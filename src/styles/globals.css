@@ -6,3 +6,27 @@ html,
 body {
   font-family: "Source Sans Pro", sans-serif;
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ffab01;
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+  background: #ffab01;
+}
+
+.scroll-box {
+  overflow-y: scroll;
+  height: 200px;
+  border: 1px solid #ccc;
+}

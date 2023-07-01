@@ -1,0 +1,58 @@
+.header {
+  @apply fixed z-10 flex h-[70px]
+  w-full items-center
+  justify-between bg-charcoal-200 transition-all duration-1000 ease-in-out;
+
+  &.full {
+    @apply pr-60;
+  }
+
+  .hamburger {
+    @apply flex h-[70px] 
+    w-[70px] items-center justify-center
+    bg-charcoal-300 transition-colors duration-300 hover:bg-charcoal-400;
+  }
+
+  .title {
+    @apply text-[22px] font-bold uppercase tracking-wide text-primary-600;
+  }
+
+  .profileCorner {
+    @apply flex h-full 
+    items-center bg-charcoal-300 px-4 transition-colors
+    duration-300 hover:bg-charcoal-400;
+
+    .info {
+      @apply mr-[10px] flex flex-col;
+
+      .name {
+        @apply text-base font-bold text-primary-600;
+      }
+
+      .role {
+        @apply text-right text-[11px] font-bold text-aqua;
+      }
+    }
+
+    .photo {
+      @apply mr-2 h-[38px] w-[38px] overflow-hidden rounded-full;
+    }
+  }
+
+  .submenu {
+    @apply absolute bottom-[-50px] 
+    right-3 w-40 bg-white;
+
+    .unordered {
+      @apply relative h-0 overflow-hidden opacity-0;
+
+      &.open {
+        @apply h-full opacity-100;
+      }
+
+      .list {
+        @apply px-5 py-3;
+      }
+    }
+  }
+}

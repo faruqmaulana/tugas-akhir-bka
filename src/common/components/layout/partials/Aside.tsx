@@ -12,7 +12,7 @@ import LIST_MENU from "~/common/constants/MENU";
 import { useRouter } from "next/router";
 import LinkBuilder from "./LinkBuilder";
 import { MenuWithSub } from "./MenuWithub";
-import styles from '~/styles/partials/Aside.module.scss';
+import styles from "~/styles/partials/Aside.module.scss";
 
 const Aside = ({ showAside }: any) => {
   const router = useRouter();

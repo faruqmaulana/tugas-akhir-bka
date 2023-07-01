@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { useState } from "react";
 import { Aside } from "./partials/Aside";
 import { Header } from "./partials/Header";
@@ -6,12 +7,16 @@ const MainLayout = ({ children }: any) => {
   const [showAside, setShowAside] = useState<boolean>(true);
 
   return (
-    <div className="grid h-screen grid-cols-[240px_1fr] grid-rows-[70px_1fr] antialiased">
+    <div className="">
       <Aside showAside={showAside} />
-      <Header setShowAside={setShowAside} showAside={showAside} />
-      <main className="col-start-2 col-end-2 row-start-2 row-end-[-1] h-full bg-charcoal-100 px-6 py-5">
-        {children}
-      </main>
+      <div
+        className={`flex flex-col transition-all duration-1000 ease-in-out ${
+          showAside ? "pl-60" : "pl-0"
+        }`}
+      >
+        <Header setShowAside={setShowAside} showAside={showAside} />
+        <main className="bg-charcoal-100 px-5 pt-[90px]">{children}</main>
+      </div>
     </div>
   );
 };
