@@ -7,7 +7,7 @@ const MainLayout = ({ children }: any) => {
   const [showAside, setShowAside] = useState<boolean>(true);
 
   return (
-    <div className="">
+    <div>
       <Aside showAside={showAside} />
       <div
         className={`flex flex-col transition-all duration-1000 ease-in-out ${
@@ -15,7 +15,9 @@ const MainLayout = ({ children }: any) => {
         }`}
       >
         <Header setShowAside={setShowAside} showAside={showAside} />
-        <main className="bg-charcoal-100 px-5 pt-[90px]">{children}</main>
+        <main className="min-h-screen bg-charcoal-100 px-5 pt-[90px]">
+          {children}
+        </main>
       </div>
     </div>
   );
