@@ -1,0 +1,11 @@
+the algorithm should be:
+
+1. seed fakultas first
+2. then prodi
+3. then user
+4. then tingkatKejuaraan
+5. then tingkatPrestasi
+6. then status
+7. then dosen
+8. then prestasiDataTable
+

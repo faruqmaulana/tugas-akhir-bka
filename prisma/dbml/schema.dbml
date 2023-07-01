@@ -1,0 +1,292 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id String [pk]
+  name String [not null]
+  npm String
+  alamat String
+  semester String
+  phone String
+  email String [unique, not null]
+  emailVerified DateTime
+  password String [not null]
+  role Role [not null, default: 'MAHASISWA']
+  prodi MasterDataProdi
+  prodiId String
+  prestasiDataTables PengajuanOnUser [not null]
+  activityLog ActivityLog [not null]
+  PatenAndHakiTable PatenAndHakiTable [not null]
+  Buku Buku [not null]
+  PengajuanBeasiswa PengajuanBeasiswa [not null]
+}
+
+Table Dosen {
+  id String [pk]
+  name String [not null]
+  nidn String [not null]
+  prestasiDataTable PrestasiDataTable [not null]
+  PengajuanPKM PengajuanPKM [not null]
+}
+
+Table MasterDataFakultas {
+  id String [pk]
+  name String [not null]
+  prodi MasterDataProdi [not null]
+}
+
+Table MasterDataProdi {
+  id String [pk]
+  name String [not null]
+  user User [not null]
+  Fakultas MasterDataFakultas
+  fakultasId String
+}
+
+Table MasterDataTingkatKejuaraan {
+  id String [pk]
+  name String [not null]
+  PrestasiDataTable PrestasiDataTable [not null]
+}
+
+Table MasterDataTingkatPrestasi {
+  id String [pk]
+  name String [not null]
+  PrestasiDataTable PrestasiDataTable [not null]
+}
+
+Table MasterDataStatus {
+  id String [pk]
+  name String [not null]
+  backgroundColor String [not null]
+  PrestasiDataTable PrestasiDataTable [not null]
+  PengajuanPKM PengajuanPKM [not null]
+  ActivityLog ActivityLog [not null]
+}
+
+Table LampiranData {
+  id String [pk]
+  piagamPenghargaan String
+  fotoPenyerahanPiala String
+  undanganKejuaraan String
+  PrestasiDataTable PrestasiDataTable [not null]
+}
+
+Table PrestasiDataTable {
+  id String [pk]
+  nama String [not null]
+  noSK String
+  tanggalSK DateTime
+  orkem String
+  kegiatan String
+  tanggalKegiatan DateTime [not null]
+  penyelenggara String
+  isValidated Boolean [not null, default: false]
+  validatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+  tingkatKejuaraan MasterDataTingkatKejuaraan [not null]
+  tingkatKejuaraanId String [not null]
+  tingkatPrestasi MasterDataTingkatPrestasi [not null]
+  tingkatPrestasiId String [not null]
+  status MasterDataStatus [not null]
+  statusId String [not null]
+  dosen Dosen [not null]
+  dosenId String [not null]
+  lampiran LampiranData [not null]
+  lampiranId String [not null]
+  users PengajuanOnUser [not null]
+  activityLog ActivityLog [not null]
+  notification Notification [not null]
+
+  Note: '==== PENGAJUAN PRESTASI TABLE === ///'
+}
+
+Table PengajuanOnUser {
+  user User [not null]
+  userId String [not null]
+  PrestasiDataTable PrestasiDataTable
+  prestasiDataTableId String [not null]
+  PengajuanPKM PengajuanPKM
+  PengajuanPKMId String [not null]
+  keterangan String [not null, default: 'Ketua Tim']
+
+  indexes {
+    (userId, prestasiDataTableId) [pk]
+  }
+}
+
+Table PengajuanPKM {
+  id String [pk]
+  judul String [not null]
+  deskripsi String [not null]
+  tanggalKegiatan DateTime [not null]
+  isValidated Boolean [not null, default: false]
+  validatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+  lampiran String
+  totalAnggaran Int [not null]
+  anggaranDosen Int [not null]
+  status MasterDataStatus [not null]
+  statusId String [not null]
+  dosen Dosen [not null]
+  dosenId String [not null]
+  users PengajuanOnUser [not null]
+  activityLog ActivityLog [not null]
+  notification Notification [not null]
+
+  Note: '=== PENGAJUAN NEW FEATURE TABLE === /// (KEGIATAN BELUM TERLAKSANA)'
+}
+
+Table PengajuanBeasiswa {
+  id String [pk]
+  isValidated Boolean [not null, default: false]
+  validatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+  lampiran String [not null]
+  nominal Int [not null]
+  user User [not null]
+  userId String [not null]
+  activityLog ActivityLog [not null]
+  notification Notification [not null]
+}
+
+Table SKRektor {
+  id String [pk]
+  nomorSK String [not null]
+  judul String [not null]
+  tanggal DateTime [not null]
+  keterangan String [not null]
+  lampiran String [not null]
+}
+
+Table PatenAndHakiTable {
+  id String [pk]
+  judul String [not null]
+  nomorPaten String [not null]
+  expiredDate DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+  keterangan String [not null]
+  validatedAt DateTime [not null]
+  isValidated Boolean [not null, default: false]
+  jenis PatenAndHaki [not null]
+  user User [not null]
+  userId String [not null]
+  activityLog ActivityLog [not null]
+  notification Notification [not null]
+
+  Note: '=== PENGAJUAN LUARAN TABLE === ///'
+}
+
+Table Buku {
+  id String [pk]
+  NomorISBN String [not null]
+  Penulis String [not null]
+  Pengarang String [not null]
+  Penerbit String [not null]
+  tahunTerbit DateTime [not null]
+  jumlahEksemplar Int [not null]
+  validatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+  user User [not null]
+  userId String [not null]
+  activityLog ActivityLog [not null]
+  notification Notification [not null]
+}
+
+Table ActivityLog {
+  id String [pk]
+  user User [not null]
+  userId String [not null]
+  status MasterDataStatus [not null]
+  statusId String [not null]
+  PrestasiDataTable PrestasiDataTable
+  prestasiDataTableId String
+  PatenAndHakiTable PatenAndHakiTable
+  PatenAndHakiTableId String
+  Buku Buku
+  bukuId String
+  PengajuanPKM PengajuanPKM
+  pengajuanPKMId String
+  PengajuanBeasiswa PengajuanBeasiswa
+  pengajuanBeasiswaId String
+}
+
+Table Notification {
+  id String [pk]
+  readed Boolean [not null, default: false]
+  PrestasiDataTable PrestasiDataTable
+  prestasiDataTableId String
+  PatenAndHakiTable PatenAndHakiTable
+  PatenAndHakiTableId String
+  Buku Buku
+  bukuId String
+  PengajuanPKM PengajuanPKM
+  pengajuanPKMId String
+  PengajuanBeasiswa PengajuanBeasiswa
+  pengajuanBeasiswaId String
+}
+
+Enum Role {
+  MAHASISWA
+  ADMIN
+}
+
+Enum PatenAndHaki {
+  PATEN
+  HAKI
+}
+
+Ref: User.prodiId > MasterDataProdi.id
+
+Ref: MasterDataProdi.fakultasId > MasterDataFakultas.id
+
+Ref: PrestasiDataTable.tingkatKejuaraanId > MasterDataTingkatKejuaraan.id
+
+Ref: PrestasiDataTable.tingkatPrestasiId > MasterDataTingkatPrestasi.id
+
+Ref: PrestasiDataTable.statusId > MasterDataStatus.id
+
+Ref: PrestasiDataTable.dosenId > Dosen.id
+
+Ref: PrestasiDataTable.lampiranId > LampiranData.id
+
+Ref: PengajuanOnUser.userId > User.id
+
+Ref: PengajuanOnUser.prestasiDataTableId > PrestasiDataTable.id
+
+Ref: PengajuanOnUser.PengajuanPKMId > PengajuanPKM.id
+
+Ref: PengajuanPKM.statusId > MasterDataStatus.id
+
+Ref: PengajuanPKM.dosenId > Dosen.id
+
+Ref: PengajuanBeasiswa.userId > User.id
+
+Ref: PatenAndHakiTable.userId > User.id
+
+Ref: Buku.userId > User.id
+
+Ref: ActivityLog.userId > User.id
+
+Ref: ActivityLog.statusId > MasterDataStatus.id
+
+Ref: ActivityLog.prestasiDataTableId > PrestasiDataTable.id
+
+Ref: ActivityLog.PatenAndHakiTableId > PatenAndHakiTable.id
+
+Ref: ActivityLog.bukuId > Buku.id
+
+Ref: ActivityLog.pengajuanPKMId > PengajuanPKM.id
+
+Ref: ActivityLog.pengajuanBeasiswaId > PengajuanBeasiswa.id
+
+Ref: Notification.prestasiDataTableId > PrestasiDataTable.id
+
+Ref: Notification.PatenAndHakiTableId > PatenAndHakiTable.id
+
+Ref: Notification.bukuId > Buku.id
+
+Ref: Notification.pengajuanPKMId > PengajuanPKM.id
+
+Ref: Notification.pengajuanBeasiswaId > PengajuanBeasiswa.id
