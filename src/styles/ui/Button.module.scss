@@ -1,34 +1,34 @@
 .button {
-  @apply text-white rounded-[5px] relative;
+  @apply relative rounded-[5px] text-white;
 
   // Color
   &.primary {
-    @apply bg-primary hover:bg-primary-800 
-    transition-colors duration-200;
+    @apply bg-primary transition-colors 
+    duration-200 hover:bg-primary-800;
   }
 
   &.secondary {
-    @apply bg-secondary-500 hover:bg-secondary-700 
-    transition-colors duration-200;
+    @apply bg-secondary-500 transition-colors 
+    duration-200 hover:bg-secondary-700;
   }
 
   &.danger {
-    @apply bg-danger-500 hover:bg-danger-700
-    transition-colors duration-200;
+    @apply bg-danger-500 transition-colors
+    duration-200 hover:bg-danger-700;
   }
 
   &.success {
-    @apply bg-tosca-500 hover:bg-tosca-700
-    transition-colors duration-200;
+    @apply bg-tosca-500 transition-colors
+    duration-200 hover:bg-tosca-700;
   }
 
   &.gray {
-    @apply bg-button-cancel hover:bg-button-cancelDarker
-    transition-colors duration-200;
+    @apply bg-button-cancel transition-colors
+    duration-200 hover:bg-button-cancelDarker;
   }
 
   &.grayGradient {
-    @apply text-charcoal-700 border border-[#DCDDE4];
+    @apply border border-[#DCDDE4] text-charcoal-700;
 
     background: transparent linear-gradient(180deg, #fefefe 0%, #f5f6fa 100%) 0%
       0% no-repeat padding-box;
@@ -36,17 +36,17 @@
   }
 
   &.purple {
-    @apply bg-[#877DE2] hover:bg-button-cancelDarker
-    transition-colors duration-200;
+    @apply bg-[#877DE2] transition-colors
+    duration-200 hover:bg-button-cancelDarker;
   }
 
   // Size
   &.small {
-    @apply text-xs px-4 py-[5px];
+    @apply px-4 py-[5px] text-xs;
   }
 
   &.medium {
-    @apply text-sm py-3 w-full font-semibold;
+    @apply py-2 px-4 text-sm font-semibold;
   }
 
   // Typography
@@ -56,34 +56,34 @@
 
   // Status
   &.disabled {
-    @apply bg-gray-400 cursor-not-allowed hover:bg-gray-400;
+    @apply cursor-not-allowed bg-gray-400 hover:bg-gray-400;
   }
 }
 
 .buttonHover {
-  @apply flex relative;
+  @apply relative flex;
 
   .toolTip {
-    @apply flex absolute top-[-25px] left-[-60px] bg-white
-    opacity-0 transition-opacity duration-300
-    rounded-[4px]
-    px-2 py-1
-    shadow-[0px_3px_6px_#00000029]
-    after:content-['']  after:absolute after:bottom-[-7px] after:w-0 after:h-0 
-    after:border-l-[7px] after:border-l-transparent after:border-solid
-    after:border-r-[7px] after:border-r-transparent
-    after:border-t-[7px] after:border-t-white;
+    @apply absolute left-[-60px] top-[-25px] flex rounded-[4px]
+    bg-white px-2 py-1
+    opacity-0
+    shadow-[0px_3px_6px_#00000029] transition-opacity
+    duration-300
+    after:absolute  after:bottom-[-7px] after:h-0 after:w-0 after:border-l-[7px] 
+    after:border-r-[7px] after:border-t-[7px] after:border-solid
+    after:border-l-transparent after:border-r-transparent
+    after:border-t-white after:content-[''];
 
     &.show {
       @apply opacity-100;
     }
 
     &.view {
-      @apply text-primary-600 font-semibold after:right-[40px];
+      @apply font-semibold text-primary-600 after:right-[40px];
     }
 
     &.add {
-      @apply text-tosca-500 font-semibold after:right-9;
+      @apply font-semibold text-tosca-500 after:right-9;
     }
   }
 }

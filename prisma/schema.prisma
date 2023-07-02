@@ -58,9 +58,11 @@ model User {
 
 // Master Data Table
 model Dosen {
-    id   String @id @default(cuid())
-    name String
-    nidn String
+    id      String           @id @default(cuid())
+    name    String
+    nidn    String
+    prodi   MasterDataProdi? @relation(fields: [prodiId], references: [id])
+    prodiId String?
 
     prestasiDataTable PrestasiDataTable[]
     PengajuanPKM      PengajuanPKM[]
@@ -73,9 +75,10 @@ model MasterDataFakultas {
 }
 
 model MasterDataProdi {
-    id   String @id @default(cuid())
-    name String
-    user User[]
+    id    String  @id @default(cuid())
+    name  String
+    user  User[]
+    Dosen Dosen[]
 
     Fakultas   MasterDataFakultas? @relation(fields: [fakultasId], references: [id])
     fakultasId String?

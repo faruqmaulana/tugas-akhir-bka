@@ -1,11 +1,36 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
+import { useEffect, useRef, useState } from "react";
+
 import styles from "~/styles/layout/Header.module.scss";
+import HamburgerIcon from "../../svg/HamburgerIcon";
+import ArrowIcon from "../../svg/ArrowIcon";
+import PersonIcon from "../../svg/PersonIcon";
+import LogoutIcon from "../../svg/LogoutIcon";
+import { useRouter } from "next/router";
+import { RoleManagementIcon } from "../../svg";
 
 const Header = ({ setShowAside, showAside }: any) => {
+  const [open, setOpen] = useState<boolean>(false);
+  const router = useRouter();
+
+  const signOutRef = useRef<any>(null);
+
   const handleHamburgerButton = () => {
     setShowAside(!showAside);
   };
+
+  useEffect(() => {
+    const handler = (e: any) => {
+      if (!signOutRef?.current?.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handler);
+  });
 
   return (
     <header className={`${styles.header} ${showAside && styles.full}`}>
@@ -14,72 +39,59 @@ const Header = ({ setShowAside, showAside }: any) => {
         type="button"
         onClick={handleHamburgerButton}
       >
-        <svg
-          id="Burger"
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="16"
-          viewBox="0 0 20 16"
-        >
-          <rect
-            id="Rectangle_558"
-            data-name="Rectangle 558"
-            width="20"
-            height="2"
-            rx="1"
-            transform="translate(0 14)"
-            fill="#ef4444"
-          />
-          <rect
-            id="Rectangle_559"
-            data-name="Rectangle 559"
-            width="20"
-            height="2"
-            rx="1"
-            transform="translate(0 7)"
-            fill="#ef4444"
-          />
-          <rect
-            id="Rectangle_560"
-            data-name="Rectangle 560"
-            width="20"
-            height="2"
-            rx="1"
-            fill="#ef4444"
-          />
-        </svg>
+        <HamburgerIcon />
       </button>
-      <h1 className="text-center text-[22px] font-bold uppercase tracking-wide text-red-600">
-        Biro Kemahasiswaan & Alumni
-      </h1>
-      <button
-        type="button"
-        className="flex h-full items-center bg-charcoal-300 px-4 transition-colors duration-300 hover:bg-charcoal-400"
-      >
-        <div className="mr-[10px] flex min-w-[100px] flex-col items-center">
-          <h1 className="text-base font-bold text-red-600">Faruq</h1>
-          <p className="text-right text-[14px] font-bold text-red-400">
-            Mahasiwa
-          </p>
-        </div>
-
-        <div className="">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="10"
-            height="6"
-            viewBox="0 0 10 6"
+      <h1 className={styles.title}>BIRO KEMAHASISWAAN DAN ALUMNI</h1>
+      <div className="flex h-full items-center gap-5">
+        <div className="relative h-full" ref={signOutRef}>
+          <button
+            type="button"
+            className={styles.profileCorner}
+            onClick={() => setOpen(!open)}
           >
-            <path
-              id="Polygon_10"
-              data-name="Polygon 10"
-              d="M4.232.922a1,1,0,0,1,1.536,0L8.633,4.36A1,1,0,0,1,7.865,6H2.135a1,1,0,0,1-.768-1.64Z"
-              transform="translate(10 6) rotate(180)"
-              fill="#99acb4"
-            />
-          </svg>
+            <div className={styles.info}>
+              <h1 className={styles.name}>Faruq Maulana</h1>
+              <p className={styles.role}>Mahasiswa</p>
+            </div>
+
+            <div className={styles.arrow}>
+              <ArrowIcon />
+            </div>
+          </button>
+          <div className={`${styles.submenu} `}>
+            <ul className={`${styles.unordered} ${open && styles.open}`}>
+              <li
+                className={`${styles.list} ${
+                  router.pathname === "/profile" && styles.active
+                }`}
+                onClick={() => {
+                  setOpen(false);
+                  void router.push("/profile");
+                }}
+              >
+                <PersonIcon />
+                <button type="button">Profile</button>
+              </li>
+              <li
+                className={`${styles.list} ${
+                  router.pathname === "/informasi-login" && styles.active
+                }`}
+                onClick={() => {
+                  setOpen(false);
+                  void router.push("/informasi-login");
+                }}
+              >
+                <RoleManagementIcon />
+                <button type="button">Informasi Login</button>
+              </li>
+              <li className={`${styles.list}`}>
+                <LogoutIcon />
+                <button type="button">Sign out</button>
+              </li>
+            </ul>
+          </div>
         </div>
-      </button>
+      </div>
     </header>
   );
 };

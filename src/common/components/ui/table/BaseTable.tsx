@@ -3,13 +3,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { MaterialReactTable } from 'material-react-table'
-import React from 'react'
-import { Button } from '../button/Button'
-import { ExportToCsv } from 'export-to-csv';
-import DownloadIcon from '../../svg/DownloadIcon';
+import { MaterialReactTable } from "material-react-table";
+import React from "react";
+import { Button } from "../button/Button";
+import { ExportToCsv } from "export-to-csv";
+import DownloadIcon from "../../svg/DownloadIcon";
 
-const BaseTable = ({columns, data}: any) => {
+const BaseTable = ({ columns, data, showColumnFilters = true }: any) => {
   const csvOptions = {
     fieldSeparator: ",",
     quoteStrings: '"',
@@ -17,13 +17,13 @@ const BaseTable = ({columns, data}: any) => {
     showLabels: true,
     useBom: true,
     useKeysAsHeaders: false,
-    headers: columns.map((c: { header: any; }) => c.header),
+    headers: columns.map((c: { header: any }) => c.header),
   };
 
   const csvExporter = new ExportToCsv(csvOptions);
 
   const handleExportRows = (rows: any[]) => {
-    csvExporter.generateCsv(rows.map((row: { original: any; }) => row.original));
+    csvExporter.generateCsv(rows.map((row: { original: any }) => row.original));
   };
 
   const handleExportData = () => {
@@ -34,7 +34,7 @@ const BaseTable = ({columns, data}: any) => {
     <MaterialReactTable
       columns={columns}
       data={data}
-      initialState={{ showColumnFilters: true }}
+      initialState={{ showColumnFilters: showColumnFilters }}
       renderTopToolbarCustomActions={({ table }) => (
         <div className="flex flex-wrap gap-4 p-2">
           <Button
@@ -64,7 +64,7 @@ const BaseTable = ({columns, data}: any) => {
         </div>
       )}
     />
-  )
-}
+  );
+};
 
-export default BaseTable
+export default BaseTable;

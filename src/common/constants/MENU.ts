@@ -44,6 +44,12 @@ const LIST_MENU: any = [
         module: "branch",
       },
       {
+        id: 46,
+        title: "Prodi",
+        url: "/master-data/prodi",
+        module: "branch",
+      },
+      {
         id: 43,
         title: "Tingkat Kejuaraan",
         url: "/master-data/tingkat-kejuaraan",
@@ -57,8 +63,8 @@ const LIST_MENU: any = [
       },
       {
         id: 45,
-        title: "Status",
-        url: "/master-data/status",
+        title: "Status Pengajuan",
+        url: "/master-data/status-pengajuan",
         module: "consumption",
       },
     ],

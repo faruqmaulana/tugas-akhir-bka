@@ -12,7 +12,7 @@ const Card = (props: CardProps) => {
     subHeaderClassName,
     header,
     subHeader,
-    style
+    style,
   } = props;
 
   const styleCard = [];
@@ -24,9 +24,12 @@ const Card = (props: CardProps) => {
   if (subHeaderClassName) styleCardSubHeader.push(subHeaderClassName);
 
   return (
-    <div className={`${styles.card} ${styleCard.join(" ")} p-[30px]`} style={style}>
-      <div className="flex">
-        {header && (
+    <div
+      className={`${styles.card} ${styleCard.join(" ")} p-[30px]`}
+      style={style}
+    >
+      {header && (
+        <div className="flex">
           <h1
             className={`text-[20px] font-bold text-gray-700 ${styleCardHeader.join(
               " "
@@ -34,8 +37,8 @@ const Card = (props: CardProps) => {
           >
             {header}
           </h1>
-        )}
-      </div>
+        </div>
+      )}
       {subHeader && (
         <p
           className={`text-[16px] text-[#5D6171] ${styleCardSubHeader.join(

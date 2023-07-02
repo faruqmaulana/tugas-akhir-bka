@@ -3,27 +3,21 @@ import React, { useMemo } from "react";
 
 import { type MRT_ColumnDef } from "material-react-table";
 import BaseTable from "~/common/components/ui/table/BaseTable";
-import { DOSEN, type DosenType } from "~/common/constants/MASTER-DATA/DOSEN";
+import {
+  FAKULTAS,
+  type FakultasType,
+} from "~/common/constants/MASTER-DATA/FAKULTAS";
 
 const Example = () => {
-  const columns = useMemo<MRT_ColumnDef<DosenType>[]>(
+  const columns = useMemo<MRT_ColumnDef<FakultasType>[]>(
     () => [
       {
         header: "Name",
         accessorKey: "name",
       },
       {
-        header: "NIDN",
-        accessorKey: "nidn",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Fakultas",
-        accessorKey: "fakultas",
-      },
-      {
-        header: "Prodi",
-        accessorKey: "prodi",
+        header: "Total Prodi",
+        accessorKey: "total_prodi",
       },
     ],
     []
@@ -31,7 +25,7 @@ const Example = () => {
 
   return (
     <>
-      <BaseTable data={DOSEN} columns={columns} />
+      <BaseTable data={FAKULTAS} columns={columns} showColumnFilters={false} />
     </>
   );
 };
