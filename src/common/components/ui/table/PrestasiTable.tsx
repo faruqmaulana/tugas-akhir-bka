@@ -1,146 +1,45 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 
-//MRT Imports
-//import MaterialReactTable, { type MRT_ColumnDef } from 'material-react-table'; //default import deprecated
-import { MaterialReactTable, type MRT_ColumnDef } from "material-react-table";
-
-//Material UI Imports
-import { Box } from "@mui/material";
-
-//Date Picker Imports
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { type MRT_ColumnDef } from "material-react-table";
 
 //Icons Imports
-import { data } from "~/common/constants/EMPLOYE";
-
-//Mock Data
-
-export type Employee = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  jobTitle: string;
-  salary: number;
-  startDate: string;
-  signatureCatchPhrase: string;
-  avatar: string;
-};
+import { data, type Employee } from "~/common/constants/STATISTIK_PRESTASI";
+import BaseTable from "./BaseTable";
 
 const Example = () => {
   const columns = useMemo<MRT_ColumnDef<Employee>[]>(
     () => [
       {
-        id: "employee", //id used to define `group` column
-        header: "",
-        columns: [
-          {
-            accessorFn: (row) => `${row.firstName} ${row.lastName}`, //accessorFn used to join multiple data into a single cell
-            id: "name", //id is still required when using accessorFn instead of accessorKey
-            header: "Name",
-            size: 250,
-            Cell: ({ renderedCellValue, row }) => (
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "1rem",
-                }}
-              >
-                <span>{renderedCellValue}</span>
-              </Box>
-            ),
-          },
-          {
-            accessorKey: "email", //accessorKey used to define `data` column. `id` gets set to accessorKey automatically
-            enableClickToCopy: true,
-            header: "Email",
-            size: 300,
-          },
-          {
-            accessorKey: "salary",
-            // filterVariant: 'range', //if not using filter modes feature, use this instead of filterFn
-            filterFn: "between",
-            header: "Salary",
-            size: 200,
-            //custom conditional format and styling
-            Cell: ({ cell }) => (
-              <Box
-                component="span"
-                sx={(theme) => ({
-                  backgroundColor:
-                    cell.getValue<number>() < 50_000
-                      ? theme.palette.error.dark
-                      : cell.getValue<number>() >= 50_000 &&
-                        cell.getValue<number>() < 75_000
-                      ? theme.palette.warning.dark
-                      : theme.palette.success.dark,
-                  borderRadius: "0.25rem",
-                  color: "#fff",
-                  maxWidth: "9ch",
-                  p: "0.25rem",
-                })}
-              >
-                {cell.getValue<number>()?.toLocaleString?.("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0,
-                })}
-              </Box>
-            ),
-          },
-          {
-            accessorKey: "jobTitle", //hey a simple column for once
-            header: "Job Title",
-            size: 350,
-          },
-          {
-            accessorFn: (row) => new Date(row.startDate), //convert to Date for sorting and filtering
-            id: "startDate",
-            header: "Start Date",
-            filterFn: "lessThanOrEqualTo",
-            sortingFn: "datetime",
-            Cell: ({ cell }) => cell.getValue<Date>()?.toLocaleDateString(), //render Date as a string
-            Header: ({ column }) => <em>{column.columnDef.header}</em>, //custom header markup
-            //Custom Date Picker Filter from @mui/x-date-pickers
-            Filter: ({ column }) => (
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  onChange={(newValue) => {
-                    column.setFilterValue(newValue);
-                  }}
-                  slotProps={{
-                    textField: {
-                      helperText: "Filter Mode: Less Than",
-                      sx: { minWidth: "120px" },
-                      variant: "standard",
-                    },
-                  }}
-                  value={column.getFilterValue()}
-                />
-              </LocalizationProvider>
-            ),
-          },
-        ],
+        header: "Name",
+        accessorKey: "name",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Fakultas",
+        accessorKey: "fakultas",
+      },
+      {
+        accessorKey: "prestasi",
+        header: "Prestasi",
+      },
+      {
+        accessorKey: "tingkatKegiatan",
+        header: "Tingkat Kegiatan",
+      },
+      {
+        accessorKey: "namaKegiatan",
+        header: "Nama Kegiatan",
+        enableClickToCopy: true,
       },
     ],
     []
   );
 
-  return (
-    <MaterialReactTable
-      columns={columns}
-      data={data}
-      enableColumnFilterModes
-      enableColumnOrdering
-      enablePinning
-      initialState={{ showColumnFilters: true }}
-      positionToolbarAlertBanner="bottom"
-    />
-  );
+  return <BaseTable data={data} columns={columns} />;
 };
 
 export default Example;

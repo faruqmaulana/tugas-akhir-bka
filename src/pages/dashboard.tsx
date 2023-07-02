@@ -1,7 +1,6 @@
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
 import Card from "~/common/components/ui/card/Card";
-import Header from "~/common/components/ui/header/Header";
+import Header from "~/common/components/ui/header/PageHeading";
 import Loader from "~/common/components/ui/loader/Loader";
 import { CHART_DATA } from "~/common/constants/CHART";
 
@@ -23,7 +22,6 @@ const TableExample = dynamic(
 export default function Home() {
   return (
     <>
-      <Header title="Dashboard" className="mb-[20px]" />
       <Card header="STATISTIK DATA PRESTASI" headerClassName="-mb-5">
         <MyResponsiveLine data={CHART_DATA.reverse()} />
       </Card>

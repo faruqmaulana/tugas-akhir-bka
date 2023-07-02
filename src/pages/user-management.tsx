@@ -3,8 +3,8 @@ import React from "react";
 import Card from "~/common/components/ui/card/Card";
 import Loader from "~/common/components/ui/loader/Loader";
 
-const TableExample = dynamic(
-  () => import("~/common/components/ui/table/PrestasiTable"),
+const MahasiswaTable = dynamic(
+  () => import("~/common/components/ui/table/MahasiswaTable"),
   {
     ssr: false,
     loading: () => <Loader />,
@@ -13,8 +13,8 @@ const TableExample = dynamic(
 
 const UserManagement = () => {
   return (
-    <Card header="DATA PRESTASI MAHASISWA TAHUN 2023" className="mt-[30px]">
-      <TableExample />
+    <Card header="DATA MAHASISWA" className="mt-[30px]">
+      <MahasiswaTable />
     </Card>
   );
 };

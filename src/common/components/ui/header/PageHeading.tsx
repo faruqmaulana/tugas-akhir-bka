@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-const Header = (props: any) => {
+const PageHeading = (props: any) => {
   const { className, subTitle, title } = props;
   const styleHeader = [];
 
@@ -29,4 +29,4 @@ const Header = (props: any) => {
   );
 };
 
-export default Header;
+export default PageHeading;
