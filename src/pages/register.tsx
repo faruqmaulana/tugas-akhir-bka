@@ -13,7 +13,21 @@ export default function LoginForm() {
           <input
             className={`${styles.formControl}`}
             type="text"
+            placeholder="Nama"
+          />
+        </div>
+        <div className="relative flex">
+          <input
+            className={`${styles.formControl}`}
+            type="text"
             placeholder="NBI"
+          />
+        </div>
+        <div className="relative flex">
+          <input
+            className={`${styles.formControl}`}
+            type="text"
+            placeholder="Email"
           />
         </div>
         <div className={`relative flex`}>
@@ -27,20 +41,14 @@ export default function LoginForm() {
           </button>
         </div>
         <div className="flex flex-col">
-          <div className={styles.forgotPassword}>
-            <Link href="/forgot-password" className={styles.forgot}>
-              Lupa Password?
-            </Link>
-          </div>
           <div className={styles.formButton}>
             <Button isPrimary isSubmit isMedium isUppercase className="w-full">
-              Login
+              Submit
             </Button>
           </div>
-          <div className={`${styles.forgotPassword} mt-1`}>
-            Belum punya akun? &nbsp;
-            <Link href="/register" className={styles.forgot}>
-              Daftar di sini
+          <div className={styles.forgotPassword}>
+            <Link href="/" className={styles.forgot}>
+              Kembali ke Login
             </Link>
           </div>
         </div>
