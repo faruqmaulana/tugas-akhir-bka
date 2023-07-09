@@ -16,26 +16,16 @@ const MenuWithSub = (props: any) => {
     id,
     icon,
     title,
-    type,
     submenu,
-    module,
-    listModules,
     index,
     isOpen,
     isAllAccess,
     handleCollapse,
+    module,
   } = props;
   const router = useRouter();
 
-  const [hasAccess, setHasAccess] = useState<boolean>(false);
   const [subModule, setSubModule] = useState<any[]>([]);
-
-  useEffect(() => {
-    const hasAccessTemp: boolean = listModules?.find(
-      (item: any) => item.split(".")[0].toString() === module
-    );
-    setHasAccess(hasAccessTemp);
-  }, [listModules, module]);
 
   useEffect(() => {
     const subModuleTemp: any[] = submenu?.map((menu: any) => {
@@ -65,10 +55,9 @@ const MenuWithSub = (props: any) => {
         data-collapse-toggle="dropdown-example"
         onClick={() => handleCollapse(index)}
       >
-        {createElement(icon)}
+        <div className={styles.icon}>{createElement(icon)}</div>
         <span className={`${styles.titleWithSub} ${isOpen ? styles.open : ""}`}>
-          {title} <br />
-          {isAllAccess && type}
+          <p>{title}</p>
           <svg
             sidebar-toggle-item="true"
             className={`${styles.arrow} ${isOpen && styles.rotate}`}
@@ -97,6 +86,9 @@ const MenuWithSub = (props: any) => {
                 className={`${styles.linkSub} ${handleActiveMenu(sub.url)}`}
               >
                 <span className={styles.titleSub}>{sub.title}</span>
+                {module !== "master-data" && (
+                  <span className={styles.counter}>{20}</span>
+                )}
               </Link>
             </li>
           );

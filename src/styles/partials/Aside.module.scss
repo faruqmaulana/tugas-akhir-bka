@@ -29,7 +29,7 @@
     @apply relative mt-5 flex flex-col;
 
     .link {
-      @apply grid w-full grid-cols-[1fr_6fr] items-center gap-1 px-5 py-[15px]
+      @apply flex w-full flex-row items-center gap-2 px-5 py-[15px]
       transition-all duration-700 hover:bg-red-900;
 
       &__dropdown {
@@ -38,18 +38,22 @@
         }
       }
 
+      .icon {
+        @apply min-w-[20px];
+      }
+
       .title {
         @apply text-[15px] text-white 
         transition-colors duration-300 ease-in-out hover:text-white;
       }
 
+      .counter {
+        @apply ml-auto h-fit rounded-xl bg-secondary px-2 text-[15px] font-bold;
+      }
+
       &.active {
         @apply relative bg-red-900 
-        before:absolute before:h-full before:w-[5px] before:rounded-r-md before:bg-secondary before:content-['']
-        after:absolute  after:right-0 after:h-0 after:w-0 after:border-b-[10px] 
-        after:border-r-[10px] after:border-t-[10px] after:border-solid
-        after:border-b-transparent after:border-r-charcoal-100
-        after:border-t-transparent after:content-[''];
+        before:absolute before:left-0 before:h-full before:w-[5px] before:rounded-r-md before:bg-secondary before:content-[''];
 
         .title {
           @apply text-white;
@@ -57,14 +61,14 @@
       }
 
       .titleWithSub {
-        @apply flex items-center justify-between text-left text-[15px] text-white;
+        @apply flex w-full items-center justify-between text-[15px] text-white;
 
         &.open {
           @apply text-white;
         }
 
         .arrow {
-          @apply rotate-0 transition-transform duration-300 ease-in-out;
+          @apply mr-3 rotate-0 transition-transform duration-300 ease-in-out;
 
           &.rotate {
             @apply rotate-90 transition-transform duration-300 ease-in-out;
@@ -82,21 +86,21 @@
       }
 
       .linkSub {
-        @apply flex w-full py-[15px] pl-[52px] 
-        text-white transition-all duration-500 ease-in-out hover:text-white;
+        @apply flex w-full flex-row items-center py-[15px] pl-[49px] pr-5 text-white
+        transition-all duration-500 ease-in-out hover:bg-red-900 hover:text-white;
 
         .titleSub {
           @apply text-[15px];
         }
 
+        .counter {
+          @apply ml-auto h-fit rounded-xl bg-secondary px-2 text-[15px] font-bold text-black;
+        }
+
         &.active {
           @apply relative bg-red-900 
           before:absolute before:left-0 before:top-0 before:h-full before:w-[5px] before:rounded-r-md
-          before:bg-secondary before:content-['']
-          after:absolute  after:right-0 after:h-0 after:w-0 after:border-b-[10px] 
-          after:border-r-[10px] after:border-t-[10px] after:border-solid
-          after:border-b-transparent after:border-r-charcoal-100
-          after:border-t-transparent after:content-[''];
+          before:bg-secondary before:content-[''];
 
           .title {
             @apply text-white;

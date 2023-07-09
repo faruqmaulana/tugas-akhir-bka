@@ -15,9 +15,8 @@ Table User {
   role Role [not null, default: 'MAHASISWA']
   prodi MasterDataProdi
   prodiId String
-  prestasiDataTables PengajuanOnUser [not null]
+  prestasiDataTables PengajuanOnUsers [not null]
   activityLog ActivityLog [not null]
-  PatenAndHakiTable PatenAndHakiTable [not null]
   Buku Buku [not null]
   PengajuanBeasiswa PengajuanBeasiswa [not null]
 }
@@ -26,8 +25,11 @@ Table Dosen {
   id String [pk]
   name String [not null]
   nidn String [not null]
+  prodi MasterDataProdi
+  prodiId String
   prestasiDataTable PrestasiDataTable [not null]
   PengajuanPKM PengajuanPKM [not null]
+  PengajuanOnUsers PengajuanOnUsers [not null]
 }
 
 Table MasterDataFakultas {
@@ -40,8 +42,15 @@ Table MasterDataProdi {
   id String [pk]
   name String [not null]
   user User [not null]
+  Dosen Dosen [not null]
   Fakultas MasterDataFakultas
   fakultasId String
+}
+
+Table MasterDataOrkem {
+  id String [pk]
+  name String [not null]
+  PrestasiDataTable PrestasiDataTable [not null]
 }
 
 Table MasterDataTingkatKejuaraan {
@@ -63,6 +72,9 @@ Table MasterDataStatus {
   PrestasiDataTable PrestasiDataTable [not null]
   PengajuanPKM PengajuanPKM [not null]
   ActivityLog ActivityLog [not null]
+  PengajuanBeasiswa PengajuanBeasiswa [not null]
+  PatenAndHakiTable PatenAndHakiTable [not null]
+  Buku Buku [not null]
 }
 
 Table LampiranData {
@@ -78,13 +90,14 @@ Table PrestasiDataTable {
   nama String [not null]
   noSK String
   tanggalSK DateTime
-  orkem String
   kegiatan String
   tanggalKegiatan DateTime [not null]
   penyelenggara String
   isValidated Boolean [not null, default: false]
   validatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
+  orkem MasterDataOrkem [not null]
+  orkemId String [not null]
   tingkatKejuaraan MasterDataTingkatKejuaraan [not null]
   tingkatKejuaraanId String [not null]
   tingkatPrestasi MasterDataTingkatPrestasi [not null]
@@ -95,20 +108,24 @@ Table PrestasiDataTable {
   dosenId String [not null]
   lampiran LampiranData [not null]
   lampiranId String [not null]
-  users PengajuanOnUser [not null]
+  users PengajuanOnUsers [not null]
   activityLog ActivityLog [not null]
   notification Notification [not null]
 
   Note: '==== PENGAJUAN PRESTASI TABLE === ///'
 }
 
-Table PengajuanOnUser {
+Table PengajuanOnUsers {
   user User [not null]
   userId String [not null]
+  dosen Dosen [not null]
+  dosenId String [not null]
   PrestasiDataTable PrestasiDataTable
   prestasiDataTableId String [not null]
   PengajuanPKM PengajuanPKM
   PengajuanPKMId String [not null]
+  PengajuanPatenAndHakiTable PatenAndHakiTable
+  PengajuanPatenAndHakiTableId String [not null]
   keterangan String [not null, default: 'Ketua Tim']
 
   indexes {
@@ -131,7 +148,7 @@ Table PengajuanPKM {
   statusId String [not null]
   dosen Dosen [not null]
   dosenId String [not null]
-  users PengajuanOnUser [not null]
+  users PengajuanOnUsers [not null]
   activityLog ActivityLog [not null]
   notification Notification [not null]
 
@@ -145,6 +162,8 @@ Table PengajuanBeasiswa {
   createdAt DateTime [default: `now()`, not null]
   lampiran String [not null]
   nominal Int [not null]
+  status MasterDataStatus [not null]
+  statusId String [not null]
   user User [not null]
   userId String [not null]
   activityLog ActivityLog [not null]
@@ -170,10 +189,11 @@ Table PatenAndHakiTable {
   validatedAt DateTime [not null]
   isValidated Boolean [not null, default: false]
   jenis PatenAndHaki [not null]
-  user User [not null]
-  userId String [not null]
+  status MasterDataStatus [not null]
+  statusId String [not null]
   activityLog ActivityLog [not null]
   notification Notification [not null]
+  PengajuanOnUsers PengajuanOnUsers [not null]
 
   Note: '=== PENGAJUAN LUARAN TABLE === ///'
 }
@@ -188,6 +208,8 @@ Table Buku {
   jumlahEksemplar Int [not null]
   validatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
+  status MasterDataStatus [not null]
+  statusId String [not null]
   user User [not null]
   userId String [not null]
   activityLog ActivityLog [not null]
@@ -239,7 +261,11 @@ Enum PatenAndHaki {
 
 Ref: User.prodiId > MasterDataProdi.id
 
+Ref: Dosen.prodiId > MasterDataProdi.id
+
 Ref: MasterDataProdi.fakultasId > MasterDataFakultas.id
+
+Ref: PrestasiDataTable.orkemId > MasterDataOrkem.id
 
 Ref: PrestasiDataTable.tingkatKejuaraanId > MasterDataTingkatKejuaraan.id
 
@@ -251,19 +277,27 @@ Ref: PrestasiDataTable.dosenId > Dosen.id
 
 Ref: PrestasiDataTable.lampiranId > LampiranData.id
 
-Ref: PengajuanOnUser.userId > User.id
+Ref: PengajuanOnUsers.userId > User.id
 
-Ref: PengajuanOnUser.prestasiDataTableId > PrestasiDataTable.id
+Ref: PengajuanOnUsers.dosenId > Dosen.id
 
-Ref: PengajuanOnUser.PengajuanPKMId > PengajuanPKM.id
+Ref: PengajuanOnUsers.prestasiDataTableId > PrestasiDataTable.id
+
+Ref: PengajuanOnUsers.PengajuanPKMId > PengajuanPKM.id
+
+Ref: PengajuanOnUsers.PengajuanPatenAndHakiTableId > PatenAndHakiTable.id
 
 Ref: PengajuanPKM.statusId > MasterDataStatus.id
 
 Ref: PengajuanPKM.dosenId > Dosen.id
 
+Ref: PengajuanBeasiswa.statusId > MasterDataStatus.id
+
 Ref: PengajuanBeasiswa.userId > User.id
 
-Ref: PatenAndHakiTable.userId > User.id
+Ref: PatenAndHakiTable.statusId > MasterDataStatus.id
+
+Ref: Buku.statusId > MasterDataStatus.id
 
 Ref: Buku.userId > User.id
 

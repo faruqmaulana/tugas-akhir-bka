@@ -49,9 +49,8 @@ model User {
 
     // USER RELATION TABLE DATA
     // Relationship with PrestasiDataTable
-    prestasiDataTables PengajuanOnUser[]
+    prestasiDataTables PengajuanOnUsers[]
     activityLog        ActivityLog[]
-    PatenAndHakiTable  PatenAndHakiTable[]
     Buku               Buku[]
     PengajuanBeasiswa  PengajuanBeasiswa[]
 }
@@ -66,6 +65,7 @@ model Dosen {
 
     prestasiDataTable PrestasiDataTable[]
     PengajuanPKM      PengajuanPKM[]
+    PengajuanOnUsers  PengajuanOnUsers[]
 }
 
 model MasterDataFakultas {
@@ -82,6 +82,12 @@ model MasterDataProdi {
 
     Fakultas   MasterDataFakultas? @relation(fields: [fakultasId], references: [id])
     fakultasId String?
+}
+
+model MasterDataOrkem {
+    id                String              @id @default(cuid())
+    name              String
+    PrestasiDataTable PrestasiDataTable[]
 }
 
 model MasterDataTingkatKejuaraan {
@@ -103,6 +109,9 @@ model MasterDataStatus {
     PrestasiDataTable PrestasiDataTable[]
     PengajuanPKM      PengajuanPKM[]
     ActivityLog       ActivityLog[]
+    PengajuanBeasiswa PengajuanBeasiswa[]
+    PatenAndHakiTable PatenAndHakiTable[]
+    Buku              Buku[]
 }
 
 // FEATURE TABLE
@@ -120,13 +129,15 @@ model PrestasiDataTable {
     nama            String
     noSK            String?
     tanggalSK       DateTime?
-    orkem           String?
     kegiatan        String?
     tanggalKegiatan DateTime
     penyelenggara   String?
     isValidated     Boolean   @default(false)
     validatedAt     DateTime
     createdAt       DateTime  @default(now())
+
+    orkem   MasterDataOrkem @relation(fields: [orkemId], references: [id])
+    orkemId String
 
     tingkatKejuaraan   MasterDataTingkatKejuaraan @relation(fields: [tingkatKejuaraanId], references: [id])
     tingkatKejuaraanId String
@@ -144,14 +155,17 @@ model PrestasiDataTable {
     lampiranId String
 
     // many relation
-    users        PengajuanOnUser[]
+    users        PengajuanOnUsers[]
     activityLog  ActivityLog[]
     notification Notification[]
 }
 
-model PengajuanOnUser {
+model PengajuanOnUsers {
     user   User   @relation(fields: [userId], references: [id])
     userId String // relation scalar field (used in the `@relation` attribute above)
+
+    dosen   Dosen  @relation(fields: [dosenId], references: [id])
+    dosenId String // relation scalar field (used in the `@relation` attribute above)
 
     // pretasi table
     PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
@@ -160,6 +174,10 @@ model PengajuanOnUser {
     // program kreativitas mahasiswa
     PengajuanPKM   PengajuanPKM? @relation(fields: [PengajuanPKMId], references: [id])
     PengajuanPKMId String
+
+    // pengajuan paten and haki
+    PengajuanPatenAndHakiTable   PatenAndHakiTable? @relation(fields: [PengajuanPatenAndHakiTableId], references: [id])
+    PengajuanPatenAndHakiTableId String
 
     keterangan String @default("Ketua Tim")
 
@@ -187,7 +205,7 @@ model PengajuanPKM {
     dosen   Dosen  @relation(fields: [dosenId], references: [id])
     dosenId String
 
-    users        PengajuanOnUser[]
+    users        PengajuanOnUsers[]
     activityLog  ActivityLog[]
     notification Notification[]
 }
@@ -199,6 +217,9 @@ model PengajuanBeasiswa {
     createdAt   DateTime @default(now())
     lampiran    String
     nominal     Int
+
+    status   MasterDataStatus @relation(fields: [statusId], references: [id])
+    statusId String
 
     // relation
     user         User           @relation(fields: [userId], references: [id])
@@ -220,25 +241,26 @@ model SKRektor {
 
 /// === PENGAJUAN LUARAN TABLE === ///
 model PatenAndHakiTable {
-    id          String       @id @default(cuid())
+    id          String           @id @default(cuid())
     judul       String
     nomorPaten  String
     expiredDate DateTime
-    createdAt   DateTime     @default(now())
+    createdAt   DateTime         @default(now())
     keterangan  String
     validatedAt DateTime
-    isValidated Boolean      @default(false)
+    isValidated Boolean          @default(false)
     jenis       PatenAndHaki
+    status      MasterDataStatus @relation(fields: [statusId], references: [id])
+    statusId    String
 
     // relation
-    user         User           @relation(fields: [userId], references: [id])
-    userId       String
-    activityLog  ActivityLog[]
-    notification Notification[]
+    activityLog      ActivityLog[]
+    notification     Notification[]
+    PengajuanOnUsers PengajuanOnUsers[]
 }
 
 model Buku {
-    id              String   @id @default(cuid())
+    id              String           @id @default(cuid())
     NomorISBN       String //minimal 13 digit
     Penulis         String
     Pengarang       String
@@ -246,7 +268,9 @@ model Buku {
     tahunTerbit     DateTime
     jumlahEksemplar Int
     validatedAt     DateTime
-    createdAt       DateTime @default(now())
+    createdAt       DateTime         @default(now())
+    status          MasterDataStatus @relation(fields: [statusId], references: [id])
+    statusId        String
 
     // relation
     user         User           @relation(fields: [userId], references: [id])

@@ -32,11 +32,19 @@ export default function LoginForm() {
               Lupa Password?
             </Link>
           </div>
-          <div className={styles.formButton}>
-            <Button isPrimary isSubmit isMedium isUppercase className="w-full">
-              Login
-            </Button>
-          </div>
+          <Link href="/dashboard">
+            <div className={styles.formButton}>
+              <Button
+                isPrimary
+                isSubmit
+                isMedium
+                isUppercase
+                className="w-full"
+              >
+                Login
+              </Button>
+            </div>
+          </Link>
           <div className={`${styles.forgotPassword} mt-1`}>
             Belum punya akun? &nbsp;
             <Link href="/register" className={styles.forgot}>

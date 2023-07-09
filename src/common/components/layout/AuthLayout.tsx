@@ -4,7 +4,6 @@ import React from "react";
 import UntagLogo from "../../../../public/untag.jpg";
 import styles from "~/styles/ui/Login.module.scss";
 import Universitas from "../../../../public/universitass.jpg";
-import Card from "../ui/card/Card";
 const AuthLayout = ({ children }: any) => {
   return (
     <>

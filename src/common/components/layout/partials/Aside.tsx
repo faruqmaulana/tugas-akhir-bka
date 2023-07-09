@@ -49,7 +49,7 @@ const Aside = ({ showAside }: any) => {
   return (
     <aside className={`${styles.wrapper} ${!showAside && styles.hide}`}>
       <div className={styles.logo}>
-        <Link href="/" passHref>
+        <Link href="/dashboard" passHref>
           <div className="flex items-center justify-center gap-2">
             <Image
               src={UntagLogo}

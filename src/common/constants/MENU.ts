@@ -50,6 +50,12 @@ const LIST_MENU: any = [
         module: "branch",
       },
       {
+        id: 47,
+        title: "Organisasi Kemahasiswaan",
+        url: "/master-data/organisasi-kemahasiswaan",
+        module: "shift",
+      },
+      {
         id: 43,
         title: "Tingkat Kejuaraan",
         url: "/master-data/tingkat-kejuaraan",

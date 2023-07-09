@@ -94,7 +94,8 @@ const Input = (props: InputProps) => {
         {(type === "text" ||
           type === "date" ||
           type === "number" ||
-          type === "password") && (
+          type === "password" ||
+          type === "color") && (
           <input
             {...(register || {})}
             disabled={disabled}

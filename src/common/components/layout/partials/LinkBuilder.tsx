@@ -29,8 +29,9 @@ const LinkBuilder = (props: any) => {
           handleCloseCollapse();
         }}
       >
-        {createElement(icon)}
+        <div className={styles.icon}>{createElement(icon)}</div>
         <span className={styles.title}>{title}</span>
+        <span className={styles.counter}>{20}</span>
       </Link>
     </li>
   );

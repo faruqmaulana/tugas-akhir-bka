@@ -55,7 +55,8 @@ const BaseTable = ({ columns, data, showColumnFilters = true }: any) => {
               handleExportRows(table.getPrePaginationRowModel().rows)
             }
             isDisabled={
-              table.getPrePaginationRowModel().rows.length === data.length
+              table.getPrePaginationRowModel().rows.length === data.length ||
+              table.getPrePaginationRowModel().rows.length === 0
             }
           >
             <DownloadIcon isWhite />

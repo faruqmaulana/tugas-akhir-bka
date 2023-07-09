@@ -1,0 +1,86 @@
+.animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.animated.faster {
+  -webkit-animation-duration: 500ms;
+  animation-duration: 500ms;
+}
+
+.fadeIn {
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn;
+}
+
+.fadeOut {
+  -webkit-animation-name: fadeOut;
+  animation-name: fadeOut;
+}
+
+.infoContainer {
+  min-width: 16rem;
+}
+
+.errorIcon svg {
+  padding-left: 0.5px;
+}
+
+.main {
+  @apply fixed inset-0 z-50 flex h-full w-full items-center justify-center overflow-hidden;
+
+  .modalContainer {
+    @apply z-[9999] mx-auto w-[600px] rounded-md bg-white shadow-lg;
+
+    &.modalLarge {
+      @apply w-[800px];
+    }
+
+    &.modalFit {
+      @apply w-fit min-w-fit;
+    }
+
+    .content {
+      @apply my-6 px-6 text-left;
+
+      .title {
+        @apply flex items-center justify-center text-[25px] font-bold text-black;
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-10%);
+  }
+}
+
+.marginTopModal {
+  margin-top: -35px;
+}
+
+.scrollableTable {
+  max-height: 30rem;
+  overflow-y: scroll;
+}
