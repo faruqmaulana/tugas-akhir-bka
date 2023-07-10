@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import Card from "~/common/components/ui/card/Card";
+import PageHeading from "~/common/components/ui/header/PageHeading";
 import Loader from "~/common/components/ui/loader/Loader";
 import { CHART_DATA } from "~/common/constants/CHART";
 
@@ -21,6 +22,7 @@ const TableExample = dynamic(
 export default function Home() {
   return (
     <>
+      <PageHeading />
       <Card header="STATISTIK DATA PRESTASI" headerClassName="-mb-5">
         <MyResponsiveLine data={CHART_DATA.reverse()} />
       </Card>

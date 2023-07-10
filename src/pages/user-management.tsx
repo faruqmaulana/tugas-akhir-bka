@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import React from "react";
 import Card from "~/common/components/ui/card/Card";
+import PageHeading from "~/common/components/ui/header/PageHeading";
 import Loader from "~/common/components/ui/loader/Loader";
 
 const MahasiswaTable = dynamic(
@@ -13,9 +14,12 @@ const MahasiswaTable = dynamic(
 
 const UserManagement = () => {
   return (
-    <Card header="DATA MAHASISWA" className="mt-[30px]">
-      <MahasiswaTable />
-    </Card>
+    <>
+      <PageHeading />
+      <Card header="DATA MAHASISWA" className="mt-[30px]">
+        <MahasiswaTable />
+      </Card>
+    </>
   );
 };
 
