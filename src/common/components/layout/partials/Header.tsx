@@ -12,6 +12,7 @@ import LogoutIcon from "../../svg/LogoutIcon";
 import { useRouter } from "next/router";
 import { RoleManagementIcon } from "../../svg";
 import { USER_NAME, USER_ROLE } from "~/common/constants";
+import NotificationIcon from "../../svg/NotificationIcon";
 
 const Header = ({ setShowAside, showAside }: any) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -43,6 +44,12 @@ const Header = ({ setShowAside, showAside }: any) => {
         <HamburgerIcon />
       </button>
       <h1 className={styles.title}>BIRO KEMAHASISWAAN DAN ALUMNI</h1>
+      <div className="relative ml-auto mr-5 cursor-pointer">
+        <div className="absolute -right-2 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500">
+          <span className=" text-[12px] font-bold text-white">33</span>
+        </div>
+        <NotificationIcon />
+      </div>
       <div className="flex h-full items-center gap-5">
         <div className="relative h-full" ref={signOutRef}>
           <button
