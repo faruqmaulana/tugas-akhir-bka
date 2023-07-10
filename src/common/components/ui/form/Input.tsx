@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable no-nested-ternary */
@@ -15,6 +16,7 @@ export type InputProps = {
   register?: any;
   additionalInfo?: string;
   selectData?: any[];
+  onChange?: (value: string) => void;
 };
 
 const Input = (props: InputProps) => {
@@ -31,7 +33,16 @@ const Input = (props: InputProps) => {
     selectData = undefined,
   } = props;
   const [inputType, setInputType] = useState(type === "date" ? "text" : type);
-
+  const [tempValue, setValue] = useState(value);
+  // Handle input value change
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event.target.value;
+    setValue(inputValue);
+    // if (onChange) {
+    //   onChange(inputValue);
+    // }
+    console.log("event.target.value", event.target.value);
+  };
   return (
     <div className={`relative mt-auto flex flex-col gap-1 ${className}`}>
       {label && <p className="text-[15px] font-medium">{label}</p>}
@@ -119,9 +130,11 @@ const Input = (props: InputProps) => {
               ? "dark:placeholder:text-neutral-900 "
               : "dark:placeholder:text-neutral-400 "
           }`}
-            placeholder={value || placeholder}
+            value={tempValue}
+            placeholder={placeholder}
             aria-label={placeholder}
             aria-describedby="basic-addon1"
+            onChange={handleInputChange}
           />
         )}
       </div>

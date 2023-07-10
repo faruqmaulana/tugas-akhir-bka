@@ -1,37 +1,23 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-
-import capitalizeFirstLetter from "~/common/utils/capitalizeFirstLetter";
 import PlusIcon from "../../svg/PlusIcon";
 import { Button } from "../button/Button";
-import { useRouter } from "next/router";
 import Modal from "../modal/Modal";
 import { useState } from "react";
 import { type ReactNode } from "react";
+import { useHeadingTitle } from "~/common/hooks/useHeading";
 
 type PageTypeHeading = {
   className?: string;
   subTitle?: string;
   showCreateButton?: boolean;
-  modal?: {
-    onSuccessButton?: () => void;
-    content?: ReactNode;
-  };
+  onOpen?: () => void;
 };
 
 const PageHeading = (props: PageTypeHeading) => {
-  const { className, subTitle, showCreateButton, modal } = props;
-  const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
-  const handlePageHeading = () => {
-    return capitalizeFirstLetter(
-      router.pathname.replaceAll("/", " ").replaceAll("-", " ")
-    );
-  };
+  const { className, subTitle, showCreateButton, onOpen } = props;
+  const { pageHeading, moduleHeading } = useHeadingTitle();
 
   const styleHeader = [];
-  const closeModal = () => {
-    setIsOpen(false);
-  };
 
   if (className) styleHeader.push(className);
 
@@ -46,7 +32,7 @@ const PageHeading = (props: PageTypeHeading) => {
           className={`text-3xl font-bold text-charcoal-900
             ${subTitle && "mr-1"}`}
         >
-          {handlePageHeading()}
+          {pageHeading}
         </h1>
         {subTitle && (
           <h4 className="text-lg font-bold text-secondary-400">
@@ -61,23 +47,11 @@ const PageHeading = (props: PageTypeHeading) => {
           className="flex items-center gap-2 px-6 py-3 text-base"
           isSuccess
           isMedium
-          onClick={() => {
-            setIsOpen(true);
-          }}
+          onClick={onOpen}
         >
           <PlusIcon />
-          <span> Add {handlePageHeading()?.replaceAll("Master", "")}</span>
+          <span> Add {moduleHeading}</span>
         </Button>
-      )}
-      {modal && (
-        <Modal
-          content={modal.content}
-          showButtonSuccess={modal.onSuccessButton ? true : false}
-          onSuccessButton={modal.onSuccessButton}
-          title={`Tambah ${handlePageHeading()?.replaceAll("Master", "")}`}
-          isOpen={isOpen}
-          onClose={closeModal}
-        />
       )}
     </div>
   );

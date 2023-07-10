@@ -7,6 +7,9 @@ import { type ModalProps } from "~/common/models/types/ModalProps";
 import { Button } from "../button/Button";
 import Spinner from "../../svg/Spinner";
 import XmarkIcon from "../../svg/XmarkIcon";
+import SuccessIcon from "../../svg/SuccessIcon";
+import ErrorIcon from "../../svg/ErrorIcon";
+import ExclamationIcon from "../../svg/ExclamationIcon";
 
 const Modal = (props: ModalProps) => {
   const {
@@ -15,10 +18,10 @@ const Modal = (props: ModalProps) => {
     confirm,
     content = null,
     contentCenter = false,
-    captionButtonClose = "Close",
+    captionButtonClose = "Cancel",
     captionButtonConfirm = "OK",
     captionButtonDanger = "Delete",
-    captionButtonSuccess = "Simpan",
+    captionButtonSuccess = "Save",
     captionTitleConfirm = "Apakah anda yakin?",
     disabledButtonSuccess = false,
     disabledButtonDanger = false,
@@ -41,10 +44,43 @@ const Modal = (props: ModalProps) => {
     showButtonConfirm = false,
     showButtonDanger = false,
     showButtonSuccess = false,
+    success = false,
+    error = false,
     title = "",
     titleCenter = false,
     loaderIcon = <Spinner />,
   } = props;
+
+  const successContent = (
+    <div className="mb-5 flex flex-col items-center justify-center">
+      <SuccessIcon />
+      <h1 className="text-3xl text-charcoal-900">Success!</h1>
+    </div>
+  );
+
+  const errorContent = (
+    <div className="mb-5 flex flex-col items-center justify-center">
+      <ErrorIcon />
+      <h1 className="text-3xl text-charcoal-900">Ooops!</h1>
+    </div>
+  );
+
+  const confirmContent = (
+    <div className="mb-5 flex flex-col items-center justify-center">
+      <ExclamationIcon width="150px" height="150px" />
+      <h1 className="text-3xl text-charcoal-900">{captionTitleConfirm}</h1>
+    </div>
+  );
+
+  const closeIcon = (
+    <button
+      type="button"
+      className="modal-close absolute right-0 z-50 cursor-pointer"
+      onClick={onClose}
+    >
+      <XmarkIcon />
+    </button>
+  );
 
   const buttonClose = (
     <Button
@@ -59,9 +95,11 @@ const Modal = (props: ModalProps) => {
 
   const buttonConfirm = (
     <Button
+      buttonForm={buttonForm}
       className="flex w-full max-w-[120px] justify-center py-2"
       isDisabled={disabledButtonConfirm || isLoading}
       isPrimary
+      isSubmit={isButtonSubmit}
       onClick={onConfirmButton}
     >
       {isLoading ? loaderIcon : captionButtonConfirm}
@@ -87,29 +125,19 @@ const Modal = (props: ModalProps) => {
       className="flex w-full max-w-[120px] justify-center py-2"
       isDisabled={disabledButtonSuccess || isLoading}
       isSuccess
-      isMedium
       isSubmit={isButtonSubmit}
       onClick={onSuccessButton}
+      isMedium
     >
       {isLoading ? loaderIcon : captionButtonSuccess}
     </Button>
   );
 
-  const closeIcon = (
-    <button
-      type="button"
-      className="modal-close absolute right-0 z-50 cursor-pointer"
-      onClick={onClose}
-    >
-      <XmarkIcon />
-    </button>
-  );
-
   const modal = (
     <div className={`${style.main}`} style={{ background: "rgba(0,0,0,.7)" }}>
       <div
-        className={`${style.modalContainer} ${style.animated} ${style.faster} ${
-          style.fadeIn
+        className={`${style.animated} ${style.faster} ${style.fadeIn} ${
+          style.modalContainer
         } ${modalLarge && style.modalLarge} ${modalFit && style.modalFit}`}
       >
         <div className={style.content}>
@@ -128,9 +156,16 @@ const Modal = (props: ModalProps) => {
               ${contentCenter && "text-center"} 
               ${modalScroll && style.scrollableTable}`}
           >
+            {success && successContent}
+            {error && errorContent}
+            {confirm && confirmContent}
             {content}
           </div>
-          <div className={`flex justify-end gap-4`}>
+          <div
+            className={`flex gap-4 ${
+              buttonCenter ? "justify-center" : "justify-end"
+            }`}
+          >
             {showButtonConfirm && buttonConfirm}
             {showButtonDanger && buttonDanger}
             {showButtonSuccess && buttonSuccess}
