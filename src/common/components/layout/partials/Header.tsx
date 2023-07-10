@@ -11,6 +11,7 @@ import PersonIcon from "../../svg/PersonIcon";
 import LogoutIcon from "../../svg/LogoutIcon";
 import { useRouter } from "next/router";
 import { RoleManagementIcon } from "../../svg";
+import { USER_NAME, USER_ROLE } from "~/common/constants";
 
 const Header = ({ setShowAside, showAside }: any) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -50,8 +51,8 @@ const Header = ({ setShowAside, showAside }: any) => {
             onClick={() => setOpen(!open)}
           >
             <div className={styles.info}>
-              <h1 className={styles.name}>Faruq Maulana</h1>
-              <p className={styles.role}>Mahasiswa</p>
+              <h1 className={styles.name}>{USER_NAME}</h1>
+              <p className={styles.role}>{USER_ROLE}</p>
             </div>
 
             <div className={styles.arrow}>

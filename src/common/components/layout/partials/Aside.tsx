@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import LinkBuilder from "./LinkBuilder";
 import { MenuWithSub } from "./MenuWithub";
 import styles from "~/styles/partials/Aside.module.scss";
+import { USER_NAME, USER_ROLE } from "~/common/constants";
 
 const Aside = ({ showAside }: any) => {
   const router = useRouter();
@@ -77,8 +78,8 @@ const Aside = ({ showAside }: any) => {
             height="70"
           />
         </div>
-        <h1 className={styles.name}>Faruq</h1>
-        <p className={styles.role}>Mahasiswa</p>
+        <h1 className={styles.name}>{USER_NAME}</h1>
+        <p className={styles.role}>{USER_ROLE}</p>
       </div>
 
       <div className={styles.menu}>
