@@ -5,7 +5,7 @@ import { MainLayout } from "./MainLayout";
 import { useState } from "react";
 import Spinner from "../svg/Spinner";
 import { AUTH_URL } from "~/common/constants";
-import { findString } from "~/common/utils/findString";
+import { findString } from "~/common/helpers/findString";
 import { AuthLayout } from "./AuthLayout";
 
 const AppLayout = ({ children }: any) => {
@@ -21,7 +21,6 @@ const AppLayout = ({ children }: any) => {
     setIsLoading(false);
   });
 
-
   if (!isAuthPage) {
     return (
       <>
@@ -31,9 +30,7 @@ const AppLayout = ({ children }: any) => {
               <Spinner width="30px" height="30px" />
             </div>
           ) : (
-            <>
-              {children}
-            </>
+            <>{children}</>
           )}
         </MainLayout>
       </>

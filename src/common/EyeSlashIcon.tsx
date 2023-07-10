@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 const EyeSlashIcon = (props: any) => {
   const { width = '18px', height = '14px', color = '#B2B6C5' } = props;
 

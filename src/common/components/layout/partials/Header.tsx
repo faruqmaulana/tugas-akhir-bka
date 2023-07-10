@@ -11,8 +11,13 @@ import PersonIcon from "../../svg/PersonIcon";
 import LogoutIcon from "../../svg/LogoutIcon";
 import { useRouter } from "next/router";
 import { RoleManagementIcon } from "../../svg";
+import NotificationInfo from "../../ui/notification/NotificationInfo";
 import { USER_NAME, USER_ROLE } from "~/common/constants";
-import NotificationIcon from "../../svg/NotificationIcon";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "../../ui/hover-card";
 
 const Header = ({ setShowAside, showAside }: any) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -44,60 +49,59 @@ const Header = ({ setShowAside, showAside }: any) => {
         <HamburgerIcon />
       </button>
       <h1 className={styles.title}>BIRO KEMAHASISWAAN DAN ALUMNI</h1>
-      <div className="relative ml-auto mr-5 cursor-pointer">
-        <div className="absolute -right-2 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500">
-          <span className=" text-[12px] font-bold text-white">33</span>
-        </div>
-        <NotificationIcon />
-      </div>
       <div className="flex h-full items-center gap-5">
+        <NotificationInfo />
         <div className="relative h-full" ref={signOutRef}>
-          <button
-            type="button"
-            className={styles.profileCorner}
-            onClick={() => setOpen(!open)}
-          >
-            <div className={styles.info}>
-              <h1 className={styles.name}>{USER_NAME}</h1>
-              <p className={styles.role}>{USER_ROLE}</p>
-            </div>
+          <HoverCard>
+            <HoverCardTrigger>
+              <button
+                type="button"
+                className={styles.profileCorner}
+                onClick={() => setOpen(!open)}
+              >
+                <div className={styles.info}>
+                  <h1 className={styles.name}>{USER_NAME}</h1>
+                  <p className={styles.role}>{USER_ROLE}</p>
+                </div>
 
-            <div className={styles.arrow}>
-              <ArrowIcon />
-            </div>
-          </button>
-          <div className={`${styles.submenu} `}>
-            <ul className={`${styles.unordered} ${open && styles.open}`}>
-              <li
-                className={`${styles.list} ${
-                  router.pathname === "/profile" && styles.active
-                }`}
-                onClick={() => {
-                  setOpen(false);
-                  void router.push("/profile");
-                }}
-              >
-                <PersonIcon />
-                <button type="button">Profile</button>
-              </li>
-              <li
-                className={`${styles.list} ${
-                  router.pathname === "/informasi-login" && styles.active
-                }`}
-                onClick={() => {
-                  setOpen(false);
-                  void router.push("/informasi-login");
-                }}
-              >
-                <RoleManagementIcon />
-                <button type="button">Informasi Login</button>
-              </li>
-              <li className={`${styles.list}`}>
-                <LogoutIcon />
-                <button type="button">Sign out</button>
-              </li>
-            </ul>
-          </div>
+                <div className={styles.arrow}>
+                  <ArrowIcon />
+                </div>
+              </button>
+            </HoverCardTrigger>
+            <HoverCardContent className="overflow-hidden p-0">
+              <ul className={`${styles.submenu}`}>
+                <li
+                  className={`${styles.list} ${
+                    router.pathname === "/profile" && styles.active
+                  }`}
+                  onClick={() => {
+                    setOpen(false);
+                    void router.push("/profile");
+                  }}
+                >
+                  <PersonIcon />
+                  <button type="button">Profile</button>
+                </li>
+                <li
+                  className={`${styles.list} ${
+                    router.pathname === "/informasi-login" && styles.active
+                  }`}
+                  onClick={() => {
+                    setOpen(false);
+                    void router.push("/informasi-login");
+                  }}
+                >
+                  <RoleManagementIcon />
+                  <button type="button">Informasi Login</button>
+                </li>
+                <li className={`${styles.list}`}>
+                  <LogoutIcon />
+                  <button type="button">Sign out</button>
+                </li>
+              </ul>
+            </HoverCardContent>
+          </HoverCard>
         </div>
       </div>
     </header>

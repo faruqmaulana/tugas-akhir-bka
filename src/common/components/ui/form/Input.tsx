@@ -61,7 +61,7 @@ const Input = (props: InputProps) => {
                     value={val.id}
                     selected={
                       value === val.id ||
-                      value.toLowerCase() === val.name.toLowerCase()
+                      value?.toLowerCase() === val?.name?.toLowerCase()
                     }
                   >
                     {val.title || val.name}

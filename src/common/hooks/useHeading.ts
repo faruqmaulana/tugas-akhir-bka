@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import capitalizeFirstLetter from "../utils/capitalizeFirstLetter";
+import capitalizeFirstLetter from "../helpers/capitalizeFirstLetter";
 
 const useHeadingTitle = () => {
   const router = useRouter();

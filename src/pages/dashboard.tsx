@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic";
 import Card from "~/common/components/ui/card/Card";
-import Header from "~/common/components/ui/header/PageHeading";
 import Loader from "~/common/components/ui/loader/Loader";
 import { CHART_DATA } from "~/common/constants/CHART";
 

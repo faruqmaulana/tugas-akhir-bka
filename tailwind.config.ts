@@ -1,8 +1,22 @@
 import { type Config } from "tailwindcss";
 
 export default {
-  content: ["./src/**/*.{js,ts,jsx,tsx}"],
+  darkMode: ["class"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       screens: {
         "3xl": "1600px",
@@ -12,17 +26,42 @@ export default {
           "linear-gradient(180deg, #FEFEFE 0%, #F5F6FA 100%) 0% 0%",
       },
       colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
         primary: {
-          DEFAULT: '#2564AD',
-          100: '#C2DAF8',
-          200: '#9BBDE5',
-          300: '#749FD3',
-          400: '#4C82C0',
-          500: '#2564AD',
-          600: '#005EB8',
-          700: '#13529B',
-          800: '#154681',
-          900: '#0E3A6E',
+          DEFAULT: "#2564AD",
+          100: "#C2DAF8",
+          200: "#9BBDE5",
+          300: "#749FD3",
+          400: "#4C82C0",
+          500: "#2564AD",
+          600: "#005EB8",
+          700: "#13529B",
+          800: "#154681",
+          900: "#0E3A6E",
         },
         secondary: {
           DEFAULT: "#FFB859",
@@ -112,9 +151,6 @@ export default {
           rackGray: "#D5D7E2",
           rackDarkGray: "#B7B9C7",
         },
-        input: {
-          gray: "#D5D6DC",
-        },
         widget: {
           regular: "#636F7B",
           primary: "#31A6F4",
@@ -122,7 +158,21 @@ export default {
           tertiary: "#1F5A9F",
         },
       },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 } satisfies Config;
