@@ -17,3 +17,12 @@ export const ORKEM: Orkem[] = [
     total_kejuaraan: 44,
   },
 ];
+
+export const ORKEM_FORM = [
+  {
+    key: "name",
+    className: "col-span-2",
+    placeholder: "Nama Organisasi Kemahasiswaan",
+    label: "Organisasi Kemahasiswaan",
+  },
+];

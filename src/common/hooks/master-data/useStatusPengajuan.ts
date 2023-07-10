@@ -1,9 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useState } from "react";
-import { PENGAJUAN_FORM } from "~/common/components/ui/page/status-pengajuan/PENGAJUAN";
-import { type StatusType } from "~/common/constants/MASTER-DATA/STATUS";
+
+import {
+  CREATE_SUCCESS,
+  DELETE_SUCCESS,
+  UPDATE_SUCCESS,
+} from "~/common/constants/MESSAGE";
+import {
+  DEFAULT_MODAL_BUTTON_ACTION,
+  INITIAL_MODAL_BUTTON,
+} from "~/common/constants/ui/BUTTON";
 import { useHeadingTitle } from "~/common/hooks/useHeading";
-import { UPDATE_SUCCESS } from "~/common/constants/MESSAGE";
 
 export type ModalStateType = {
   formData: any;
@@ -12,8 +20,14 @@ export type ModalStateType = {
   confirm: boolean;
   success: boolean;
   content?: string | null;
-  showButtonSuccess: boolean;
   isAddData?: boolean;
+  createAction: boolean;
+  updateAction: boolean;
+  deleteAction: boolean;
+  showButtonSuccess: boolean;
+  showButtonConfirm: boolean;
+  showButtonClose: boolean;
+  showButtonDanger: boolean;
 };
 
 const INITIAL_STATE = {
@@ -23,8 +37,13 @@ const INITIAL_STATE = {
   confirm: false,
   success: false,
   content: null,
+  createAction: false,
+  updateAction: false,
+  deleteAction: false,
   showButtonSuccess: false,
-  isAddData: false,
+  showButtonConfirm: false,
+  showButtonClose: false,
+  showButtonDanger: false,
 };
 
 const useStatusPengajuan = () => {
@@ -38,12 +57,66 @@ const useStatusPengajuan = () => {
     confirm,
     success,
     content,
-    isAddData,
+    createAction,
+    updateAction,
+    deleteAction,
     showButtonSuccess,
+    showButtonConfirm,
+    showButtonClose,
+    showButtonDanger,
   } = modalState;
 
   const onClose = () => {
     setModalState(INITIAL_STATE);
+  };
+
+  const handleContent = (): string => {
+    if (createAction) return CREATE_SUCCESS;
+    if (updateAction) return UPDATE_SUCCESS;
+    if (deleteAction) return DELETE_SUCCESS;
+    return "";
+  };
+
+  const handleAdd = () => {
+    setModalState({
+      ...modalState,
+      ...DEFAULT_MODAL_BUTTON_ACTION,
+      isOpen: true,
+      title: `Add ${moduleHeading as string}`,
+      createAction: true,
+    });
+  };
+
+  const handleEdit = (row: { [x: string]: any }, formData: any[]) => {
+    const tempCopy = formData.map((item: { key: string | number }) => {
+      const value = row[item.key];
+      return {
+        ...item,
+        value,
+      };
+    });
+
+    console.log("tempCopy", tempCopy);
+
+    setModalState({
+      ...modalState,
+      ...DEFAULT_MODAL_BUTTON_ACTION,
+      isOpen: true,
+      formData: tempCopy,
+      title: `Edit ${moduleHeading as string}`,
+      updateAction: true,
+    });
+  };
+
+  const handleDelete = (row: any) => {
+    setModalState({
+      ...modalState,
+      showButtonClose: true,
+      showButtonDanger: true,
+      isOpen: true,
+      confirm: true,
+      deleteAction: true,
+    });
   };
 
   const onSubmit = () => {
@@ -52,49 +125,13 @@ const useStatusPengajuan = () => {
     setTimeout(() => {
       setModalState({
         ...modalState,
+        ...INITIAL_MODAL_BUTTON,
         isOpen: true,
         success: true,
-        content: UPDATE_SUCCESS,
+        showButtonConfirm: true,
+        content: handleContent(),
       });
     }, 500);
-  };
-
-  const handleAdd = () => {
-    setModalState({
-      ...modalState,
-      isOpen: true,
-      title: `Add ${moduleHeading as string}`,
-      showButtonSuccess: true,
-      isAddData: true,
-    });
-  };
-
-  const handleEdit = (row: StatusType) => {
-    const tempCopy = PENGAJUAN_FORM.map((item) => {
-      const value = row[item.key];
-      return {
-        ...item,
-        value,
-      };
-    });
-
-    setModalState({
-      ...modalState,
-      isOpen: true,
-      formData: tempCopy,
-      title: `Edit ${moduleHeading as string}`,
-      showButtonSuccess: true,
-    });
-  };
-
-  const handleDelete = (row: StatusType) => {
-    const { id } = row;
-    setModalState({
-      ...modalState,
-      isOpen: true,
-      confirm: true,
-      showButtonSuccess: false,
-    });
   };
 
   return {
@@ -104,13 +141,18 @@ const useStatusPengajuan = () => {
     confirm,
     success,
     content,
-    showButtonSuccess,
-    isAddData,
     onClose,
     handleEdit,
     handleDelete,
     onSubmit,
     handleAdd,
+    createAction,
+    updateAction,
+    deleteAction,
+    showButtonSuccess,
+    showButtonConfirm,
+    showButtonClose,
+    showButtonDanger,
   };
 };
 

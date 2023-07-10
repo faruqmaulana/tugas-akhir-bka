@@ -5,31 +5,44 @@ export type FakultasType = {
 
 export const FAKULTAS: FakultasType[] = [
   {
-    name: "Fakultas Teknik",
+    name: "Teknik",
     total_prodi: 10,
   },
   {
-    name: "Fakultas Ekonomi",
+    name: "Ekonomi",
     total_prodi: 8,
   },
   {
-    name: "Fakultas Hukum",
+    name: "Hukum",
     total_prodi: 6,
   },
   {
-    name: "Fakultas Kedokteran",
+    name: "Kedokteran",
     total_prodi: 12,
   },
   {
-    name: "Fakultas Ilmu Sosial dan Ilmu Politik",
+    name: "Ilmu Sosial dan Ilmu Politik",
     total_prodi: 5,
   },
   {
-    name: "Fakultas Pertanian",
+    name: "Pertanian",
     total_prodi: 7,
   },
   {
-    name: "Fakultas Psikologi",
+    name: "Psikologi",
     total_prodi: 4,
+  },
+  {
+    name: "Ilmu Kesehatan",
+    total_prodi: 4,
+  },
+];
+
+export const FAKULTAS_FORM = [
+  {
+    key: "name",
+    className: "col-span-2",
+    placeholder: "Nama Fakultas",
+    label: "Fakultas",
   },
 ];

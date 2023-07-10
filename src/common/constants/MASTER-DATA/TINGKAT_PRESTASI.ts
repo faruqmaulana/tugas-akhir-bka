@@ -17,3 +17,12 @@ export const TINGKAT_PRESTASI: TingkatPrestasi[] = [
     total_prestasi: 222,
   },
 ];
+
+export const TINGKAT_PRESTASI_FORM = [
+  {
+    key: "name",
+    className: "col-span-2",
+    placeholder: "Nama Tingkat Prestasi",
+    label: "Tingkat Prestasi",
+  },
+];

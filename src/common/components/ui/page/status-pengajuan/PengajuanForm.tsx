@@ -1,6 +1,6 @@
 import React from "react";
 import Input from "../../form/Input";
-import { PENGAJUAN_FORM } from "./PENGAJUAN";
+import { PENGAJUAN_FORM } from "~/common/constants/MASTER-DATA/STATUS";
 
 const PengajuanForm = ({ data = PENGAJUAN_FORM }) => {
   return (

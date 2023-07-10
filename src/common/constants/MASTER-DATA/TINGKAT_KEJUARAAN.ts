@@ -17,3 +17,12 @@ export const TINGKAT_KEJUARAAN: TingkatKejuaraan[] = [
     total_kejuaraan: 222,
   },
 ];
+
+export const TINGKAT_KEJUARAAN_FORM = [
+  {
+    key: "name",
+    className: "col-span-2",
+    placeholder: "Nama Tingkat Kejuaraan",
+    label: "Tingkat Kejuaraan",
+  },
+];

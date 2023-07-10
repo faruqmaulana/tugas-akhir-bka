@@ -38,10 +38,6 @@ const Input = (props: InputProps) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
     setValue(inputValue);
-    // if (onChange) {
-    //   onChange(inputValue);
-    // }
-    console.log("event.target.value", event.target.value);
   };
   return (
     <div className={`relative mt-auto flex flex-col gap-1 ${className}`}>
@@ -63,9 +59,12 @@ const Input = (props: InputProps) => {
                   <option
                     key={val.id}
                     value={val.id}
-                    selected={value === val.id}
+                    selected={
+                      value === val.id ||
+                      value.toLowerCase() === val.name.toLowerCase()
+                    }
                   >
-                    {val.title}
+                    {val.title || val.name}
                   </option>
                 ))}
             </select>

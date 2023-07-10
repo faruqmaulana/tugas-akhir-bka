@@ -4,15 +4,17 @@ import React, { useMemo } from "react";
 
 import { type MRT_ColumnDef } from "material-react-table";
 import BaseTable from "~/common/components/ui/table/BaseTable";
-import { STATUS, type StatusType } from "~/common/constants/MASTER-DATA/STATUS";
+import {
+  PENGAJUAN_FORM,
+  STATUS,
+  type StatusType,
+} from "~/common/constants/MASTER-DATA/STATUS";
 import PageHeading from "~/common/components/ui/header/PageHeading";
-import PengajuanForm from "~/common/components/ui/page/status-pengajuan/PengajuanForm";
-import { Button } from "~/common/components/ui/button/Button";
-import EditIcon from "~/common/components/svg/EditIcon";
 import Modal from "~/common/components/ui/modal/Modal";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
-import TrashIcon from "~/common/components/svg/TrashIcon";
 import { useStatusPengajuan } from "~/common/hooks/master-data/useStatusPengajuan";
+import FormModalContent from "~/common/components/ui/modal/FormModalContent";
+import TableAction from "~/common/components/ui/table/TableAction";
 
 const Example = () => {
   const {
@@ -22,20 +24,24 @@ const Example = () => {
     confirm,
     success,
     content,
-    showButtonSuccess,
-    isAddData,
+    createAction,
     handleAdd,
     handleEdit,
     handleDelete,
     onClose,
     onSubmit,
+    showButtonSuccess,
+    showButtonConfirm,
+    showButtonClose,
+    showButtonDanger,
   } = useStatusPengajuan();
 
-  const handleContent = () => {
-    if (success) return <p className="text-center xl:text-lg">{content}</p>;
-    if (isAddData) return <PengajuanForm />;
-
-    return <PengajuanForm data={formData} />;
+  const contentData = {
+    success,
+    createAction,
+    content,
+    initialData: PENGAJUAN_FORM,
+    updateFormData: formData,
   };
 
   const columns = useMemo<MRT_ColumnDef<StatusType>[]>(
@@ -59,25 +65,10 @@ const Example = () => {
         accessorKey: "id",
         ...tableActionConfig,
         Cell: ({ row }) => (
-          <div className="flex flex-row gap-1">
-            <Button
-              isPrimary
-              isSmall
-              className="flex items-center gap-2 text-center"
-              onClick={() => handleEdit(row.original)}
-            >
-              <EditIcon />
-              <span>Edit</span>
-            </Button>
-            <Button
-              isDanger
-              isSmall
-              className="flex items-center gap-2 text-center"
-              onClick={() => handleDelete(row.original)}
-            >
-              <TrashIcon />
-            </Button>
-          </div>
+          <TableAction
+            onEdit={() => handleEdit(row.original, PENGAJUAN_FORM)}
+            onDelete={() => handleDelete(row.original)}
+          />
         ),
       },
     ],
@@ -89,19 +80,19 @@ const Example = () => {
       <PageHeading showCreateButton onOpen={handleAdd} />
       <Modal
         isOpen={isOpen}
-        content={handleContent()}
+        content={<FormModalContent {...contentData} />}
         onClose={onClose}
         title={success ? "" : title}
         success={success}
-        showButtonConfirm={success}
         confirm={!success && confirm}
-        showButtonSuccess={!success && showButtonSuccess}
-        showButtonClose={!success && confirm}
-        showButtonDanger={!success && confirm}
+        showButtonConfirm={showButtonConfirm}
+        showButtonSuccess={showButtonSuccess}
+        showButtonClose={showButtonClose}
+        showButtonDanger={showButtonDanger}
         buttonCenter={confirm || success}
         onConfirmButton={onClose}
-        onSuccessButton={onSubmit}
         onCloseButton={onClose}
+        onSuccessButton={onSubmit}
         onDangerButton={onSubmit}
       />
       <BaseTable data={STATUS} columns={columns} showColumnFilters={false} />
