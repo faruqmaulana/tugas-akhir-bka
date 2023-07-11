@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { useEffect, useRef, useState } from "react";
 
 import styles from "~/styles/layout/Header.module.scss";
 import HamburgerIcon from "../../svg/HamburgerIcon";
@@ -20,24 +19,11 @@ import {
 } from "../../ui/hover-card";
 
 const Header = ({ setShowAside, showAside }: any) => {
-  const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
-
-  const signOutRef = useRef<any>(null);
 
   const handleHamburgerButton = () => {
     setShowAside(!showAside);
   };
-
-  useEffect(() => {
-    const handler = (e: any) => {
-      if (!signOutRef?.current?.contains(e.target)) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handler);
-  });
 
   return (
     <header className={`${styles.header} ${showAside && styles.full}`}>
@@ -51,14 +37,10 @@ const Header = ({ setShowAside, showAside }: any) => {
       <h1 className={styles.title}>BIRO KEMAHASISWAAN DAN ALUMNI</h1>
       <div className="flex h-full items-center gap-5">
         <NotificationInfo />
-        <div className="relative h-full" ref={signOutRef}>
+        <div className="relative h-full">
           <HoverCard>
             <HoverCardTrigger>
-              <button
-                type="button"
-                className={styles.profileCorner}
-                onClick={() => setOpen(!open)}
-              >
+              <button type="button" className={styles.profileCorner}>
                 <div className={styles.info}>
                   <h1 className={styles.name}>{USER_NAME}</h1>
                   <p className={styles.role}>{USER_ROLE}</p>
@@ -76,7 +58,6 @@ const Header = ({ setShowAside, showAside }: any) => {
                     router.pathname === "/profile" && styles.active
                   }`}
                   onClick={() => {
-                    setOpen(false);
                     void router.push("/profile");
                   }}
                 >
@@ -88,14 +69,18 @@ const Header = ({ setShowAside, showAside }: any) => {
                     router.pathname === "/informasi-login" && styles.active
                   }`}
                   onClick={() => {
-                    setOpen(false);
                     void router.push("/informasi-login");
                   }}
                 >
                   <RoleManagementIcon />
                   <button type="button">Informasi Login</button>
                 </li>
-                <li className={`${styles.list}`}>
+                <li
+                  className={`${styles.list}`}
+                  onClick={() => {
+                    void router.push("/");
+                  }}
+                >
                   <LogoutIcon />
                   <button type="button">Sign out</button>
                 </li>

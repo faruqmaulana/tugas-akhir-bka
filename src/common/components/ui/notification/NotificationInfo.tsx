@@ -26,15 +26,15 @@ const NotificationInfo = () => {
             <span className="text-[12px] font-bold text-white">33</span>
           </div>
         </div>
-        <div className="flex flex-col overflow-y-auto max-h-36">
-          {NOTIFICATION.map((val) => (
+        <div className="flex max-h-36 flex-col overflow-y-auto">
+          {NOTIFICATION.slice(0, 5).map((val) => (
             <div
               key={val.name}
-              className="flex cursor-pointer p-2 flex-row items-center justify-between gap-2 transition-all duration-200 hover:bg-gray-200"
+              className="flex cursor-pointer flex-row items-center justify-between gap-2 p-2 transition-all duration-200 hover:bg-gray-200"
             >
-              <span className="truncate font-semibold text-sm">{val.name}</span>
+              <span className="truncate text-sm font-semibold">{val.name}</span>
               <div
-                className="rounded-full opacity-95 font-semibold px-2 text-xs"
+                className="rounded-full px-2 text-xs font-semibold opacity-95"
                 style={{ backgroundColor: val.color }}
               >
                 {val.status}
@@ -43,7 +43,7 @@ const NotificationInfo = () => {
           ))}
         </div>
         <Link href="/notifikasi" className="mt-2">
-          <span className="flex justify-center rounded-lg bg-gray-200 items-center py-1">
+          <span className="flex items-center justify-center rounded-lg bg-gray-200 py-1">
             Lihat semua
           </span>
         </Link>

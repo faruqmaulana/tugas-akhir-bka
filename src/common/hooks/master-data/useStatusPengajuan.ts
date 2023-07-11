@@ -96,8 +96,6 @@ const useStatusPengajuan = () => {
       };
     });
 
-    console.log("tempCopy", tempCopy);
-
     setModalState({
       ...modalState,
       ...DEFAULT_MODAL_BUTTON_ACTION,

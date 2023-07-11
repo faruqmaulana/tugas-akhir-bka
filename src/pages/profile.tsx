@@ -1,6 +1,7 @@
 import { Button } from "~/common/components/ui/button/Button";
 import Card from "~/common/components/ui/card/Card";
 import Input from "~/common/components/ui/form/Input";
+import PageHeading from "~/common/components/ui/header/PageHeading";
 
 export const INFORMASI_LOGIN = [
   {
@@ -69,18 +70,21 @@ export const INFORMASI_LOGIN = [
 ];
 const InformasiLogin = () => {
   return (
-    <form className="">
-      <Card header="Informasi Profile" headerClassName="mb-5">
-        <div className="mx-auto mb-5 grid h-fit w-full grid-cols-2 gap-5">
-          {INFORMASI_LOGIN.map((val) => (
-            <Input key={val.label} {...val} />
-          ))}
-        </div>
-        <Button isSubmit isSuccess isMedium className="col-span-1 ml-auto">
-          Simpan
-        </Button>
-      </Card>
-    </form>
+    <>
+      <PageHeading />
+      <form className="">
+        <Card header="Informasi Profile" headerClassName="mb-5">
+          <div className="mx-auto mb-5 grid h-fit w-full grid-cols-2 gap-5">
+            {INFORMASI_LOGIN.map((val) => (
+              <Input key={val.label} {...val} />
+            ))}
+          </div>
+          <Button isSubmit isSuccess isMedium className="col-span-1 ml-auto">
+            Simpan
+          </Button>
+        </Card>
+      </form>
+    </>
   );
 };
 
