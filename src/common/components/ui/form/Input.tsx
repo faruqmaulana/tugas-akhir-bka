@@ -17,6 +17,7 @@ export type InputProps = {
   additionalInfo?: string;
   selectData?: any[];
   onChange?: (value: string) => void;
+  labelFontSize?: string;
 };
 
 const Input = (props: InputProps) => {
@@ -31,6 +32,7 @@ const Input = (props: InputProps) => {
     additionalInfo = undefined,
     register,
     selectData = undefined,
+    labelFontSize = "text-[15px]",
   } = props;
   const [inputType, setInputType] = useState(type === "date" ? "text" : type);
   const [tempValue, setValue] = useState(value);
@@ -41,7 +43,7 @@ const Input = (props: InputProps) => {
   };
   return (
     <div className={`relative mt-auto flex flex-col gap-1 ${className}`}>
-      {label && <p className="text-[15px] font-medium">{label}</p>}
+      {label && <p className={`font-medium ${labelFontSize}`}>{label}</p>}
       <div className="relative flex flex-wrap items-stretch">
         {type === "select" && (
           <div className="relative w-full">
@@ -102,6 +104,7 @@ const Input = (props: InputProps) => {
           </span>
         )}
         {(type === "text" ||
+          type === "file" ||
           type === "date" ||
           type === "number" ||
           type === "password" ||

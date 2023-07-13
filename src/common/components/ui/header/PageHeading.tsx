@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import PlusIcon from "../../svg/PlusIcon";
 import { Button } from "../button/Button";
-import Modal from "../modal/Modal";
-import { useState } from "react";
-import { type ReactNode } from "react";
 import { useHeadingTitle } from "~/common/hooks/useHeading";
 
 type PageTypeHeading = {
+  title?: string;
   className?: string;
   subTitle?: string;
   showCreateButton?: boolean;
@@ -14,7 +12,7 @@ type PageTypeHeading = {
 };
 
 const PageHeading = (props: PageTypeHeading) => {
-  const { className, subTitle, showCreateButton, onOpen } = props;
+  const { className, title, subTitle, showCreateButton, onOpen } = props;
   const { pageHeading, moduleHeading } = useHeadingTitle();
 
   const styleHeader = [];
@@ -23,7 +21,7 @@ const PageHeading = (props: PageTypeHeading) => {
 
   return (
     <div
-      className={`mb-[20px] flex items-center justify-between ${styleHeader.join(
+      className={`mb-[15px] flex items-center justify-between ${styleHeader.join(
         " "
       )}`}
     >
@@ -32,7 +30,7 @@ const PageHeading = (props: PageTypeHeading) => {
           className={`text-3xl font-bold text-charcoal-900
             ${subTitle && "mr-1"}`}
         >
-          {pageHeading}
+          {title || pageHeading}
         </h1>
         {subTitle && (
           <h4 className="text-lg font-bold text-secondary-400">

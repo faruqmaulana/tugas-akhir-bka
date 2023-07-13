@@ -34,7 +34,10 @@ const BaseTable = ({ columns, data, showColumnFilters = true }: any) => {
     <MaterialReactTable
       columns={columns}
       data={data}
-      initialState={{ showColumnFilters: showColumnFilters }}
+      initialState={{
+        showColumnFilters: showColumnFilters,
+        density: "compact",
+      }}
       renderTopToolbarCustomActions={({ table }) => (
         <div className="flex flex-wrap gap-4 p-2">
           <Button

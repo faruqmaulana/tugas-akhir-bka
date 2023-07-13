@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 const EyeIcon = (props: any) => {
   const { width = '18px', height = '14px', color = '#b2b6c5' } = props;
   return (

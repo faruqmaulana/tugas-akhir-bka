@@ -15,7 +15,7 @@ const MainLayout = ({ children }: any) => {
         }`}
       >
         <Header setShowAside={setShowAside} showAside={showAside} />
-        <main className="min-h-screen bg-charcoal-100 px-5 pt-[90px]">
+        <main className="min-h-screen bg-charcoal-100 px-5 pb-5 pt-[90px]">
           {children}
         </main>
       </div>

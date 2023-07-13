@@ -8,7 +8,9 @@ import { createElement } from "react";
 import styles from "~/styles/partials/Aside.module.scss";
 
 const LinkBuilder = (props: any) => {
-  const { id, url, title, pathName, icon, handleCloseCollapse } = props;
+  const { id, url, title, pathName, icon, module, handleCloseCollapse } = props;
+
+  const exceptModule = ["dashboard", "user-management"];
 
   const handleActiveMenu = (
     _url: string,
@@ -31,7 +33,7 @@ const LinkBuilder = (props: any) => {
       >
         <div className={styles.icon}>{createElement(icon)}</div>
         <span className={styles.title}>{title}</span>
-        <span className={styles.counter}>{20}</span>
+        {!exceptModule.includes(module) && <span className={styles.counter}>{20}</span>}
       </Link>
     </li>
   );

@@ -32,6 +32,12 @@ const LIST_MENU: any = [
     isOpen: false,
     submenu: [
       {
+        id: 40,
+        title: "Beasiswa",
+        url: "/master-data/beasiswa",
+        module: "Dosen",
+      },
+      {
         id: 41,
         title: "Dosen",
         url: "/master-data/dosen",
@@ -75,29 +81,45 @@ const LIST_MENU: any = [
       },
     ],
   },
-  // {
-  //   id: 5,
-  //   title: "Sample Data",
-  //   type: "Petugas Cabang",
-  //   module: "cabang-sample-data",
-  //   url: "",
-  //   icon: BookIcon,
-  //   isOpen: false,
-  //   submenu: [
-  //     {
-  //       id: 51,
-  //       title: "Today's Data",
-  //       url: "/sample-data/today?type=petugasCabang",
-  //       module: "todays-data",
-  //     },
-  //     {
-  //       id: 52,
-  //       title: "History Data",
-  //       url: "/sample-data/history?type=petugasCabang",
-  //       module: "history-data",
-  //     },
-  //   ],
-  // },
+  {
+    id: 5,
+    title: "Pengajuan Beasiswa",
+    type: "Petugas Cabang",
+    module: "cabang-sample-data",
+    url: "",
+    icon: BookIcon,
+    isOpen: false,
+    submenu: [
+      {
+        id: 51,
+        title: "Baru",
+        url: "/module/beasiswa/baru",
+        module: "todays-data",
+        counter: 57,
+      },
+      {
+        id: 52,
+        title: "Diajukan Ulang",
+        url: "/module/beasiswa/diajukan-ulang",
+        module: "history-data",
+        counter: 20,
+      },
+      {
+        id: 53,
+        title: "Disetujui",
+        url: "/module/beasiswa/disetujui",
+        module: "history-data",
+        counter: 30,
+      },
+      {
+        id: 53,
+        title: "Ditolak",
+        url: "/module/beasiswa/ditolak",
+        module: "history-data",
+        counter: 10,
+      },
+    ],
+  },
   // {
   //   id: 6,
   //   title: "Sample Data",

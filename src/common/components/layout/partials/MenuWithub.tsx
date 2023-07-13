@@ -44,6 +44,15 @@ const MenuWithSub = (props: any) => {
     return isActive ? styles.active : "";
   };
 
+  const handleBackground = (type: string): string => {
+    if (type === "Baru") return "!bg-[#fb923c]";
+    if (type === "Diajukan Ulang") return "!bg-[#FFD580]";
+    if (type === "Disetujui") return "!bg-[#42C997]";
+    if (type === "Ditolak") return "!bg-[#FF7070]";
+
+    return "";
+  };
+
   return (
     <li key={id}>
       <button
@@ -87,7 +96,13 @@ const MenuWithSub = (props: any) => {
               >
                 <span className={styles.titleSub}>{sub.title}</span>
                 {module !== "master-data" && (
-                  <span className={styles.counter}>{20}</span>
+                  <span
+                    className={`${styles.counter} ${handleBackground(
+                      sub.title
+                    )}`}
+                  >
+                    {sub.counter}
+                  </span>
                 )}
               </Link>
             </li>

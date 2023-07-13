@@ -21,6 +21,12 @@ Table User {
   PengajuanBeasiswa PengajuanBeasiswa [not null]
 }
 
+Table Beasiswa {
+  id String [pk]
+  syarat String [not null]
+  templateFormulir String [not null]
+}
+
 Table Dosen {
   id String [pk]
   name String [not null]
@@ -160,8 +166,9 @@ Table PengajuanBeasiswa {
   isValidated Boolean [not null, default: false]
   validatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
-  lampiran String [not null]
-  nominal Int [not null]
+  dokumenFormulir String [not null]
+  deskripsiDokumen String [not null]
+  dokumenPendukung String [not null]
   status MasterDataStatus [not null]
   statusId String [not null]
   user User [not null]

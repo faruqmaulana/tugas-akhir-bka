@@ -56,6 +56,12 @@ model User {
 }
 
 // Master Data Table
+model Beasiswa {
+    id               String @id @default(cuid())
+    syarat           String // free text
+    templateFormulir String
+}
+
 model Dosen {
     id      String           @id @default(cuid())
     name    String
@@ -211,12 +217,13 @@ model PengajuanPKM {
 }
 
 model PengajuanBeasiswa {
-    id          String   @id @default(cuid())
-    isValidated Boolean  @default(false)
-    validatedAt DateTime
-    createdAt   DateTime @default(now())
-    lampiran    String
-    nominal     Int
+    id               String   @id @default(cuid())
+    isValidated      Boolean  @default(false)
+    validatedAt      DateTime
+    createdAt        DateTime @default(now())
+    dokumenFormulir  String
+    deskripsiDokumen String
+    dokumenPendukung String
 
     status   MasterDataStatus @relation(fields: [statusId], references: [id])
     statusId String
