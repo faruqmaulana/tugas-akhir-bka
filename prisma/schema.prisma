@@ -48,7 +48,6 @@ model User {
     prodiId String?
 
     // USER RELATION TABLE DATA
-    // Relationship with PrestasiDataTable
     prestasiDataTables PengajuanOnUsers[]
     activityLog        ActivityLog[]
     Buku               Buku[]

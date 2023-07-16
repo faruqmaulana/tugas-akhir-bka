@@ -10,7 +10,6 @@ import Modal from "~/common/components/ui/modal/Modal";
 import { useState } from "react";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Input from "~/common/components/ui/form/Input";
-import { UPDATE_SUCCESS } from "~/common/constants/MESSAGE";
 import {
   PENGAJUAN_BEASISWA,
   type PengajuanBeasiswa,
@@ -141,7 +140,7 @@ const Example = () => {
         content={
           <Input
             labelFontSize="text-[16px]"
-            label="Berikan Alasan Anda :"
+            label="*Berikan Alasan Anda :"
             placeholder="Contoh: Dokumen tidak valid"
             type="textarea"
           />
@@ -158,7 +157,14 @@ const Example = () => {
         onClose={() => handleButtonAction("close")}
         onCloseButton={() => handleButtonAction("close")}
         onSuccessButton={() => handleButtonAction("success")}
-        content=""
+        content={
+          <Input
+            labelFontSize="text-[16px]"
+            label="*Tambahkan Catatan :"
+            placeholder="Contoh: Dana Beasiswa Akan Cair Tanggal 12 Mei 2023. Diharapkan datang ke kantor BKA setelah dana beasiswa cair."
+            type="textarea"
+          />
+        }
       ></Modal>
       <Modal
         success
