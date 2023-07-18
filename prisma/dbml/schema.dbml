@@ -225,6 +225,7 @@ Table Buku {
 
 Table ActivityLog {
   id String [pk]
+  catatan String
   user User [not null]
   userId String [not null]
   status MasterDataStatus [not null]

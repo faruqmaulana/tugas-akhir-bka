@@ -9,10 +9,18 @@ type PageTypeHeading = {
   subTitle?: string;
   showCreateButton?: boolean;
   onOpen?: () => void;
+  ownButton?: React.ReactNode;
 };
 
 const PageHeading = (props: PageTypeHeading) => {
-  const { className, title, subTitle, showCreateButton, onOpen } = props;
+  const {
+    className,
+    title,
+    subTitle,
+    showCreateButton,
+    onOpen,
+    ownButton = false,
+  } = props;
   const { pageHeading, moduleHeading } = useHeadingTitle();
 
   const styleHeader = [];
@@ -51,6 +59,7 @@ const PageHeading = (props: PageTypeHeading) => {
           <span> Add {moduleHeading}</span>
         </Button>
       )}
+      {ownButton || ""}
     </div>
   );
 };

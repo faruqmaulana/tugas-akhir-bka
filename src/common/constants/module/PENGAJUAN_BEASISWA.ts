@@ -1,4 +1,5 @@
 export type PengajuanBeasiswa = {
+  status: string;
   namaMahasiswa: string;
   prodi: string;
   fakultas: string;
@@ -12,7 +13,9 @@ export type PengajuanBeasiswa = {
 
 export const PENGAJUAN_BEASISWA: PengajuanBeasiswa[] = [
   {
+    status: "Ditolak",
     namaMahasiswa: "Rina Dewi",
+    nbi: "1462221454",
     prodi: "Teknik Informatika",
     fakultas: "Teknik",
     semester: "Semester 4",
@@ -20,10 +23,11 @@ export const PENGAJUAN_BEASISWA: PengajuanBeasiswa[] = [
     deskripsi: "Lorem Ipsum",
     dokumenPendukung: "https://example.com/dokumen1",
     tanggalPengajuan: "Jumat, 21 April 2023 pukul 10.30",
-    nbi: "1462221454",
   },
   {
+    status: "Disetujui",
     namaMahasiswa: "Andi Firmansyah",
+    nbi: "1462221454",
     prodi: "Akuntansi",
     fakultas: "Ekonomi",
     semester: "Semester 6",
@@ -31,10 +35,11 @@ export const PENGAJUAN_BEASISWA: PengajuanBeasiswa[] = [
     deskripsi: "Lorem Ipsum",
     dokumenPendukung: "https://example.com/dokumen2",
     tanggalPengajuan: "Kamis, 20 April 2023 pukul 14.45",
-    nbi: "1462221454",
   },
   {
+    status: "Ditolak",
     namaMahasiswa: "Siti Nurhayati",
+    nbi: "1462221454",
     prodi: "Kedokteran",
     fakultas: "Kedokteran",
     semester: "Semester 8",
@@ -42,10 +47,11 @@ export const PENGAJUAN_BEASISWA: PengajuanBeasiswa[] = [
     deskripsi: "Lorem Ipsum",
     dokumenPendukung: "https://example.com/dokumen3",
     tanggalPengajuan: "Senin, 17 April 2023 pukul 09.15",
-    nbi: "1462221454",
   },
   {
+    status: "Diajukan Ulang",
     namaMahasiswa: "Budi Santoso",
+    nbi: "1462221454",
     prodi: "Manajemen",
     fakultas: "Ekonomi",
     semester: "Semester 5",
@@ -53,10 +59,11 @@ export const PENGAJUAN_BEASISWA: PengajuanBeasiswa[] = [
     deskripsi: "Lorem Ipsum",
     dokumenPendukung: "https://example.com/dokumen4",
     tanggalPengajuan: "Rabu, 19 April 2023 pukul 11.30",
-    nbi: "1462221454",
   },
   {
+    status: "Disetujui",
     namaMahasiswa: "Dewi Indah",
+    nbi: "1462221454",
     prodi: "Psikologi",
     fakultas: "Ilmu Sosial dan Ilmu Politik",
     semester: "Semester 7",
@@ -64,6 +71,5 @@ export const PENGAJUAN_BEASISWA: PengajuanBeasiswa[] = [
     deskripsi: "Lorem Ipsum",
     dokumenPendukung: "https://example.com/dokumen5",
     tanggalPengajuan: "Selasa, 18 April 2023 pukul 13.00",
-    nbi: "1462221454",
   },
 ];

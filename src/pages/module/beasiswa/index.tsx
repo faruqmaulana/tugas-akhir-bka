@@ -10,12 +10,28 @@ import {
   PENGAJUAN_BEASISWA,
   type PengajuanBeasiswa,
 } from "~/common/constants/module/PENGAJUAN_BEASISWA";
+import { handleBgColor } from "~/common/helpers/handleBgColor";
 
 const UserManagement = () => {
   const router = useRouter();
 
   const columns = useMemo<MRT_ColumnDef<PengajuanBeasiswa>[]>(
     () => [
+      {
+        header: "Status",
+        accessorKey: "status",
+        enableClickToCopy: true,
+        Cell: ({ cell }) => (
+          <div
+            className="rounded-full px-2 py-1 text-xs font-semibold opacity-95"
+            style={{
+              backgroundColor: handleBgColor(cell.getValue() as string),
+            }}
+          >
+            {cell.getValue() as string}
+          </div>
+        ),
+      },
       {
         header: "Name",
         accessorKey: "namaMahasiswa",
@@ -64,13 +80,10 @@ const UserManagement = () => {
       {
         header: "Action",
         ...tableActionConfig,
-        Cell: ({ row }) => (
+        Cell: () => (
           <ViewDetailButton
             onClick={() => {
-              const transformUrl = router.pathname
-                .split("/")
-                .slice(0, -1)
-                .join("/");
+              const transformUrl = router.pathname.split("/").join("/");
               void router.push(transformUrl + "/detail");
             }}
           />
@@ -82,11 +95,8 @@ const UserManagement = () => {
 
   return (
     <>
-      <PageHeading title="Module Data Beasiswa" />
-      <Card
-        header="DATA PENGAJUAN BEASISWA YANG PERLU DIREVIEW"
-        className="mt-[30px]"
-      >
+      <PageHeading title="Module Pengajuan Beasiswa" />
+      <Card header="DATA PENGAJUAN BEASISWA" className="mt-[30px]">
         <BaseTable data={PENGAJUAN_BEASISWA} columns={columns} />
       </Card>
     </>

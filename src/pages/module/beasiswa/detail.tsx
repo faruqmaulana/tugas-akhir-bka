@@ -14,6 +14,7 @@ import {
   PENGAJUAN_BEASISWA,
   type PengajuanBeasiswa,
 } from "~/common/constants/module/PENGAJUAN_BEASISWA";
+import ArrorLeft from "~/common/components/svg/ArrorLeft";
 
 const INITIAL_STATE = {
   isReject: false,
@@ -58,10 +59,42 @@ const Example = () => {
 
   return (
     <>
-      <PageHeading />
+      <PageHeading
+        ownButton={
+          <Button
+            isMedium
+            isGray
+            className="flex w-fit items-center gap-2"
+            onClick={() => {
+              void router.push("/master-data/beasiswa");
+            }}
+          >
+            <ArrorLeft />
+            <span>Kembali</span>
+          </Button>
+        }
+      />
       <div className="flex flex-col gap-5">
         <Card>
-          <div className="grid grid-cols-12 gap-2">
+          <div className="ml-auto flex flex-row gap-4">
+            <Button
+              isMedium
+              isDanger
+              className="w-fit"
+              onClick={() => handleButtonAction("reject")}
+            >
+              <span>Tolak</span>
+            </Button>
+            <Button
+              isMedium
+              isSuccess
+              className="w-fit"
+              onClick={() => handleButtonAction("approve")}
+            >
+              <span>Setuju</span>
+            </Button>
+          </div>
+          <div className="-mt-9 grid grid-cols-12 gap-2">
             <span className="col-span-2 font-semibold">Nama Mahasiswa</span>
             <span className="col-span-10">: {namaMahasiswa}</span>
             <span className="col-span-2 font-semibold">NBI</span>
@@ -94,34 +127,6 @@ const Example = () => {
             </span>
           </div>
         </Card>
-        <div className="ml-auto flex flex-row gap-4">
-          <Button
-            isMedium
-            isGray
-            className="w-fit"
-            onClick={() => {
-              void router.push("/master-data/beasiswa");
-            }}
-          >
-            <span>Kembali</span>
-          </Button>
-          <Button
-            isMedium
-            isDanger
-            className="w-fit"
-            onClick={() => handleButtonAction("reject")}
-          >
-            <span>Tolak</span>
-          </Button>
-          <Button
-            isMedium
-            isSuccess
-            className="w-fit"
-            onClick={() => handleButtonAction("approve")}
-          >
-            <span>Setuju</span>
-          </Button>
-        </div>
       </div>
       <Modal
         confirm

@@ -291,6 +291,8 @@ model Buku {
 model ActivityLog {
     id String @id @default(cuid())
 
+    catatan String?
+
     user   User   @relation(fields: [userId], references: [id])
     userId String
 
