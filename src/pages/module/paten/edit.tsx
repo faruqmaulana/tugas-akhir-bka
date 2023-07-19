@@ -4,13 +4,13 @@ import { Button } from "~/common/components/ui/button/Button";
 import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import PengajuanForm from "~/common/components/ui/page/status-pengajuan/PengajuanForm";
-import { HAKI_FORM } from "~/common/constants/DUMMY_PATEN_HAKI";
+import { HAKI_FORM, PATEN_FORM } from "~/common/constants/DUMMY_PATEN_HAKI";
 
 const tambah = () => {
   return (
     <>
       <PageHeading
-        title="Form Pengajuan Haki"
+        title="Form Edit Paten"
         ownButton={
           <Button isMedium isGray className="flex w-fit items-center gap-2">
             <ArrorLeft />
@@ -19,7 +19,7 @@ const tambah = () => {
         }
       />
       <Card className="mt-[20px]">
-        <PengajuanForm data={HAKI_FORM} showValue={false} />
+        <PengajuanForm data={PATEN_FORM} />
         <Button isMedium isSuccess className="flex w-fit items-center gap-2">
           <span>Submit</span>
         </Button>

@@ -129,7 +129,7 @@ const LIST_MENU: any = [
     url: "/module/haki",
     icon: BookIcon,
     isOpen: false,
-    counter: 20,
+    counter: 3,
   },
   {
     id: 5,

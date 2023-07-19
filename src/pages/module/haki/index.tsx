@@ -118,11 +118,13 @@ const UserManagement = () => {
 
   return (
     <>
-      <PageHeading title="Module Data Haki" />
-      <Card
-        header="SEMUA DATA PENGAJUAN HAKI"
-        className="mt-[30px]"
-      >
+      <PageHeading
+        title="Module Data Haki"
+        showCreateButton
+        createButtonTitle="Data Haki"
+        link="haki/tambah"
+      />
+      <Card header="SEMUA DATA PENGAJUAN HAKI" className="mt-[30px]">
         <BaseTable data={DATA_HAKI} columns={columns} />
       </Card>
     </>

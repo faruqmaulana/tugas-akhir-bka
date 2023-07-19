@@ -18,7 +18,7 @@ export type HAKI = {
 };
 
 // Tipe untuk data Paten
-type Paten = {
+export type PatenType = {
   Jenis: string;
   JudulPaten: string;
   NomorPaten: string;
@@ -96,7 +96,7 @@ export const DATA_HAKI: HAKI[] = [
   },
 ];
 
-export const DATA_PATEN: Paten[] = [
+export const DATA_PATEN: PatenType[] = [
   {
     Jenis: "Paten",
     JudulPaten: "Robot Pembersih Otomatis",
@@ -140,6 +140,94 @@ export const DATA_PATEN: Paten[] = [
     Prodi: "Farmasi",
     Fakultas: "Fakultas Kedokteran",
     Dosen: "Prof. Dr. Fitria Farmasista",
+  },
+  {
+    Jenis: "Paten",
+    JudulPaten: "Robot Asisten Rumah Tangga",
+    NomorPaten: "PT202303",
+    PemegangPaten: "Smart Home Solutions",
+    PenulisPenemu: "Rina Inventor",
+    Abstrak:
+      "Patent ini menggambarkan robot asisten rumah tangga dengan beragam fitur.",
+    Klaim: "Robot asisten rumah tangga yang efisien dan mudah dioperasikan.",
+    Gambar: "gambar_robot_asisten.jpg",
+    Klasifikasi: "B25D 3/02",
+    TanggalPengajuan: "2023-07-21",
+    TanggalDiberikan: "2023-12-17",
+    MasaBerlaku: "18 tahun",
+    DaerahPerlindungan: "Indonesia",
+    Status: "Aktif",
+    NBI: "987654321",
+    Semester: 5,
+    Prodi: "Teknik Elektro",
+    Fakultas: "Fakultas Teknik",
+    Dosen: "Dr. Ir. Putri Teknologi",
+  },
+  {
+    Jenis: "Paten",
+    JudulPaten: "Teknologi Hibrida Ramah Lingkungan",
+    NomorPaten: "PT202304",
+    PemegangPaten: "EcoTech Innovations",
+    PenulisPenemu: "Ahmad Researcher",
+    Abstrak:
+      "Patent ini menggambarkan teknologi hibrida untuk mengurangi emisi karbon.",
+    Klaim: "Teknologi hibrida yang lebih efisien dan ramah lingkungan.",
+    Gambar: "gambar_teknologi_hibrida.jpg",
+    Klasifikasi: "F01N 13/08",
+    TanggalPengajuan: "2023-07-22",
+    TanggalDiberikan: "2023-12-18",
+    MasaBerlaku: "17 tahun",
+    DaerahPerlindungan: "Indonesia",
+    Status: "Aktif",
+    NBI: "543216789",
+    Semester: 7,
+    Prodi: "Teknik Lingkungan",
+    Fakultas: "Fakultas Teknik",
+    Dosen: "Dr. Ir. Siti Lingkungan",
+  },
+  {
+    Jenis: "Paten",
+    JudulPaten: "Terapi Virtual untuk Kesehatan Mental",
+    NomorPaten: "PT202305",
+    PemegangPaten: "Mindfulness Innovations",
+    PenulisPenemu: "Dewi Psikolog",
+    Abstrak:
+      "Patent ini menggambarkan terapi virtual yang membantu kesehatan mental.",
+    Klaim: "Terapi virtual inovatif untuk meredakan stres dan kecemasan.",
+    Gambar: "gambar_terapi_virtual.jpg",
+    Klasifikasi: "A61N 5/06",
+    TanggalPengajuan: "2023-07-23",
+    TanggalDiberikan: "2023-12-19",
+    MasaBerlaku: "16 tahun",
+    DaerahPerlindungan: "Indonesia",
+    Status: "Aktif",
+    NBI: "987654321",
+    Semester: 6,
+    Prodi: "Psikologi",
+    Fakultas: "Fakultas Psikologi",
+    Dosen: "Prof. Dr. Mental Psikolog",
+  },
+  {
+    Jenis: "Paten",
+    JudulPaten: "Inovasi Baterai Tahan Lama",
+    NomorPaten: "PT202306",
+    PemegangPaten: "PowerTech Solutions",
+    PenulisPenemu: "Eko Engineer",
+    Abstrak:
+      "Patent ini menggambarkan baterai tahan lama dengan teknologi baru.",
+    Klaim: "Baterai inovatif dengan masa pakai yang lebih panjang.",
+    Gambar: "gambar_inovasi_baterai.jpg",
+    Klasifikasi: "H01M 10/04",
+    TanggalPengajuan: "2023-07-24",
+    TanggalDiberikan: "2023-12-20",
+    MasaBerlaku: "19 tahun",
+    DaerahPerlindungan: "Indonesia",
+    Status: "Aktif",
+    NBI: "543216789",
+    Semester: 7,
+    Prodi: "Teknik Elektro",
+    Fakultas: "Fakultas Teknik",
+    Dosen: "Dr. Ir. Bambang Teknologi",
   },
 ];
 
@@ -321,6 +409,59 @@ export const PATEN_TABLE_HEADER = [
 
 export const HAKI_FORM = [
   {
+    key: "PemegangHAKI",
+    className: "col-span-1",
+    placeholder: "Pemegang HAKI",
+    label: "Pemegang HAKI",
+    value: DATA_HAKI[0]?.PemegangHAKI,
+  },
+  {
+    key: "Pencipta",
+    className: "col-span-1",
+    placeholder: "Pencipta",
+    label: "Pencipta",
+    value: DATA_HAKI[0]?.Pencipta,
+  },
+  {
+    disabled: true,
+    key: "NBI",
+    className: "col-span-1",
+    placeholder: "NBI",
+    label: "NBI",
+    value: DATA_HAKI[0]?.NBI,
+  },
+  {
+    disabled: true,
+    key: "Semester",
+    className: "col-span-1",
+    placeholder: "Semester",
+    label: "Semester",
+    value: DATA_HAKI[0]?.Semester,
+  },
+  {
+    disabled: true,
+    key: "Prodi",
+    className: "col-span-1",
+    placeholder: "Program Studi",
+    label: "Program Studi",
+    value: DATA_HAKI[0]?.Prodi,
+  },
+  {
+    disabled: true,
+    key: "Fakultas",
+    className: "col-span-1",
+    placeholder: "Fakultas",
+    label: "Fakultas",
+    value: DATA_HAKI[0]?.Fakultas,
+  },
+  {
+    key: "Dosen",
+    className: "col-span-1",
+    placeholder: "Dosen",
+    label: "Dosen",
+    value: DATA_HAKI[0]?.Dosen,
+  },
+  {
     key: "Jenis",
     className: "col-span-1",
     placeholder: "Jenis Hak Kekayaan Intelektual",
@@ -341,20 +482,7 @@ export const HAKI_FORM = [
     label: "Nomor Pendaftaran",
     value: DATA_HAKI[0]?.NomorPendaftaran,
   },
-  {
-    key: "PemegangHAKI",
-    className: "col-span-1",
-    placeholder: "Pemegang HAKI",
-    label: "Pemegang HAKI",
-    value: DATA_HAKI[0]?.PemegangHAKI,
-  },
-  {
-    key: "Pencipta",
-    className: "col-span-1",
-    placeholder: "Pencipta",
-    label: "Pencipta",
-    value: DATA_HAKI[0]?.Pencipta,
-  },
+
   {
     key: "Deskripsi",
     className: "col-span-1",
@@ -362,14 +490,15 @@ export const HAKI_FORM = [
     label: "Deskripsi",
     value: DATA_HAKI[0]?.Deskripsi,
   },
+  // {
+  //   key: "TanggalPendaftaran",
+  //   className: "col-span-1",
+  //   placeholder: "Tanggal Pendaftaran",
+  //   label: "Tanggal Pendaftaran",
+  //   value: DATA_HAKI[0]?.TanggalPendaftaran,
+  // },
   {
-    key: "TanggalPendaftaran",
-    className: "col-span-1",
-    placeholder: "Tanggal Pendaftaran",
-    label: "Tanggal Pendaftaran",
-    value: DATA_HAKI[0]?.TanggalPendaftaran,
-  },
-  {
+    disabled: true,
     key: "MasaBerlaku",
     className: "col-span-1",
     placeholder: "Masa Berlaku",
@@ -384,49 +513,58 @@ export const HAKI_FORM = [
     value: DATA_HAKI[0]?.DaerahPerlindungan,
   },
   {
+    key: "DaerahPerlindungan",
+    className: "col-span-1",
+    placeholder: "Dokumen Pendukung",
+    label: "Dokumen Pendukung",
+    value: DATA_HAKI[0]?.DaerahPerlindungan,
+    type: "file",
+  },
+];
+
+export const PATEN_FORM = [
+  {
     key: "NBI",
     className: "col-span-1",
     placeholder: "NBI",
     label: "NBI",
-    value: DATA_HAKI[0]?.NBI,
+    value: DATA_PATEN[0]?.NBI,
   },
   {
     key: "Semester",
     className: "col-span-1",
     placeholder: "Semester",
     label: "Semester",
-    value: DATA_HAKI[0]?.Semester,
+    value: DATA_PATEN[0]?.Semester,
   },
   {
     key: "Prodi",
     className: "col-span-1",
     placeholder: "Program Studi",
     label: "Program Studi",
-    value: DATA_HAKI[0]?.Prodi,
+    value: DATA_PATEN[0]?.Prodi,
   },
   {
     key: "Fakultas",
     className: "col-span-1",
     placeholder: "Fakultas",
     label: "Fakultas",
-    value: DATA_HAKI[0]?.Fakultas,
+    value: DATA_PATEN[0]?.Fakultas,
   },
   {
     key: "Dosen",
     className: "col-span-1",
     placeholder: "Dosen",
     label: "Dosen",
-    value: DATA_HAKI[0]?.Dosen,
+    value: DATA_PATEN[0]?.Dosen,
   },
-];
-
-export const PATEN_FORM = [
   {
     key: "Jenis",
     className: "col-span-1",
     placeholder: "Jenis Hak Kekayaan Intelektual",
     label: "Jenis Hak Kekayaan Intelektual",
     value: DATA_PATEN[0]?.Jenis,
+    disabled: true,
   },
   {
     key: "JudulPaten",
@@ -471,13 +609,6 @@ export const PATEN_FORM = [
     value: DATA_PATEN[0]?.Klaim,
   },
   {
-    key: "Gambar",
-    className: "col-span-1",
-    placeholder: "Gambar",
-    label: "Gambar",
-    value: DATA_PATEN[0]?.Gambar,
-  },
-  {
     key: "Klasifikasi",
     className: "col-span-1",
     placeholder: "Klasifikasi",
@@ -490,6 +621,7 @@ export const PATEN_FORM = [
     placeholder: "Tanggal Pengajuan",
     label: "Tanggal Pengajuan",
     value: DATA_PATEN[0]?.TanggalPengajuan,
+    disabled: true,
   },
   {
     key: "TanggalDiberikan",
@@ -518,40 +650,5 @@ export const PATEN_FORM = [
     placeholder: "Status",
     label: "Status",
     value: DATA_PATEN[0]?.Status,
-  },
-  {
-    key: "NBI",
-    className: "col-span-1",
-    placeholder: "NBI",
-    label: "NBI",
-    value: DATA_PATEN[0]?.NBI,
-  },
-  {
-    key: "Semester",
-    className: "col-span-1",
-    placeholder: "Semester",
-    label: "Semester",
-    value: DATA_PATEN[0]?.Semester,
-  },
-  {
-    key: "Prodi",
-    className: "col-span-1",
-    placeholder: "Program Studi",
-    label: "Program Studi",
-    value: DATA_PATEN[0]?.Prodi,
-  },
-  {
-    key: "Fakultas",
-    className: "col-span-1",
-    placeholder: "Fakultas",
-    label: "Fakultas",
-    value: DATA_PATEN[0]?.Fakultas,
-  },
-  {
-    key: "Dosen",
-    className: "col-span-1",
-    placeholder: "Dosen",
-    label: "Dosen",
-    value: DATA_PATEN[0]?.Dosen,
   },
 ];

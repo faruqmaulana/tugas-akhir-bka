@@ -7,64 +7,120 @@ import PageHeading from "~/common/components/ui/header/PageHeading";
 import BaseTable from "~/common/components/ui/table/BaseTable";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
 import {
-  PENGAJUAN_BEASISWA,
-  type PengajuanBeasiswa,
-} from "~/common/constants/module/PENGAJUAN_BEASISWA";
+  DATA_PATEN,
+  type PatenType,
+} from "~/common/constants/DUMMY_PATEN_HAKI";
+import { handleBgColor } from "~/common/helpers/handleBgColor";
 
 const UserManagement = () => {
   const router = useRouter();
 
-  const columns = useMemo<MRT_ColumnDef<PengajuanBeasiswa>[]>(
+  const columns = useMemo<MRT_ColumnDef<PatenType>[]>(
     () => [
       {
-        header: "Status",
-        accessorKey: "status",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Name",
-        accessorKey: "namaMahasiswa",
-        enableClickToCopy: true,
-      },
-      {
         header: "NBI",
-        accessorKey: "nbi",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Prodi",
-        accessorKey: "prodi",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Fakultas",
-        accessorKey: "fakultas",
+        accessorKey: "NBI",
         enableClickToCopy: true,
       },
       {
         header: "Semester",
-        accessorKey: "semester",
+        accessorKey: "Semester",
         enableClickToCopy: true,
       },
       {
-        header: "Formulir Pengajuan",
-        accessorKey: "dokumenFormulirPengajuan",
+        header: "Prodi",
+        accessorKey: "Prodi",
         enableClickToCopy: true,
       },
       {
-        header: "Deskripsi",
-        accessorKey: "deskripsi",
+        header: "Fakultas",
+        accessorKey: "Fakultas",
         enableClickToCopy: true,
       },
       {
-        header: "Dokumen Pendukung",
-        accessorKey: "dokumenPendukung",
+        header: "Dosen",
+        accessorKey: "Dosen",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Jenis",
+        accessorKey: "Jenis",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Judul Paten",
+        accessorKey: "JudulPaten",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Nomor Paten",
+        accessorKey: "NomorPaten",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Pemegang Paten",
+        accessorKey: "PemegangPaten",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Penulis Penemu",
+        accessorKey: "PenulisPenemu",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Abstrak",
+        accessorKey: "Abstrak",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Klaim",
+        accessorKey: "Klaim",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Gambar",
+        accessorKey: "Gambar",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Klasifikasi",
+        accessorKey: "Klasifikasi",
         enableClickToCopy: true,
       },
       {
         header: "Tanggal Pengajuan",
-        accessorKey: "tanggalPengajuan",
+        accessorKey: "TanggalPengajuan",
         enableClickToCopy: true,
+      },
+      {
+        header: "Tanggal Diberikan",
+        accessorKey: "TanggalDiberikan",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Masa Berlaku",
+        accessorKey: "MasaBerlaku",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Daerah Perlindungan",
+        accessorKey: "DaerahPerlindungan",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Status",
+        accessorKey: "Status",
+        enableClickToCopy: true,
+        Cell: ({ cell }) => (
+          <div
+            className="rounded-full px-2 py-1 text-xs font-semibold opacity-95"
+            style={{
+              backgroundColor: handleBgColor(cell.getValue() as string),
+            }}
+          >
+            {cell.getValue() as string}
+          </div>
+        ),
       },
       {
         header: "Action",
@@ -84,12 +140,14 @@ const UserManagement = () => {
 
   return (
     <>
-      <PageHeading title="Module Data Beasiswa" />
-      <Card
-        header="DATA PENGAJUAN BEASISWA YANG PERLU DIREVIEW"
-        className="mt-[30px]"
-      >
-        <BaseTable data={PENGAJUAN_BEASISWA} columns={columns} />
+      <PageHeading
+        title="Module Data Paten"
+        showCreateButton
+        createButtonTitle="Data Paten"
+        link="haki/tambah"
+      />
+      <Card header="SEMUA DATA PENGAJUAN PATEN" className="mt-[30px]">
+        <BaseTable data={DATA_PATEN} columns={columns} />
       </Card>
     </>
   );

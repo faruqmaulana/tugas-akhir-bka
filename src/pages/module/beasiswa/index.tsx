@@ -95,7 +95,11 @@ const UserManagement = () => {
 
   return (
     <>
-      <PageHeading title="Module Pengajuan Beasiswa" />
+      <PageHeading
+        title="Module Pengajuan Beasiswa"
+        showCreateButton
+        createButtonTitle="Pengajuan Beasiswa"
+      />
       <Card header="DATA PENGAJUAN BEASISWA" className="mt-[30px]">
         <BaseTable data={PENGAJUAN_BEASISWA} columns={columns} />
       </Card>

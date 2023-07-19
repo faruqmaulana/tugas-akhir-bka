@@ -10,7 +10,7 @@ const tambah = () => {
   return (
     <>
       <PageHeading
-        title="Form Pengajuan Haki"
+        title="Form Edit Haki"
         ownButton={
           <Button isMedium isGray className="flex w-fit items-center gap-2">
             <ArrorLeft />
@@ -19,7 +19,7 @@ const tambah = () => {
         }
       />
       <Card className="mt-[20px]">
-        <PengajuanForm data={HAKI_FORM} showValue={false} />
+        <PengajuanForm data={HAKI_FORM} />
         <Button isMedium isSuccess className="flex w-fit items-center gap-2">
           <span>Submit</span>
         </Button>
