@@ -15,6 +15,7 @@ import {
   type PengajuanBeasiswa,
 } from "~/common/constants/module/PENGAJUAN_BEASISWA";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
+import { DATA_HAKI, type HAKI } from "~/common/constants/DUMMY_PATEN_HAKI";
 
 const INITIAL_STATE = {
   isReject: false,
@@ -36,6 +37,24 @@ const Example = () => {
     dokumenPendukung,
     tanggalPengajuan,
   } = PENGAJUAN_BEASISWA[0] as PengajuanBeasiswa;
+
+  const {
+    DaerahPerlindungan,
+    Deskripsi,
+    Dosen,
+    Fakultas,
+    Jenis,
+    Judul,
+    MasaBerlaku,
+    NBI,
+    NomorPendaftaran,
+    PemegangHAKI,
+    Pencipta,
+    Prodi,
+    Semester,
+    Status,
+    TanggalPendaftaran,
+  } = DATA_HAKI[0] as HAKI;
 
   const handleButtonAction = (type: string) => {
     if (type === "reject") {
@@ -60,14 +79,14 @@ const Example = () => {
   return (
     <>
       <PageHeading
-        title="Detail Beasiswa"
+        title="Detail Haki"
         ownButton={
           <Button
             isMedium
             isGray
             className="flex w-fit items-center gap-2"
             onClick={() => {
-              void router.push("/module/kejuaraan");
+              void router.push("/module/haki");
             }}
           >
             <ArrorLeft />
@@ -106,18 +125,28 @@ const Example = () => {
             <span className="col-span-10">: {fakultas}</span>
             <span className="col-span-2 font-semibold">Semester</span>
             <span className="col-span-10">: {semester}</span>
-            <span className="col-span-2 font-semibold">Deskripsi Dokumen</span>
-            <span className="col-span-10">: {deskripsi}</span>
-            <span className="col-span-2 font-semibold">Tanggal Pengajuan</span>
-            <span className="col-span-10">: {tanggalPengajuan}</span>
-            <span className="col-span-2 font-semibold">Formulir Pengajuan</span>
-            <span className="col-span-10">:</span>
-            <span className="col-span-12">
-              <iframe
-                className="h-[600px] w-full"
-                src="https://www.buds.com.ua/images/Lorem_ipsum.pdf"
-              ></iframe>
+            <span className="col-span-2 font-semibold">Judul Haki</span>
+            <span className="col-span-10">: {Judul}</span>
+            <span className="col-span-2 font-semibold">Jenis Haki</span>
+            <span className="col-span-10">: {Jenis}</span>
+            <span className="col-span-2 font-semibold">Nomor Pendaftaran</span>
+            <span className="col-span-10">: {NomorPendaftaran}</span>
+            <span className="col-span-2 font-semibold">Pemegang Haki</span>
+            <span className="col-span-10">: {PemegangHAKI}</span>
+            <span className="col-span-2 font-semibold">Deskripsi</span>
+            <span className="col-span-10">: {Deskripsi}</span>
+            <span className="col-span-2 font-semibold">
+              Tanggal Pendaftaran
             </span>
+            <span className="col-span-10">: {TanggalPendaftaran}</span>
+            <span className="col-span-2 font-semibold">Masa Berlaku</span>
+            <span className="col-span-10">: {MasaBerlaku}</span>
+            <span className="col-span-2 font-semibold">
+              Daerah Perlindungan
+            </span>
+            <span className="col-span-10">: {DaerahPerlindungan}</span>
+            <span className="col-span-2 font-semibold">Status</span>
+            <span className="col-span-10">: Dalam Proses</span>
             <span className="col-span-2 font-semibold">Dokumen Pendukung</span>
             <span className="col-span-10">:</span>
             <span className="col-span-12">

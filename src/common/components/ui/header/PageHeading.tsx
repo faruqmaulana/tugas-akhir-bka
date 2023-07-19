@@ -8,8 +8,10 @@ type PageTypeHeading = {
   className?: string;
   subTitle?: string;
   showCreateButton?: boolean;
+  link?: string;
   onOpen?: () => void;
   ownButton?: React.ReactNode;
+  createButtonTitle?: string;
 };
 
 const PageHeading = (props: PageTypeHeading) => {
@@ -17,11 +19,13 @@ const PageHeading = (props: PageTypeHeading) => {
     className,
     title,
     subTitle,
-    showCreateButton,
     onOpen,
+    showCreateButton,
+    createButtonTitle,
+    link = undefined,
     ownButton = false,
   } = props;
-  const { pageHeading, moduleHeading } = useHeadingTitle();
+  const { router, pageHeading, moduleHeading } = useHeadingTitle();
 
   const styleHeader = [];
 
@@ -53,10 +57,16 @@ const PageHeading = (props: PageTypeHeading) => {
           className="flex items-center gap-2 px-6 py-3 text-base"
           isSuccess
           isMedium
-          onClick={onOpen}
+          onClick={() => {
+            if (link) {
+              void router.push(link);
+              return;
+            }
+            onOpen;
+          }}
         >
           <PlusIcon />
-          <span> Add {moduleHeading}</span>
+          <span> Add {createButtonTitle || moduleHeading}</span>
         </Button>
       )}
       {ownButton || ""}

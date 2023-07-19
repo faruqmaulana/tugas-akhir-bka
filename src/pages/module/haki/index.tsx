@@ -6,65 +6,99 @@ import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import BaseTable from "~/common/components/ui/table/BaseTable";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
-import {
-  PENGAJUAN_BEASISWA,
-  type PengajuanBeasiswa,
-} from "~/common/constants/module/PENGAJUAN_BEASISWA";
+import { type HAKI, DATA_HAKI } from "~/common/constants/DUMMY_PATEN_HAKI";
+import { handleBgColor } from "~/common/helpers/handleBgColor";
 
 const UserManagement = () => {
   const router = useRouter();
 
-  const columns = useMemo<MRT_ColumnDef<PengajuanBeasiswa>[]>(
+  const columns = useMemo<MRT_ColumnDef<HAKI>[]>(
     () => [
       {
-        header: "Status",
-        accessorKey: "status",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Name",
-        accessorKey: "namaMahasiswa",
+        header: "Nama Mahasiswa",
+        accessorKey: "Pencipta",
         enableClickToCopy: true,
       },
       {
         header: "NBI",
-        accessorKey: "nbi",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Prodi",
-        accessorKey: "prodi",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Fakultas",
-        accessorKey: "fakultas",
+        accessorKey: "NBI",
         enableClickToCopy: true,
       },
       {
         header: "Semester",
-        accessorKey: "semester",
+        accessorKey: "Semester",
         enableClickToCopy: true,
       },
       {
-        header: "Formulir Pengajuan",
-        accessorKey: "dokumenFormulirPengajuan",
+        header: "Prodi",
+        accessorKey: "Prodi",
         enableClickToCopy: true,
       },
+      {
+        header: "Fakultas",
+        accessorKey: "Fakultas",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Dosen",
+        accessorKey: "Dosen",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Jenis",
+        accessorKey: "Jenis",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Judul",
+        accessorKey: "Judul",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Nomor Pendaftaran",
+        accessorKey: "NomorPendaftaran",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Pemegang HAKI",
+        accessorKey: "PemegangHAKI",
+        enableClickToCopy: true,
+      },
+
       {
         header: "Deskripsi",
-        accessorKey: "deskripsi",
+        accessorKey: "Deskripsi",
         enableClickToCopy: true,
       },
       {
-        header: "Dokumen Pendukung",
-        accessorKey: "dokumenPendukung",
+        header: "Tanggal Pendaftaran",
+        accessorKey: "TanggalPendaftaran",
         enableClickToCopy: true,
       },
       {
-        header: "Tanggal Pengajuan",
-        accessorKey: "tanggalPengajuan",
+        header: "Masa Berlaku",
+        accessorKey: "MasaBerlaku",
         enableClickToCopy: true,
+      },
+      {
+        header: "Daerah Perlindungan",
+        accessorKey: "DaerahPerlindungan",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Status",
+        accessorKey: "Status",
+        enableClickToCopy: true,
+        Cell: ({ cell }) => (
+          <div
+            className="rounded-full px-2 py-1 text-xs font-semibold opacity-95"
+            style={{
+              backgroundColor: handleBgColor(cell.getValue() as string),
+            }}
+          >
+            {cell.getValue() as string}
+          </div>
+        ),
       },
       {
         header: "Action",
@@ -84,12 +118,12 @@ const UserManagement = () => {
 
   return (
     <>
-      <PageHeading title="Module Data Beasiswa" />
+      <PageHeading title="Module Data Haki" />
       <Card
-        header="DATA PENGAJUAN BEASISWA YANG PERLU DIREVIEW"
+        header="SEMUA DATA PENGAJUAN HAKI"
         className="mt-[30px]"
       >
-        <BaseTable data={PENGAJUAN_BEASISWA} columns={columns} />
+        <BaseTable data={DATA_HAKI} columns={columns} />
       </Card>
     </>
   );

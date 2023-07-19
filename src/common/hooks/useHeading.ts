@@ -11,6 +11,7 @@ const useHeadingTitle = () => {
   const moduleHeading = pageHeading?.replaceAll("Master", "");
 
   return {
+    router,
     pageHeading,
     moduleHeading,
   };

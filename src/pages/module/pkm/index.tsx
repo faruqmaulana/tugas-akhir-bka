@@ -6,29 +6,31 @@ import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import BaseTable from "~/common/components/ui/table/BaseTable";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
+import { DUMMY_PKM, type PkmType } from "~/common/constants/DUMMY_PKM";
 import {
   PENGAJUAN_BEASISWA,
   type PengajuanBeasiswa,
 } from "~/common/constants/module/PENGAJUAN_BEASISWA";
+import { handleBgColor } from "~/common/helpers/handleBgColor";
 
 const UserManagement = () => {
   const router = useRouter();
 
-  const columns = useMemo<MRT_ColumnDef<PengajuanBeasiswa>[]>(
+  const columns = useMemo<MRT_ColumnDef<PkmType>[]>(
     () => [
       {
-        header: "Status",
-        accessorKey: "status",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Name",
+        header: "Nama Mahasiswa",
         accessorKey: "namaMahasiswa",
         enableClickToCopy: true,
       },
       {
         header: "NBI",
-        accessorKey: "nbi",
+        accessorKey: "npm",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Semester",
+        accessorKey: "semester",
         enableClickToCopy: true,
       },
       {
@@ -42,13 +44,8 @@ const UserManagement = () => {
         enableClickToCopy: true,
       },
       {
-        header: "Semester",
-        accessorKey: "semester",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Formulir Pengajuan",
-        accessorKey: "dokumenFormulirPengajuan",
+        header: "Judul",
+        accessorKey: "judul",
         enableClickToCopy: true,
       },
       {
@@ -57,14 +54,44 @@ const UserManagement = () => {
         enableClickToCopy: true,
       },
       {
-        header: "Dokumen Pendukung",
-        accessorKey: "dokumenPendukung",
+        header: "Tanggal Kegiatan",
+        accessorKey: "tanggalKegiatan",
         enableClickToCopy: true,
       },
       {
-        header: "Tanggal Pengajuan",
-        accessorKey: "tanggalPengajuan",
+        header: "Lampiran",
+        accessorKey: "lampiran",
         enableClickToCopy: true,
+      },
+      {
+        header: "Total Anggaran",
+        accessorKey: "totalAnggaran",
+        enableClickToCopy: true,
+      },
+      // {
+      //   header: "Anggaran Dosen",
+      //   accessorKey: "anggaranDosen",
+      //   enableClickToCopy: true,
+      // },
+      {
+        header: "Dosen",
+        accessorKey: "Dosen",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Status",
+        accessorKey: "status",
+        enableClickToCopy: true,
+        Cell: ({ cell }) => (
+          <div
+            className="rounded-full px-2 py-1 text-xs font-semibold opacity-95"
+            style={{
+              backgroundColor: handleBgColor(cell.getValue() as string),
+            }}
+          >
+            {cell.getValue() as string}
+          </div>
+        ),
       },
       {
         header: "Action",
@@ -84,12 +111,14 @@ const UserManagement = () => {
 
   return (
     <>
-      <PageHeading title="Module Data Beasiswa" />
-      <Card
-        header="DATA PENGAJUAN BEASISWA YANG PERLU DIREVIEW"
-        className="mt-[30px]"
-      >
-        <BaseTable data={PENGAJUAN_BEASISWA} columns={columns} />
+      <PageHeading
+        title="Module Program Kreativitas Mahasiswa"
+        showCreateButton
+        createButtonTitle="Program Kreativitas Mahasiswa"
+        link="/module/pkm/tambah"
+      />
+      <Card header="DATA PROGRAM KREATIVITAS MAHASISWA" className="mt-[30px]">
+        <BaseTable data={DUMMY_PKM} columns={columns} />
       </Card>
     </>
   );

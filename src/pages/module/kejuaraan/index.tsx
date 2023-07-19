@@ -18,21 +18,6 @@ const UserManagement = () => {
   const columns = useMemo<MRT_ColumnDef<KejuaraanData>[]>(
     () => [
       {
-        header: "Status",
-        accessorKey: "status",
-        enableClickToCopy: true,
-        Cell: ({ cell }) => (
-          <div
-            className="rounded-full px-2 py-1 text-xs font-semibold opacity-95"
-            style={{
-              backgroundColor: handleBgColor(cell.getValue() as string),
-            }}
-          >
-            {cell.getValue() as string}
-          </div>
-        ),
-      },
-      {
         header: "Nama",
         accessorKey: "nama",
         enableClickToCopy: true,
@@ -98,6 +83,21 @@ const UserManagement = () => {
         enableClickToCopy: true,
       },
       {
+        header: "Status",
+        accessorKey: "status",
+        enableClickToCopy: true,
+        Cell: ({ cell }) => (
+          <div
+            className="rounded-full px-2 py-1 text-xs font-semibold opacity-95"
+            style={{
+              backgroundColor: handleBgColor(cell.getValue() as string),
+            }}
+          >
+            {cell.getValue() as string}
+          </div>
+        ),
+      },
+      {
         header: "Action",
         ...tableActionConfig,
         Cell: () => (
@@ -115,7 +115,11 @@ const UserManagement = () => {
 
   return (
     <>
-      <PageHeading title="Module Prestasi Lomba & Kejuaraan" showCreateButton />
+      <PageHeading
+        title="Module Prestasi Lomba & Kejuaraan"
+        showCreateButton
+        link="/module/kejuaraan/tambah"
+      />
       <Card
         header={"DATA Prestasi Lomba & Kejuaraan".toUpperCase()}
         className="mt-[30px]"

@@ -224,81 +224,104 @@ export const DUMMY_KEJUARAAN: KejuaraanData[] = [
 export const KEJUARAAN_FORM = [
   {
     key: "nama",
-    className: "col-span-2",
+    className: "col-span-1",
     placeholder: "Nama Mahasiswa",
     label: "Nama",
+    value: "John Doe", // Contoh dummy data untuk nama mahasiswa.
   },
   {
     key: "noSK",
-    className: "col-span-2",
+    className: "col-span-1",
     placeholder: "No SK",
     label: "No SK",
+    value: "036/K/BKA/II/2023", // Contoh dummy data untuk nomor SK.
   },
   {
     key: "tanggalSK",
-    className: "col-span-2",
+    className: "col-span-1",
     placeholder: "Tanggal SK",
     label: "Tanggal SK",
+    value: "2023-07-15", // Contoh dummy data untuk tanggal SK.
   },
   {
     key: "dosen",
-    className: "col-span-2",
+    className: "col-span-1",
     placeholder: "Dosen",
     label: "Dosen",
+    value: "Dr. Jane Smith", // Contoh dummy data untuk dosen.
   },
   {
     key: "kegiatan",
-    className: "col-span-2",
+    className: "col-span-1",
     placeholder: "Kegiatan",
     label: "Kegiatan",
+    value: "Lomba Debat", // Contoh dummy data untuk kegiatan.
   },
   {
     key: "tanggalKegiatan",
-    className: "col-span-2",
+    className: "col-span-1",
     placeholder: "Tanggal Kegiatan",
     label: "Tanggal Kegiatan",
+    value: "2023-07-20", // Contoh dummy data untuk tanggal kegiatan.
   },
   {
     key: "penyelenggara",
-    className: "col-span-2",
+    className: "col-span-1",
     placeholder: "Penyelenggara",
     label: "Penyelenggara",
+    value: "Universitas ABC", // Contoh dummy data untuk penyelenggara.
   },
   {
     key: "orkem",
-    className: "col-span-2",
+    className: "col-span-1",
     placeholder: "Orkem",
     label: "Orkem",
+    value: "Internasional", // Contoh dummy data untuk orkem (organisasi kemahasiswaan).
   },
   {
     key: "tingkatKejuaraan",
-    className: "col-span-2",
+    className: "col-span-1",
     placeholder: "Tingkat Kejuaraan",
     label: "Tingkat Kejuaraan",
+    value: "Nasional", // Contoh dummy data untuk tingkat kejuaraan.
   },
   {
     key: "tingkatPrestasi",
-    className: "col-span-2",
+    className: "col-span-1",
     placeholder: "Tingkat Prestasi",
     label: "Tingkat Prestasi",
+    value: "Juara 1", // Contoh dummy data untuk tingkat prestasi.
   },
-
   {
     key: "piagamPenghargaan",
-    className: "col-span-2",
+    className: "col-span-1",
     placeholder: "Piagam Penghargaan",
     label: "Piagam Penghargaan",
+    type: "file",
+    value: "", // Tidak ada dummy data untuk file piagam penghargaan karena ini adalah file.
   },
   {
     key: "fotoPenyerahanPiala",
-    className: "col-span-2",
+    className: "col-span-1",
     placeholder: "Foto Penyerahan Piala",
     label: "Foto Penyerahan Piala",
+    type: "file",
+    value: "", // Tidak ada dummy data untuk file foto penyerahan piala karena ini adalah file.
   },
   {
     key: "undanganKejuaraan",
-    className: "col-span-2",
+    className: "col-span-1",
     placeholder: "Undangan Kejuaraan",
     label: "Undangan Kejuaraan",
+    type: "file",
+    value: "", // Tidak ada dummy data untuk file undangan kejuaraan karena ini adalah file.
+  },
+  {
+    key: "dokumenPendukung",
+    className: "col-span-1",
+    placeholder: "Dokumen Pendukung",
+    label: "Dokumen Pendukung",
+    type: "file",
+    value: "", // Tidak ada dummy data untuk file dokumen pendukung karena ini adalah file.
   },
 ];

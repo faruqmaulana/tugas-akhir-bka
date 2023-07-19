@@ -73,3 +73,64 @@ export const PENGAJUAN_BEASISWA: PengajuanBeasiswa[] = [
     tanggalPengajuan: "Selasa, 18 April 2023 pukul 13.00",
   },
 ];
+
+export const BEASISWA_FORM = [
+  {
+    key: "nama",
+    className: "col-span-1",
+    placeholder: "Nama Mahasiswa",
+    label: "Nama",
+    value: PENGAJUAN_BEASISWA[0]?.namaMahasiswa,
+  },
+  {
+    key: "noSK",
+    className: "col-span-1",
+    placeholder: "No SK",
+    label: "No SK",
+    value: PENGAJUAN_BEASISWA[0]?.nbi,
+  },
+  {
+    key: "prodi",
+    className: "col-span-1",
+    placeholder: "Program Studi",
+    label: "Program Studi",
+    value: PENGAJUAN_BEASISWA[0]?.prodi,
+  },
+  {
+    key: "fakultas",
+    className: "col-span-1",
+    placeholder: "Fakultas",
+    label: "Fakultas",
+    value: PENGAJUAN_BEASISWA[0]?.fakultas,
+  },
+  {
+    key: "semester",
+    className: "col-span-1",
+    placeholder: "Semester",
+    label: "Semester",
+    value: PENGAJUAN_BEASISWA[0]?.semester,
+  },
+  {
+    key: "deskripsi",
+    className: "col-span-1",
+    placeholder: "Deskripsi",
+    label: "Deskripsi",
+    value: PENGAJUAN_BEASISWA[0]?.deskripsi,
+  },
+  {
+    key: "dokumenFormulirPengajuan",
+    className: "col-span-1",
+    placeholder: "Dokumen Formulir Pengajuan",
+    label: "Dokumen Formulir Pengajuan",
+    type: "file",
+    value: PENGAJUAN_BEASISWA[0]?.dokumenFormulirPengajuan,
+  },
+  {
+    key: "dokumenPendukung",
+    className: "col-span-1",
+    placeholder: "Dokumen Pendukung",
+    label: "Dokumen Pendukung",
+    type: "file",
+    value: PENGAJUAN_BEASISWA[0]?.dokumenPendukung,
+  },
+];

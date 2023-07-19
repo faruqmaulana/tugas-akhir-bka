@@ -18,6 +18,7 @@ export type InputProps = {
   selectData?: any[];
   onChange?: (value: string) => void;
   labelFontSize?: string;
+  showValue?: boolean;
 };
 
 const Input = (props: InputProps) => {
@@ -33,14 +34,16 @@ const Input = (props: InputProps) => {
     register,
     selectData = undefined,
     labelFontSize = "text-[15px]",
+    showValue = true,
   } = props;
   const [inputType, setInputType] = useState(type === "date" ? "text" : type);
-  const [tempValue, setValue] = useState(value);
+  const [tempValue, setValue] = useState(showValue ? value : "");
   // Handle input value change
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
     setValue(inputValue);
   };
+
   return (
     <div className={`relative mt-auto flex flex-col gap-1 ${className}`}>
       {label && <p className={`font-medium ${labelFontSize}`}>{label}</p>}

@@ -15,6 +15,10 @@ import {
   type PengajuanBeasiswa,
 } from "~/common/constants/module/PENGAJUAN_BEASISWA";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
+import {
+  DUMMY_KEJUARAAN,
+  type KejuaraanData,
+} from "~/common/constants/DUMMY_KEJUARAAN";
 
 const INITIAL_STATE = {
   isReject: false,
@@ -26,16 +30,17 @@ const Example = () => {
   const router = useRouter();
   const [state, setState] = useState(INITIAL_STATE);
   const {
-    namaMahasiswa,
-    nbi,
-    prodi,
-    fakultas,
-    semester,
-    dokumenFormulirPengajuan,
-    deskripsi,
-    dokumenPendukung,
-    tanggalPengajuan,
-  } = PENGAJUAN_BEASISWA[0] as PengajuanBeasiswa;
+    nama,
+    dosen,
+    noSK,
+    tanggalSK,
+    orkem,
+    kegiatan,
+    tanggalKegiatan,
+    penyelenggara,
+    tingkatKejuaraan,
+    tingkatPrestasi,
+  } = DUMMY_KEJUARAAN[0] as KejuaraanData;
 
   const handleButtonAction = (type: string) => {
     if (type === "reject") {
@@ -60,7 +65,7 @@ const Example = () => {
   return (
     <>
       <PageHeading
-        title="Detail Beasiswa"
+        title="Detail Prestasi lomba dan kejuaraan"
         ownButton={
           <Button
             isMedium
@@ -97,20 +102,45 @@ const Example = () => {
           </div>
           <div className="-mt-9 grid grid-cols-12 gap-2">
             <span className="col-span-2 font-semibold">Nama Mahasiswa</span>
-            <span className="col-span-10">: {namaMahasiswa}</span>
+            <span className="col-span-3">: {nama}</span>
             <span className="col-span-2 font-semibold">NBI</span>
-            <span className="col-span-10">: {nbi}</span>
+            <span className="col-span-5">: 1462000447</span>
             <span className="col-span-2 font-semibold">Prodi</span>
-            <span className="col-span-10">: {prodi}</span>
+            <span className="col-span-3">: Teknik Informatika</span>
             <span className="col-span-2 font-semibold">Fakultas</span>
-            <span className="col-span-10">: {fakultas}</span>
-            <span className="col-span-2 font-semibold">Semester</span>
-            <span className="col-span-10">: {semester}</span>
-            <span className="col-span-2 font-semibold">Deskripsi Dokumen</span>
-            <span className="col-span-10">: {deskripsi}</span>
-            <span className="col-span-2 font-semibold">Tanggal Pengajuan</span>
-            <span className="col-span-10">: {tanggalPengajuan}</span>
-            <span className="col-span-2 font-semibold">Formulir Pengajuan</span>
+            <span className="col-span-5">: Teknik</span>
+            <span className="col-span-2 font-semibold">Dosen</span>
+            <span className="col-span-3">: {dosen}</span>
+            <span className="col-span-2 font-semibold">No SK</span>
+            <span className="col-span-5">: {noSK}</span>
+            <span className="col-span-2 font-semibold">Tanggal SK</span>
+            <span className="col-span-3">: {tanggalSK}</span>
+            <span className="col-span-2 font-semibold">
+              Organisasi Kemahasiswaan
+            </span>
+            <span className="col-span-5">: {orkem}</span>
+            <span className="col-span-2 font-semibold">Kegiatan</span>
+            <span className="col-span-3">: {kegiatan}</span>
+            <span className="col-span-2 font-semibold">Tanggal Kegiatan</span>
+            <span className="col-span-5">: {tanggalKegiatan}</span>
+            <span className="col-span-2 font-semibold">Penyelenggara</span>
+            <span className="col-span-3">: {penyelenggara}</span>
+            <span className="col-span-2 font-semibold">Tingkat</span>
+            <span className="col-span-5">: {tingkatKejuaraan}</span>
+            <span className="col-span-2 font-semibold">Prestasi</span>
+            <span className="col-span-3">: {tingkatPrestasi}</span>
+            <span className="col-span-12 font-semibold">
+              Piagam Penghargaan
+            </span>
+            <span className="col-span-12">
+              <iframe
+                className="h-[600px] w-full"
+                src="https://www.buds.com.ua/images/Lorem_ipsum.pdf"
+              ></iframe>
+            </span>
+            <span className="col-span-2 font-semibold">
+              Foto Penyerahan Piala
+            </span>
             <span className="col-span-10">:</span>
             <span className="col-span-12">
               <iframe
@@ -118,7 +148,7 @@ const Example = () => {
                 src="https://www.buds.com.ua/images/Lorem_ipsum.pdf"
               ></iframe>
             </span>
-            <span className="col-span-2 font-semibold">Dokumen Pendukung</span>
+            <span className="col-span-2 font-semibold">Undangan Kejuaraan</span>
             <span className="col-span-10">:</span>
             <span className="col-span-12">
               <iframe

@@ -193,6 +193,7 @@ model PengajuanOnUsers {
 
 /// === PENGAJUAN NEW FEATURE TABLE === /// (KEGIATAN BELUM TERLAKSANA)
 model PengajuanPKM {
+    // Program Kreativitas Mahasiswa
     id              String   @id @default(cuid())
     judul           String
     deskripsi       String

@@ -18,21 +18,6 @@ const UserManagement = () => {
   const columns = useMemo<MRT_ColumnDef<PengajuanBeasiswa>[]>(
     () => [
       {
-        header: "Status",
-        accessorKey: "status",
-        enableClickToCopy: true,
-        Cell: ({ cell }) => (
-          <div
-            className="rounded-full px-2 py-1 text-xs font-semibold opacity-95"
-            style={{
-              backgroundColor: handleBgColor(cell.getValue() as string),
-            }}
-          >
-            {cell.getValue() as string}
-          </div>
-        ),
-      },
-      {
         header: "Name",
         accessorKey: "namaMahasiswa",
         enableClickToCopy: true,
@@ -76,6 +61,21 @@ const UserManagement = () => {
         header: "Tanggal Pengajuan",
         accessorKey: "tanggalPengajuan",
         enableClickToCopy: true,
+      },
+      {
+        header: "Status",
+        accessorKey: "status",
+        enableClickToCopy: true,
+        Cell: ({ cell }) => (
+          <div
+            className="rounded-full px-2 py-1 text-xs font-semibold opacity-95"
+            style={{
+              backgroundColor: handleBgColor(cell.getValue() as string),
+            }}
+          >
+            {cell.getValue() as string}
+          </div>
+        ),
       },
       {
         header: "Action",
