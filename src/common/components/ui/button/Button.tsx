@@ -47,7 +47,7 @@ const Button = (props: ButtonProps) => {
       className={styleButton.join(" ")}
       type={isSubmit ? "submit" : "button"}
       form={buttonForm}
-      disabled={isDisabled}
+      disabled={isDisabled || isLoading}
       {...otherProps}
     >
       {isLoading || buttonIcon ? (

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 const Spinner = (props: any) => {
-  const { width = "24", height = "24", fill = "fill-red-600" } = props;
+  const { width = "24", height = "24", fill = "fill-gray-500" } = props;
 
   return (
     <svg

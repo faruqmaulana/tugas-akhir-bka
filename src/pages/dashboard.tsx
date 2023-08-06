@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/require-await */
 import dynamic from "next/dynamic";
+import { requireAuth } from "~/common/authentication/requireAuth";
 import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import Loader from "~/common/components/ui/loader/Loader";
@@ -18,6 +20,10 @@ const TableExample = dynamic(
     loading: () => <Loader />,
   }
 );
+
+export const getServerSideProps = requireAuth(async (ctx) => {
+  return { props: {} };
+});
 
 export default function Home() {
   return (

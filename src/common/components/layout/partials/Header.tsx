@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
@@ -17,6 +18,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "../../ui/hover-card";
+import { signOut } from "next-auth/react";
 
 const Header = ({ setShowAside, showAside }: any) => {
   const router = useRouter();
@@ -77,9 +79,7 @@ const Header = ({ setShowAside, showAside }: any) => {
                 </li>
                 <li
                   className={`${styles.list}`}
-                  onClick={() => {
-                    void router.push("/");
-                  }}
+                  onClick={() => signOut({ redirect: true })}
                 >
                   <LogoutIcon />
                   <button type="button">Sign out</button>

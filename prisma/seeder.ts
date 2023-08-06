@@ -1,114 +1,126 @@
-// /* eslint-disable @typescript-eslint/no-floating-promises */
-// /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// /* eslint-disable @typescript-eslint/no-unused-vars */
-// /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-// /* eslint-disable @typescript-eslint/no-unsafe-call */
-// /* eslint-disable @typescript-eslint/no-misused-promises */
-// import { PrismaClient, Role } from "@prisma/client";
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+import { PrismaClient, Role } from "@prisma/client";
+import { hash } from "argon2";
 
-// const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
-// async function seedFakultas() {
-//   await prisma.fakultas.createMany({
-//     data: [
-//       { name: "Fakultas A" },
-//       { name: "Fakultas B" },
-//       // Add more fakultas data as needed
-//     ],
-//   });
-// }
+async function seedFakultas() {
+  await prisma.masterDataFakultas.createMany({
+    data: [
+      { name: "Fakultas A" },
+      { name: "Fakultas B" },
+      // Add more fakultas data as needed
+    ],
+  });
+}
 
-// async function seedProdi() {
-//   const fakultas = await prisma.fakultas.findMany(); // Retrieve all users
+async function seedProdi() {
+  const fakultas = await prisma.masterDataTingkatPrestasi.findMany(); // Retrieve all users
 
-//   await prisma.prodi.createMany({
-//     data: [
-//       { name: "Prodi A", fakultasId: fakultas[0]?.id },
-//       { name: "Prodi B", fakultasId: fakultas[0]?.id },
-//       { name: "Prodi C", fakultasId: fakultas[1]?.id },
-//       // Add more prodi data as needed
-//     ],
-//   });
-// }
+  await prisma.masterDataProdi.createMany({
+    data: [
+      { name: "Prodi A", fakultasId: fakultas[0]?.id },
+      { name: "Prodi B", fakultasId: fakultas[0]?.id },
+      { name: "Prodi C", fakultasId: fakultas[1]?.id },
+      // Add more prodi data as needed
+    ],
+  });
+}
 
-// async function seedUsers() {
-//   const prodi = await prisma.prodi.findMany(); // Retrieve all users
+async function seedUsers() {
+  const prodi = await prisma.masterDataProdi.findMany(); // Retrieve all users
 
-//   await prisma.user.createMany({
-//     data: [
-//       {
-//         name: "User 1",
-//         npm: "npm-1",
-//         alamat: "Alamat 1",
-//         semester: "Semester 1",
-//         phone: "Phone 1",
-//         email: "user1@example.com",
-//         password: "password1",
-//         role: Role.MAHASISWA,
-//         prodiId: prodi[0]!.id,
-//       },
-//       {
-//         name: "User 2",
-//         npm: "npm-2",
-//         alamat: "Alamat 2",
-//         semester: "Semester 2",
-//         phone: "Phone 2",
-//         email: "user2@example.com",
-//         password: "password2",
-//         role: Role.ADMIN,
-//         prodiId: prodi[1]!.id,
-//       },
-//       // Add more user data as needed
-//     ],
-//   });
-// }
+  await prisma.user.createMany({
+    data: [
+      // {
+      //   name: "User 1",
+      //   npm: "npm-1",
+      //   alamat: "Alamat 1",
+      //   semester: "Semester 1",
+      //   phone: "Phone 1",
+      //   email: "user1@example.com",
+      //   password: "password1",
+      //   role: Role.MAHASISWA,
+      //   prodiId: prodi[0]!.id,
+      // },
+      // {
+      //   name: "faruqlulus",
+      //   npm: "faruqlulus",
+      //   alamat: "Alamat 2",
+      //   semester: "Semester 2",
+      //   phone: "Phone 2",
+      //   email: "user3@example.com",
+      //   password: await hash("faruqlulus"),
+      //   role: Role.ADMIN,
+      //   prodiId: prodi[1]!.id,
+      // },
+      {
+        name: "dimasspeed",
+        npm: "dimasspeed",
+        alamat: "Alamat 2",
+        semester: "Semester 2",
+        phone: "Phone 2",
+        email: "user4@example.com",
+        password: await hash("dimasspeed"),
+        role: Role.MAHASISWA,
+        prodiId: prodi[1]!.id,
+      },
+      // Add more user data as needed
+    ],
+  });
+}
 
-// async function seedTingkatKejuaraan() {
-//   await prisma.tingkatKejuaraan.createMany({
-//     data: [
-//       { name: "Tingkat Kejuaraan A" },
-//       { name: "Tingkat Kejuaraan B" },
-//       // Add more tingkat kejuaraan data as needed
-//     ],
-//   });
-// }
+async function seedTingkatKejuaraan() {
+  await prisma.masterDataTingkatKejuaraan.createMany({
+    data: [
+      { name: "Tingkat Kejuaraan A" },
+      { name: "Tingkat Kejuaraan B" },
+      // Add more tingkat kejuaraan data as needed
+    ],
+  });
+}
 
-// async function seedTingkatPrestasi() {
-//   await prisma.tingkatPrestasi.createMany({
-//     data: [
-//       { name: "Tingkat Prestasi A" },
-//       { name: "Tingkat Prestasi B" },
-//       // Add more tingkat prestasi data as needed
-//     ],
-//   });
-// }
+async function seedTingkatPrestasi() {
+  await prisma.masterDataTingkatPrestasi.createMany({
+    data: [
+      { name: "Tingkat Prestasi A" },
+      { name: "Tingkat Prestasi B" },
+      // Add more tingkat prestasi data as needed
+    ],
+  });
+}
 
-// async function seedStatus() {
-//   await prisma.status.createMany({
-//     data: [
-//       { name: "Status A", backgroundColor: "#000000" },
-//       { name: "Status B", backgroundColor: "#FFFFFF" },
-//       // Add more status data as needed
-//     ],
-//   });
-// }
+async function seedStatus() {
+  await prisma.masterDataStatus.createMany({
+    data: [
+      { name: "Status A", backgroundColor: "#000000" },
+      { name: "Status B", backgroundColor: "#FFFFFF" },
+      // Add more status data as needed
+    ],
+  });
+}
 
-// async function seedDosen() {
-//   await prisma.dosen.createMany({
-//     data: [
-//       { name: "Dosen 1", nidn: "nidn-1" },
-//       { name: "Dosen 2", nidn: "nidn-2" },
-//       // Add more dosen data as needed
-//     ],
-//   });
-// }
+async function seedDosen() {
+  await prisma.dosen.createMany({
+    data: [
+      { name: "Dosen 1", nidn: "nidn-1" },
+      { name: "Dosen 2", nidn: "nidn-2" },
+      // Add more dosen data as needed
+    ],
+  });
+}
 
 // async function seedPrestasiDataTable() {
 //   const users = await prisma.user.findMany(); // Retrieve all users
 //   const dosen = await prisma.dosen.findMany(); // Retrieve all users
-//   const tingkatKejuaraan = await prisma.tingkatKejuaraan.findMany(); // Retrieve all users
-//   const tingkatPrestasi = await prisma.tingkatPrestasi.findMany(); // Retrieve all users
-//   const status = await prisma.status.findMany(); // Retrieve all users
+//   const tingkatKejuaraan = await prisma.masterDataTingkatKejuaraan.findMany(); // Retrieve all users
+//   const tingkatPrestasi = await prisma.masterDataTingkatPrestasi.findMany(); // Retrieve all users
+//   const status = await prisma.masterDataStatus.findMany(); // Retrieve all users
 
 //   await prisma.prestasiDataTable.create({
 //     data: {
@@ -132,29 +144,29 @@
 //   });
 // }
 
-// async function seed() {
-//   const seedingFunctions = [
-//     seedFakultas,
-//     seedProdi,
-//     seedUsers,
-//     seedTingkatKejuaraan,
-//     seedTingkatPrestasi,
-//     seedStatus,
-//     seedDosen,
-//     seedPrestasiDataTable,
-//   ];
+async function seed() {
+  const seedingFunctions = [
+    // seedFakultas,
+    // seedProdi,
+    seedUsers,
+    // seedTingkatKejuaraan,
+    // seedTingkatPrestasi,
+    // seedStatus,
+    // seedDosen,
+    // seedPrestasiDataTable,
+  ];
 
-//   try {
-//     for (const seedingFunction of seedingFunctions) {
-//       await seedingFunction();
-//     }
+  try {
+    for (const seedingFunction of seedingFunctions) {
+      await seedingFunction();
+    }
 
-//     console.log("Seeder completed successfully.");
-//   } catch (error) {
-//     console.error("Seeder encountered an error:", error);
-//   } finally {
-//     await prisma.$disconnect();
-//   }
-// }
+    console.log("Seeder completed successfully.");
+  } catch (error) {
+    console.error("Seeder encountered an error:", error);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
 
-// seed();
+seed();
