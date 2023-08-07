@@ -20,8 +20,8 @@ async function seedFakultas() {
 }
 
 async function seedProdi() {
-  const fakultas = await prisma.masterDataTingkatPrestasi.findMany(); // Retrieve all users
-
+  const fakultas = await prisma.masterDataFakultas.findMany(); // Retrieve all users
+  console.log("fakultas", fakultas);
   await prisma.masterDataProdi.createMany({
     data: [
       { name: "Prodi A", fakultasId: fakultas[0]?.id },
@@ -37,28 +37,17 @@ async function seedUsers() {
 
   await prisma.user.createMany({
     data: [
-      // {
-      //   name: "User 1",
-      //   npm: "npm-1",
-      //   alamat: "Alamat 1",
-      //   semester: "Semester 1",
-      //   phone: "Phone 1",
-      //   email: "user1@example.com",
-      //   password: "password1",
-      //   role: Role.MAHASISWA,
-      //   prodiId: prodi[0]!.id,
-      // },
-      // {
-      //   name: "faruqlulus",
-      //   npm: "faruqlulus",
-      //   alamat: "Alamat 2",
-      //   semester: "Semester 2",
-      //   phone: "Phone 2",
-      //   email: "user3@example.com",
-      //   password: await hash("faruqlulus"),
-      //   role: Role.ADMIN,
-      //   prodiId: prodi[1]!.id,
-      // },
+      {
+        name: "faruqlulus",
+        npm: "faruqlulus",
+        alamat: "Alamat 2",
+        semester: "Semester 2",
+        phone: "Phone 2",
+        email: "user3@example.com",
+        password: await hash("faruqlulus"),
+        role: Role.ADMIN,
+        prodiId: prodi[1]!.id,
+      },
       {
         name: "dimasspeed",
         npm: "dimasspeed",
@@ -86,7 +75,7 @@ async function seedTingkatKejuaraan() {
 }
 
 async function seedTingkatPrestasi() {
-  await prisma.masterDataTingkatPrestasi.createMany({
+  await prisma.masterDataFakultas.createMany({
     data: [
       { name: "Tingkat Prestasi A" },
       { name: "Tingkat Prestasi B" },
@@ -146,8 +135,8 @@ async function seedDosen() {
 
 async function seed() {
   const seedingFunctions = [
-    // seedFakultas,
-    // seedProdi,
+    seedFakultas,
+    seedProdi,
     seedUsers,
     // seedTingkatKejuaraan,
     // seedTingkatPrestasi,
