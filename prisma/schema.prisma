@@ -35,10 +35,10 @@ enum PatenAndHaki {
 model User {
     id            String    @id @default(cuid())
     name          String
-    npm           String?
+    npm           String
     alamat        String?
     semester      String?
-    phone         String?
+    phone         String
     email         String    @unique
     emailVerified DateTime?
     password      String

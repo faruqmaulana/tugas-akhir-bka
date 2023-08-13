@@ -19,6 +19,7 @@ export type InputProps = {
   onChange?: (value: string) => void;
   labelFontSize?: string;
   showValue?: boolean;
+  autocomplete?: string;
 };
 
 const Input = (props: InputProps) => {
@@ -35,6 +36,7 @@ const Input = (props: InputProps) => {
     selectData = undefined,
     labelFontSize = "text-[15px]",
     showValue = true,
+    autocomplete,
   } = props;
   const [inputType, setInputType] = useState(type === "date" ? "text" : type);
   const [tempValue, setValue] = useState(showValue ? value : "");
@@ -114,6 +116,7 @@ const Input = (props: InputProps) => {
           type === "color") && (
           <input
             {...(register || {})}
+            autoComplete={autocomplete || "off"}
             disabled={disabled}
             type={inputType}
             onFocus={() => {

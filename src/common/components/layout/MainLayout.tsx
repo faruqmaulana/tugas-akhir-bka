@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { useState } from "react";
+import Spinner from "../svg/Spinner";
 import { Aside } from "./partials/Aside";
 import { Header } from "./partials/Header";
+import { useMainLayout } from "~/common/hooks/layout/useMainLayout";
 
 const MainLayout = ({ children }: any) => {
-  const [showAside, setShowAside] = useState<boolean>(true);
+  const { showAside, setShowAside, userData } = useMainLayout();
 
   return (
     <div>
@@ -16,7 +17,13 @@ const MainLayout = ({ children }: any) => {
       >
         <Header setShowAside={setShowAside} showAside={showAside} />
         <main className="min-h-screen bg-charcoal-100 px-5 pb-5 pt-[90px]">
-          {children}
+          {userData ? (
+            children
+          ) : (
+            <div className="flex h-full min-h-[80vh] items-center justify-center">
+              <Spinner width="30px" height="30px" />
+            </div>
+          )}
         </main>
       </div>
     </div>

@@ -7,7 +7,26 @@ import {
   UserManagementIcon,
 } from "~/common/components/svg";
 
-const LIST_MENU: any = [
+export type SubMenuItem = {
+  id: number;
+  title: string;
+  url: string;
+  module: string;
+};
+
+export type MenuItemType = {
+  id: number;
+  title: string;
+  url: string;
+  module: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  isOpen?: boolean;
+  type?: string;
+  submenu?: SubMenuItem[];
+  counter?: number;
+};
+
+const LIST_MENU: MenuItemType[] = [
   {
     id: 1,
     title: "Dashboard",

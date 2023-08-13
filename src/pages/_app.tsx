@@ -6,18 +6,21 @@ import { AppLayout } from "~/common/components/layout/AppLayout";
 import { ToastContainer } from "react-toastify";
 import "~/styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
+import { GlobalProvider } from "~/common/context/GlobalContext";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <SessionProvider session={session}>
-      <ToastContainer />
-      <AppLayout>
-        <Component {...pageProps} />
-      </AppLayout>
-    </SessionProvider>
+    <GlobalProvider>
+      <SessionProvider session={session}>
+        <ToastContainer />
+        <AppLayout>
+          <Component {...pageProps} />
+        </AppLayout>
+      </SessionProvider>
+    </GlobalProvider>
   );
 };
 

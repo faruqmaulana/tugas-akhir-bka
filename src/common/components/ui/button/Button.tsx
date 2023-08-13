@@ -40,7 +40,7 @@ const Button = (props: ButtonProps) => {
   if (isDisabled) styleButton.push(styles.disabled);
   if (className) styleButton.push(className);
 
-  const getLoader = loaderIcon ?? <Spinner />;
+  const getLoader = loaderIcon ?? <Spinner fill="fill-gray-500" />;
 
   return (
     <button

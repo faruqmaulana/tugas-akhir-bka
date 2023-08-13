@@ -7,45 +7,14 @@ import Image from "next/image";
 import Link from "next/link";
 import ProfilePhoto from "../../../../../public/profile.jpg";
 import UntagLogo from "../../../../../public/untag.jpg";
-import { useState } from "react";
-import LIST_MENU from "~/common/constants/MENU";
-import { useRouter } from "next/router";
 import LinkBuilder from "./LinkBuilder";
 import { MenuWithSub } from "./MenuWithub";
 import styles from "~/styles/partials/Aside.module.scss";
-import { USER_NAME, USER_ROLE } from "~/common/constants";
+import { useAside } from "~/common/hooks/layout/useAside";
 
 const Aside = ({ showAside }: any) => {
-  const router = useRouter();
-
-  const [listMenu, setListMenu] = useState<any[]>(LIST_MENU);
-
-  const handleCollapse = (indexList: number) => {
-    const tempCollapseData = [...listMenu];
-
-    tempCollapseData.map((list) => {
-      if (tempCollapseData[indexList].type === list.type) {
-        tempCollapseData[indexList].isOpen =
-          !tempCollapseData[indexList]?.isOpen;
-      } else {
-        list.isOpen = false;
-      }
-
-      return false;
-    });
-
-    setListMenu(tempCollapseData);
-  };
-
-  const handleCloseCollapse = () => {
-    const tempCollapse = [...listMenu];
-    tempCollapse.forEach((value: any, indexList: number) => {
-      if (value?.isOpen) {
-        tempCollapse[indexList].isOpen = !tempCollapse[indexList]?.isOpen;
-      }
-    });
-    setListMenu(tempCollapse);
-  };
+  const { router, listMenu, user, handleCollapse, handleCloseCollapse } =
+    useAside();
 
   return (
     <aside className={`${styles.wrapper} ${!showAside && styles.hide}`}>
@@ -78,8 +47,8 @@ const Aside = ({ showAside }: any) => {
             height="70"
           />
         </div>
-        <h1 className={styles.name}>{USER_NAME}</h1>
-        <p className={styles.role}>{USER_ROLE}</p>
+        <h1 className={styles.name}>{user?.name}</h1>
+        <p className={styles.role}>{user?.role}</p>
       </div>
 
       <div className={styles.menu}>
@@ -95,7 +64,7 @@ const Aside = ({ showAside }: any) => {
             ) : (
               <MenuWithSub
                 {...item}
-                index={index}
+                index={item.id}
                 key={item.id}
                 isAllAccess={true}
                 handleCollapse={handleCollapse}

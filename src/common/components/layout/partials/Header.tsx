@@ -1,31 +1,29 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-
 import styles from "~/styles/layout/Header.module.scss";
 import HamburgerIcon from "../../svg/HamburgerIcon";
 import ArrowIcon from "../../svg/ArrowIcon";
 import PersonIcon from "../../svg/PersonIcon";
 import LogoutIcon from "../../svg/LogoutIcon";
-import { useRouter } from "next/router";
 import { RoleManagementIcon } from "../../svg";
 import NotificationInfo from "../../ui/notification/NotificationInfo";
-import { USER_NAME, USER_ROLE } from "~/common/constants";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "../../ui/hover-card";
 import { signOut } from "next-auth/react";
+import { type Dispatch, type SetStateAction } from "react";
+import { useHeader } from "~/common/hooks/layout/useHeader";
 
-const Header = ({ setShowAside, showAside }: any) => {
-  const router = useRouter();
+export type HeaderProps = {
+  showAside: boolean;
+  setShowAside: Dispatch<SetStateAction<boolean>>;
+};
 
-  const handleHamburgerButton = () => {
-    setShowAside(!showAside);
-  };
+const Header = (props: HeaderProps) => {
+  const { showAside } = props;
+
+  const { router, user, handleHamburgerButton } = useHeader(props);
 
   return (
     <header className={`${styles.header} ${showAside && styles.full}`}>
@@ -44,8 +42,8 @@ const Header = ({ setShowAside, showAside }: any) => {
             <HoverCardTrigger>
               <button type="button" className={styles.profileCorner}>
                 <div className={styles.info}>
-                  <h1 className={styles.name}>{USER_NAME}</h1>
-                  <p className={styles.role}>{USER_ROLE}</p>
+                  <h1 className={styles.name}>{user?.name}</h1>
+                  <p className={styles.role}>{user?.role}</p>
                 </div>
 
                 <div className={styles.arrow}>
@@ -79,7 +77,10 @@ const Header = ({ setShowAside, showAside }: any) => {
                 </li>
                 <li
                   className={`${styles.list}`}
-                  onClick={() => signOut({ redirect: true })}
+                  onClick={() => {
+                    void signOut({ redirect: false });
+                    void router.push("/");
+                  }}
                 >
                   <LogoutIcon />
                   <button type="button">Sign out</button>
