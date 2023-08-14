@@ -20,3 +20,18 @@ export const showToast = (
     theme: "colored",
   });
 };
+
+export const customToast = (data: string, message: string | undefined) => {
+  const isError = data?.toLowerCase() === "error";
+  if (message)
+    return toast(message, {
+      type: isError ? "error" : "success",
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "colored",
+    });
+};

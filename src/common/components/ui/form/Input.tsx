@@ -4,6 +4,8 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable indent */
 import React, { useState } from "react";
+import EyeSlashIcon from "~/common/EyeSlashIcon";
+import EyeIcon from "../../svg/EyeIcon";
 
 export type InputProps = {
   disabled?: boolean;
@@ -20,6 +22,7 @@ export type InputProps = {
   labelFontSize?: string;
   showValue?: boolean;
   autocomplete?: string;
+  error?: string;
 };
 
 const Input = (props: InputProps) => {
@@ -37,14 +40,10 @@ const Input = (props: InputProps) => {
     labelFontSize = "text-[15px]",
     showValue = true,
     autocomplete,
+    error,
   } = props;
   const [inputType, setInputType] = useState(type === "date" ? "text" : type);
-  const [tempValue, setValue] = useState(showValue ? value : "");
-  // Handle input value change
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = event.target.value;
-    setValue(inputValue);
-  };
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   return (
     <div className={`relative mt-auto flex flex-col gap-1 ${className}`}>
@@ -118,7 +117,7 @@ const Input = (props: InputProps) => {
             {...(register || {})}
             autoComplete={autocomplete || "off"}
             disabled={disabled}
-            type={inputType}
+            type={showPassword ? "text" : inputType}
             onFocus={() => {
               if (type === "date") {
                 setInputType("date");
@@ -138,18 +137,30 @@ const Input = (props: InputProps) => {
               ? "dark:placeholder:text-neutral-900 "
               : "dark:placeholder:text-neutral-400 "
           }`}
-            value={tempValue}
             placeholder={placeholder}
             aria-label={placeholder}
             aria-describedby="basic-addon1"
-            onChange={handleInputChange}
           />
+        )}
+        {type === "password" && (
+          <button
+            type="button"
+            className="absolute right-2 top-1/2 z-[99] -translate-y-1/2 cursor-pointer"
+            onClick={() => {
+              setShowPassword(!showPassword);
+            }}
+          >
+            {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
+          </button>
         )}
       </div>
       {additionalInfo && (
         <p className="text-sm text-red-500 lg:absolute lg:-bottom-5">
           *{additionalInfo}
         </p>
+      )}
+      {error && (
+        <p className="text-sm text-red-500 lg:absolute lg:-bottom-5">{error}</p>
       )}
     </div>
   );

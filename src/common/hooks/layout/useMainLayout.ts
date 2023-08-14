@@ -8,10 +8,10 @@ const useMainLayout = () => {
   const { data: user, isLoading } = api.user.userProfile.useQuery();
 
   useEffect(() => {
-    if (!isLoading && user && !state.user) {
+    if (!isLoading && user) {
       dispatch({ type: "UPDATE_USER", payload: user });
     }
-  }, [isLoading, user, state.user, dispatch]);
+  }, [isLoading, user, dispatch]);
 
   const userData = state?.user;
 

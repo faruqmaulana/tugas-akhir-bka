@@ -1,57 +1,24 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect } from "react";
-import { useForm } from "react-hook-form";
+/* eslint-disable @typescript-eslint/require-await */
 import Email from "~/common/components/svg/Email";
 import LockIcon from "~/common/components/svg/Lock";
 import { Button } from "~/common/components/ui/button/Button";
 import Card from "~/common/components/ui/card/Card";
 import Input from "~/common/components/ui/form/Input";
 import PageHeading from "~/common/components/ui/header/PageHeading";
-import { useGlobalContext } from "~/common/context/GlobalContext";
-import {
-  type ILoginInformation,
-  loginInformation,
-} from "~/common/schemas/user/login-information.schema";
+import { useLoginInformation } from "~/common/hooks/module/profile/useLoginInformation";
 
 const InformasiLogin = () => {
-  const {
-    state: { user },
-  } = useGlobalContext();
-
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ILoginInformation>({
-    // defaultValues: {
-    //   name: user?.name,
-    //   email: user?.email,
-    //   password: "",
-    // },
-    resolver: zodResolver(loginInformation),
-  });
-
-  useEffect(() => {
-    if (user) {
-      // Set default values from API response
-      Object.entries(user).forEach(([key, value]) => {
-        setValue(key, value);
-      });
-    }
-  }, [setValue, user]);
-
-  const onSubmit = useCallback(async (data: ILoginInformation) => {
-    console.log("data", data);
-  }, []);
+  const { register, handleSubmit, errors, onSubmit, loading } =
+    useLoginInformation();
 
   const INFORMASI_LOGIN = [
     {
       className: "col-span-1",
       placeholder: "Nama Lengkap",
       label: "Nama Lengkap",
-      register: register("name"),
+      register: { ...register("name") },
+      error: errors.name?.message,
     },
     {
       className: "col-span-1",
@@ -59,7 +26,7 @@ const InformasiLogin = () => {
       leftAddonComponent: <Email />,
       label: "Email",
       disabled: true,
-      register: register("email"),
+      register: { ...register("email") },
     },
     {
       className: "col-span-1",
@@ -69,7 +36,8 @@ const InformasiLogin = () => {
       type: "password",
       autocomplete: "off",
       value: "",
-      register: register("password"),
+      register: { ...register("password") },
+      error: errors.requireOldPassword?.message,
     },
     {
       className: "col-span-1",
@@ -78,6 +46,8 @@ const InformasiLogin = () => {
       label: "Kata Sandi Baru",
       type: "password",
       autocomplete: "off",
+      register: { ...register("newPassword") },
+      error: errors.customErrorPassword?.message,
     },
     {
       className: "col-span-1",
@@ -86,6 +56,8 @@ const InformasiLogin = () => {
       label: "Konfirmasi Kata Sandi",
       type: "password",
       autocomplete: "off",
+      register: { ...register("passwordConfirmation") },
+      error: errors.customErrorPassword?.message,
     },
   ];
 
@@ -97,7 +69,13 @@ const InformasiLogin = () => {
           {INFORMASI_LOGIN.map((val, index) => (
             <Input key={index} {...val} />
           ))}
-          <Button isSubmit isSuccess isMedium className="col-span-1 ml-auto">
+          <Button
+            isSubmit
+            isSuccess
+            isMedium
+            isLoading={loading}
+            className="col-span-1 ml-auto"
+          >
             Simpan
           </Button>
         </Card>
