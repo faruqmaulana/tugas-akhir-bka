@@ -5,6 +5,7 @@ import { verify } from "argon2";
 import { CustomError } from "~/common/types/custom";
 import { PASSWORD_NOT_MATCH, UPDATE_PROFILE_SUCCESS } from "~/common/message";
 import { TRPCError } from "@trpc/server";
+import { CustomTrpcError } from "~/common/config/trpcErrorHandling";
 
 export const userData = createTRPCRouter({
   userProfile: protectedProcedure.query(async ({ ctx }) => {
@@ -31,13 +32,12 @@ export const userData = createTRPCRouter({
 
         // check password is correct
         const isValidPassword = await verify(user!.password, password);
+
         if (!isValidPassword && password !== "") {
-          // throw new TRPCError({
-          //   code: "INTERNAL_SERVER_ERROR",
-          //   message: "An unexpected error occurred, please try again later.",
-          //   // optional: pass the original error to retain stack trace
-          // });
-          return new CustomError(PASSWORD_NOT_MATCH);
+          CustomTrpcError({
+            code: "UNAUTHORIZED",
+            message: PASSWORD_NOT_MATCH,
+          });
         }
 
         await ctx.prisma.user.update({
@@ -53,7 +53,7 @@ export const userData = createTRPCRouter({
           message: UPDATE_PROFILE_SUCCESS,
         };
       } catch (error) {
-        console.log("error", error);
+        throw error;
       }
     }),
 });

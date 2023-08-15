@@ -14,7 +14,7 @@ const useLoginInformation = () => {
     state: { user },
   } = useGlobalContext();
   const { refetch: refetchUserProfile } = api.user.userProfile.useQuery();
-  
+
   const [loading, setLoading] = useState<boolean>(false);
   const { mutate: mutateLoginInformation } =
     api.user.updateLoginInformation.useMutation();
@@ -50,16 +50,14 @@ const useLoginInformation = () => {
     setLoading(true);
     mutateLoginInformation(payload, {
       onSuccess(data, variable) {
-        customToast(data?.name, data?.message);
+        customToast("success", data?.message);
         setLoading(false);
         void refetchUserProfile();
       },
-      // onError(error) {
-      //   console.log("aasdasdasdasd");
-      //   console.log("error", error);
-      //   customToast("error", error?.message);
-      //   setLoading(false);
-      // },
+      onError(error) {
+        customToast("error", error?.message);
+        setLoading(false);
+      },
     });
   }, []);
 
