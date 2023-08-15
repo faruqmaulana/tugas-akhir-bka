@@ -5,11 +5,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { PrismaClient, Role } from "@prisma/client";
+import { hash } from "argon2";
 
 const prisma = new PrismaClient();
 
 async function seedFakultas() {
-  await prisma.fakultas.createMany({
+  await prisma.masterDataFakultas.createMany({
     data: [
       { name: "Fakultas A" },
       { name: "Fakultas B" },
@@ -19,9 +20,9 @@ async function seedFakultas() {
 }
 
 async function seedProdi() {
-  const fakultas = await prisma.fakultas.findMany(); // Retrieve all users
-
-  await prisma.prodi.createMany({
+  const fakultas = await prisma.masterDataFakultas.findMany(); // Retrieve all users
+  console.log("fakultas", fakultas);
+  await prisma.masterDataProdi.createMany({
     data: [
       { name: "Prodi A", fakultasId: fakultas[0]?.id },
       { name: "Prodi B", fakultasId: fakultas[0]?.id },
@@ -32,30 +33,30 @@ async function seedProdi() {
 }
 
 async function seedUsers() {
-  const prodi = await prisma.prodi.findMany(); // Retrieve all users
+  const prodi = await prisma.masterDataProdi.findMany(); // Retrieve all users
 
   await prisma.user.createMany({
     data: [
       {
-        name: "User 1",
-        npm: "npm-1",
-        alamat: "Alamat 1",
-        semester: "Semester 1",
-        phone: "Phone 1",
-        email: "user1@example.com",
-        password: "password1",
-        role: Role.MAHASISWA,
-        prodiId: prodi[0]!.id,
-      },
-      {
-        name: "User 2",
-        npm: "npm-2",
+        name: "faruqlulus",
+        npm: "faruqlulus",
         alamat: "Alamat 2",
         semester: "Semester 2",
         phone: "Phone 2",
-        email: "user2@example.com",
-        password: "password2",
+        email: "user3@example.com",
+        password: await hash("faruqlulus"),
         role: Role.ADMIN,
+        prodiId: prodi[1]!.id,
+      },
+      {
+        name: "dimasspeed",
+        npm: "dimasspeed",
+        alamat: "Alamat 2",
+        semester: "Semester 2",
+        phone: "Phone 2",
+        email: "user4@example.com",
+        password: await hash("dimasspeed"),
+        role: Role.MAHASISWA,
         prodiId: prodi[1]!.id,
       },
       // Add more user data as needed
@@ -64,7 +65,7 @@ async function seedUsers() {
 }
 
 async function seedTingkatKejuaraan() {
-  await prisma.tingkatKejuaraan.createMany({
+  await prisma.masterDataTingkatKejuaraan.createMany({
     data: [
       { name: "Tingkat Kejuaraan A" },
       { name: "Tingkat Kejuaraan B" },
@@ -74,7 +75,7 @@ async function seedTingkatKejuaraan() {
 }
 
 async function seedTingkatPrestasi() {
-  await prisma.tingkatPrestasi.createMany({
+  await prisma.masterDataFakultas.createMany({
     data: [
       { name: "Tingkat Prestasi A" },
       { name: "Tingkat Prestasi B" },
@@ -84,7 +85,7 @@ async function seedTingkatPrestasi() {
 }
 
 async function seedStatus() {
-  await prisma.status.createMany({
+  await prisma.masterDataStatus.createMany({
     data: [
       { name: "Status A", backgroundColor: "#000000" },
       { name: "Status B", backgroundColor: "#FFFFFF" },
@@ -103,45 +104,45 @@ async function seedDosen() {
   });
 }
 
-async function seedPrestasiDataTable() {
-  const users = await prisma.user.findMany(); // Retrieve all users
-  const dosen = await prisma.dosen.findMany(); // Retrieve all users
-  const tingkatKejuaraan = await prisma.tingkatKejuaraan.findMany(); // Retrieve all users
-  const tingkatPrestasi = await prisma.tingkatPrestasi.findMany(); // Retrieve all users
-  const status = await prisma.status.findMany(); // Retrieve all users
+// async function seedPrestasiDataTable() {
+//   const users = await prisma.user.findMany(); // Retrieve all users
+//   const dosen = await prisma.dosen.findMany(); // Retrieve all users
+//   const tingkatKejuaraan = await prisma.masterDataTingkatKejuaraan.findMany(); // Retrieve all users
+//   const tingkatPrestasi = await prisma.masterDataTingkatPrestasi.findMany(); // Retrieve all users
+//   const status = await prisma.masterDataStatus.findMany(); // Retrieve all users
 
-  await prisma.prestasiDataTable.create({
-    data: {
-      nama: "Prestasi 1",
-      noSK: "no-sk-1",
-      tanggalSK: new Date(),
-      orkem: "Orkem 1",
-      kegiatan: "Kegiatan 1",
-      tanggalKegiatan: new Date(),
-      penyelenggara: "Penyelenggara 1",
-      keterangan: "Keterangan 1",
-      isValidated: false,
-      validatedAt: new Date(),
-      tingkatKejuaraanId: tingkatKejuaraan[0]!.id,
-      tingkatPrestasiId: tingkatPrestasi[0]!.id,
-      statusId: status[0]!.id,
-      dosenId: dosen[0]!.id,
-      users: { connect: [{ id: users[0]?.id }, { id: users[1]?.id }] },
-      // Connect the first user
-    },
-  });
-}
+//   await prisma.prestasiDataTable.create({
+//     data: {
+//       nama: "Prestasi 1",
+//       noSK: "no-sk-1",
+//       tanggalSK: new Date(),
+//       orkem: "Orkem 1",
+//       kegiatan: "Kegiatan 1",
+//       tanggalKegiatan: new Date(),
+//       penyelenggara: "Penyelenggara 1",
+//       keterangan: "Keterangan 1",
+//       isValidated: false,
+//       validatedAt: new Date(),
+//       tingkatKejuaraanId: tingkatKejuaraan[0]!.id,
+//       tingkatPrestasiId: tingkatPrestasi[0]!.id,
+//       statusId: status[0]!.id,
+//       dosenId: dosen[0]!.id,
+//       users: { connect: [{ id: users[0]?.id }, { id: users[1]?.id }] },
+//       // Connect the first user
+//     },
+//   });
+// }
 
 async function seed() {
   const seedingFunctions = [
     seedFakultas,
     seedProdi,
     seedUsers,
-    seedTingkatKejuaraan,
-    seedTingkatPrestasi,
-    seedStatus,
-    seedDosen,
-    seedPrestasiDataTable,
+    // seedTingkatKejuaraan,
+    // seedTingkatPrestasi,
+    // seedStatus,
+    // seedDosen,
+    // seedPrestasiDataTable,
   ];
 
   try {

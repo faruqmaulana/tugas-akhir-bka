@@ -1,0 +1,47 @@
+.container {
+  @apply grid lg:grid-cols-6  h-screen grid-cols-1;
+
+  .image {
+    @apply lg:flex flex-[2] h-screen relative col-start-1 col-end-5 hidden;
+  }
+
+  .right {
+    @apply flex flex-col items-center justify-center lg:col-start-5 lg:col-end-7;
+
+    .title {
+      @apply font-bold text-[#2564AD] md:text-3xl text-2xl tracking-wider mb-10;
+    }
+
+    .copyright {
+      @apply absolute bottom-4 text-[#2564AD] text-sm;
+    }
+  }
+}
+
+.welcome {
+  @apply text-slate-400 text-base mb-5;
+}
+
+.form {
+  @apply w-[350px] flex flex-col gap-5;
+
+  .formControl {
+    @apply border indent-2 border-gray-400 rounded-md text-[15px] w-full h-10 placeholder:mb-10 pl-2 placeholder:text-slate-600 focus:placeholder:text-slate-300 focus:outline-none focus:border-primary;
+
+    &.error {
+      @apply border-b-danger-400;
+    }
+  }
+
+  .formButton {
+    @apply w-full flex items-center justify-center mt-3;
+  }
+}
+
+.forgotPassword {
+  @apply w-[350px] text-right font-semibold;
+
+  .forgot {
+    @apply text-secondary-500 text-left hover:text-secondary-700;
+  }
+}

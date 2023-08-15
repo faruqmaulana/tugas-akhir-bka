@@ -1,0 +1,19 @@
+.container {
+  @apply antialiased h-screen
+  grid grid-cols-[240px_1fr] grid-rows-[70px_1fr];
+
+  &.hideAside {
+    @apply grid-cols-1;
+  }
+
+  .main {
+    @apply h-full bg-charcoal-100
+    px-6 py-5
+    col-start-2 col-end-2 
+    row-start-2 row-end-[-1];
+
+    &.full {
+      @apply col-start-1 col-end-[-1];
+    }
+  }
+}
