@@ -1,56 +1,81 @@
 import { userQuery } from "~/server/queries/module/user/user.query";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
-import { loginInformation } from "~/common/schemas/user/login-information.schema";
-import { verify } from "argon2";
-import { CustomError } from "~/common/types/custom";
+import { hash, verify } from "argon2";
 import { PASSWORD_NOT_MATCH, UPDATE_PROFILE_SUCCESS } from "~/common/message";
 import { TRPCError } from "@trpc/server";
-import { CustomTrpcError } from "~/common/config/trpcErrorHandling";
+import { removeEmptyStringProperties } from "~/common/helpers/removeEmptyStringProperties";
+import { loginInformation, userProfileForm } from "~/common/schemas/user";
 
 export const userData = createTRPCRouter({
-  userProfile: protectedProcedure.query(async ({ ctx }) => {
+  //** GET USER PROFILE */
+  getUserProfile: protectedProcedure.query(async ({ ctx }) => {
     try {
+      console.log("ctx.session", ctx.session);
       return await ctx.prisma.user.findUnique({
         where: { id: ctx.session?.user.userId },
         select: userQuery,
       });
     } catch (error) {
-      console.log("error", error);
+      return error;
     }
   }),
 
-  // UPDATE INFORMATION LOGIN
-  updateLoginInformation: protectedProcedure
+  //** UPDATE USER PROFILE */
+  updateUserProfile: protectedProcedure
+    .input(userProfileForm)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        // DO UPDATE
+        const data = await ctx.prisma.user.update({
+          where: {
+            id: ctx.session?.user.userId,
+          },
+          data: removeEmptyStringProperties(input),
+          select: userQuery,
+        });
+
+        return {
+          message: UPDATE_PROFILE_SUCCESS,
+          data,
+        };
+      } catch (error) {
+        throw error;
+      }
+    }),
+
+  //** UPDATE INFORMATION LOGIN */
+  updateUserPassword: protectedProcedure
     .input(loginInformation)
     .mutation(async ({ ctx, input }) => {
       try {
-        const { password } = input;
+        const { password, passwordConfirmation } = input;
         const user = await ctx.prisma.user.findUnique({
           where: { id: ctx.session?.user.userId },
           select: { ...userQuery, password: true },
         });
 
-        // check password is correct
+        // CHECK IS VALID PASSWORD
         const isValidPassword = await verify(user!.password, password);
 
         if (!isValidPassword && password !== "") {
-          CustomTrpcError({
+          throw new TRPCError({
             code: "UNAUTHORIZED",
             message: PASSWORD_NOT_MATCH,
           });
         }
 
-        await ctx.prisma.user.update({
+        // DO UPDATE PASSWORD
+        const data = await ctx.prisma.user.update({
           where: {
             id: ctx.session?.user.userId,
           },
-          data: {
-            name: input.name,
-          },
+          data: { password: await hash(passwordConfirmation) },
+          select: userQuery,
         });
 
         return {
           message: UPDATE_PROFILE_SUCCESS,
+          data,
         };
       } catch (error) {
         throw error;

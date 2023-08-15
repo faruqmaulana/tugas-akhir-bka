@@ -15,13 +15,6 @@ const InformasiLogin = () => {
   const INFORMASI_LOGIN = [
     {
       className: "col-span-1",
-      placeholder: "Nama Lengkap",
-      label: "Nama Lengkap",
-      register: { ...register("name") },
-      error: errors.name?.message,
-    },
-    {
-      className: "col-span-1",
       placeholder: "email",
       leftAddonComponent: <Email />,
       label: "Email",

@@ -6,29 +6,24 @@ import React, {
   useReducer,
   type ReactNode,
 } from "react";
-import { type UserProfileType } from "~/server/queries/module/user/user.query";
 
-// Define the type for your global state
-interface GlobalState {
-  user: UserProfileType | undefined;
-  // Your global state properties and types here
-}
-
-// Define the action types
-type Action = {
-  type: "UPDATE_USER";
-  payload: GlobalState["user"]; // Define payload type as needed
-};
+import {
+  type ActionType,
+  type GlobalState,
+} from "../types/context/GlobalContextType";
 
 // Initial state
 const initialState: GlobalState = {
   user: undefined,
+  something: undefined,
   // Initial global state values here
 };
 
 // Reducer function
-const reducer = (state: GlobalState, action: Action): GlobalState => {
+const reducer = (state: GlobalState, action: ActionType): GlobalState => {
   switch (action.type) {
+    case "UPDATE_USER":
+      return { ...state, user: action.payload };
     case "UPDATE_USER":
       return { ...state, user: action.payload };
     // Add more cases for different actions
@@ -41,7 +36,7 @@ const reducer = (state: GlobalState, action: Action): GlobalState => {
 const GlobalContext = createContext<
   | {
       state: GlobalState;
-      dispatch: React.Dispatch<Action>;
+      dispatch: React.Dispatch<ActionType>;
     }
   | undefined
 >(undefined);

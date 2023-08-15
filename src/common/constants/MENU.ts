@@ -35,14 +35,14 @@ const LIST_MENU: MenuItemType[] = [
     icon: DashboardIcon,
   },
   {
-    id: 3,
+    id: 2,
     title: "User Management",
     url: "/user-management",
     module: "user-management",
     icon: UserManagementIcon,
   },
   {
-    id: 4,
+    id: 3,
     title: "Master Data",
     type: "",
     module: "master-data",
@@ -101,7 +101,7 @@ const LIST_MENU: MenuItemType[] = [
     ],
   },
   {
-    id: 5,
+    id: 4,
     title: "Prestasi Lomba & Kejuaraan",
     type: "Petugas Cabang",
     module: "cabang-sample-data",
@@ -121,7 +121,7 @@ const LIST_MENU: MenuItemType[] = [
     counter: 28,
   },
   {
-    id: 5,
+    id: 6,
     title: "Pengajuan Beasiswa",
     type: "Petugas Cabang",
     module: "cabang-sample-data",
@@ -131,7 +131,7 @@ const LIST_MENU: MenuItemType[] = [
     counter: 20,
   },
   {
-    id: 5,
+    id: 7,
     title: "SK Rektor",
     type: "Petugas Cabang",
     module: "cabang-sample-data",
@@ -141,7 +141,7 @@ const LIST_MENU: MenuItemType[] = [
     counter: 10,
   },
   {
-    id: 5,
+    id: 8,
     title: "Haki",
     type: "Petugas Cabang",
     module: "cabang-sample-data",
@@ -151,7 +151,7 @@ const LIST_MENU: MenuItemType[] = [
     counter: 3,
   },
   {
-    id: 5,
+    id: 9,
     title: "Paten",
     type: "Petugas Cabang",
     module: "cabang-sample-data",
@@ -161,7 +161,7 @@ const LIST_MENU: MenuItemType[] = [
     counter: 5,
   },
   {
-    id: 5,
+    id: 10,
     title: "Buku",
     type: "Petugas Cabang",
     module: "cabang-sample-data",

@@ -28,7 +28,6 @@ function isPasswordNotEmpty(data: PasswordType): boolean {
 
 export const loginInformation = z
   .object({
-    name: z.string().min(1, { message: "Nama tidak boleh kosong" }),
     email: z.string(),
     password: z.string(),
     newPassword: z.string(),

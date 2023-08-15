@@ -154,11 +154,11 @@ const Input = (props: InputProps) => {
           </button>
         )}
       </div>
-      {additionalInfo && (
+      {/* {additionalInfo && (
         <p className="text-sm text-red-500 lg:absolute lg:-bottom-5">
           *{additionalInfo}
         </p>
-      )}
+      )} */}
       {error && (
         <p className="text-sm text-red-500 lg:absolute lg:-bottom-5">{error}</p>
       )}
