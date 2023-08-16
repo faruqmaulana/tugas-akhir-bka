@@ -48,7 +48,7 @@ const LIST_MENU: MenuItemType[] = [
     module: "master-data",
     url: "",
     icon: MasterDataIcon,
-    isOpen: true,
+    isOpen: false,
     submenu: [
       {
         id: 40,
