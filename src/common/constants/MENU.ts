@@ -44,11 +44,11 @@ const LIST_MENU: MenuItemType[] = [
   {
     id: 3,
     title: "Master Data",
-    type: "",
+    type: "Master Data",
     module: "master-data",
     url: "",
     icon: MasterDataIcon,
-    isOpen: false,
+    isOpen: true,
     submenu: [
       {
         id: 40,
@@ -107,7 +107,6 @@ const LIST_MENU: MenuItemType[] = [
     module: "cabang-sample-data",
     url: "/module/kejuaraan",
     icon: BookIcon,
-    isOpen: false,
     counter: 44,
   },
   {
@@ -117,7 +116,6 @@ const LIST_MENU: MenuItemType[] = [
     module: "cabang-sample-data",
     url: "/module/pkm",
     icon: BookIcon,
-    isOpen: false,
     counter: 28,
   },
   {
@@ -127,7 +125,6 @@ const LIST_MENU: MenuItemType[] = [
     module: "cabang-sample-data",
     url: "/module/beasiswa",
     icon: BookIcon,
-    isOpen: false,
     counter: 20,
   },
   {
@@ -137,7 +134,6 @@ const LIST_MENU: MenuItemType[] = [
     module: "cabang-sample-data",
     url: "/module/sk-rektor",
     icon: BookIcon,
-    isOpen: false,
     counter: 10,
   },
   {
@@ -147,7 +143,6 @@ const LIST_MENU: MenuItemType[] = [
     module: "cabang-sample-data",
     url: "/module/haki",
     icon: BookIcon,
-    isOpen: false,
     counter: 3,
   },
   {
@@ -157,7 +152,6 @@ const LIST_MENU: MenuItemType[] = [
     module: "cabang-sample-data",
     url: "/module/paten",
     icon: BookIcon,
-    isOpen: false,
     counter: 5,
   },
   {
@@ -167,7 +161,6 @@ const LIST_MENU: MenuItemType[] = [
     module: "cabang-sample-data",
     url: "/module/buku",
     icon: BookIcon,
-    isOpen: false,
     counter: 30,
   },
   // {

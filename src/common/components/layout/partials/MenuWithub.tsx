@@ -62,7 +62,7 @@ const MenuWithSub = (props: any) => {
         }`}
         aria-controls="dropdown-example"
         data-collapse-toggle="dropdown-example"
-        onClick={() => handleCollapse(index)}
+        onClick={() => handleCollapse(index - 1)}
       >
         <div className={styles.icon}>{createElement(icon)}</div>
         <span className={`${styles.titleWithSub} ${isOpen ? styles.open : ""}`}>
