@@ -10,7 +10,6 @@ export const userData = createTRPCRouter({
   //** GET USER PROFILE */
   getUserProfile: protectedProcedure.query(async ({ ctx }) => {
     try {
-      console.log("ctx.session", ctx.session);
       return await ctx.prisma.user.findUnique({
         where: { id: ctx.session?.user.userId },
         select: userQuery,

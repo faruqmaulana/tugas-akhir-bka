@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { type MRT_ColumnDef } from "material-react-table";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
+import { requireAuth } from "~/common/authentication/requireAuth";
 import ViewDetailButton from "~/common/components/ui/button/ViewDetailButton";
 import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
@@ -11,6 +13,10 @@ import {
   type KejuaraanData,
 } from "~/common/constants/DUMMY_KEJUARAAN";
 import { handleBgColor } from "~/common/helpers/handleBgColor";
+
+export const getServerSideProps = requireAuth(async (ctx) => {
+  return { props: {} };
+});
 
 const UserManagement = () => {
   const router = useRouter();

@@ -11,7 +11,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "../../ui/hover-card";
-import { signOut } from "next-auth/react";
 import { type Dispatch, type SetStateAction } from "react";
 import { useHeader } from "~/common/hooks/layout/useHeader";
 
@@ -22,8 +21,8 @@ export type HeaderProps = {
 
 const Header = (props: HeaderProps) => {
   const { showAside } = props;
-
-  const { router, user, handleHamburgerButton } = useHeader(props);
+  const { router, user, handleHamburgerButton, handleSignOut } =
+    useHeader(props);
 
   return (
     <header className={`${styles.header} ${showAside && styles.full}`}>
@@ -75,15 +74,7 @@ const Header = (props: HeaderProps) => {
                   <RoleManagementIcon />
                   <button type="button">Informasi Login</button>
                 </li>
-                <li
-                  className={`${styles.list}`}
-                  onClick={() => {
-                    void signOut({ redirect: false });
-                    setTimeout(() => {
-                      void router.push("/");
-                    }, 2000);
-                  }}
-                >
+                <li className={`${styles.list}`} onClick={handleSignOut}>
                   <LogoutIcon />
                   <button type="button">Sign out</button>
                 </li>
