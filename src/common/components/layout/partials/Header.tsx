@@ -79,7 +79,9 @@ const Header = (props: HeaderProps) => {
                   className={`${styles.list}`}
                   onClick={() => {
                     void signOut({ redirect: false });
-                    void router.push("/");
+                    setTimeout(() => {
+                      void router.push("/");
+                    }, 2000);
                   }}
                 >
                   <LogoutIcon />
