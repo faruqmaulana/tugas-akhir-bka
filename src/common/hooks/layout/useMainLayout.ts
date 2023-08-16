@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useGlobalContext } from "~/common/context/GlobalContext";
 import { ActionReducer } from "~/common/types/context/GlobalContextType";
+import { type UserProfileType } from "~/server/queries/module/user/user.query";
 import { api } from "~/utils/api";
 
 const useMainLayout = () => {
@@ -10,7 +11,10 @@ const useMainLayout = () => {
 
   useEffect(() => {
     if (!isLoading && user) {
-      dispatch({ type: ActionReducer.UPDATE_USER, payload: user });
+      dispatch({
+        type: ActionReducer.UPDATE_USER,
+        payload: user as UserProfileType,
+      });
     }
   }, [isLoading, user, dispatch]);
 
