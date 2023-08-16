@@ -74,7 +74,7 @@ const Header = (props: HeaderProps) => {
                   <RoleManagementIcon />
                   <button type="button">Informasi Login</button>
                 </li>
-                <li className={`${styles.list}`} onClick={handleSignOut}>
+                <li className={`${styles.list}`} onClick={void handleSignOut}>
                   <LogoutIcon />
                   <button type="button">Sign out</button>
                 </li>
