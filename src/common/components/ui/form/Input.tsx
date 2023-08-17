@@ -3,9 +3,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable indent */
-import React, { useState } from "react";
+import React, { useState, type ChangeEvent } from "react";
 import EyeSlashIcon from "~/common/EyeSlashIcon";
 import EyeIcon from "../../svg/EyeIcon";
+import Spinner from "../../svg/Spinner";
 
 export type InputProps = {
   disabled?: boolean;
@@ -18,11 +19,12 @@ export type InputProps = {
   register?: any;
   additionalInfo?: string;
   selectData?: any[];
-  onChange?: (value: string) => void;
   labelFontSize?: string;
   showValue?: boolean;
   autocomplete?: string;
   error?: string;
+  onChange?: (value: string) => void;
+  handleSelectOptionChange?: (value: ChangeEvent<HTMLInputElement>) => void;
 };
 
 const Input = (props: InputProps) => {
@@ -41,6 +43,7 @@ const Input = (props: InputProps) => {
     showValue = true,
     autocomplete,
     error,
+    handleSelectOptionChange,
   } = props;
   const [inputType, setInputType] = useState(type === "date" ? "text" : type);
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -52,13 +55,18 @@ const Input = (props: InputProps) => {
         {type === "select" && (
           <div className="relative w-full">
             <select
-              disabled={disabled}
+              disabled={disabled || !selectData}
               {...(register || {})}
               className={`focus:shadow-outline block w-full appearance-none rounded border border-gray-400 bg-transparent px-4 py-2 pr-8 leading-tight shadow focus:outline-none ${
-                disabled
+                disabled || !selectData
                   ? "cursor-not-allowed !text-gray-500 opacity-80"
                   : "hover:border-gray-500"
               }`}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                if (handleSelectOptionChange) {
+                  handleSelectOptionChange(event);
+                }
+              }}
             >
               {selectData &&
                 selectData?.map((val) => (
@@ -67,13 +75,20 @@ const Input = (props: InputProps) => {
                     value={val.id}
                     selected={
                       value === val.id ||
-                      value?.toLowerCase() === val?.name?.toLowerCase()
+                      value?.toLowerCase() === val?.id?.toLowerCase()
                     }
                   >
                     {val.title || val.name}
                   </option>
                 ))}
             </select>
+            {!selectData && (
+              <Spinner
+                width="20"
+                height="20"
+                className="absolute right-7 top-2"
+              />
+            )}
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
               <svg
                 className="h-4 w-4 fill-current"

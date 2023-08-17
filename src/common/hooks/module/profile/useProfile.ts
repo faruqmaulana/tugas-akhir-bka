@@ -3,19 +3,31 @@ import { useForm } from "react-hook-form";
 import { type IUserProfileForm, userProfileForm } from "~/common/schemas/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type UserProfileType } from "~/server/queries/module/user/user.query";
-import { useCallback, useEffect, useState } from "react";
+import { type ChangeEvent, useCallback, useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { customToast } from "~/common/components/ui/toast/showToast";
 import { ActionReducer } from "~/common/types/context/GlobalContextType";
+import { type AllMasterDataProdiType } from "~/server/api/module/master-data/prodi";
 const useProfile = () => {
   const {
     state: { user },
     dispatch,
   } = useGlobalContext();
 
+  // ** FAKULTAS STATE
+  const [fakultasState, setFakultasState] = useState<{
+    id: string | undefined;
+    name: string | undefined;
+  }>({
+    id: user?.prodi?.Fakultas?.id,
+    name: user?.prodi?.Fakultas?.name,
+  });
+
   const [loading, setLoading] = useState<boolean>(false);
+
   const { mutate: updateUserProfile } =
     api.user.updateUserProfile.useMutation();
+  const { data: prodi } = api.prodi.getAllProdi.useQuery();
 
   const {
     register,
@@ -38,19 +50,45 @@ const useProfile = () => {
       setValue(userKey, valueKey);
     });
   };
-  //
+
+  // ** HANDLE DEFAULT FORM VALUE
   useEffect(() => {
     if (user) {
       handleDefaultForm(user);
     }
   }, [setValue, user]);
 
-  const onSubmit = useCallback((payload: IUserProfileForm) => {
+  // useEffect(() => {
+  //   if (user) {
+  //     setFakultasState({
+  //       id: user?.prodi?.Fakultas?.id,
+  //       name: user?.prodi?.Fakultas?.name,
+  //     });
+  //   }
+  // }, [user]);
+
+  // ** HANDLE FAKULTAS STATE WHEN PRODI WAS CHANGE
+  const handleFakultasChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const tempProdi: AllMasterDataProdiType = prodi as AllMasterDataProdiType;
+    const filteredProdi: AllMasterDataProdiType = tempProdi?.filter(
+      (val) => val.id === event.target.value
+    );
+
+    setFakultasState({
+      id: filteredProdi[0]?.Fakultas?.id,
+      name: filteredProdi[0]?.Fakultas?.name,
+    });
+  };
+
+  const onSubmit = useCallback((userPayload: IUserProfileForm) => {
     setLoading(true);
-    updateUserProfile(payload, {
+    updateUserProfile(userPayload, {
       onSuccess: (data) => {
         customToast("success", data?.message);
-        dispatch({ type: ActionReducer.UPDATE_USER, payload: data.data });
+        dispatch({
+          type: ActionReducer.UPDATE_USER,
+          payload: data.data as unknown as UserProfileType,
+        });
         setLoading(false);
       },
       onError: (error) => {
@@ -81,16 +119,12 @@ const useProfile = () => {
       placeholder: "Fakultas",
       label: "Fakultas",
       type: "select",
-      value: "Teknik",
       disabled: true,
+      value: fakultasState?.id,
       selectData: [
         {
-          id: "teknik",
-          title: "Teknik",
-        },
-        {
-          id: "kedokteran",
-          title: "Kedokteran",
+          id: fakultasState?.id,
+          title: fakultasState?.name,
         },
       ],
     },
@@ -99,15 +133,13 @@ const useProfile = () => {
       placeholder: "Prodi",
       label: "Prodi",
       type: "select",
-      value: "Teknik Informatika",
-      selectData: [
+      value: user?.prodi?.id,
+      handleSelectOptionChange: handleFakultasChange,
+      register: { ...register("prodiId") },
+      selectData: prodi || [
         {
-          id: "teknik-informatika",
-          title: "Teknik Informatika",
-        },
-        {
-          id: "teknik-mesin",
-          title: "Teknik Mesin",
+          id: user?.prodi?.id,
+          title: user?.prodi?.name,
         },
       ],
     },
