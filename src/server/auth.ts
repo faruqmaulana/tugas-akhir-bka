@@ -63,7 +63,6 @@ export const authOptions: NextAuthOptions = {
           if (!isValidPassword) return null;
 
           return { id: result.id, role: result.role };
-          // return { id: "cll19m7oh0005ukfw2o10p74i", role: "ADMIN" };
         } catch {
           return null;
         }

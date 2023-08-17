@@ -58,15 +58,6 @@ const useProfile = () => {
     }
   }, [setValue, user]);
 
-  // useEffect(() => {
-  //   if (user) {
-  //     setFakultasState({
-  //       id: user?.prodi?.Fakultas?.id,
-  //       name: user?.prodi?.Fakultas?.name,
-  //     });
-  //   }
-  // }, [user]);
-
   // ** HANDLE FAKULTAS STATE WHEN PRODI WAS CHANGE
   const handleFakultasChange = (event: ChangeEvent<HTMLInputElement>) => {
     const tempProdi: AllMasterDataProdiType = prodi as AllMasterDataProdiType;

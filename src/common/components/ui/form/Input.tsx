@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable indent */
-import React, { useState, type ChangeEvent } from "react";
+import React, { useState, type ChangeEvent, useEffect } from "react";
 import EyeSlashIcon from "~/common/EyeSlashIcon";
 import EyeIcon from "../../svg/EyeIcon";
 import Spinner from "../../svg/Spinner";
@@ -13,12 +13,12 @@ export type InputProps = {
   leftAddonComponent?: React.ReactNode | string;
   className?: string;
   placeholder: string;
-  value?: string;
+  value?: string | Date | any;
   label?: string;
   type?: string;
   register?: any;
   additionalInfo?: string;
-  selectData?: any[];
+  selectData?: any;
   labelFontSize?: string;
   showValue?: boolean;
   autocomplete?: string;
@@ -47,6 +47,14 @@ const Input = (props: InputProps) => {
   } = props;
   const [inputType, setInputType] = useState(type === "date" ? "text" : type);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [disableDefaultSelectedOption, setDisableDefaultSelectedOption] =
+    useState<boolean>(false);
+
+  const handleDisableDefaultSelectOption = (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    setDisableDefaultSelectedOption(true);
+  };
 
   return (
     <div className={`relative mt-auto flex flex-col gap-1 ${className}`}>
@@ -64,23 +72,32 @@ const Input = (props: InputProps) => {
               }`}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 if (handleSelectOptionChange) {
-                  handleSelectOptionChange(event);
+                  return handleSelectOptionChange(event);
                 }
+                handleDisableDefaultSelectOption(event);
               }}
             >
+              {!value && (
+                <option
+                  value=""
+                  disabled={disableDefaultSelectedOption}
+                >{`Pilih ${placeholder}`}</option>
+              )}
               {selectData &&
-                selectData?.map((val) => (
-                  <option
-                    key={val.id}
-                    value={val.id}
-                    selected={
-                      value === val.id ||
-                      value?.toLowerCase() === val?.id?.toLowerCase()
-                    }
-                  >
-                    {val.title || val.name}
-                  </option>
-                ))}
+                selectData?.map(
+                  (val: { id: string; name?: string; title?: string }) => (
+                    <option
+                      key={val.id}
+                      value={val.id}
+                      selected={
+                        value === val.id ||
+                        value?.toLowerCase() === val?.id?.toLowerCase()
+                      }
+                    >
+                      {val.title || val.name}
+                    </option>
+                  )
+                )}
             </select>
             {!selectData && (
               <Spinner
@@ -130,6 +147,8 @@ const Input = (props: InputProps) => {
           type === "color") && (
           <input
             {...(register || {})}
+            // onMouseEnter={handleMouseEnter}
+            // onMouseLeave={handleMouseLeave}
             autoComplete={autocomplete || "off"}
             disabled={disabled}
             type={showPassword ? "text" : inputType}

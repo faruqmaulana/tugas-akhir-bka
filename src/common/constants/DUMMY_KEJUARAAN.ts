@@ -16,7 +16,7 @@ export type KejuaraanData = {
   dosen: string;
   piagamPenghargaan: string; // URL gambar publik
   fotoPenyerahanPiala: string; // URL gambar publik
-  undanganKejuaraan: string; // URL file PDF publik
+  undanganKejuaraan: string; // URL text PDF publik
 };
 export const DUMMY_KEJUARAAN: KejuaraanData[] = [
   {
@@ -221,7 +221,7 @@ export const DUMMY_KEJUARAAN: KejuaraanData[] = [
   },
 ];
 
-export const KEJUARAAN_FORM = [
+export const DUMMY_KEJUARAAN_FORM = [
   {
     key: "nama",
     className: "col-span-1",
@@ -297,31 +297,31 @@ export const KEJUARAAN_FORM = [
     className: "col-span-1",
     placeholder: "Piagam Penghargaan",
     label: "Piagam Penghargaan",
-    type: "file",
-    value: "", // Tidak ada dummy data untuk file piagam penghargaan karena ini adalah file.
+    type: "text",
+    value: "", // Tidak ada dummy data untuk text piagam penghargaan karena ini adalah text.
   },
   {
     key: "fotoPenyerahanPiala",
     className: "col-span-1",
     placeholder: "Foto Penyerahan Piala",
     label: "Foto Penyerahan Piala",
-    type: "file",
-    value: "", // Tidak ada dummy data untuk file foto penyerahan piala karena ini adalah file.
+    type: "text",
+    value: "", // Tidak ada dummy data untuk text foto penyerahan piala karena ini adalah text.
   },
   {
     key: "undanganKejuaraan",
     className: "col-span-1",
     placeholder: "Undangan Kejuaraan",
     label: "Undangan Kejuaraan",
-    type: "file",
-    value: "", // Tidak ada dummy data untuk file undangan kejuaraan karena ini adalah file.
+    type: "text",
+    value: "", // Tidak ada dummy data untuk text undangan kejuaraan karena ini adalah text.
   },
   {
     key: "dokumenPendukung",
     className: "col-span-1",
     placeholder: "Dokumen Pendukung",
     label: "Dokumen Pendukung",
-    type: "file",
-    value: "", // Tidak ada dummy data untuk file dokumen pendukung karena ini adalah file.
+    type: "text",
+    value: "", // Tidak ada dummy data untuk text dokumen pendukung karena ini adalah text.
   },
 ];

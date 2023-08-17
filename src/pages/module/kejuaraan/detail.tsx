@@ -135,7 +135,9 @@ const Example = () => {
             <span className="col-span-12">
               <iframe
                 className="h-[600px] w-full"
-                src="https://www.buds.com.ua/images/Lorem_ipsum.pdf"
+                // src="https://drive.google.com/uc?id=1WCEiV1Ovxga261bLEs_rlNoS4I0hANiN"
+                src="https://drive.google.com/uc?id=1iSoVWRPyyQVJ_tn0oMGNs8Bttw7u6UtP"
+                title="Embedded Google Drive File"
               ></iframe>
             </span>
             <span className="col-span-2 font-semibold">

@@ -1,11 +1,17 @@
+/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-misused-promises */
+import { requireAuth } from "~/common/authentication/requireAuth";
 import { Button } from "~/common/components/ui/button/Button";
 import Card from "~/common/components/ui/card/Card";
 import Input from "~/common/components/ui/form/Input";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import { useProfile } from "~/common/hooks/module/profile/useProfile";
 
-const InformasiLogin = () => {
+export const getServerSideProps = requireAuth(async (ctx) => {
+  return { props: {} };
+});
+
+const ProfilePage = () => {
   const { handleSubmit, onSubmit, loading, INFORMASI_LOGIN } = useProfile();
 
   return (
@@ -33,4 +39,4 @@ const InformasiLogin = () => {
   );
 };
 
-export default InformasiLogin;
+export default ProfilePage;

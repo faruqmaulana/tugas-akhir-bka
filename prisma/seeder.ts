@@ -21,7 +21,6 @@ async function seedFakultas() {
 
 async function seedProdi() {
   const fakultas = await prisma.masterDataFakultas.findMany(); // Retrieve all users
-  console.log("fakultas", fakultas);
   await prisma.masterDataProdi.createMany({
     data: [
       { name: "Prodi A", fakultasId: fakultas[0]?.id },
@@ -67,18 +66,20 @@ async function seedUsers() {
 async function seedTingkatKejuaraan() {
   await prisma.masterDataTingkatKejuaraan.createMany({
     data: [
-      { name: "Tingkat Kejuaraan A" },
-      { name: "Tingkat Kejuaraan B" },
+      { name: "Nasional" },
+      { name: "Regional" },
+      { name: "Internasional" },
       // Add more tingkat kejuaraan data as needed
     ],
   });
 }
 
 async function seedTingkatPrestasi() {
-  await prisma.masterDataFakultas.createMany({
+  await prisma.masterDataTingkatPrestasi.createMany({
     data: [
-      { name: "Tingkat Prestasi A" },
-      { name: "Tingkat Prestasi B" },
+      { name: "Juara 1" },
+      { name: "Juara 2" },
+      { name: "Juara 3" },
       // Add more tingkat prestasi data as needed
     ],
   });
@@ -95,10 +96,32 @@ async function seedStatus() {
 }
 
 async function seedDosen() {
+  const prodi = await prisma.masterDataProdi.findMany();
   await prisma.dosen.createMany({
     data: [
-      { name: "Dosen 1", nidn: "nidn-1" },
-      { name: "Dosen 2", nidn: "nidn-2" },
+      {
+        name: "Fridy Mandita, S.Kom., M.Sc",
+        nidn: "nidn-1",
+        prodiId: prodi[0]!.id,
+      },
+      {
+        name: "Muhamad Firdaus S.Kom.,M.Kom",
+        nidn: "nidn-2",
+        prodiId: prodi[1]!.id,
+      },
+      // Add more dosen data as needed
+    ],
+  });
+}
+async function seedOrkem() {
+  await prisma.masterDataOrkem.createMany({
+    data: [
+      {
+        name: "Karate",
+      },
+      {
+        name: "Silat",
+      },
       // Add more dosen data as needed
     ],
   });
@@ -135,14 +158,15 @@ async function seedDosen() {
 
 async function seed() {
   const seedingFunctions = [
-    seedFakultas,
-    seedProdi,
-    seedUsers,
+    // seedFakultas,
+    // seedProdi,
+    // seedUsers,
     // seedTingkatKejuaraan,
-    // seedTingkatPrestasi,
+    seedTingkatPrestasi,
     // seedStatus,
     // seedDosen,
     // seedPrestasiDataTable,
+    // seedOrkem,
   ];
 
   try {

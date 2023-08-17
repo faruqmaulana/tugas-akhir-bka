@@ -5,10 +5,10 @@
 Table User {
   id String [pk]
   name String [not null]
-  npm String
+  npm String [not null]
   alamat String
   semester String
-  phone String
+  phone String [not null]
   email String [unique, not null]
   emailVerified DateTime
   password String [not null]
@@ -19,6 +19,7 @@ Table User {
   activityLog ActivityLog [not null]
   Buku Buku [not null]
   PengajuanBeasiswa PengajuanBeasiswa [not null]
+  Catatan Catatan [not null]
 }
 
 Table Beasiswa {
@@ -31,8 +32,8 @@ Table Dosen {
   id String [pk]
   name String [not null]
   nidn String [not null]
-  prodi MasterDataProdi
   prodiId String
+  prodi MasterDataProdi
   prestasiDataTable PrestasiDataTable [not null]
   PengajuanPKM PengajuanPKM [not null]
   PengajuanOnUsers PengajuanOnUsers [not null]
@@ -75,9 +76,7 @@ Table MasterDataStatus {
   id String [pk]
   name String [not null]
   backgroundColor String [not null]
-  PrestasiDataTable PrestasiDataTable [not null]
   PengajuanPKM PengajuanPKM [not null]
-  ActivityLog ActivityLog [not null]
   PengajuanBeasiswa PengajuanBeasiswa [not null]
   PatenAndHakiTable PatenAndHakiTable [not null]
   Buku Buku [not null]
@@ -88,37 +87,43 @@ Table LampiranData {
   piagamPenghargaan String
   fotoPenyerahanPiala String
   undanganKejuaraan String
+  dokumenPendukung String
   PrestasiDataTable PrestasiDataTable [not null]
 }
 
 Table PrestasiDataTable {
   id String [pk]
-  nama String [not null]
   noSK String
   tanggalSK DateTime
-  kegiatan String
+  kegiatan String [not null]
   tanggalKegiatan DateTime [not null]
   penyelenggara String
-  isValidated Boolean [not null, default: false]
-  validatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  dosen Dosen [not null]
+  dosenId String [not null]
   orkem MasterDataOrkem [not null]
   orkemId String [not null]
   tingkatKejuaraan MasterDataTingkatKejuaraan [not null]
   tingkatKejuaraanId String [not null]
   tingkatPrestasi MasterDataTingkatPrestasi [not null]
   tingkatPrestasiId String [not null]
-  status MasterDataStatus [not null]
-  statusId String [not null]
-  dosen Dosen [not null]
-  dosenId String [not null]
   lampiran LampiranData [not null]
   lampiranId String [not null]
   users PengajuanOnUsers [not null]
   activityLog ActivityLog [not null]
   notification Notification [not null]
+  Catatan Catatan [not null]
 
   Note: '==== PENGAJUAN PRESTASI TABLE === ///'
+}
+
+Table Catatan {
+  id String [pk]
+  user User [not null]
+  userId String [not null]
+  PrestasiDataTable PrestasiDataTable
+  prestasiDataTableId String
 }
 
 Table PengajuanOnUsers {
@@ -228,8 +233,6 @@ Table ActivityLog {
   catatan String
   user User [not null]
   userId String [not null]
-  status MasterDataStatus [not null]
-  statusId String [not null]
   PrestasiDataTable PrestasiDataTable
   prestasiDataTableId String
   PatenAndHakiTable PatenAndHakiTable
@@ -273,17 +276,19 @@ Ref: Dosen.prodiId > MasterDataProdi.id
 
 Ref: MasterDataProdi.fakultasId > MasterDataFakultas.id
 
+Ref: PrestasiDataTable.dosenId > Dosen.id
+
 Ref: PrestasiDataTable.orkemId > MasterDataOrkem.id
 
 Ref: PrestasiDataTable.tingkatKejuaraanId > MasterDataTingkatKejuaraan.id
 
 Ref: PrestasiDataTable.tingkatPrestasiId > MasterDataTingkatPrestasi.id
 
-Ref: PrestasiDataTable.statusId > MasterDataStatus.id
-
-Ref: PrestasiDataTable.dosenId > Dosen.id
-
 Ref: PrestasiDataTable.lampiranId > LampiranData.id
+
+Ref: Catatan.userId > User.id
+
+Ref: Catatan.prestasiDataTableId > PrestasiDataTable.id
 
 Ref: PengajuanOnUsers.userId > User.id
 
@@ -310,8 +315,6 @@ Ref: Buku.statusId > MasterDataStatus.id
 Ref: Buku.userId > User.id
 
 Ref: ActivityLog.userId > User.id
-
-Ref: ActivityLog.statusId > MasterDataStatus.id
 
 Ref: ActivityLog.prestasiDataTableId > PrestasiDataTable.id
 

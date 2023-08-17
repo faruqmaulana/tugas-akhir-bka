@@ -5,8 +5,21 @@ import { PASSWORD_NOT_MATCH, UPDATE_PROFILE_SUCCESS } from "~/common/message";
 import { TRPCError } from "@trpc/server";
 import { removeEmptyStringProperties } from "~/common/helpers/removeEmptyStringProperties";
 import { loginInformation, userProfileForm } from "~/common/schemas/user";
+import { Role } from "@prisma/client";
 
 export const userData = createTRPCRouter({
+  //** GET ALL MAHASISWA
+  getAllMahasiswa: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      return await ctx.prisma.user.findMany({
+        where: { role: Role.MAHASISWA },
+        select: userQuery,
+      });
+    } catch (error) {
+      return error;
+    }
+  }),
+
   //** GET USER PROFILE */
   getUserProfile: protectedProcedure.query(async ({ ctx }) => {
     try {
