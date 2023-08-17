@@ -16,9 +16,9 @@ generator client {
 }
 
 datasource db {
-    provider  = "postgresql"
-    url       = env("DATABASE_URL")
-    directUrl = env("DATABASE_URLS")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+    // directUrl = env("DATABASE_URLS")
 }
 
 // USERS TABLE
@@ -52,6 +52,7 @@ model User {
     activityLog        ActivityLog[]
     Buku               Buku[]
     PengajuanBeasiswa  PengajuanBeasiswa[]
+    Catatan            Catatan[]
 }
 
 // Master Data Table
@@ -65,8 +66,8 @@ model Dosen {
     id      String           @id @default(cuid())
     name    String
     nidn    String
-    prodi   MasterDataProdi? @relation(fields: [prodiId], references: [id])
     prodiId String?
+    prodi   MasterDataProdi? @relation(fields: [prodiId], references: [id])
 
     prestasiDataTable PrestasiDataTable[]
     PengajuanPKM      PengajuanPKM[]
@@ -111,9 +112,9 @@ model MasterDataStatus {
     id                String              @id @default(cuid())
     name              String
     backgroundColor   String
-    PrestasiDataTable PrestasiDataTable[]
+    // PrestasiDataTable PrestasiDataTable[]
     PengajuanPKM      PengajuanPKM[]
-    ActivityLog       ActivityLog[]
+    // ActivityLog       ActivityLog[]
     PengajuanBeasiswa PengajuanBeasiswa[]
     PatenAndHakiTable PatenAndHakiTable[]
     Buku              Buku[]
@@ -125,21 +126,23 @@ model LampiranData {
     piagamPenghargaan   String?
     fotoPenyerahanPiala String?
     undanganKejuaraan   String?
+    dokumenPendukung    String?
     PrestasiDataTable   PrestasiDataTable[]
 }
 
 /// ==== PENGAJUAN PRESTASI TABLE === ///
 model PrestasiDataTable {
     id              String    @id @default(cuid())
-    nama            String
     noSK            String?
     tanggalSK       DateTime?
-    kegiatan        String?
+    kegiatan        String
     tanggalKegiatan DateTime
     penyelenggara   String?
-    isValidated     Boolean   @default(false)
-    validatedAt     DateTime
     createdAt       DateTime  @default(now())
+    updatedAt       DateTime
+
+    dosen   Dosen  @relation(fields: [dosenId], references: [id])
+    dosenId String
 
     orkem   MasterDataOrkem @relation(fields: [orkemId], references: [id])
     orkemId String
@@ -150,12 +153,6 @@ model PrestasiDataTable {
     tingkatPrestasi   MasterDataTingkatPrestasi @relation(fields: [tingkatPrestasiId], references: [id])
     tingkatPrestasiId String
 
-    status   MasterDataStatus @relation(fields: [statusId], references: [id])
-    statusId String
-
-    dosen   Dosen  @relation(fields: [dosenId], references: [id])
-    dosenId String
-
     lampiran   LampiranData @relation(fields: [lampiranId], references: [id])
     lampiranId String
 
@@ -163,12 +160,31 @@ model PrestasiDataTable {
     users        PengajuanOnUsers[]
     activityLog  ActivityLog[]
     notification Notification[]
+    Catatan      Catatan[]
+    // ** ADMIN ACTION
+    // isValidated Boolean  @default(false)
+    // rejected    Boolean  @default(false)
+    // rejecteddAt DateTime
+
+    // status   MasterDataStatus @relation(fields: [statusId], references: [id])
+    // statusId String
+}
+
+model Catatan {
+    id String @id @default(cuid())
+
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
+
+    PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
+    prestasiDataTableId String?
 }
 
 model PengajuanOnUsers {
     user   User   @relation(fields: [userId], references: [id])
     userId String // relation scalar field (used in the `@relation` attribute above)
 
+    // multiple dosen when ajukan paten
     dosen   Dosen  @relation(fields: [dosenId], references: [id])
     dosenId String // relation scalar field (used in the `@relation` attribute above)
 
@@ -297,8 +313,8 @@ model ActivityLog {
     user   User   @relation(fields: [userId], references: [id])
     userId String
 
-    status   MasterDataStatus @relation(fields: [statusId], references: [id])
-    statusId String
+    // status   MasterDataStatus @relation(fields: [statusId], references: [id])
+    // statusId String
 
     PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
     prestasiDataTableId String?
