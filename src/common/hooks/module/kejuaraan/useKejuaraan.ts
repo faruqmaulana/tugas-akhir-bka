@@ -24,7 +24,7 @@ const useKejuaraan = () => {
   } = useForm<IPengajuanPrestasiForm>({
     resolver: zodResolver(pengajuanPrestasiForm),
   });
-
+  console.log("errors", errors);
   const onSubmit = useCallback((userPayload: IPengajuanPrestasiForm) => {
     console.log("userPayload", userPayload);
     // setLoading(true);
@@ -118,8 +118,8 @@ const useKejuaraan = () => {
       placeholder: "Piagam Penghargaan",
       label: "Piagam Penghargaan",
       type: "text",
-      register: { ...register("orkemId") },
-      error: errors.orkemId?.message,
+      register: { ...register("piagamPenghargaan") },
+      error: errors.custom?.message,
     },
     {
       className: "col-span-1",
@@ -127,7 +127,7 @@ const useKejuaraan = () => {
       label: "Foto Penyerahan Piala",
       type: "text",
       register: { ...register("fotoPenyerahanPiala") },
-      error: errors.atLeastOneFilled?.message,
+      error: errors.custom?.message,
     },
     {
       className: "col-span-1",
@@ -135,7 +135,7 @@ const useKejuaraan = () => {
       label: "Undangan Kejuaraan",
       type: "text",
       register: { ...register("undanganKejuaraan") },
-      error: errors.atLeastOneFilled?.message,
+      error: errors.custom?.message,
     },
     {
       className: "col-span-1",
@@ -143,7 +143,7 @@ const useKejuaraan = () => {
       label: "Dokumen Pendukung",
       type: "text",
       register: { ...register("dokumenPendukung") },
-      error: errors.atLeastOneFilled?.message,
+      error: errors.custom?.message,
     },
   ];
 

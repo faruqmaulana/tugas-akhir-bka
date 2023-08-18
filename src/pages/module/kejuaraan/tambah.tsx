@@ -27,19 +27,23 @@ const TambahKejuaraan = () => {
           </Button>
         }
       />
-      <Card className="mt-[20px]">
-        <form
-          className="mx-auto mb-5 grid h-fit w-full grid-cols-2 gap-5"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          {KEJUARAAN_FORM.map((val) => (
-            <Input key={val.label} {...val} />
-          ))}
-        </form>
-        <Button isMedium isSuccess className="flex w-fit items-center gap-2">
-          Submit
-        </Button>
-      </Card>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Card className="mt-[20px]">
+          <div className="mx-auto mb-5 grid h-fit w-full grid-cols-2 gap-5">
+            {KEJUARAAN_FORM.map((val) => (
+              <Input key={val.label} {...val} />
+            ))}
+          </div>
+          <Button
+            isSubmit
+            isSuccess
+            isMedium
+            className="flex w-fit items-center gap-2"
+          >
+            Submit
+          </Button>
+        </Card>
+      </form>
     </>
   );
 };
