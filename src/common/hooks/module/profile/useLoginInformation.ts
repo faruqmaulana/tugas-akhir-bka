@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import { useGlobalContext } from "~/common/context/GlobalContext";
 import { useForm } from "react-hook-form";
 import {
@@ -59,7 +58,7 @@ const useLoginInformation = () => {
         customToast("success", data?.message);
         setLoading(false);
         reset();
-        handleDefaultForm(data.data);
+        handleDefaultForm(data.data as unknown as UserProfileType);
       },
       onError: (error) => {
         customToast("error", error?.message);
