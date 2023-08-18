@@ -1,345 +1,274 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator dbml {
-    provider = "prisma-dbml-generator"
+  provider = "prisma-dbml-generator"
 }
 
-// generator erd {
-//     provider = "prisma-erd-generator"
-//     theme    = "neutral"
-//     output   = "./ERD.svg"
-// }
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
-    // directUrl = env("DATABASE_URLS")
-}
-
-// USERS TABLE
-enum Role {
-    MAHASISWA
-    ADMIN
-}
-
-enum PatenAndHaki {
-    PATEN
-    HAKI
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String
-    npm           String
-    alamat        String?
-    semester      String?
-    phone         String
-    email         String    @unique
-    emailVerified DateTime?
-    password      String
-    role          Role      @default(MAHASISWA)
-
-    prodi   MasterDataProdi? @relation(fields: [prodiId], references: [id])
-    prodiId String?
-
-    // USER RELATION TABLE DATA
-    prestasiDataTables PengajuanOnUsers[]
-    activityLog        ActivityLog[]
-    Buku               Buku[]
-    PengajuanBeasiswa  PengajuanBeasiswa[]
-    Catatan            Catatan[]
+  id                 String              @id @default(cuid())
+  name               String
+  npm                String
+  alamat             String?
+  semester           String?
+  phone              String
+  email              String              @unique
+  emailVerified      DateTime?
+  password           String
+  role               Role                @default(MAHASISWA)
+  prodiId            String?
+  activityLog        ActivityLog[]
+  Buku               Buku[]
+  Catatan            Catatan[]
+  PengajuanBeasiswa  PengajuanBeasiswa[]
+  prestasiDataTables PengajuanOnUsers[]
+  prodi              MasterDataProdi?    @relation(fields: [prodiId], references: [id])
 }
 
-// Master Data Table
 model Beasiswa {
-    id               String @id @default(cuid())
-    syarat           String // free text
-    templateFormulir String
+  id               String @id @default(cuid())
+  syarat           String
+  templateFormulir String
 }
 
 model Dosen {
-    id      String           @id @default(cuid())
-    name    String
-    nidn    String
-    prodiId String?
-    prodi   MasterDataProdi? @relation(fields: [prodiId], references: [id])
-
-    prestasiDataTable PrestasiDataTable[]
-    PengajuanPKM      PengajuanPKM[]
-    PengajuanOnUsers  PengajuanOnUsers[]
+  id                String              @id @default(cuid())
+  name              String
+  nidn              String
+  prodiId           String?
+  prodi             MasterDataProdi?    @relation(fields: [prodiId], references: [id])
+  PengajuanOnUsers  PengajuanOnUsers[]
+  PengajuanPKM      PengajuanPKM[]
+  prestasiDataTable PrestasiDataTable[]
 }
 
 model MasterDataFakultas {
-    id    String            @id @default(cuid())
-    name  String
-    prodi MasterDataProdi[]
+  id    String            @id @default(cuid())
+  name  String
+  prodi MasterDataProdi[]
 }
 
 model MasterDataProdi {
-    id    String  @id @default(cuid())
-    name  String
-    user  User[]
-    Dosen Dosen[]
-
-    Fakultas   MasterDataFakultas? @relation(fields: [fakultasId], references: [id])
-    fakultasId String?
+  id         String              @id @default(cuid())
+  name       String
+  fakultasId String?
+  Dosen      Dosen[]
+  Fakultas   MasterDataFakultas? @relation(fields: [fakultasId], references: [id])
+  user       User[]
 }
 
 model MasterDataOrkem {
-    id                String              @id @default(cuid())
-    name              String
-    PrestasiDataTable PrestasiDataTable[]
+  id                String              @id @default(cuid())
+  name              String
+  PrestasiDataTable PrestasiDataTable[]
 }
 
 model MasterDataTingkatKejuaraan {
-    id                String              @id @default(cuid())
-    name              String
-    PrestasiDataTable PrestasiDataTable[]
+  id                String              @id @default(cuid())
+  name              String
+  PrestasiDataTable PrestasiDataTable[]
 }
 
 model MasterDataTingkatPrestasi {
-    id                String              @id @default(cuid())
-    name              String
-    PrestasiDataTable PrestasiDataTable[]
+  id                String              @id @default(cuid())
+  name              String
+  PrestasiDataTable PrestasiDataTable[]
 }
 
 model MasterDataStatus {
-    id                String              @id @default(cuid())
-    name              String
-    backgroundColor   String
-    // PrestasiDataTable PrestasiDataTable[]
-    PengajuanPKM      PengajuanPKM[]
-    // ActivityLog       ActivityLog[]
-    PengajuanBeasiswa PengajuanBeasiswa[]
-    PatenAndHakiTable PatenAndHakiTable[]
-    Buku              Buku[]
+  id                String              @id @default(cuid())
+  name              String
+  backgroundColor   String
+  Buku              Buku[]
+  PatenAndHakiTable PatenAndHakiTable[]
+  PengajuanBeasiswa PengajuanBeasiswa[]
+  PengajuanPKM      PengajuanPKM[]
 }
 
-// FEATURE TABLE
 model LampiranData {
-    id                  String              @id @default(cuid())
-    piagamPenghargaan   String?
-    fotoPenyerahanPiala String?
-    undanganKejuaraan   String?
-    dokumenPendukung    String?
-    PrestasiDataTable   PrestasiDataTable[]
+  id                  String              @id @default(cuid())
+  piagamPenghargaan   String?
+  fotoPenyerahanPiala String?
+  undanganKejuaraan   String?
+  dokumenPendukung    String?
+  PrestasiDataTable   PrestasiDataTable[]
 }
 
 /// ==== PENGAJUAN PRESTASI TABLE === ///
 model PrestasiDataTable {
-    id              String    @id @default(cuid())
-    noSK            String?
-    tanggalSK       DateTime?
-    kegiatan        String
-    tanggalKegiatan DateTime
-    penyelenggara   String?
-    createdAt       DateTime  @default(now())
-    updatedAt       DateTime
-
-    dosen   Dosen  @relation(fields: [dosenId], references: [id])
-    dosenId String
-
-    orkem   MasterDataOrkem @relation(fields: [orkemId], references: [id])
-    orkemId String
-
-    tingkatKejuaraan   MasterDataTingkatKejuaraan @relation(fields: [tingkatKejuaraanId], references: [id])
-    tingkatKejuaraanId String
-
-    tingkatPrestasi   MasterDataTingkatPrestasi @relation(fields: [tingkatPrestasiId], references: [id])
-    tingkatPrestasiId String
-
-    lampiran   LampiranData @relation(fields: [lampiranId], references: [id])
-    lampiranId String
-
-    // many relation
-    users        PengajuanOnUsers[]
-    activityLog  ActivityLog[]
-    notification Notification[]
-    Catatan      Catatan[]
-    // ** ADMIN ACTION
-    // isValidated Boolean  @default(false)
-    // rejected    Boolean  @default(false)
-    // rejecteddAt DateTime
-
-    // status   MasterDataStatus @relation(fields: [statusId], references: [id])
-    // statusId String
+  id                 String                     @id @default(cuid())
+  noSK               String?
+  tanggalSK          String?
+  kegiatan           String
+  tanggalKegiatan    String
+  penyelenggara      String?
+  createdAt          DateTime?                  @default(now())
+  orkemId            String
+  tingkatKejuaraanId String
+  tingkatPrestasiId  String
+  dosenId            String
+  lampiranId         String
+  updatedAt          DateTime?                  @default(now())
+  activityLog        ActivityLog[]
+  Catatan            Catatan[]
+  notification       Notification[]
+  users              PengajuanOnUsers[]
+  dosen              Dosen                      @relation(fields: [dosenId], references: [id])
+  lampiran           LampiranData               @relation(fields: [lampiranId], references: [id])
+  orkem              MasterDataOrkem            @relation(fields: [orkemId], references: [id])
+  tingkatKejuaraan   MasterDataTingkatKejuaraan @relation(fields: [tingkatKejuaraanId], references: [id])
+  tingkatPrestasi    MasterDataTingkatPrestasi  @relation(fields: [tingkatPrestasiId], references: [id])
 }
 
 model Catatan {
-    id String @id @default(cuid())
-
-    user   User   @relation(fields: [userId], references: [id])
-    userId String
-
-    PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
-    prestasiDataTableId String?
+  id                  String             @id @default(cuid())
+  userId              String
+  prestasiDataTableId String?
+  PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
+  user                User               @relation(fields: [userId], references: [id])
 }
 
 model PengajuanOnUsers {
-    user   User   @relation(fields: [userId], references: [id])
-    userId String // relation scalar field (used in the `@relation` attribute above)
-
-    // multiple dosen when ajukan paten
-    dosen   Dosen  @relation(fields: [dosenId], references: [id])
-    dosenId String // relation scalar field (used in the `@relation` attribute above)
-
-    // pretasi table
-    PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
-    prestasiDataTableId String
-
-    // program kreativitas mahasiswa
-    PengajuanPKM   PengajuanPKM? @relation(fields: [PengajuanPKMId], references: [id])
-    PengajuanPKMId String
-
-    // pengajuan paten and haki
-    PengajuanPatenAndHakiTable   PatenAndHakiTable? @relation(fields: [PengajuanPatenAndHakiTableId], references: [id])
-    PengajuanPatenAndHakiTableId String
-
-    keterangan String @default("Ketua Tim")
-
-    @@id([userId, prestasiDataTableId])
+  userId                       String
+  dosenId                      String
+  prestasiDataTableId          String?
+  PengajuanPKMId               String?
+  PengajuanPatenAndHakiTableId String?
+  keterangan                   String             @default("Ketua Tim")
+  id                           String             @id @default(cuid())
+  PengajuanPKM                 PengajuanPKM?      @relation(fields: [PengajuanPKMId], references: [id])
+  PengajuanPatenAndHakiTable   PatenAndHakiTable? @relation(fields: [PengajuanPatenAndHakiTableId], references: [id])
+  dosen                        Dosen              @relation(fields: [dosenId], references: [id])
+  PrestasiDataTable            PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
+  user                         User               @relation(fields: [userId], references: [id])
 }
-
-/// ==== END OF PENGAJUAN PRESTASI TABLE === ///
 
 /// === PENGAJUAN NEW FEATURE TABLE === /// (KEGIATAN BELUM TERLAKSANA)
 model PengajuanPKM {
-    // Program Kreativitas Mahasiswa
-    id              String   @id @default(cuid())
-    judul           String
-    deskripsi       String
-    tanggalKegiatan DateTime
-    isValidated     Boolean  @default(false)
-    validatedAt     DateTime
-    createdAt       DateTime @default(now())
-    lampiran        String? // berupa link google drive
-    totalAnggaran   Int
-    anggaranDosen   Int
-
-    status   MasterDataStatus @relation(fields: [statusId], references: [id])
-    statusId String
-
-    dosen   Dosen  @relation(fields: [dosenId], references: [id])
-    dosenId String
-
-    users        PengajuanOnUsers[]
-    activityLog  ActivityLog[]
-    notification Notification[]
+  id              String             @id @default(cuid())
+  judul           String
+  deskripsi       String
+  tanggalKegiatan String
+  isValidated     Boolean            @default(false)
+  validatedAt     DateTime
+  createdAt       DateTime           @default(now())
+  lampiran        String?
+  totalAnggaran   Int
+  anggaranDosen   Int
+  statusId        String
+  dosenId         String
+  activityLog     ActivityLog[]
+  notification    Notification[]
+  users           PengajuanOnUsers[]
+  dosen           Dosen              @relation(fields: [dosenId], references: [id])
+  status          MasterDataStatus   @relation(fields: [statusId], references: [id])
 }
 
 model PengajuanBeasiswa {
-    id               String   @id @default(cuid())
-    isValidated      Boolean  @default(false)
-    validatedAt      DateTime
-    createdAt        DateTime @default(now())
-    dokumenFormulir  String
-    deskripsiDokumen String
-    dokumenPendukung String
-
-    status   MasterDataStatus @relation(fields: [statusId], references: [id])
-    statusId String
-
-    // relation
-    user         User           @relation(fields: [userId], references: [id])
-    userId       String
-    activityLog  ActivityLog[]
-    notification Notification[]
+  id               String           @id @default(cuid())
+  isValidated      Boolean          @default(false)
+  validatedAt      DateTime
+  createdAt        DateTime         @default(now())
+  dokumenFormulir  String
+  deskripsiDokumen String
+  dokumenPendukung String
+  statusId         String
+  userId           String
+  activityLog      ActivityLog[]
+  notification     Notification[]
+  status           MasterDataStatus @relation(fields: [statusId], references: [id])
+  user             User             @relation(fields: [userId], references: [id])
 }
 
 model SKRektor {
-    id         String   @id @default(cuid())
-    nomorSK    String
-    judul      String
-    tanggal    DateTime
-    keterangan String
-    lampiran   String
+  id         String   @id @default(cuid())
+  nomorSK    String
+  judul      String
+  tanggal    DateTime
+  keterangan String
+  lampiran   String
 }
-
-/// === END OF PENGAJUAN NEW FEATURE TABLE === ///
 
 /// === PENGAJUAN LUARAN TABLE === ///
 model PatenAndHakiTable {
-    id          String           @id @default(cuid())
-    judul       String
-    nomorPaten  String
-    expiredDate DateTime
-    createdAt   DateTime         @default(now())
-    keterangan  String
-    validatedAt DateTime
-    isValidated Boolean          @default(false)
-    jenis       PatenAndHaki
-    status      MasterDataStatus @relation(fields: [statusId], references: [id])
-    statusId    String
-
-    // relation
-    activityLog      ActivityLog[]
-    notification     Notification[]
-    PengajuanOnUsers PengajuanOnUsers[]
+  id               String             @id @default(cuid())
+  judul            String
+  nomorPaten       String
+  expiredDate      DateTime
+  createdAt        DateTime           @default(now())
+  keterangan       String
+  validatedAt      DateTime
+  isValidated      Boolean            @default(false)
+  jenis            PatenAndHaki
+  statusId         String
+  activityLog      ActivityLog[]
+  notification     Notification[]
+  status           MasterDataStatus   @relation(fields: [statusId], references: [id])
+  PengajuanOnUsers PengajuanOnUsers[]
 }
 
 model Buku {
-    id              String           @id @default(cuid())
-    NomorISBN       String //minimal 13 digit
-    Penulis         String
-    Pengarang       String
-    Penerbit        String
-    tahunTerbit     DateTime
-    jumlahEksemplar Int
-    validatedAt     DateTime
-    createdAt       DateTime         @default(now())
-    status          MasterDataStatus @relation(fields: [statusId], references: [id])
-    statusId        String
-
-    // relation
-    user         User           @relation(fields: [userId], references: [id])
-    userId       String
-    activityLog  ActivityLog[]
-    notification Notification[]
+  id              String           @id @default(cuid())
+  NomorISBN       String
+  Penulis         String
+  Pengarang       String
+  Penerbit        String
+  tahunTerbit     DateTime
+  jumlahEksemplar Int
+  validatedAt     DateTime
+  createdAt       DateTime         @default(now())
+  statusId        String
+  userId          String
+  activityLog     ActivityLog[]
+  status          MasterDataStatus @relation(fields: [statusId], references: [id])
+  user            User             @relation(fields: [userId], references: [id])
+  notification    Notification[]
 }
 
-/// === END OF PENGAJUAN LUARAN TABLE === ///
-
-// ADDITIONAL INFO
 model ActivityLog {
-    id String @id @default(cuid())
-
-    catatan String?
-
-    user   User   @relation(fields: [userId], references: [id])
-    userId String
-
-    // status   MasterDataStatus @relation(fields: [statusId], references: [id])
-    // statusId String
-
-    PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
-    prestasiDataTableId String?
-    PatenAndHakiTable   PatenAndHakiTable? @relation(fields: [PatenAndHakiTableId], references: [id])
-    PatenAndHakiTableId String?
-    Buku                Buku?              @relation(fields: [bukuId], references: [id])
-    bukuId              String?
-    PengajuanPKM        PengajuanPKM?      @relation(fields: [pengajuanPKMId], references: [id])
-    pengajuanPKMId      String?
-    PengajuanBeasiswa   PengajuanBeasiswa? @relation(fields: [pengajuanBeasiswaId], references: [id])
-    pengajuanBeasiswaId String?
+  id                  String             @id @default(cuid())
+  catatan             String?
+  userId              String
+  prestasiDataTableId String?
+  PatenAndHakiTableId String?
+  bukuId              String?
+  pengajuanPKMId      String?
+  pengajuanBeasiswaId String?
+  PatenAndHakiTable   PatenAndHakiTable? @relation(fields: [PatenAndHakiTableId], references: [id])
+  Buku                Buku?              @relation(fields: [bukuId], references: [id])
+  PengajuanBeasiswa   PengajuanBeasiswa? @relation(fields: [pengajuanBeasiswaId], references: [id])
+  PengajuanPKM        PengajuanPKM?      @relation(fields: [pengajuanPKMId], references: [id])
+  PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
+  user                User               @relation(fields: [userId], references: [id])
 }
 
 model Notification {
-    id     String  @id @default(cuid())
-    readed Boolean @default(false)
+  id                  String             @id @default(cuid())
+  readed              Boolean            @default(false)
+  prestasiDataTableId String?
+  PatenAndHakiTableId String?
+  bukuId              String?
+  pengajuanPKMId      String?
+  pengajuanBeasiswaId String?
+  PatenAndHakiTable   PatenAndHakiTable? @relation(fields: [PatenAndHakiTableId], references: [id])
+  Buku                Buku?              @relation(fields: [bukuId], references: [id])
+  PengajuanBeasiswa   PengajuanBeasiswa? @relation(fields: [pengajuanBeasiswaId], references: [id])
+  PengajuanPKM        PengajuanPKM?      @relation(fields: [pengajuanPKMId], references: [id])
+  PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
+}
 
-    PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
-    prestasiDataTableId String?
-    PatenAndHakiTable   PatenAndHakiTable? @relation(fields: [PatenAndHakiTableId], references: [id])
-    PatenAndHakiTableId String?
-    Buku                Buku?              @relation(fields: [bukuId], references: [id])
-    bukuId              String?
-    PengajuanPKM        PengajuanPKM?      @relation(fields: [pengajuanPKMId], references: [id])
-    pengajuanPKMId      String?
-    PengajuanBeasiswa   PengajuanBeasiswa? @relation(fields: [pengajuanBeasiswaId], references: [id])
-    pengajuanBeasiswaId String?
+enum Role {
+  MAHASISWA
+  ADMIN
+}
+
+enum PatenAndHaki {
+  PATEN
+  HAKI
 }

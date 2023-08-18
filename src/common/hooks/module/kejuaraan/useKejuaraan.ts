@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
+import { customToast } from "~/common/components/ui/toast/showToast";
 import {
   type IPengajuanPrestasiForm,
   pengajuanPrestasiForm,
@@ -13,35 +14,29 @@ const useKejuaraan = () => {
   const { data: orkem } = api.orkem.getAllOrkem.useQuery();
   const { data: kejuaraan } = api.kejuaraan.getAllTingkatKejuaraan.useQuery();
   const { data: prestasi } = api.prestasi.getAllTingkatPrestasi.useQuery();
-
+  const { mutate: createPrestasiLomba } = api.prestasiLomba.createPrestasiLomba.useMutation();
   const [loading, setLoading] = useState<boolean>(false);
 
   const {
     register,
-    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<IPengajuanPrestasiForm>({
     resolver: zodResolver(pengajuanPrestasiForm),
   });
-  console.log("errors", errors);
+
   const onSubmit = useCallback((userPayload: IPengajuanPrestasiForm) => {
-    console.log("userPayload", userPayload);
-    // setLoading(true);
-    // updateUserProfile(userPayload, {
-    //   onSuccess: (data) => {
-    //     customToast("success", data?.message);
-    //     dispatch({
-    //       type: ActionReducer.UPDATE_USER,
-    //       payload: data.data as unknown as UserProfileType,
-    //     });
-    //     setLoading(false);
-    //   },
-    //   onError: (error) => {
-    //     customToast("error", error?.message);
-    //     setLoading(false);
-    //   },
-    // });
+    setLoading(false);
+    createPrestasiLomba(userPayload, {
+      onSuccess: (data) => {
+        customToast("success", data?.message);
+        setLoading(false);
+      },
+      onError: (error) => {
+        customToast("error", error?.message);
+        setLoading(false);
+      },
+    });
   }, []);
 
   const KEJUARAAN_FORM = [

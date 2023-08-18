@@ -4,7 +4,7 @@ export const pengajuanPrestasiForm = z
   .object({
     userId: z.string().min(1, { message: "Pilih mahasiswa!" }),
     kegiatan: z.string().min(1, { message: "Kegiatan tidak boleh kosong!" }),
-    tanggalKegiatan: z.string(),
+    tanggalKegiatan: z.string().min(1, { message: "required!" }),
     penyelenggara: z
       .string()
       .min(1, { message: "Penyelenggara tidak boleh kosong!" }),

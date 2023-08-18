@@ -14,6 +14,7 @@ export type UserProfileType = Prisma.UserGetPayload<{
 }>;
 
 export const userQuery = {
+  id: true,
   name: true,
   alamat: true,
   email: true,

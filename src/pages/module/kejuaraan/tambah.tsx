@@ -38,6 +38,7 @@ const TambahKejuaraan = () => {
             isSubmit
             isSuccess
             isMedium
+            isLoading={loading}
             className="flex w-fit items-center gap-2"
           >
             Submit

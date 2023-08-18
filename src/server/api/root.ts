@@ -6,6 +6,7 @@ import { dosenQuery } from "./module/master-data/dosen";
 import { orkemQuery } from "./module/master-data/orkem";
 import { tingkatKejuaraanQuery } from "./module/master-data/tingkatKejuaraan";
 import { tingkatPrestasiQuery } from "./module/master-data/tingkatPrestasi";
+import { prestasiLombaQuery } from "./module/pengajuan/prestasi";
 
 /**
  * This is the primary router for your server.
@@ -22,6 +23,9 @@ export const appRouter = createTRPCRouter({
   orkem: orkemQuery,
   kejuaraan: tingkatKejuaraanQuery,
   prestasi: tingkatPrestasiQuery,
+
+  // ** PENGAJUAN DATA
+  prestasiLomba: prestasiLombaQuery,
 });
 
 // export type definition of API
