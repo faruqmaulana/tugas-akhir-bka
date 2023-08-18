@@ -221,7 +221,7 @@ export const DUMMY_KEJUARAAN: KejuaraanData[] = [
   },
 ];
 
-export const DUMMY_KEJUARAAN_FORM = [
+export const KEJUARAAN_FORM = [
   {
     key: "nama",
     className: "col-span-1",
