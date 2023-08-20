@@ -24,7 +24,7 @@ export type InputProps = {
   handleSelectOptionChange?: (
     newValue: SingleValue<ReactSelectOptionType>
   ) => void;
-  control: any;
+  control?: any;
   isLoading?: boolean;
 };
 
