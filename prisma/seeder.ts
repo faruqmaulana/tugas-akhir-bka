@@ -85,15 +85,15 @@ async function seedTingkatPrestasi() {
   });
 }
 
-async function seedStatus() {
-  await prisma.masterDataStatus.createMany({
-    data: [
-      { name: "Status A", backgroundColor: "#000000" },
-      { name: "Status B", backgroundColor: "#FFFFFF" },
-      // Add more status data as needed
-    ],
-  });
-}
+// async function seedStatus() {
+//   await prisma.masterDataStatus.createMany({
+//     data: [
+//       { name: "Status A", backgroundColor: "#000000" },
+//       { name: "Status B", backgroundColor: "#FFFFFF" },
+//       // Add more status data as needed
+//     ],
+//   });
+// }
 
 async function seedDosen() {
   const prodi = await prisma.masterDataProdi.findMany();

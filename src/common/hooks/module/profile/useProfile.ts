@@ -3,11 +3,14 @@ import { useForm } from "react-hook-form";
 import { type IUserProfileForm, userProfileForm } from "~/common/schemas/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type UserProfileType } from "~/server/queries/module/user/user.query";
-import { type ChangeEvent, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { customToast } from "~/common/components/ui/toast/showToast";
 import { ActionReducer } from "~/common/types/context/GlobalContextType";
 import { type AllMasterDataProdiType } from "~/server/api/module/master-data/prodi";
+import { type SingleValue } from "react-select";
+import { type ReactSelectOptionType } from "~/common/components/ui/form/ReactSelect";
+
 const useProfile = () => {
   const {
     state: { user },
@@ -33,6 +36,7 @@ const useProfile = () => {
     register,
     setValue,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<IUserProfileForm>({
     resolver: zodResolver(userProfileForm),
@@ -59,12 +63,13 @@ const useProfile = () => {
   }, [setValue, user]);
 
   // ** HANDLE FAKULTAS STATE WHEN PRODI WAS CHANGE
-  const handleFakultasChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFakultasChange = (
+    selectState: SingleValue<ReactSelectOptionType>
+  ) => {
     const tempProdi: AllMasterDataProdiType = prodi as AllMasterDataProdiType;
     const filteredProdi: AllMasterDataProdiType = tempProdi?.filter(
-      (val) => val.id === event.target.value
+      (val) => val.id === selectState?.value
     );
-
     setFakultasState({
       id: filteredProdi[0]?.Fakultas?.id,
       name: filteredProdi[0]?.Fakultas?.name,
@@ -106,12 +111,13 @@ const useProfile = () => {
       error: errors.npm?.message,
     },
     {
+      disabled: true,
       className: "col-span-2 lg:col-span-1",
       placeholder: "Fakultas",
       label: "Fakultas",
       type: "select",
-      disabled: true,
       value: fakultasState?.id,
+      control: control,
       selectData: [
         {
           id: fakultasState?.id,
@@ -124,9 +130,11 @@ const useProfile = () => {
       placeholder: "Prodi",
       label: "Prodi",
       type: "select",
+      isLoading: !prodi,
       value: user?.prodi?.id,
-      handleSelectOptionChange: handleFakultasChange,
+      control: control,
       register: { ...register("prodiId") },
+      handleSelectOptionChange: handleFakultasChange,
       selectData: prodi || [
         {
           id: user?.prodi?.id,

@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable indent */
-import React, { useState, type ChangeEvent, useEffect } from "react";
+import React, { useState } from "react";
 import EyeSlashIcon from "~/common/EyeSlashIcon";
 import EyeIcon from "../../svg/EyeIcon";
-import Spinner from "../../svg/Spinner";
+import { ReactSelect, type ReactSelectOptionType } from "./ReactSelect";
+import { type SingleValue } from "react-select";
+import { type FieldValues, type UseFormRegister } from "react-hook-form";
 
 export type InputProps = {
   disabled?: boolean;
@@ -16,15 +14,18 @@ export type InputProps = {
   value?: string | Date | any;
   label?: string;
   type?: string;
-  register?: any;
+  register?: UseFormRegister<FieldValues>;
   additionalInfo?: string;
   selectData?: any;
   labelFontSize?: string;
-  showValue?: boolean;
   autocomplete?: string;
   error?: string;
   onChange?: (value: string) => void;
-  handleSelectOptionChange?: (value: ChangeEvent<HTMLInputElement>) => void;
+  handleSelectOptionChange?: (
+    newValue: SingleValue<ReactSelectOptionType>
+  ) => void;
+  control: any;
+  isLoading?: boolean;
 };
 
 const Input = (props: InputProps) => {
@@ -36,31 +37,40 @@ const Input = (props: InputProps) => {
     value = "",
     label = "",
     type = "text",
-    additionalInfo = undefined,
     register,
     selectData = undefined,
     labelFontSize = "text-[15px]",
-    showValue = true,
     autocomplete,
     error,
+    control,
+    isLoading = false,
     handleSelectOptionChange,
+    additionalInfo = undefined,
   } = props;
   const [inputType, setInputType] = useState(type === "date" ? "text" : type);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [disableDefaultSelectedOption, setDisableDefaultSelectedOption] =
-    useState<boolean>(false);
-
-  const handleDisableDefaultSelectOption = (
-    event: ChangeEvent<HTMLInputElement>
-  ) => {
-    setDisableDefaultSelectedOption(true);
-  };
 
   return (
     <div className={`relative mt-auto flex flex-col gap-1 ${className}`}>
       {label && <p className={`font-medium ${labelFontSize}`}>{label}</p>}
       <div className="relative flex flex-wrap items-stretch">
         {type === "select" && (
+          <ReactSelect
+            isLoading={isLoading}
+            control={control}
+            disabled={disabled}
+            register={register}
+            placeholder={placeholder}
+            defaultValue={value}
+            optionData={selectData}
+            onChange={(newValue: SingleValue<ReactSelectOptionType>) => {
+              if (handleSelectOptionChange) {
+                return handleSelectOptionChange(newValue);
+              }
+            }}
+          />
+        )}
+        {/* {type === "select" && (
           <div className="relative w-full">
             <select
               disabled={disabled || !selectData}
@@ -116,7 +126,7 @@ const Input = (props: InputProps) => {
               </svg>
             </div>
           </div>
-        )}
+        )} */}
         {type === "textarea" && (
           <textarea
             {...(register || {})}

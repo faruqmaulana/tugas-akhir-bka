@@ -10,5 +10,5 @@ TUGAS AKHIR BKA PROGRESS
 - pengajuan prestasi ✅
 - TODO 
   -> fix created pengajuan with multiple users and choose leader option
-  -> handle if data successfully created
-  -> fix submit loading animation
+  -> handle if data successfully created -> redirect to root module -> pengajuan prestasi
+  -> fix submit loading animation ✅
