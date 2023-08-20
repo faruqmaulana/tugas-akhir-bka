@@ -16,7 +16,6 @@ Table User {
   prodiId String
   activityLog ActivityLog [not null]
   Buku Buku [not null]
-  Catatan Catatan [not null]
   PengajuanBeasiswa PengajuanBeasiswa [not null]
   prestasiDataTables PengajuanOnUsers [not null]
   prodi MasterDataProdi
@@ -72,16 +71,6 @@ Table MasterDataTingkatPrestasi {
   PrestasiDataTable PrestasiDataTable [not null]
 }
 
-Table MasterDataStatus {
-  id String [pk]
-  name String [not null]
-  backgroundColor String [not null]
-  Buku Buku [not null]
-  PatenAndHakiTable PatenAndHakiTable [not null]
-  PengajuanBeasiswa PengajuanBeasiswa [not null]
-  PengajuanPKM PengajuanPKM [not null]
-}
-
 Table LampiranData {
   id String [pk]
   piagamPenghargaan String
@@ -105,8 +94,8 @@ Table PrestasiDataTable {
   dosenId String [not null]
   lampiranId String [not null]
   updatedAt DateTime [default: `now()`]
+  status String [not null, default: 'Sedang Di Prosess']
   activityLog ActivityLog [not null]
-  Catatan Catatan [not null]
   notification Notification [not null]
   users PengajuanOnUsers [not null]
   dosen Dosen [not null]
@@ -116,14 +105,6 @@ Table PrestasiDataTable {
   tingkatPrestasi MasterDataTingkatPrestasi [not null]
 
   Note: '==== PENGAJUAN PRESTASI TABLE === ///'
-}
-
-Table Catatan {
-  id String [pk]
-  userId String [not null]
-  prestasiDataTableId String
-  PrestasiDataTable PrestasiDataTable
-  user User [not null]
 }
 
 Table PengajuanOnUsers {
@@ -152,13 +133,12 @@ Table PengajuanPKM {
   lampiran String
   totalAnggaran Int [not null]
   anggaranDosen Int [not null]
-  statusId String [not null]
   dosenId String [not null]
+  status String [not null, default: 'Sedang Di Prosess']
   activityLog ActivityLog [not null]
   notification Notification [not null]
   users PengajuanOnUsers [not null]
   dosen Dosen [not null]
-  status MasterDataStatus [not null]
 
   Note: '=== PENGAJUAN NEW FEATURE TABLE === /// (KEGIATAN BELUM TERLAKSANA)'
 }
@@ -171,11 +151,10 @@ Table PengajuanBeasiswa {
   dokumenFormulir String [not null]
   deskripsiDokumen String [not null]
   dokumenPendukung String [not null]
-  statusId String [not null]
   userId String [not null]
+  status String [not null]
   activityLog ActivityLog [not null]
   notification Notification [not null]
-  status MasterDataStatus [not null]
   user User [not null]
 }
 
@@ -198,10 +177,8 @@ Table PatenAndHakiTable {
   validatedAt DateTime [not null]
   isValidated Boolean [not null, default: false]
   jenis PatenAndHaki [not null]
-  statusId String [not null]
   activityLog ActivityLog [not null]
   notification Notification [not null]
-  status MasterDataStatus [not null]
   PengajuanOnUsers PengajuanOnUsers [not null]
 
   Note: '=== PENGAJUAN LUARAN TABLE === ///'
@@ -217,10 +194,9 @@ Table Buku {
   jumlahEksemplar Int [not null]
   validatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
-  statusId String [not null]
   userId String [not null]
+  status String
   activityLog ActivityLog [not null]
-  status MasterDataStatus [not null]
   user User [not null]
   notification Notification [not null]
 }
@@ -234,6 +210,7 @@ Table ActivityLog {
   bukuId String
   pengajuanPKMId String
   pengajuanBeasiswaId String
+  status String [not null, default: 'Sedang Di Prosess']
   PatenAndHakiTable PatenAndHakiTable
   Buku Buku
   PengajuanBeasiswa PengajuanBeasiswa
@@ -283,10 +260,6 @@ Ref: PrestasiDataTable.tingkatKejuaraanId > MasterDataTingkatKejuaraan.id
 
 Ref: PrestasiDataTable.tingkatPrestasiId > MasterDataTingkatPrestasi.id
 
-Ref: Catatan.prestasiDataTableId > PrestasiDataTable.id
-
-Ref: Catatan.userId > User.id
-
 Ref: PengajuanOnUsers.PengajuanPKMId > PengajuanPKM.id
 
 Ref: PengajuanOnUsers.PengajuanPatenAndHakiTableId > PatenAndHakiTable.id
@@ -299,15 +272,7 @@ Ref: PengajuanOnUsers.userId > User.id
 
 Ref: PengajuanPKM.dosenId > Dosen.id
 
-Ref: PengajuanPKM.statusId > MasterDataStatus.id
-
-Ref: PengajuanBeasiswa.statusId > MasterDataStatus.id
-
 Ref: PengajuanBeasiswa.userId > User.id
-
-Ref: PatenAndHakiTable.statusId > MasterDataStatus.id
-
-Ref: Buku.statusId > MasterDataStatus.id
 
 Ref: Buku.userId > User.id
 

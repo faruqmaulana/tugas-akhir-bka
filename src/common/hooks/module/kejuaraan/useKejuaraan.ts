@@ -14,7 +14,8 @@ const useKejuaraan = () => {
   const { data: orkem } = api.orkem.getAllOrkem.useQuery();
   const { data: kejuaraan } = api.kejuaraan.getAllTingkatKejuaraan.useQuery();
   const { data: prestasi } = api.prestasi.getAllTingkatPrestasi.useQuery();
-  const { mutate: createPrestasiLomba } = api.prestasiLomba.createPrestasiLomba.useMutation();
+  const { mutate: createPrestasiLomba } =
+    api.prestasiLomba.createPrestasiLomba.useMutation();
   const [loading, setLoading] = useState<boolean>(false);
 
   const {
@@ -26,7 +27,7 @@ const useKejuaraan = () => {
   });
 
   const onSubmit = useCallback((userPayload: IPengajuanPrestasiForm) => {
-    setLoading(false);
+    setLoading(true);
     createPrestasiLomba(userPayload, {
       onSuccess: (data) => {
         customToast("success", data?.message);

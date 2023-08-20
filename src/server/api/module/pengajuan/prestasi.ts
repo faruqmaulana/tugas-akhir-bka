@@ -71,6 +71,16 @@ export const prestasiLombaQuery = createTRPCRouter({
             ],
           });
 
+        // ** ADD ACTIVITY LOG
+        await ctx.prisma.activityLog.create({
+          data: {
+            userId: ctx.session.user.userId,
+            prestasiDataTableId: createPrestasiDataTable.id,
+          },
+        });
+
+        //** ADD NOTIFICATION */
+
         return {
           message: ADD_PRESTASI_LOMBA_SUCCESS,
           data: createPengajuanOnUsers,

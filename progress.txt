@@ -6,5 +6,9 @@ TUGAS AKHIR BKA PROGRESS
 - Profile Page ✅
 - Informasi Login ✅
 
-=== MODULE PRESTASI ===
+=== MODULE PRESTASI 190823 ===
 - pengajuan prestasi ✅
+- TODO 
+  -> fix created pengajuan with multiple users and choose leader option
+  -> handle if data successfully created
+  -> fix submit loading animation

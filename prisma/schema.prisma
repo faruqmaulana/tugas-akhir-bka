@@ -25,7 +25,6 @@ model User {
   prodiId            String?
   activityLog        ActivityLog[]
   Buku               Buku[]
-  Catatan            Catatan[]
   PengajuanBeasiswa  PengajuanBeasiswa[]
   prestasiDataTables PengajuanOnUsers[]
   prodi              MasterDataProdi?    @relation(fields: [prodiId], references: [id])
@@ -81,16 +80,6 @@ model MasterDataTingkatPrestasi {
   PrestasiDataTable PrestasiDataTable[]
 }
 
-model MasterDataStatus {
-  id                String              @id @default(cuid())
-  name              String
-  backgroundColor   String
-  Buku              Buku[]
-  PatenAndHakiTable PatenAndHakiTable[]
-  PengajuanBeasiswa PengajuanBeasiswa[]
-  PengajuanPKM      PengajuanPKM[]
-}
-
 model LampiranData {
   id                  String              @id @default(cuid())
   piagamPenghargaan   String?
@@ -115,8 +104,8 @@ model PrestasiDataTable {
   dosenId            String
   lampiranId         String
   updatedAt          DateTime?                  @default(now())
+  status             String                     @default("Sedang Di Prosess")
   activityLog        ActivityLog[]
-  Catatan            Catatan[]
   notification       Notification[]
   users              PengajuanOnUsers[]
   dosen              Dosen                      @relation(fields: [dosenId], references: [id])
@@ -124,14 +113,6 @@ model PrestasiDataTable {
   orkem              MasterDataOrkem            @relation(fields: [orkemId], references: [id])
   tingkatKejuaraan   MasterDataTingkatKejuaraan @relation(fields: [tingkatKejuaraanId], references: [id])
   tingkatPrestasi    MasterDataTingkatPrestasi  @relation(fields: [tingkatPrestasiId], references: [id])
-}
-
-model Catatan {
-  id                  String             @id @default(cuid())
-  userId              String
-  prestasiDataTableId String?
-  PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
-  user                User               @relation(fields: [userId], references: [id])
 }
 
 model PengajuanOnUsers {
@@ -161,29 +142,27 @@ model PengajuanPKM {
   lampiran        String?
   totalAnggaran   Int
   anggaranDosen   Int
-  statusId        String
   dosenId         String
+  status          String             @default("Sedang Di Prosess")
   activityLog     ActivityLog[]
   notification    Notification[]
   users           PengajuanOnUsers[]
   dosen           Dosen              @relation(fields: [dosenId], references: [id])
-  status          MasterDataStatus   @relation(fields: [statusId], references: [id])
 }
 
 model PengajuanBeasiswa {
-  id               String           @id @default(cuid())
-  isValidated      Boolean          @default(false)
+  id               String         @id @default(cuid())
+  isValidated      Boolean        @default(false)
   validatedAt      DateTime
-  createdAt        DateTime         @default(now())
+  createdAt        DateTime       @default(now())
   dokumenFormulir  String
   deskripsiDokumen String
   dokumenPendukung String
-  statusId         String
   userId           String
+  status           String
   activityLog      ActivityLog[]
   notification     Notification[]
-  status           MasterDataStatus @relation(fields: [statusId], references: [id])
-  user             User             @relation(fields: [userId], references: [id])
+  user             User           @relation(fields: [userId], references: [id])
 }
 
 model SKRektor {
@@ -206,15 +185,13 @@ model PatenAndHakiTable {
   validatedAt      DateTime
   isValidated      Boolean            @default(false)
   jenis            PatenAndHaki
-  statusId         String
   activityLog      ActivityLog[]
   notification     Notification[]
-  status           MasterDataStatus   @relation(fields: [statusId], references: [id])
   PengajuanOnUsers PengajuanOnUsers[]
 }
 
 model Buku {
-  id              String           @id @default(cuid())
+  id              String         @id @default(cuid())
   NomorISBN       String
   Penulis         String
   Pengarang       String
@@ -222,12 +199,11 @@ model Buku {
   tahunTerbit     DateTime
   jumlahEksemplar Int
   validatedAt     DateTime
-  createdAt       DateTime         @default(now())
-  statusId        String
+  createdAt       DateTime       @default(now())
   userId          String
+  status          String?
   activityLog     ActivityLog[]
-  status          MasterDataStatus @relation(fields: [statusId], references: [id])
-  user            User             @relation(fields: [userId], references: [id])
+  user            User           @relation(fields: [userId], references: [id])
   notification    Notification[]
 }
 
@@ -240,6 +216,7 @@ model ActivityLog {
   bukuId              String?
   pengajuanPKMId      String?
   pengajuanBeasiswaId String?
+  status              String             @default("Sedang Di Prosess")
   PatenAndHakiTable   PatenAndHakiTable? @relation(fields: [PatenAndHakiTableId], references: [id])
   Buku                Buku?              @relation(fields: [bukuId], references: [id])
   PengajuanBeasiswa   PengajuanBeasiswa? @relation(fields: [pengajuanBeasiswaId], references: [id])
