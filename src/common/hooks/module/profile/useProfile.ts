@@ -159,7 +159,7 @@ const useProfile = () => {
       error: errors.semester?.message,
     },
     {
-      className: "col-span-2 lg:mt-3",
+      className: "col-span-2",
       placeholder: "Alamat Lengkap",
       label: "Alamat Lengkap",
       type: "textarea",

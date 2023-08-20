@@ -5,6 +5,7 @@ import { requireAuth } from "~/common/authentication/requireAuth";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
 import { Button } from "~/common/components/ui/button/Button";
 import Card from "~/common/components/ui/card/Card";
+import BaseForm from "~/common/components/ui/form/BaseForm";
 import Input from "~/common/components/ui/form/Input";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import { useKejuaraan } from "~/common/hooks/module/kejuaraan/useKejuaraan";
@@ -29,11 +30,7 @@ const TambahKejuaraan = () => {
       />
       <form onSubmit={handleSubmit(onSubmit)}>
         <Card className="mt-[20px]">
-          <div className="mx-auto mb-5 grid h-fit w-full grid-cols-2 gap-5">
-            {KEJUARAAN_FORM.map((val) => (
-              <Input key={val.label} {...val} />
-            ))}
-          </div>
+          <BaseForm data={KEJUARAAN_FORM} />
           <Button
             isSubmit
             isSuccess

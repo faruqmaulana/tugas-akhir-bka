@@ -43,7 +43,7 @@ const useKejuaraan = () => {
 
   const KEJUARAAN_FORM = [
     {
-      className: "col-span-1",
+      className: "col-span-2 lg:col-span-1",
       placeholder: "Mahasiswa",
       label: "Nama",
       type: "select",
@@ -53,7 +53,7 @@ const useKejuaraan = () => {
       error: errors.userId?.message,
     },
     {
-      className: "col-span-1",
+      className: "col-span-2 lg:col-span-1",
       placeholder: "Dosen",
       label: "Dosen",
       type: "select",
@@ -63,14 +63,14 @@ const useKejuaraan = () => {
       error: errors.dosenId?.message,
     },
     {
-      className: "col-span-1",
+      className: "col-span-2 lg:col-span-1",
       placeholder: "Kegiatan",
       label: "Kegiatan",
       register: { ...register("kegiatan") },
       error: errors.kegiatan?.message,
     },
     {
-      className: "col-span-1",
+      className: "col-span-2 lg:col-span-1",
       placeholder: "Tanggal Kegiatan",
       label: "Tanggal Kegiatan",
       value: new Date(), // Contoh dummy data untuk tanggal kegiatan.
@@ -79,14 +79,14 @@ const useKejuaraan = () => {
       error: errors.tanggalKegiatan?.message,
     },
     {
-      className: "col-span-1",
+      className: "col-span-2 lg:col-span-1",
       placeholder: "Penyelenggara",
       label: "Penyelenggara",
       register: { ...register("penyelenggara") },
       error: errors.penyelenggara?.message,
     },
     {
-      className: "col-span-1",
+      className: "col-span-2 lg:col-span-1",
       placeholder: "Orkem",
       label: "Orkem",
       type: "select",
@@ -96,7 +96,7 @@ const useKejuaraan = () => {
       error: errors.orkemId?.message,
     },
     {
-      className: "col-span-1",
+      className: "col-span-2 lg:col-span-1",
       placeholder: "Tingkat Kejuaraan",
       label: "Tingkat Kejuaraan",
       type: "select",
@@ -106,7 +106,7 @@ const useKejuaraan = () => {
       error: errors.tingkatKejuaraanId?.message,
     },
     {
-      className: "col-span-1",
+      className: "col-span-2 lg:col-span-1",
       placeholder: "Tingkat Prestasi",
       label: "Tingkat Prestasi",
       type: "select",
@@ -116,7 +116,7 @@ const useKejuaraan = () => {
       error: errors.tingkatPrestasiId?.message,
     },
     {
-      className: "col-span-1",
+      className: "col-span-2 lg:col-span-1",
       placeholder: "Piagam Penghargaan",
       label: "Piagam Penghargaan",
       type: "text",
@@ -124,7 +124,7 @@ const useKejuaraan = () => {
       error: errors.custom?.message,
     },
     {
-      className: "col-span-1",
+      className: "col-span-2 lg:col-span-1",
       placeholder: "Foto Penyerahan Piala",
       label: "Foto Penyerahan Piala",
       type: "text",
@@ -132,7 +132,7 @@ const useKejuaraan = () => {
       error: errors.custom?.message,
     },
     {
-      className: "col-span-1",
+      className: "col-span-2 lg:col-span-1",
       placeholder: "Undangan Kejuaraan",
       label: "Undangan Kejuaraan",
       type: "text",
@@ -140,7 +140,7 @@ const useKejuaraan = () => {
       error: errors.custom?.message,
     },
     {
-      className: "col-span-1",
+      className: "col-span-2 lg:col-span-1",
       placeholder: "Dokumen Pendukung",
       label: "Dokumen Pendukung",
       type: "text",
