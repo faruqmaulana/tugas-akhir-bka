@@ -20,12 +20,15 @@ export type InputProps = {
   labelFontSize?: string;
   autocomplete?: string;
   error?: string;
+  control?: any;
+  isLoading?: boolean;
+  selectedData?: ReactSelectOptionType[];
   onChange?: (value: string) => void;
+  handleSwitch?: (value: string) => void;
+  handleDeleteSelectedData?: (value: string, isKetua: boolean) => void;
   handleSelectOptionChange?: (
     newValue: SingleValue<ReactSelectOptionType>
   ) => void;
-  control?: any;
-  isLoading?: boolean;
 };
 
 const Input = (props: InputProps) => {
@@ -43,9 +46,12 @@ const Input = (props: InputProps) => {
     autocomplete,
     error,
     control,
+    handleSwitch,
     isLoading = false,
-    handleSelectOptionChange,
+    selectedData = [],
     additionalInfo = undefined,
+    handleSelectOptionChange,
+    handleDeleteSelectedData,
   } = props;
   const [inputType, setInputType] = useState(type === "date" ? "text" : type);
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -64,6 +70,9 @@ const Input = (props: InputProps) => {
             defaultValue={value}
             optionData={selectData}
             error={error}
+            handleSwitch={handleSwitch}
+            handleDeleteSelectedData={handleDeleteSelectedData}
+            selectedData={selectedData}
             onChange={(newValue: SingleValue<ReactSelectOptionType>) => {
               if (handleSelectOptionChange) {
                 return handleSelectOptionChange(newValue);

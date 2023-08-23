@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,8 +27,8 @@ const useKejuaraan = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [mahasiswa, setMahasiswa] = useState<
-    CustomReactSelectOptionsType[] | undefined
-  >(undefined);
+    CustomReactSelectOptionsType[] | []
+  >([]);
   const [mahasiswaPayload, setMahasiswaPayload] = useState<
     ReactSelectOptionType[]
   >([]);
@@ -55,17 +57,56 @@ const useKejuaraan = () => {
   }, []);
 
   const handleSelectMultipleUser = (ctx: ReactSelectOptionType) => {
-    setMahasiswaPayload([...mahasiswaPayload, { ...ctx, isKetua: false }]);
+    if (!ctx) return;
+    setMahasiswaPayload([
+      ...mahasiswaPayload,
+      { ...ctx, isKetua: mahasiswaPayload.length > 0 ? false : true },
+    ]);
+    const tempMahasiswa = mahasiswa?.filter((val) => val.id !== ctx?.value);
+
+    setMahasiswa(tempMahasiswa);
   };
 
   useEffect(() => {
     if (user || mahasiswa) {
-      if (mahasiswa!.length > 0) return;
+      if (mahasiswa?.length > 0) return;
       setMahasiswa(user as CustomReactSelectOptionsType[]);
     }
   }, [user]);
 
-  console.log("mahasiswa payload", mahasiswaPayload);
+  const handleDeleteSelectedData = (id: string, isKetua: boolean) => {
+    const tempMahasiswa = [...mahasiswaPayload];
+    if (Array.isArray(user)) {
+      const updatedMahasiswa = tempMahasiswa.filter((val) => val.value !== id);
+
+      // if is cuurent deleted is ketua then set ketua to other in index 0 if any
+      if (isKetua && updatedMahasiswa.length > 0) {
+        updatedMahasiswa[0]!.isKetua = true;
+      }
+
+      const deletedData = user.filter(
+        (val: CustomReactSelectOptionsType) => val.id === id
+      );
+
+      setMahasiswaPayload(updatedMahasiswa);
+      setMahasiswa([...mahasiswa, ...deletedData]);
+    }
+  };
+
+  const handleMahasiswaLead = (id: string) => {
+    const tempMahasiswa = [...mahasiswaPayload];
+
+    tempMahasiswa.forEach((val, i) => {
+      if (id === val.value) {
+        tempMahasiswa[i]!.isKetua = true;
+      } else {
+        tempMahasiswa[i]!.isKetua = false;
+      }
+    });
+
+    setMahasiswaPayload(tempMahasiswa);
+  };
+
   const KEJUARAAN_FORM = [
     {
       className: "col-span-2 lg:col-span-1",
@@ -76,6 +117,9 @@ const useKejuaraan = () => {
       selectData: mahasiswa,
       register: { ...register("userId") },
       error: errors.userId?.message,
+      selectedData: mahasiswaPayload,
+      handleSwitch: handleMahasiswaLead,
+      handleDeleteSelectedData: handleDeleteSelectedData,
       handleSelectOptionChange: handleSelectMultipleUser,
     },
     {
