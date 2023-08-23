@@ -1,28 +1,34 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable indent */
 import React, { useState } from "react";
 import EyeSlashIcon from "~/common/EyeSlashIcon";
 import EyeIcon from "../../svg/EyeIcon";
+import { ReactSelect, type ReactSelectOptionType } from "./ReactSelect";
+import { type SingleValue } from "react-select";
 
 export type InputProps = {
   disabled?: boolean;
   leftAddonComponent?: React.ReactNode | string;
   className?: string;
   placeholder: string;
-  value?: string;
+  value?: string | Date | any;
   label?: string;
   type?: string;
   register?: any;
   additionalInfo?: string;
-  selectData?: any[];
-  onChange?: (value: string) => void;
+  selectData?: any;
   labelFontSize?: string;
-  showValue?: boolean;
   autocomplete?: string;
   error?: string;
+  control?: any;
+  isLoading?: boolean;
+  selectedData?: ReactSelectOptionType[];
+  onChange?: (value: string) => void;
+  handleSwitch?: (value: string) => void;
+  handleDeleteSelectedData?: (value: string, isKetua: boolean) => void;
+  handleSelectOptionChange?: (
+    newValue: SingleValue<ReactSelectOptionType>
+  ) => void;
 };
 
 const Input = (props: InputProps) => {
@@ -34,61 +40,56 @@ const Input = (props: InputProps) => {
     value = "",
     label = "",
     type = "text",
-    additionalInfo = undefined,
     register,
     selectData = undefined,
     labelFontSize = "text-[15px]",
-    showValue = true,
     autocomplete,
     error,
+    control,
+    handleSwitch,
+    isLoading = false,
+    selectedData = [],
+    additionalInfo = undefined,
+    handleSelectOptionChange,
+    handleDeleteSelectedData,
   } = props;
   const [inputType, setInputType] = useState(type === "date" ? "text" : type);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   return (
-    <div className={`relative mt-auto flex flex-col gap-1 ${className}`}>
+    <div className={`relative flex flex-col gap-1 ${className}`}>
       {label && <p className={`font-medium ${labelFontSize}`}>{label}</p>}
       <div className="relative flex flex-wrap items-stretch">
         {type === "select" && (
-          <div className="relative w-full">
-            <select
-              disabled={disabled}
-              {...(register || {})}
-              className={`focus:shadow-outline block w-full appearance-none rounded border border-gray-400 bg-transparent px-4 py-2 pr-8 leading-tight shadow focus:outline-none ${
-                disabled
-                  ? "cursor-not-allowed !text-gray-500 opacity-80"
-                  : "hover:border-gray-500"
-              }`}
-            >
-              {selectData &&
-                selectData?.map((val) => (
-                  <option
-                    key={val.id}
-                    value={val.id}
-                    selected={
-                      value === val.id ||
-                      value?.toLowerCase() === val?.name?.toLowerCase()
-                    }
-                  >
-                    {val.title || val.name}
-                  </option>
-                ))}
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <svg
-                className="h-4 w-4 fill-current"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-              </svg>
-            </div>
-          </div>
+          <ReactSelect
+            isLoading={isLoading}
+            control={control}
+            disabled={disabled}
+            register={register}
+            placeholder={placeholder}
+            defaultValue={value}
+            optionData={selectData}
+            error={error}
+            handleSwitch={handleSwitch}
+            handleDeleteSelectedData={handleDeleteSelectedData}
+            selectedData={selectedData}
+            onChange={(newValue: SingleValue<ReactSelectOptionType>) => {
+              if (handleSelectOptionChange) {
+                return handleSelectOptionChange(newValue);
+              }
+            }}
+          />
         )}
         {type === "textarea" && (
           <textarea
             {...(register || {})}
-            className={`peer block min-h-[auto] w-full rounded border border-primary bg-transparent px-3 py-[0.32rem] leading-[1.6] transition-all duration-200 ease-linear focus-visible:border-primary peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:peer-focus:text-primary ${
+            className={`peer block min-h-[auto] w-full rounded border border-neutral-300 bg-transparent px-3 py-[0.32rem] leading-[1.6] ease-linear focus:border-primary focus:text-neutral-700 focus:outline-none data-[te-input-state-active]:placeholder:opacity-100 
+            ${
+              error
+                ? "!border-red-500 focus:!border-red-500"
+                : "border-neutral-300"
+            }
+            ${
               value
                 ? "dark:placeholder:text-neutral-900 "
                 : "dark:placeholder:text-neutral-400 "
@@ -99,8 +100,12 @@ const Input = (props: InputProps) => {
         )}
         {leftAddonComponent && (
           <span
-            className={`bg-grey-900 flex items-center whitespace-nowrap rounded-l border border-r-0 border-solid border-neutral-300 px-3 py-[0.25rem] text-center text-base font-normal leading-[1.6] text-neutral-700 dark:border-neutral-600 dark:text-neutral-900 dark:placeholder:text-neutral-200 ${
-              disabled ? "cursor-not-allowed opacity-60" : ""
+            className={`bg-grey-900 flex items-center whitespace-nowrap rounded-l border border-r-0 border-solid border-neutral-300 px-3 py-[0.25rem] text-center text-base font-normal leading-[1.6] text-neutral-700 dark:border-neutral-600 dark:text-neutral-900 dark:placeholder:text-neutral-200 
+            ${disabled ? "cursor-not-allowed opacity-60" : ""} 
+            ${
+              error
+                ? "!border-red-500 focus:!border-red-500"
+                : "border-neutral-300"
             }`}
             id="basic-addon1"
           >
@@ -115,6 +120,8 @@ const Input = (props: InputProps) => {
           type === "color") && (
           <input
             {...(register || {})}
+            // onMouseEnter={handleMouseEnter}
+            // onMouseLeave={handleMouseLeave}
             autoComplete={autocomplete || "off"}
             disabled={disabled}
             type={showPassword ? "text" : inputType}
@@ -129,8 +136,13 @@ const Input = (props: InputProps) => {
               }
             }}
             data-te-inline="true"
-            className={`relative m-0 block w-[1px] min-w-0 flex-auto rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:text-neutral-900 dark:focus:border-primary ${
+            className={`relative m-0 block w-[1px] min-w-0 flex-auto rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:text-neutral-900 dark:focus:border-primary ${
               !leftAddonComponent ? "rounded-l" : ""
+            }
+            ${
+              error
+                ? "!border-red-500 focus:!border-red-500"
+                : "border-neutral-300"
             }
           ${
             value
@@ -154,14 +166,10 @@ const Input = (props: InputProps) => {
           </button>
         )}
       </div>
-      {/* {additionalInfo && (
-        <p className="text-sm text-red-500 lg:absolute lg:-bottom-5">
-          *{additionalInfo}
-        </p>
-      )} */}
-      {error && (
-        <p className="text-sm text-red-500 lg:absolute lg:-bottom-5">{error}</p>
+      {additionalInfo && (
+        <p className="text-sm text-red-500">*{additionalInfo}</p>
       )}
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
 };

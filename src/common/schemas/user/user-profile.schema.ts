@@ -16,6 +16,7 @@ export const userProfileForm = z.object({
   }),
   semester: z.string(),
   alamat: z.string(),
+  prodiId: z.string(),
 });
 
 export type IUserProfileForm = z.infer<typeof userProfileForm>;

@@ -21,7 +21,6 @@ async function seedFakultas() {
 
 async function seedProdi() {
   const fakultas = await prisma.masterDataFakultas.findMany(); // Retrieve all users
-  console.log("fakultas", fakultas);
   await prisma.masterDataProdi.createMany({
     data: [
       { name: "Prodi A", fakultasId: fakultas[0]?.id },
@@ -37,25 +36,47 @@ async function seedUsers() {
 
   await prisma.user.createMany({
     data: [
+      // {
+      //   name: "faruqlulus",
+      //   npm: "faruqlulus",
+      //   alamat: "Alamat 2",
+      //   semester: "Semester 2",
+      //   phone: "Phone 2",
+      //   email: "user3@example.com",
+      //   password: await hash("faruqlulus"),
+      //   role: Role.ADMIN,
+      //   prodiId: prodi[1]!.id,
+      // },
+      // {
+      //   name: "dimasspeed",
+      //   npm: "dimasspeed",
+      //   alamat: "Alamat 2",
+      //   semester: "Semester 2",
+      //   phone: "Phone 2",
+      //   email: "user4@example.com",
+      //   password: await hash("dimasspeed"),
+      //   role: Role.MAHASISWA,
+      //   prodiId: prodi[1]!.id,
+      // },
+      // {
+      //   name: "angga",
+      //   npm: "angga",
+      //   alamat: "Alamat 3",
+      //   semester: "Semester 2",
+      //   phone: "08357857848",
+      //   email: "angga@example.com",
+      //   password: await hash("angga123"),
+      //   role: Role.MAHASISWA,
+      //   prodiId: prodi[1]!.id,
+      // },
       {
-        name: "faruqlulus",
-        npm: "faruqlulus",
-        alamat: "Alamat 2",
+        name: "John Doe",
+        npm: "johndoee",
+        alamat: "Alamat 4",
         semester: "Semester 2",
-        phone: "Phone 2",
-        email: "user3@example.com",
-        password: await hash("faruqlulus"),
-        role: Role.ADMIN,
-        prodiId: prodi[1]!.id,
-      },
-      {
-        name: "dimasspeed",
-        npm: "dimasspeed",
-        alamat: "Alamat 2",
-        semester: "Semester 2",
-        phone: "Phone 2",
-        email: "user4@example.com",
-        password: await hash("dimasspeed"),
+        phone: "08357857848",
+        email: "johndoe@example.com",
+        password: await hash("johndoee"),
         role: Role.MAHASISWA,
         prodiId: prodi[1]!.id,
       },
@@ -67,38 +88,62 @@ async function seedUsers() {
 async function seedTingkatKejuaraan() {
   await prisma.masterDataTingkatKejuaraan.createMany({
     data: [
-      { name: "Tingkat Kejuaraan A" },
-      { name: "Tingkat Kejuaraan B" },
+      { name: "Nasional" },
+      { name: "Regional" },
+      { name: "Internasional" },
       // Add more tingkat kejuaraan data as needed
     ],
   });
 }
 
 async function seedTingkatPrestasi() {
-  await prisma.masterDataFakultas.createMany({
+  await prisma.masterDataTingkatPrestasi.createMany({
     data: [
-      { name: "Tingkat Prestasi A" },
-      { name: "Tingkat Prestasi B" },
+      { name: "Juara 1" },
+      { name: "Juara 2" },
+      { name: "Juara 3" },
       // Add more tingkat prestasi data as needed
     ],
   });
 }
 
-async function seedStatus() {
-  await prisma.masterDataStatus.createMany({
+// async function seedStatus() {
+//   await prisma.masterDataStatus.createMany({
+//     data: [
+//       { name: "Status A", backgroundColor: "#000000" },
+//       { name: "Status B", backgroundColor: "#FFFFFF" },
+//       // Add more status data as needed
+//     ],
+//   });
+// }
+
+async function seedDosen() {
+  const prodi = await prisma.masterDataProdi.findMany();
+  await prisma.dosen.createMany({
     data: [
-      { name: "Status A", backgroundColor: "#000000" },
-      { name: "Status B", backgroundColor: "#FFFFFF" },
-      // Add more status data as needed
+      {
+        name: "Fridy Mandita, S.Kom., M.Sc",
+        nidn: "nidn-1",
+        prodiId: prodi[0]!.id,
+      },
+      {
+        name: "Muhamad Firdaus S.Kom.,M.Kom",
+        nidn: "nidn-2",
+        prodiId: prodi[1]!.id,
+      },
+      // Add more dosen data as needed
     ],
   });
 }
-
-async function seedDosen() {
-  await prisma.dosen.createMany({
+async function seedOrkem() {
+  await prisma.masterDataOrkem.createMany({
     data: [
-      { name: "Dosen 1", nidn: "nidn-1" },
-      { name: "Dosen 2", nidn: "nidn-2" },
+      {
+        name: "Karate",
+      },
+      {
+        name: "Silat",
+      },
       // Add more dosen data as needed
     ],
   });
@@ -135,14 +180,15 @@ async function seedDosen() {
 
 async function seed() {
   const seedingFunctions = [
-    seedFakultas,
-    seedProdi,
+    // seedFakultas,
+    // seedProdi,
     seedUsers,
     // seedTingkatKejuaraan,
     // seedTingkatPrestasi,
     // seedStatus,
     // seedDosen,
     // seedPrestasiDataTable,
+    // seedOrkem,
   ];
 
   try {

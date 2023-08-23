@@ -65,7 +65,7 @@ const InformasiLogin = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Card className="bg-grey mx-auto grid h-fit w-full grid-cols-2 gap-5 rounded-md p-5 shadow-md md:w-4/5 md:p-8 lg:w-3/5 xl:w-2/5">
           {INFORMASI_LOGIN.map((val, index) => (
-            <Input key={index} {...val} />
+            <Input {...val} key={index} />
           ))}
           <Button
             isSubmit

@@ -7,20 +7,36 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { customToast } from "~/common/components/ui/toast/showToast";
 import { ActionReducer } from "~/common/types/context/GlobalContextType";
+import { type AllMasterDataProdiType } from "~/server/api/module/master-data/prodi";
+import { type SingleValue } from "react-select";
+import { type ReactSelectOptionType } from "~/common/components/ui/form/ReactSelect";
+
 const useProfile = () => {
   const {
     state: { user },
     dispatch,
   } = useGlobalContext();
 
+  // ** FAKULTAS STATE
+  const [fakultasState, setFakultasState] = useState<{
+    id: string | undefined;
+    name: string | undefined;
+  }>({
+    id: user?.prodi?.Fakultas?.id,
+    name: user?.prodi?.Fakultas?.name,
+  });
+
   const [loading, setLoading] = useState<boolean>(false);
+
   const { mutate: updateUserProfile } =
     api.user.updateUserProfile.useMutation();
+  const { data: prodi } = api.prodi.getAllProdi.useQuery();
 
   const {
     register,
     setValue,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<IUserProfileForm>({
     resolver: zodResolver(userProfileForm),
@@ -38,19 +54,37 @@ const useProfile = () => {
       setValue(userKey, valueKey);
     });
   };
-  //
+
+  // ** HANDLE DEFAULT FORM VALUE
   useEffect(() => {
     if (user) {
       handleDefaultForm(user);
     }
   }, [setValue, user]);
 
-  const onSubmit = useCallback((payload: IUserProfileForm) => {
+  // ** HANDLE FAKULTAS STATE WHEN PRODI WAS CHANGE
+  const handleFakultasChange = (
+    selectState: SingleValue<ReactSelectOptionType>
+  ) => {
+    const tempProdi: AllMasterDataProdiType = prodi as AllMasterDataProdiType;
+    const filteredProdi: AllMasterDataProdiType = tempProdi?.filter(
+      (val) => val.id === selectState?.value
+    );
+    setFakultasState({
+      id: filteredProdi[0]?.Fakultas?.id,
+      name: filteredProdi[0]?.Fakultas?.name,
+    });
+  };
+
+  const onSubmit = useCallback((userPayload: IUserProfileForm) => {
     setLoading(true);
-    updateUserProfile(payload, {
+    updateUserProfile(userPayload, {
       onSuccess: (data) => {
         customToast("success", data?.message);
-        dispatch({ type: ActionReducer.UPDATE_USER, payload: data.data });
+        dispatch({
+          type: ActionReducer.UPDATE_USER,
+          payload: data.data as unknown as UserProfileType,
+        });
         setLoading(false);
       },
       onError: (error) => {
@@ -77,20 +111,17 @@ const useProfile = () => {
       error: errors.npm?.message,
     },
     {
+      disabled: true,
       className: "col-span-2 lg:col-span-1",
       placeholder: "Fakultas",
       label: "Fakultas",
       type: "select",
-      value: "Teknik",
-      disabled: true,
+      value: fakultasState?.id,
+      control: control,
       selectData: [
         {
-          id: "teknik",
-          title: "Teknik",
-        },
-        {
-          id: "kedokteran",
-          title: "Kedokteran",
+          id: fakultasState?.id,
+          title: fakultasState?.name,
         },
       ],
     },
@@ -99,17 +130,18 @@ const useProfile = () => {
       placeholder: "Prodi",
       label: "Prodi",
       type: "select",
-      value: "Teknik Informatika",
-      selectData: [
+      isLoading: !prodi,
+      value: user?.prodi?.id,
+      control: control,
+      register: { ...register("prodiId") },
+      handleSelectOptionChange: handleFakultasChange,
+      selectData: prodi || [
         {
-          id: "teknik-informatika",
-          title: "Teknik Informatika",
-        },
-        {
-          id: "teknik-mesin",
-          title: "Teknik Mesin",
+          id: user?.prodi?.id,
+          title: user?.prodi?.name,
         },
       ],
+      error: errors.prodiId?.message,
     },
     {
       className: "col-span-2 lg:col-span-1",
@@ -128,7 +160,7 @@ const useProfile = () => {
       error: errors.semester?.message,
     },
     {
-      className: "col-span-2 lg:mt-3",
+      className: "col-span-2",
       placeholder: "Alamat Lengkap",
       label: "Alamat Lengkap",
       type: "textarea",

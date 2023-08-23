@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import styles from "~/styles/layout/Header.module.scss";
 import HamburgerIcon from "../../svg/HamburgerIcon";
@@ -74,7 +75,7 @@ const Header = (props: HeaderProps) => {
                   <RoleManagementIcon />
                   <button type="button">Informasi Login</button>
                 </li>
-                <li className={`${styles.list}`} onClick={void handleSignOut}>
+                <li className={`${styles.list}`} onClick={handleSignOut}>
                   <LogoutIcon />
                   <button type="button">Sign out</button>
                 </li>

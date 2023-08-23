@@ -19,7 +19,7 @@ const tambah = () => {
         }
       />
       <Card className="mt-[20px]">
-        <PengajuanForm data={KEJUARAAN_FORM} />
+        {/* <PengajuanForm data={KEJUARAAN_FORM} /> */}
         <Button isMedium isSuccess className="flex w-fit items-center gap-2">
           <span>Submit</span>
         </Button>

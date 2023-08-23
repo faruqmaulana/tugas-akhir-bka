@@ -20,7 +20,7 @@ const Aside = ({ showAside }: any) => {
     <aside className={`${styles.wrapper} ${!showAside && styles.hide}`}>
       <div className={styles.logo}>
         <Link href="/dashboard" passHref>
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center justify-center gap-3">
             <Image
               src={UntagLogo}
               alt="untag-logo"
@@ -29,7 +29,6 @@ const Aside = ({ showAside }: any) => {
               placeholder="blur"
               quality={10}
             />
-            <div className="h-[50px] border-l border-gray-400"></div>
             <div className="flex flex-col items-center">
               <p className="text-[11px]">Biro Kemahasiswaan dan Alumni</p>
               <p className="text-[12px]">Untag Surabaya</p>

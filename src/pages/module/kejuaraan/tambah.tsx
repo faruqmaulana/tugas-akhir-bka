@@ -1,12 +1,22 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/require-await */
 import React from "react";
+import { requireAuth } from "~/common/authentication/requireAuth";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
 import { Button } from "~/common/components/ui/button/Button";
 import Card from "~/common/components/ui/card/Card";
+import BaseForm from "~/common/components/ui/form/BaseForm";
+import Input from "~/common/components/ui/form/Input";
 import PageHeading from "~/common/components/ui/header/PageHeading";
-import PengajuanForm from "~/common/components/ui/page/status-pengajuan/PengajuanForm";
-import { KEJUARAAN_FORM } from "~/common/constants/DUMMY_KEJUARAAN";
+import { useKejuaraan } from "~/common/hooks/module/kejuaraan/useKejuaraan";
 
-const tambah = () => {
+export const getServerSideProps = requireAuth(async (ctx) => {
+  return { props: {} };
+});
+
+const TambahKejuaraan = () => {
+  const { KEJUARAAN_FORM, handleSubmit, onSubmit, loading } = useKejuaraan();
+
   return (
     <>
       <PageHeading
@@ -18,14 +28,22 @@ const tambah = () => {
           </Button>
         }
       />
-      <Card className="mt-[20px]">
-        <PengajuanForm data={KEJUARAAN_FORM} />
-        <Button isMedium isSuccess className="flex w-fit items-center gap-2">
-          <span>Submit</span>
-        </Button>
-      </Card>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Card className="mt-[20px]">
+          <BaseForm data={KEJUARAAN_FORM} />
+          <Button
+            isSubmit
+            isSuccess
+            isMedium
+            isLoading={loading}
+            className="flex w-fit items-center gap-2"
+          >
+            Submit
+          </Button>
+        </Card>
+      </form>
     </>
   );
 };
 
-export default tambah;
+export default TambahKejuaraan;

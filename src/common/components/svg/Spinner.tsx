@@ -1,14 +1,19 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 const Spinner = (props: any) => {
-  const { width = "24", height = "24", fill = "fill-red-500" } = props;
+  const {
+    width = "24",
+    height = "24",
+    fill = "fill-red-500",
+    className = "",
+  } = props;
 
   return (
     <svg
       aria-hidden="true"
       width={width}
       height={height}
-      className={`animate-spin text-gray-200 ${fill}`}
+      className={`animate-spin text-gray-200 ${fill} ${className}`}
       viewBox="0 0 100 101"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

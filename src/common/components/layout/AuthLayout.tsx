@@ -18,7 +18,7 @@ const AuthLayout = ({ children }: any) => {
           />
         </div>
         <div className={`${styles.right} flex flex-col gap-10`}>
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center justify-center gap-4">
             <Image
               src={UntagLogo}
               alt="untag-logo"
@@ -27,7 +27,7 @@ const AuthLayout = ({ children }: any) => {
               placeholder="blur"
               quality={80}
             />
-            <div className="h-[50px] border-l border-gray-400"></div>
+            {/* <div className="h-[50px] border-l border-gray-400"></div> */}
             <div className="flex flex-col items-center">
               <p className="text-[16px]">Biro Kemahasiswaan dan Alumni</p>
               <p className="text-[16px]">Untag Surabaya</p>

@@ -1,0 +1,16 @@
+TUGAS AKHIR BKA PROGRESS
+
+//** 170823 ** //
+=== MODULE PROFILE ===
+
+- Profile Page ✅
+- Informasi Login ✅
+
+=== MODULE PRESTASI 190823 ===
+- pengajuan prestasi ✅
+- TODO 
+  -> fix created pengajuan with multiple users and choose leader option
+  -> handle if data successfully created -> redirect to root module -> pengajuan prestasi
+  -> fix submit loading animation ✅
+  -> change select component ✅
+  -> trying google drive cloud provider
