@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { BorderColor } from "@mui/icons-material";
 import { useState } from "react";
 import { Controller } from "react-hook-form";
-import Select, { type SingleValue } from "react-select";
+import Select, { type StylesConfig, type SingleValue } from "react-select";
 
 export type ReactSelectOptionType = {
   value: string;
   label: string;
   disabled: boolean;
+  isKetua?: boolean
 };
 
 export type CustomReactSelectOptionsType = {
@@ -26,6 +28,7 @@ export type ReactSelectType = {
   onChange: (newValue: SingleValue<ReactSelectOptionType>) => void;
   control: any;
   isLoading: boolean;
+  error?: string;
 };
 
 export const ReactSelect = (props: ReactSelectType) => {
@@ -38,6 +41,7 @@ export const ReactSelect = (props: ReactSelectType) => {
     onChange: customOnChange,
     register,
     control,
+    error,
   } = props;
 
   const options: ReactSelectOptionType[] =
@@ -59,7 +63,7 @@ export const ReactSelect = (props: ReactSelectType) => {
     obj: ReactSelectOptionType
   ) => {
     if (onChange) {
-      onChange(obj.value);
+      onChange(obj?.value);
     }
     if (customOnChange) {
       customOnChange(obj);
@@ -80,7 +84,11 @@ export const ReactSelect = (props: ReactSelectType) => {
             isClearable
             isSearchable
             placeholder={`Pilih ${placeholder}`}
-            className="basic-single w-full"
+            className={`basic-single w-full rounded ${
+              error
+                ? "error border !border-red-500 hover:border-red-500 focus:!border-red-500 focus:outline-none"
+                : ""
+            }`}
             classNamePrefix="select"
             value={(disabled && defaultOption) || currentValue}
             defaultValue={currentValue}

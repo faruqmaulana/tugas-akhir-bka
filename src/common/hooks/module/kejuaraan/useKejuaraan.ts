@@ -1,6 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import {
+  type CustomReactSelectOptionsType,
+  type ReactSelectOptionType,
+} from "~/common/components/ui/form/ReactSelect";
 import { customToast } from "~/common/components/ui/toast/showToast";
 import {
   type IPengajuanPrestasiForm,
@@ -16,7 +22,14 @@ const useKejuaraan = () => {
   const { data: prestasi } = api.prestasi.getAllTingkatPrestasi.useQuery();
   const { mutate: createPrestasiLomba } =
     api.prestasiLomba.createPrestasiLomba.useMutation();
+
   const [loading, setLoading] = useState<boolean>(false);
+  const [mahasiswa, setMahasiswa] = useState<
+    CustomReactSelectOptionsType[] | undefined
+  >(undefined);
+  const [mahasiswaPayload, setMahasiswaPayload] = useState<
+    ReactSelectOptionType[]
+  >([]);
 
   const {
     register,
@@ -41,6 +54,18 @@ const useKejuaraan = () => {
     });
   }, []);
 
+  const handleSelectMultipleUser = (ctx: ReactSelectOptionType) => {
+    setMahasiswaPayload([...mahasiswaPayload, { ...ctx, isKetua: false }]);
+  };
+
+  useEffect(() => {
+    if (user || mahasiswa) {
+      if (mahasiswa!.length > 0) return;
+      setMahasiswa(user as CustomReactSelectOptionsType[]);
+    }
+  }, [user]);
+
+  console.log("mahasiswa payload", mahasiswaPayload);
   const KEJUARAAN_FORM = [
     {
       className: "col-span-2 lg:col-span-1",
@@ -48,9 +73,10 @@ const useKejuaraan = () => {
       label: "Nama",
       type: "select",
       control: control,
-      selectData: user,
+      selectData: mahasiswa,
       register: { ...register("userId") },
       error: errors.userId?.message,
+      handleSelectOptionChange: handleSelectMultipleUser,
     },
     {
       className: "col-span-2 lg:col-span-1",

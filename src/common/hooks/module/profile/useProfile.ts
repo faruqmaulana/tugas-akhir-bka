@@ -141,6 +141,7 @@ const useProfile = () => {
           title: user?.prodi?.name,
         },
       ],
+      error: errors.prodiId?.message,
     },
     {
       className: "col-span-2 lg:col-span-1",

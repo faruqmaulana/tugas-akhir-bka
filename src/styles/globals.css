@@ -106,3 +106,12 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.error-react-select .css-t3ipsp-control {
+  box-shadow: 0 0 0 1px #ef4444 !important;
+  border-color: #ef4444 !important;
+}
+
+.error-react-select .css-t3ipsp-control:hover {
+  border-color: #ef4444 !important;
+}

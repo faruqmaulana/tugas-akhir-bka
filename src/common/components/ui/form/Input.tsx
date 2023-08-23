@@ -63,6 +63,7 @@ const Input = (props: InputProps) => {
             placeholder={placeholder}
             defaultValue={value}
             optionData={selectData}
+            error={error}
             onChange={(newValue: SingleValue<ReactSelectOptionType>) => {
               if (handleSelectOptionChange) {
                 return handleSelectOptionChange(newValue);
