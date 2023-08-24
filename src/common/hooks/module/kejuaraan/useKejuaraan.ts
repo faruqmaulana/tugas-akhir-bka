@@ -33,6 +33,11 @@ const useKejuaraan = () => {
     ReactSelectOptionType[]
   >([]);
 
+  const [dosenData, setDosenData] = useState<
+    CustomReactSelectOptionsType[] | []
+  >([]);
+  const [dosenPayload, setDosenPayload] = useState<ReactSelectOptionType[]>([]);
+
   const {
     register,
     handleSubmit,
@@ -43,17 +48,18 @@ const useKejuaraan = () => {
   });
 
   const onSubmit = useCallback((userPayload: IPengajuanPrestasiForm) => {
-    setLoading(true);
-    createPrestasiLomba(userPayload, {
-      onSuccess: (data) => {
-        customToast("success", data?.message);
-        setLoading(false);
-      },
-      onError: (error) => {
-        customToast("error", error?.message);
-        setLoading(false);
-      },
-    });
+    console.log("userPayload", userPayload);
+    // setLoading(true);
+    // createPrestasiLomba(userPayload, {
+    //   onSuccess: (data) => {
+    //     customToast("success", data?.message);
+    //     setLoading(false);
+    //   },
+    //   onError: (error) => {
+    //     customToast("error", error?.message);
+    //     setLoading(false);
+    //   },
+    // });
   }, []);
 
   const handleSelectMultipleUser = (ctx: ReactSelectOptionType) => {
@@ -107,6 +113,47 @@ const useKejuaraan = () => {
     setMahasiswaPayload(tempMahasiswa);
   };
 
+  // DOSEN
+  const handleSelectMultipleDosen = (ctx: ReactSelectOptionType) => {
+    if (!ctx) return;
+    setDosenPayload([
+      ...dosenPayload,
+      { ...ctx, isKetua: dosenPayload.length > 0 ? false : true },
+    ]);
+    const tempDosen = dosenData?.filter((val) => val.id !== ctx?.value);
+
+    setDosenData(tempDosen);
+  };
+
+  useEffect(() => {
+    if (dosen || dosenData) {
+      if (dosenData?.length > 0) return;
+      setDosenData(dosen as CustomReactSelectOptionsType[]);
+    }
+  }, [dosen]);
+
+  const handleDeleteSelectedDosen = (id: string, isKetua: boolean) => {
+    const tempDosenPayload = [...dosenPayload];
+    if (Array.isArray(dosen)) {
+      const updatedMahasiswa = tempDosenPayload.filter(
+        (val) => val.value !== id
+      );
+
+      // if is cuurent deleted is ketua then set ketua to other in index 0 if any
+      if (isKetua && updatedMahasiswa.length > 0) {
+        updatedMahasiswa[0]!.isKetua = true;
+      }
+
+      const deletedData = dosen.filter(
+        (val: CustomReactSelectOptionsType) => val.id === id
+      );
+
+      setDosenPayload(updatedMahasiswa);
+      setDosenData([...dosenData, ...deletedData]);
+    }
+  };
+
+  console.log("error", errors)
   const KEJUARAAN_FORM = [
     {
       className: "col-span-2 lg:col-span-1",
@@ -115,12 +162,12 @@ const useKejuaraan = () => {
       type: "select",
       control: control,
       selectData: mahasiswa,
-      register: { ...register("userId") },
-      error: errors.userId?.message,
+      register: { ...register("users") },
+      error: errors.users?.message,
       selectedData: mahasiswaPayload,
       handleSwitch: handleMahasiswaLead,
       handleDeleteSelectedData: handleDeleteSelectedData,
-      handleSelectOptionChange: handleSelectMultipleUser,
+      handleSelectMultipleUser: handleSelectMultipleUser,
     },
     {
       className: "col-span-2 lg:col-span-1",
@@ -128,9 +175,12 @@ const useKejuaraan = () => {
       label: "Dosen",
       type: "select",
       control: control,
-      selectData: dosen,
+      selectData: dosenData,
       register: { ...register("dosenId") },
       error: errors.dosenId?.message,
+      selectedData: dosenPayload,
+      handleDeleteSelectedData: handleDeleteSelectedDosen,
+      handleSelectMultipleUser: handleSelectMultipleDosen,
     },
     {
       className: "col-span-2 lg:col-span-1",

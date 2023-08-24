@@ -14,3 +14,5 @@ TUGAS AKHIR BKA PROGRESS
   -> fix submit loading animation ✅
   -> change select component ✅
   -> trying google drive cloud provider
+  -> add choose multiple users, set ketua and delete selected data [MAHASISWA] ✅
+  -> clear react select after select a data 

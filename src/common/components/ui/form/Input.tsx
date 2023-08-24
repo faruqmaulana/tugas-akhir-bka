@@ -26,7 +26,7 @@ export type InputProps = {
   onChange?: (value: string) => void;
   handleSwitch?: (value: string) => void;
   handleDeleteSelectedData?: (value: string, isKetua: boolean) => void;
-  handleSelectOptionChange?: (
+  handleSelectMultipleUser?: (
     newValue: SingleValue<ReactSelectOptionType>
   ) => void;
 };
@@ -50,7 +50,7 @@ const Input = (props: InputProps) => {
     isLoading = false,
     selectedData = [],
     additionalInfo = undefined,
-    handleSelectOptionChange,
+    handleSelectMultipleUser,
     handleDeleteSelectedData,
   } = props;
   const [inputType, setInputType] = useState(type === "date" ? "text" : type);
@@ -70,14 +70,10 @@ const Input = (props: InputProps) => {
             defaultValue={value}
             optionData={selectData}
             error={error}
+            selectedData={selectedData}
             handleSwitch={handleSwitch}
             handleDeleteSelectedData={handleDeleteSelectedData}
-            selectedData={selectedData}
-            onChange={(newValue: SingleValue<ReactSelectOptionType>) => {
-              if (handleSelectOptionChange) {
-                return handleSelectOptionChange(newValue);
-              }
-            }}
+            handleSelectMultipleUser={handleSelectMultipleUser}
           />
         )}
         {type === "textarea" && (

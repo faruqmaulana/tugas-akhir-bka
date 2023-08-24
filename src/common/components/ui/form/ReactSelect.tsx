@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -26,13 +27,15 @@ export type ReactSelectType = {
   placeholder: string;
   disabled?: boolean;
   register?: any;
-  onChange: (newValue: SingleValue<ReactSelectOptionType>) => void;
   control: any;
   isLoading: boolean;
   error?: string;
   selectedData: ReactSelectOptionType[];
   handleSwitch?: (value: string) => void;
   handleDeleteSelectedData?: (value: string, isKetua: boolean) => void;
+  handleSelectMultipleUser?: (
+    newValue: SingleValue<ReactSelectOptionType>
+  ) => void;
 };
 
 export const ReactSelect = (props: ReactSelectType) => {
@@ -42,12 +45,12 @@ export const ReactSelect = (props: ReactSelectType) => {
     defaultValue,
     placeholder,
     disabled = false,
-    onChange: customOnChange,
     register,
     control,
     error,
     selectedData,
     handleSwitch,
+    handleSelectMultipleUser,
     handleDeleteSelectedData,
   } = props;
 
@@ -69,15 +72,21 @@ export const ReactSelect = (props: ReactSelectType) => {
     onChange: (...event: any[]) => void,
     obj: ReactSelectOptionType
   ) => {
-    if (onChange) {
-      onChange(obj?.value);
+    if (handleSelectMultipleUser) {
+      handleSelectMultipleUser(obj);
     }
-    if (customOnChange) {
-      customOnChange(obj);
+
+    if (onChange && !handleSelectMultipleUser) {
+      onChange(obj?.value);
     }
 
     const filterCurrentOption = options?.filter((val) => val === obj);
     setCurrentValue(filterCurrentOption);
+  };
+
+  const handleValue = () => {
+    if (handleSelectMultipleUser) return "";
+    return (disabled && defaultOption) || currentValue;
   };
 
   return (
@@ -98,7 +107,7 @@ export const ReactSelect = (props: ReactSelectType) => {
                   : ""
               }`}
               classNamePrefix="select"
-              value={(disabled && defaultOption) || currentValue}
+              value={handleValue()}
               defaultValue={currentValue}
               isDisabled={disabled}
               isLoading={isLoading || !options}
@@ -115,7 +124,7 @@ export const ReactSelect = (props: ReactSelectType) => {
                     className="flex flex-row items-center gap-2"
                   >
                     <div
-                      title="Delete data"
+                      title="Hapus data"
                       className="flex cursor-pointer rounded-full border border-red-600 bg-red-300 p-[3px] hover:bg-red-200"
                       onClick={() => {
                         if (handleDeleteSelectedData) {
@@ -126,16 +135,20 @@ export const ReactSelect = (props: ReactSelectType) => {
                       <X className="m-auto" size={14} />
                     </div>
                     <p className="min-w-[110px]">{val.label}</p>
-                    <Switch
-                      title={val.isKetua ? "" : "Jadikan ketua"}
-                      checked={val.isKetua}
-                      onClick={() => {
-                        if (handleSwitch) {
-                          handleSwitch(val.value);
-                        }
-                      }}
-                    />
-                    {val.isKetua ? "Ketua Tim" : "Anggota"}
+                    {handleSwitch && (
+                      <div className="flex flex-row items-center gap-2">
+                        <Switch
+                          title={val.isKetua ? "" : "Jadikan ketua"}
+                          checked={val.isKetua}
+                          onClick={() => {
+                            if (handleSwitch) {
+                              handleSwitch(val.value);
+                            }
+                          }}
+                        />
+                        {val.isKetua ? "Ketua Tim" : "Anggota"}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
