@@ -11,14 +11,18 @@ import { X } from "lucide-react";
 export type ReactSelectOptionType = {
   value: string;
   label: string;
-  disabled: boolean;
-  isKetua?: boolean;
+  isKetua: boolean;
+  disabled?: boolean;
 };
 
 export type CustomReactSelectOptionsType = {
   id?: string;
   name?: string;
   title?: string;
+};
+
+export type handleDeleteSelectedDataType = {
+  context: ReactSelectOptionType;
 };
 
 export type ReactSelectType = {
@@ -32,14 +36,19 @@ export type ReactSelectType = {
   error?: string;
   selectedData: ReactSelectOptionType[];
   handleSwitch?: (value: string) => void;
-  handleDeleteSelectedData?: (value: string, isKetua: boolean) => void;
+  handleDeleteSelectedData?: (params: handleDeleteSelectedDataType) => void;
   handleSelectMultipleUser?: (
     newValue: SingleValue<ReactSelectOptionType>
   ) => void;
+  handleSelectOptionChange?: (
+    newValue: SingleValue<ReactSelectOptionType>
+  ) => void;
+  trigger?: (value: string) => void;
 };
 
 export const ReactSelect = (props: ReactSelectType) => {
   const {
+    trigger,
     isLoading,
     optionData,
     defaultValue,
@@ -52,6 +61,7 @@ export const ReactSelect = (props: ReactSelectType) => {
     handleSwitch,
     handleSelectMultipleUser,
     handleDeleteSelectedData,
+    handleSelectOptionChange,
   } = props;
 
   const options: ReactSelectOptionType[] =
@@ -72,12 +82,23 @@ export const ReactSelect = (props: ReactSelectType) => {
     onChange: (...event: any[]) => void,
     obj: ReactSelectOptionType
   ) => {
+    if (handleSelectOptionChange) {
+      handleSelectOptionChange(obj);
+    }
+
     if (handleSelectMultipleUser) {
       handleSelectMultipleUser(obj);
     }
 
     if (onChange && !handleSelectMultipleUser) {
       onChange(obj?.value);
+    }
+
+    // IMMEDIATELLY UPDATE ERROR STATE
+    if (trigger) {
+      setTimeout(() => {
+        trigger(register?.name);
+      });
     }
 
     const filterCurrentOption = options?.filter((val) => val === obj);
@@ -89,9 +110,17 @@ export const ReactSelect = (props: ReactSelectType) => {
     return (disabled && defaultOption) || currentValue;
   };
 
+  const handlePlaceholder = () => {
+    if (selectedData.length > 0 && handleSelectMultipleUser) {
+      return `Tambah ${placeholder}`;
+    }
+    return `Pilih ${placeholder}`;
+  };
+
   return (
     <>
       <Controller
+        {...(register || {})}
         name={register?.name || "temp"}
         control={control}
         render={({ field: { ref, onChange } }) => (
@@ -100,7 +129,7 @@ export const ReactSelect = (props: ReactSelectType) => {
               ref={ref}
               isClearable
               isSearchable
-              placeholder={`Pilih ${placeholder}`}
+              placeholder={handlePlaceholder()}
               className={`basic-single w-full rounded ${
                 error
                   ? "error border !border-red-500 hover:border-red-500 focus:!border-red-500 focus:outline-none"
@@ -118,9 +147,9 @@ export const ReactSelect = (props: ReactSelectType) => {
             />
             {selectedData.length > 0 && (
               <div className="flex flex-col gap-2">
-                {selectedData.map((val, index) => (
+                {selectedData.map((value) => (
                   <div
-                    key={val.value}
+                    key={value.value}
                     className="flex flex-row items-center gap-2"
                   >
                     <div
@@ -128,25 +157,34 @@ export const ReactSelect = (props: ReactSelectType) => {
                       className="flex cursor-pointer rounded-full border border-red-600 bg-red-300 p-[3px] hover:bg-red-200"
                       onClick={() => {
                         if (handleDeleteSelectedData) {
-                          handleDeleteSelectedData(val.value, val.isKetua!);
+                          handleDeleteSelectedData({
+                            context: value,
+                          });
+
+                          // IMMEDIATELLY UPDATE ERROR STATE
+                          if (trigger) {
+                            setTimeout(() => {
+                              trigger(register?.name);
+                            });
+                          }
                         }
                       }}
                     >
                       <X className="m-auto" size={14} />
                     </div>
-                    <p className="min-w-[110px]">{val.label}</p>
+                    <p className="min-w-[110px]">{value.label}</p>
                     {handleSwitch && (
                       <div className="flex flex-row items-center gap-2">
                         <Switch
-                          title={val.isKetua ? "" : "Jadikan ketua"}
-                          checked={val.isKetua}
+                          title={value.isKetua ? "" : "Jadikan ketua"}
+                          checked={value.isKetua}
                           onClick={() => {
                             if (handleSwitch) {
-                              handleSwitch(val.value);
+                              handleSwitch(value.value);
                             }
                           }}
                         />
-                        {val.isKetua ? "Ketua Tim" : "Anggota"}
+                        {value.isKetua ? "Ketua Tim" : "Anggota"}
                       </div>
                     )}
                   </div>

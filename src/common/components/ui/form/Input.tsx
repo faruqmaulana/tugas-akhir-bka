@@ -3,7 +3,11 @@
 import React, { useState } from "react";
 import EyeSlashIcon from "~/common/EyeSlashIcon";
 import EyeIcon from "../../svg/EyeIcon";
-import { ReactSelect, type ReactSelectOptionType } from "./ReactSelect";
+import {
+  ReactSelect,
+  type handleDeleteSelectedDataType,
+  type ReactSelectOptionType,
+} from "./ReactSelect";
 import { type SingleValue } from "react-select";
 
 export type InputProps = {
@@ -25,14 +29,19 @@ export type InputProps = {
   selectedData?: ReactSelectOptionType[];
   onChange?: (value: string) => void;
   handleSwitch?: (value: string) => void;
-  handleDeleteSelectedData?: (value: string, isKetua: boolean) => void;
+  handleDeleteSelectedData?: (params: handleDeleteSelectedDataType) => void;
   handleSelectMultipleUser?: (
     newValue: SingleValue<ReactSelectOptionType>
   ) => void;
+  handleSelectOptionChange?: (
+    newValue: SingleValue<ReactSelectOptionType>
+  ) => void;
+  trigger?: (value: string) => void;
 };
 
 const Input = (props: InputProps) => {
   const {
+    trigger,
     disabled = false,
     leftAddonComponent = false,
     className = "",
@@ -52,6 +61,7 @@ const Input = (props: InputProps) => {
     additionalInfo = undefined,
     handleSelectMultipleUser,
     handleDeleteSelectedData,
+    handleSelectOptionChange,
   } = props;
   const [inputType, setInputType] = useState(type === "date" ? "text" : type);
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -62,6 +72,7 @@ const Input = (props: InputProps) => {
       <div className="relative flex flex-wrap items-stretch">
         {type === "select" && (
           <ReactSelect
+            trigger={trigger}
             isLoading={isLoading}
             control={control}
             disabled={disabled}
@@ -74,6 +85,7 @@ const Input = (props: InputProps) => {
             handleSwitch={handleSwitch}
             handleDeleteSelectedData={handleDeleteSelectedData}
             handleSelectMultipleUser={handleSelectMultipleUser}
+            handleSelectOptionChange={handleSelectOptionChange}
           />
         )}
         {type === "textarea" && (

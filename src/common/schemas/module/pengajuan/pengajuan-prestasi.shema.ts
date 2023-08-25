@@ -1,14 +1,30 @@
-import { z, ZodError, type ZodIssue, type ZodTypeAny } from "zod";
+import { z, ZodError, type ZodIssue } from "zod";
 
 export const pengajuanPrestasiForm = z
   .object({
-    users: z.any(),
+    users: z
+      .array(
+        z.object({
+          value: z.string(),
+          label: z.string(),
+          isKetua: z.boolean(),
+        })
+      )
+      .min(1, "Required!"),
     kegiatan: z.string().min(1, { message: "Kegiatan tidak boleh kosong!" }),
     tanggalKegiatan: z.string().min(1, { message: "required!" }),
     penyelenggara: z
       .string()
       .min(1, { message: "Penyelenggara tidak boleh kosong!" }),
-    dosenId: z.any(),
+    dosenData: z
+      .array(
+        z.object({
+          value: z.string(),
+          label: z.string(),
+          isKetua: z.boolean(),
+        })
+      )
+      .min(1, "Required!"),
     orkemId: z.string().min(1, { message: "Pilih organisasi kemahasiswaan!" }),
     tingkatKejuaraanId: z
       .string()

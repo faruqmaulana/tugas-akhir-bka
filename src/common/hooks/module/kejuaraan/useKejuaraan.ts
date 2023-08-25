@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -6,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
+  type handleDeleteSelectedDataType,
   type CustomReactSelectOptionsType,
   type ReactSelectOptionType,
 } from "~/common/components/ui/form/ReactSelect";
@@ -40,12 +43,19 @@ const useKejuaraan = () => {
 
   const {
     register,
+    setValue,
     handleSubmit,
+    trigger,
     control,
     formState: { errors },
   } = useForm<IPengajuanPrestasiForm>({
     resolver: zodResolver(pengajuanPrestasiForm),
   });
+
+  useEffect(() => {
+    setValue("users", mahasiswaPayload);
+    setValue("dosenData", dosenPayload);
+  }, [mahasiswaPayload, dosenPayload, setValue]);
 
   const onSubmit = useCallback((userPayload: IPengajuanPrestasiForm) => {
     console.log("userPayload", userPayload);
@@ -80,18 +90,24 @@ const useKejuaraan = () => {
     }
   }, [user]);
 
-  const handleDeleteSelectedData = (id: string, isKetua: boolean) => {
+  const handleDeleteSelectedMahasiswa = (
+    params: handleDeleteSelectedDataType
+  ) => {
+    const { context } = params;
     const tempMahasiswa = [...mahasiswaPayload];
+
     if (Array.isArray(user)) {
-      const updatedMahasiswa = tempMahasiswa.filter((val) => val.value !== id);
+      const updatedMahasiswa = tempMahasiswa.filter(
+        (val) => val.value !== context.value
+      );
 
       // if is cuurent deleted is ketua then set ketua to other in index 0 if any
-      if (isKetua && updatedMahasiswa.length > 0) {
+      if (context.isKetua && updatedMahasiswa.length > 0) {
         updatedMahasiswa[0]!.isKetua = true;
       }
 
       const deletedData = user.filter(
-        (val: CustomReactSelectOptionsType) => val.id === id
+        (val: CustomReactSelectOptionsType) => val.id === context.value
       );
 
       setMahasiswaPayload(updatedMahasiswa);
@@ -132,20 +148,21 @@ const useKejuaraan = () => {
     }
   }, [dosen]);
 
-  const handleDeleteSelectedDosen = (id: string, isKetua: boolean) => {
+  const handleDeleteSelectedDosen = (params: handleDeleteSelectedDataType) => {
+    const { context } = params;
     const tempDosenPayload = [...dosenPayload];
     if (Array.isArray(dosen)) {
       const updatedMahasiswa = tempDosenPayload.filter(
-        (val) => val.value !== id
+        (val) => val.value !== context.value
       );
 
       // if is cuurent deleted is ketua then set ketua to other in index 0 if any
-      if (isKetua && updatedMahasiswa.length > 0) {
+      if (context.isKetua && updatedMahasiswa.length > 0) {
         updatedMahasiswa[0]!.isKetua = true;
       }
 
       const deletedData = dosen.filter(
-        (val: CustomReactSelectOptionsType) => val.id === id
+        (val: CustomReactSelectOptionsType) => val.id === context.value
       );
 
       setDosenPayload(updatedMahasiswa);
@@ -153,9 +170,9 @@ const useKejuaraan = () => {
     }
   };
 
-  console.log("error", errors)
   const KEJUARAAN_FORM = [
     {
+      trigger: trigger,
       className: "col-span-2 lg:col-span-1",
       placeholder: "Mahasiswa",
       label: "Nama",
@@ -166,23 +183,25 @@ const useKejuaraan = () => {
       error: errors.users?.message,
       selectedData: mahasiswaPayload,
       handleSwitch: handleMahasiswaLead,
-      handleDeleteSelectedData: handleDeleteSelectedData,
+      handleDeleteSelectedData: handleDeleteSelectedMahasiswa,
       handleSelectMultipleUser: handleSelectMultipleUser,
     },
     {
+      trigger: trigger,
       className: "col-span-2 lg:col-span-1",
       placeholder: "Dosen",
       label: "Dosen",
       type: "select",
       control: control,
       selectData: dosenData,
-      register: { ...register("dosenId") },
-      error: errors.dosenId?.message,
+      register: { ...register("dosenData") },
+      error: errors.dosenData?.message,
       selectedData: dosenPayload,
       handleDeleteSelectedData: handleDeleteSelectedDosen,
       handleSelectMultipleUser: handleSelectMultipleDosen,
     },
     {
+      trigger: trigger,
       className: "col-span-2 lg:col-span-1",
       placeholder: "Kegiatan",
       label: "Kegiatan",
@@ -190,6 +209,7 @@ const useKejuaraan = () => {
       error: errors.kegiatan?.message,
     },
     {
+      trigger: trigger,
       className: "col-span-2 lg:col-span-1",
       placeholder: "Tanggal Kegiatan",
       label: "Tanggal Kegiatan",
@@ -199,6 +219,7 @@ const useKejuaraan = () => {
       error: errors.tanggalKegiatan?.message,
     },
     {
+      trigger: trigger,
       className: "col-span-2 lg:col-span-1",
       placeholder: "Penyelenggara",
       label: "Penyelenggara",
@@ -206,6 +227,7 @@ const useKejuaraan = () => {
       error: errors.penyelenggara?.message,
     },
     {
+      trigger: trigger,
       className: "col-span-2 lg:col-span-1",
       placeholder: "Orkem",
       label: "Orkem",
@@ -216,6 +238,7 @@ const useKejuaraan = () => {
       error: errors.orkemId?.message,
     },
     {
+      trigger: trigger,
       className: "col-span-2 lg:col-span-1",
       placeholder: "Tingkat Kejuaraan",
       label: "Tingkat Kejuaraan",
@@ -226,6 +249,7 @@ const useKejuaraan = () => {
       error: errors.tingkatKejuaraanId?.message,
     },
     {
+      trigger: trigger,
       className: "col-span-2 lg:col-span-1",
       placeholder: "Tingkat Prestasi",
       label: "Tingkat Prestasi",
@@ -236,6 +260,7 @@ const useKejuaraan = () => {
       error: errors.tingkatPrestasiId?.message,
     },
     {
+      trigger: trigger,
       className: "col-span-2 lg:col-span-1",
       placeholder: "Piagam Penghargaan",
       label: "Piagam Penghargaan",
@@ -244,6 +269,7 @@ const useKejuaraan = () => {
       error: errors.custom?.message,
     },
     {
+      trigger: trigger,
       className: "col-span-2 lg:col-span-1",
       placeholder: "Foto Penyerahan Piala",
       label: "Foto Penyerahan Piala",
@@ -252,6 +278,7 @@ const useKejuaraan = () => {
       error: errors.custom?.message,
     },
     {
+      trigger: trigger,
       className: "col-span-2 lg:col-span-1",
       placeholder: "Undangan Kejuaraan",
       label: "Undangan Kejuaraan",
@@ -260,6 +287,7 @@ const useKejuaraan = () => {
       error: errors.custom?.message,
     },
     {
+      trigger: trigger,
       className: "col-span-2 lg:col-span-1",
       placeholder: "Dokumen Pendukung",
       label: "Dokumen Pendukung",
