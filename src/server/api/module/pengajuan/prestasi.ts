@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { pengajuanPrestasiForm } from "~/common/schemas/module/pengajuan/pengajuan-prestasi.shema";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { ADD_PRESTASI_LOMBA_SUCCESS } from "~/common/message";
@@ -9,6 +10,53 @@ export type SuccessPengajuanOnUsersType = {
 };
 
 export const prestasiLombaQuery = createTRPCRouter({
+  //** GET ALL KEJUARAAN */
+  getAllKejuaraan: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const prestasiData = await ctx.prisma.pengajuanOnUsers.findMany({
+        where: { NOT: { prestasiDataTableId: null } },
+        include: {
+          PrestasiDataTable: {
+            include: {
+              lampiran: true,
+              orkem: true,
+              tingkatKejuaraan: true,
+              tingkatPrestasi: true,
+            },
+          },
+          dosen: { select: { name: true, nidn: true } },
+          user: { select: { name: true, prodi: true } },
+        },
+      });
+
+      const transformedPrestasiData = prestasiData.map((data) => ({
+        status:
+          data.PrestasiDataTable!.status,
+        id: data.PrestasiDataTable!.id,
+        nama: data.user.name,
+        noSK: data.PrestasiDataTable!.noSK || "",
+        tanggalSK: data.PrestasiDataTable!.tanggalSK || "",
+        kegiatan: data.PrestasiDataTable!.kegiatan,
+        tanggalKegiatan: data.PrestasiDataTable!.tanggalKegiatan,
+        penyelenggara: data.PrestasiDataTable!.penyelenggara,
+        isValidated: data.PrestasiDataTable!.status === "Sedang Di Proses",
+        validatedAt: data.PrestasiDataTable!.createdAt,
+        createdAt: data.PrestasiDataTable!.createdAt,
+        orkem: data.PrestasiDataTable!.orkem.name,
+        tingkatKejuaraan: data.PrestasiDataTable!.tingkatKejuaraan.name,
+        tingkatPrestasi: data.PrestasiDataTable!.tingkatPrestasi.name,
+        dosen: data.dosen.name,
+        piagamPenghargaan: data.PrestasiDataTable!.lampiran.piagamPenghargaan,
+        fotoPenyerahanPiala:
+          data.PrestasiDataTable!.lampiran.fotoPenyerahanPiala,
+        undanganKejuaraan: data.PrestasiDataTable!.lampiran.undanganKejuaraan,
+      }));
+
+      return transformedPrestasiData;
+    } catch (error) {
+      return error;
+    }
+  }),
   //** GET ALL PRODI */
   createPrestasiLomba: protectedProcedure
     .input(pengajuanPrestasiForm)
@@ -31,7 +79,7 @@ export const prestasiLombaQuery = createTRPCRouter({
           tingkatPrestasiId,
 
           // PENGAJUAN ON USER PAYLOAD
-          userId,
+          users,
         } = input;
 
         // ** CREATE A LAMPIRAN DATA FIRST TO GET A LAMPIRAN ID
@@ -62,13 +110,14 @@ export const prestasiLombaQuery = createTRPCRouter({
         // ** CREATE NEW ENTITY PENGAJUAN ON USERS BASED ON PRETASI DATA TABLE AND USERS
         const createPengajuanOnUsers =
           await ctx.prisma.pengajuanOnUsers.createMany({
-            data: [
-              {
-                userId,
+            data: users.map((val) => {
+              return {
                 dosenId,
+                userId: val.value,
+                keterangan: val.isKetua ? "Ketua Tim" : "Anggota",
                 prestasiDataTableId: createPrestasiDataTable.id,
-              },
-            ],
+              };
+            }),
           });
 
         // ** ADD ACTIVITY LOG

@@ -6,7 +6,6 @@ import ArrorLeft from "~/common/components/svg/ArrorLeft";
 import { Button } from "~/common/components/ui/button/Button";
 import Card from "~/common/components/ui/card/Card";
 import BaseForm from "~/common/components/ui/form/BaseForm";
-import Input from "~/common/components/ui/form/Input";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import { useKejuaraan } from "~/common/hooks/module/kejuaraan/useKejuaraan";
 

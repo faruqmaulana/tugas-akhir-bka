@@ -5,6 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -20,11 +21,13 @@ import {
 import { api } from "~/utils/api";
 
 const useKejuaraan = () => {
+  const router = useRouter();
   const { data: user } = api.user.getAllMahasiswa.useQuery();
   const { data: dosen } = api.dosen.getAllDosen.useQuery();
   const { data: orkem } = api.orkem.getAllOrkem.useQuery();
   const { data: kejuaraan } = api.kejuaraan.getAllTingkatKejuaraan.useQuery();
   const { data: prestasi } = api.prestasi.getAllTingkatPrestasi.useQuery();
+  const { data: allKejuaraan } = api.prestasiLomba.getAllKejuaraan.useQuery();
   const { mutate: createPrestasiLomba } =
     api.prestasiLomba.createPrestasiLomba.useMutation();
 
@@ -36,10 +39,10 @@ const useKejuaraan = () => {
     ReactSelectOptionType[]
   >([]);
 
-  const [dosenData, setDosenData] = useState<
-    CustomReactSelectOptionsType[] | []
-  >([]);
-  const [dosenPayload, setDosenPayload] = useState<ReactSelectOptionType[]>([]);
+  // const [dosenData, setDosenData] = useState<
+  //   CustomReactSelectOptionsType[] | []
+  // >([]);
+  // const [dosenPayload, setDosenPayload] = useState<ReactSelectOptionType[]>([]);
 
   const {
     register,
@@ -54,22 +57,22 @@ const useKejuaraan = () => {
 
   useEffect(() => {
     setValue("users", mahasiswaPayload);
-    setValue("dosenData", dosenPayload);
-  }, [mahasiswaPayload, dosenPayload, setValue]);
+    // setValue("dosenData", dosenPayload);
+  }, [mahasiswaPayload, setValue]);
 
   const onSubmit = useCallback((userPayload: IPengajuanPrestasiForm) => {
-    console.log("userPayload", userPayload);
-    // setLoading(true);
-    // createPrestasiLomba(userPayload, {
-    //   onSuccess: (data) => {
-    //     customToast("success", data?.message);
-    //     setLoading(false);
-    //   },
-    //   onError: (error) => {
-    //     customToast("error", error?.message);
-    //     setLoading(false);
-    //   },
-    // });
+    setLoading(true);
+    createPrestasiLomba(userPayload, {
+      onSuccess: (data) => {
+        customToast("success", data?.message);
+        setLoading(false);
+        void router.push("/module/kejuaraan");
+      },
+      onError: (error) => {
+        customToast("error", error?.message);
+        setLoading(false);
+      },
+    });
   }, []);
 
   const handleSelectMultipleUser = (ctx: ReactSelectOptionType) => {
@@ -129,46 +132,46 @@ const useKejuaraan = () => {
     setMahasiswaPayload(tempMahasiswa);
   };
 
-  // DOSEN
-  const handleSelectMultipleDosen = (ctx: ReactSelectOptionType) => {
-    if (!ctx) return;
-    setDosenPayload([
-      ...dosenPayload,
-      { ...ctx, isKetua: dosenPayload.length > 0 ? false : true },
-    ]);
-    const tempDosen = dosenData?.filter((val) => val.id !== ctx?.value);
+  // ** DOSEN MODULE */
+  // const handleSelectMultipleDosen = (ctx: ReactSelectOptionType) => {
+  //   if (!ctx) return;
+  //   setDosenPayload([
+  //     ...dosenPayload,
+  //     { ...ctx, isKetua: dosenPayload.length > 0 ? false : true },
+  //   ]);
+  //   const tempDosen = dosenData?.filter((val) => val.id !== ctx?.value);
 
-    setDosenData(tempDosen);
-  };
+  //   setDosenData(tempDosen);
+  // };
 
-  useEffect(() => {
-    if (dosen || dosenData) {
-      if (dosenData?.length > 0) return;
-      setDosenData(dosen as CustomReactSelectOptionsType[]);
-    }
-  }, [dosen]);
+  // useEffect(() => {
+  //   if (dosen || dosenData) {
+  //     if (dosenData?.length > 0) return;
+  //     setDosenData(dosen as CustomReactSelectOptionsType[]);
+  //   }
+  // }, [dosen]);
 
-  const handleDeleteSelectedDosen = (params: handleDeleteSelectedDataType) => {
-    const { context } = params;
-    const tempDosenPayload = [...dosenPayload];
-    if (Array.isArray(dosen)) {
-      const updatedMahasiswa = tempDosenPayload.filter(
-        (val) => val.value !== context.value
-      );
+  // const handleDeleteSelectedDosen = (params: handleDeleteSelectedDataType) => {
+  //   const { context } = params;
+  //   const tempDosenPayload = [...dosenPayload];
+  //   if (Array.isArray(dosen)) {
+  //     const updatedMahasiswa = tempDosenPayload.filter(
+  //       (val) => val.value !== context.value
+  //     );
 
-      // if is cuurent deleted is ketua then set ketua to other in index 0 if any
-      if (context.isKetua && updatedMahasiswa.length > 0) {
-        updatedMahasiswa[0]!.isKetua = true;
-      }
+  //     // if is cuurent deleted is ketua then set ketua to other in index 0 if any
+  //     if (context.isKetua && updatedMahasiswa.length > 0) {
+  //       updatedMahasiswa[0]!.isKetua = true;
+  //     }
 
-      const deletedData = dosen.filter(
-        (val: CustomReactSelectOptionsType) => val.id === context.value
-      );
+  //     const deletedData = dosen.filter(
+  //       (val: CustomReactSelectOptionsType) => val.id === context.value
+  //     );
 
-      setDosenPayload(updatedMahasiswa);
-      setDosenData([...dosenData, ...deletedData]);
-    }
-  };
+  //     setDosenPayload(updatedMahasiswa);
+  //     setDosenData([...dosenData, ...deletedData]);
+  //   }
+  // };
 
   const KEJUARAAN_FORM = [
     {
@@ -193,12 +196,12 @@ const useKejuaraan = () => {
       label: "Dosen",
       type: "select",
       control: control,
-      selectData: dosenData,
-      register: { ...register("dosenData") },
-      error: errors.dosenData?.message,
-      selectedData: dosenPayload,
-      handleDeleteSelectedData: handleDeleteSelectedDosen,
-      handleSelectMultipleUser: handleSelectMultipleDosen,
+      selectData: dosen,
+      register: { ...register("dosenId") },
+      error: errors.dosenId?.message,
+      // selectedData: dosenPayload,
+      // handleDeleteSelectedData: handleDeleteSelectedDosen,
+      // handleSelectMultipleUser: handleSelectMultipleDosen,
     },
     {
       trigger: trigger,
@@ -297,7 +300,7 @@ const useKejuaraan = () => {
     },
   ];
 
-  return { KEJUARAAN_FORM, handleSubmit, onSubmit, loading };
+  return { KEJUARAAN_FORM, handleSubmit, onSubmit, loading, allKejuaraan };
 };
 
 export { useKejuaraan };

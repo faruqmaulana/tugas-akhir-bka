@@ -3,16 +3,15 @@ import { type MRT_ColumnDef } from "material-react-table";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { requireAuth } from "~/common/authentication/requireAuth";
+import Spinner from "~/common/components/svg/Spinner";
 import ViewDetailButton from "~/common/components/ui/button/ViewDetailButton";
 import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import BaseTable from "~/common/components/ui/table/BaseTable";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
-import {
-  DUMMY_KEJUARAAN,
-  type KejuaraanData,
-} from "~/common/constants/DUMMY_KEJUARAAN";
+import { type KejuaraanData } from "~/common/constants/DUMMY_KEJUARAAN";
 import { handleBgColor } from "~/common/helpers/handleBgColor";
+import { useKejuaraan } from "~/common/hooks/module/kejuaraan/useKejuaraan";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -20,6 +19,8 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 
 const UserManagement = () => {
   const router = useRouter();
+  const { allKejuaraan } = useKejuaraan();
+  const transformedData = allKejuaraan as KejuaraanData[];
 
   const columns = useMemo<MRT_ColumnDef<KejuaraanData>[]>(
     () => [
@@ -79,7 +80,7 @@ const UserManagement = () => {
         enableClickToCopy: true,
       },
       {
-        header: "Foto Penyerahan Piala",
+        header: "Penyerahan Piala",
         accessorKey: "fotoPenyerahanPiala",
         enableClickToCopy: true,
       },
@@ -130,7 +131,13 @@ const UserManagement = () => {
         header={"DATA Prestasi Lomba & Kejuaraan".toUpperCase()}
         className="mt-[30px]"
       >
-        <BaseTable data={DUMMY_KEJUARAAN} columns={columns} />
+        {!transformedData && <Spinner className="m-auto" />}
+        {transformedData?.length > 0 && (
+          <BaseTable
+            data={transformedData.reverse().reverse()}
+            columns={columns}
+          />
+        )}
       </Card>
     </>
   );

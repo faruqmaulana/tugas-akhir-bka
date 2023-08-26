@@ -104,7 +104,7 @@ model PrestasiDataTable {
   dosenId            String
   lampiranId         String
   updatedAt          DateTime?                  @default(now())
-  status             String                     @default("Sedang Di Prosess")
+  status             String                     @default("Sedang Diproses")
   activityLog        ActivityLog[]
   notification       Notification[]
   users              PengajuanOnUsers[]
@@ -143,7 +143,7 @@ model PengajuanPKM {
   totalAnggaran   Int
   anggaranDosen   Int
   dosenId         String
-  status          String             @default("Sedang Di Prosess")
+  status          String             @default("Sedang Diproses")
   activityLog     ActivityLog[]
   notification    Notification[]
   users           PengajuanOnUsers[]
@@ -216,7 +216,7 @@ model ActivityLog {
   bukuId              String?
   pengajuanPKMId      String?
   pengajuanBeasiswaId String?
-  status              String             @default("Sedang Di Prosess")
+  status              String             @default("Sedang Diproses")
   PatenAndHakiTable   PatenAndHakiTable? @relation(fields: [PatenAndHakiTableId], references: [id])
   Buku                Buku?              @relation(fields: [bukuId], references: [id])
   PengajuanBeasiswa   PengajuanBeasiswa? @relation(fields: [pengajuanBeasiswaId], references: [id])

@@ -11,20 +11,21 @@ export const pengajuanPrestasiForm = z
         })
       )
       .min(1, "Required!"),
+    // dosenData: z
+    //   .array(
+    //     z.object({
+    //       value: z.string(),
+    //       label: z.string(),
+    //       isKetua: z.boolean(),
+    //     })
+    //   )
+    //   .min(1, "Required!"),
+    dosenId: z.string().min(1, { message: "Required!" }),
     kegiatan: z.string().min(1, { message: "Kegiatan tidak boleh kosong!" }),
     tanggalKegiatan: z.string().min(1, { message: "required!" }),
     penyelenggara: z
       .string()
       .min(1, { message: "Penyelenggara tidak boleh kosong!" }),
-    dosenData: z
-      .array(
-        z.object({
-          value: z.string(),
-          label: z.string(),
-          isKetua: z.boolean(),
-        })
-      )
-      .min(1, "Required!"),
     orkemId: z.string().min(1, { message: "Pilih organisasi kemahasiswaan!" }),
     tingkatKejuaraanId: z
       .string()
