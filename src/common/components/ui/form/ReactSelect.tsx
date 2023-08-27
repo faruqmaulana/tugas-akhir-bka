@@ -1,18 +1,18 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { useState } from "react";
-import { Controller } from "react-hook-form";
+import { Controller, type RegisterOptions } from "react-hook-form";
 import Select, { type SingleValue } from "react-select";
-import { Switch } from "../switch/switch";
-import { X } from "lucide-react";
+
+import ReactSelectedList from "./ReactSelectedList";
 
 export type ReactSelectOptionType = {
   value: string;
   label: string;
   isKetua: boolean;
   disabled?: boolean;
+  disableDelete?: boolean;
 };
 
 export type CustomReactSelectOptionsType = {
@@ -30,8 +30,6 @@ export type ReactSelectType = {
   defaultValue: string;
   placeholder: string;
   disabled?: boolean;
-  register?: any;
-  control: any;
   isLoading: boolean;
   error?: string;
   selectedData: ReactSelectOptionType[];
@@ -43,7 +41,12 @@ export type ReactSelectType = {
   handleSelectOptionChange?: (
     newValue: SingleValue<ReactSelectOptionType>
   ) => void;
-  trigger?: (value: string) => void;
+  register?: (
+    name: string,
+    options?: RegisterOptions
+  ) => (ref: HTMLInputElement | null) => void;
+  trigger?: (fieldName?: string | string[]) => Promise<boolean>;
+  control: any;
 };
 
 export const ReactSelect = (props: ReactSelectType) => {
@@ -97,7 +100,7 @@ export const ReactSelect = (props: ReactSelectType) => {
     // IMMEDIATELLY UPDATE ERROR STATE
     if (trigger) {
       setTimeout(() => {
-        trigger(register?.name);
+        void trigger(register?.name);
       });
     }
 
@@ -123,7 +126,8 @@ export const ReactSelect = (props: ReactSelectType) => {
         {...(register || {})}
         name={register?.name || "temp"}
         control={control}
-        render={({ field: { ref, onChange } }) => (
+        render={
+          ({ field: { ref, onChange } }) => (
           <div className="flex w-full flex-col gap-2">
             <Select
               ref={ref}
@@ -146,50 +150,11 @@ export const ReactSelect = (props: ReactSelectType) => {
               }}
             />
             {selectedData.length > 0 && (
-              <div className="flex flex-col gap-2">
-                {selectedData.map((value) => (
-                  <div
-                    key={value.value}
-                    className="flex flex-row items-center gap-2"
-                  >
-                    <div
-                      title="Hapus data"
-                      className="flex cursor-pointer rounded-full border border-red-600 bg-red-300 p-[3px] hover:bg-red-200"
-                      onClick={() => {
-                        if (handleDeleteSelectedData) {
-                          handleDeleteSelectedData({
-                            context: value,
-                          });
-
-                          // IMMEDIATELLY UPDATE ERROR STATE
-                          if (trigger) {
-                            setTimeout(() => {
-                              trigger(register?.name);
-                            });
-                          }
-                        }
-                      }}
-                    >
-                      <X className="m-auto" size={14} />
-                    </div>
-                    <p className="min-w-[110px]">{value.label}</p>
-                    {handleSwitch && (
-                      <div className="flex flex-row items-center gap-2">
-                        <Switch
-                          title={value.isKetua ? "" : "Jadikan ketua"}
-                          checked={value.isKetua}
-                          onClick={() => {
-                            if (handleSwitch) {
-                              handleSwitch(value.value);
-                            }
-                          }}
-                        />
-                        {value.isKetua ? "Ketua Tim" : "Anggota"}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+              <ReactSelectedList
+                selectedData={selectedData}
+                handleSwitch={handleSwitch}
+                handleDeleteSelectedData={handleDeleteSelectedData}
+              />
             )}
           </div>
         )}

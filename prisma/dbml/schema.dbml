@@ -94,7 +94,7 @@ Table PrestasiDataTable {
   dosenId String [not null]
   lampiranId String [not null]
   updatedAt DateTime [default: `now()`]
-  status String [not null, default: 'Sedang Di Prosess']
+  status String [not null, default: 'Sedang Diproses']
   activityLog ActivityLog [not null]
   notification Notification [not null]
   users PengajuanOnUsers [not null]
@@ -134,7 +134,7 @@ Table PengajuanPKM {
   totalAnggaran Int [not null]
   anggaranDosen Int [not null]
   dosenId String [not null]
-  status String [not null, default: 'Sedang Di Prosess']
+  status String [not null, default: 'Sedang Diproses']
   activityLog ActivityLog [not null]
   notification Notification [not null]
   users PengajuanOnUsers [not null]
@@ -210,7 +210,7 @@ Table ActivityLog {
   bukuId String
   pengajuanPKMId String
   pengajuanBeasiswaId String
-  status String [not null, default: 'Sedang Di Prosess']
+  status String [not null, default: 'Sedang Diproses']
   PatenAndHakiTable PatenAndHakiTable
   Buku Buku
   PengajuanBeasiswa PengajuanBeasiswa

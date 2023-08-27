@@ -9,6 +9,7 @@ import {
   type ReactSelectOptionType,
 } from "./ReactSelect";
 import { type SingleValue } from "react-select";
+import { DatePicker } from "../calendar/DatePicker";
 
 export type InputProps = {
   disabled?: boolean;
@@ -36,7 +37,7 @@ export type InputProps = {
   handleSelectOptionChange?: (
     newValue: SingleValue<ReactSelectOptionType>
   ) => void;
-  trigger?: (value: string) => void;
+  trigger?: (fieldName?: string | string[]) => Promise<boolean>;
 };
 
 const Input = (props: InputProps) => {
@@ -63,7 +64,6 @@ const Input = (props: InputProps) => {
     handleDeleteSelectedData,
     handleSelectOptionChange,
   } = props;
-  const [inputType, setInputType] = useState(type === "date" ? "text" : type);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   return (
@@ -120,29 +120,20 @@ const Input = (props: InputProps) => {
             {leftAddonComponent}
           </span>
         )}
+        {type === "date" && (
+          <DatePicker control={control} register={register} error={error} />
+        )}
         {(type === "text" ||
           type === "file" ||
-          type === "date" ||
+          // type === "date" ||
           type === "number" ||
           type === "password" ||
           type === "color") && (
           <input
             {...(register || {})}
-            // onMouseEnter={handleMouseEnter}
-            // onMouseLeave={handleMouseLeave}
             autoComplete={autocomplete || "off"}
             disabled={disabled}
-            type={showPassword ? "text" : inputType}
-            onFocus={() => {
-              if (type === "date") {
-                setInputType("date");
-              }
-            }}
-            onBlur={() => {
-              if (type === "date") {
-                setInputType("text");
-              }
-            }}
+            type={showPassword ? "text" : type}
             data-te-inline="true"
             className={`relative m-0 block w-[1px] min-w-0 flex-auto rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:text-neutral-900 dark:focus:border-primary ${
               !leftAddonComponent ? "rounded-l" : ""

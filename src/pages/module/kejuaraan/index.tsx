@@ -95,10 +95,8 @@ const UserManagement = () => {
         enableClickToCopy: true,
         Cell: ({ cell }) => (
           <div
-            className="rounded-full px-2 py-1 text-xs font-semibold opacity-95"
-            style={{
-              backgroundColor: handleBgColor(cell.getValue() as string),
-            }}
+            className={`rounded-full px-2 py-1 text-xs font-semibold opacity-95 
+            ${handleBgColor(cell.getValue() as string)}`}
           >
             {cell.getValue() as string}
           </div>

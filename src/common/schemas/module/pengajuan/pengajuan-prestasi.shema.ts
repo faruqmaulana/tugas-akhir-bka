@@ -11,18 +11,14 @@ export const pengajuanPrestasiForm = z
         })
       )
       .min(1, "Required!"),
-    // dosenData: z
-    //   .array(
-    //     z.object({
-    //       value: z.string(),
-    //       label: z.string(),
-    //       isKetua: z.boolean(),
-    //     })
-    //   )
-    //   .min(1, "Required!"),
     dosenId: z.string().min(1, { message: "Required!" }),
     kegiatan: z.string().min(1, { message: "Kegiatan tidak boleh kosong!" }),
-    tanggalKegiatan: z.string().min(1, { message: "required!" }),
+    tanggalKegiatan: z.date().refine((date) => {
+      if (!date) {
+        throw new Error("Tanggal kegiatan is required.");
+      }
+      return true;
+    }),
     penyelenggara: z
       .string()
       .min(1, { message: "Penyelenggara tidak boleh kosong!" }),

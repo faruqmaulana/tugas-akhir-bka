@@ -15,6 +15,7 @@ import styles from "~/styles/ui/Login.module.scss";
 import { requireAuth } from "~/common/authentication/requireAuth";
 import { showToast } from "~/common/components/ui/toast/showToast";
 import { LOGIN_TOAST } from "~/common/constants/MESSAGE";
+import EyeIcon from "~/common/components/svg/EyeIcon";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -23,6 +24,7 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 export default function LoginForm() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const {
     register,
@@ -71,12 +73,18 @@ export default function LoginForm() {
         <div className={`relative flex`}>
           <input
             className={`${styles.formControl}`}
-            type={"password"}
+            type={showPassword ? "text" : "password"}
             placeholder="Password"
             {...register("password")}
           />
-          <button type="button" className="absolute right-2 top-3">
-            <EyeSlashIcon />
+          <button
+            type="button"
+            className="absolute right-2 top-3"
+            onClick={() => {
+              setShowPassword(!showPassword);
+            }}
+          >
+            {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
           </button>
         </div>
         {errors.password?.message && <p>{errors.password?.message}</p>}
