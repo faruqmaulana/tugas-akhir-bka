@@ -13,7 +13,7 @@ import {
   type IPengajuanPrestasiForm,
   pengajuanPrestasiForm,
 } from "~/common/schemas/module/pengajuan/pengajuan-prestasi.shema";
-import { useMultiSelectUser } from "~/pages/module/global/useMultiSelectUser";
+import { useMultiSelectUser } from "~/common/hooks/module/global/useMultiSelectUser";
 import { api } from "~/utils/api";
 
 const useKejuaraan = () => {
