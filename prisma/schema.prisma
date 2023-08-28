@@ -93,9 +93,9 @@ model LampiranData {
 model PrestasiDataTable {
   id                 String                     @id @default(cuid())
   noSK               String?
-  tanggalSK          String?
+  tanggalSK          DateTime?
   kegiatan           String
-  tanggalKegiatan    String
+  tanggalKegiatan    DateTime
   penyelenggara      String?
   createdAt          DateTime?                  @default(now())
   orkemId            String
@@ -135,7 +135,6 @@ model PengajuanPKM {
   id              String             @id @default(cuid())
   judul           String
   deskripsi       String
-  tanggalKegiatan String
   isValidated     Boolean            @default(false)
   validatedAt     DateTime
   createdAt       DateTime           @default(now())
@@ -144,6 +143,7 @@ model PengajuanPKM {
   anggaranDosen   Int
   dosenId         String
   status          String             @default("Sedang Diproses")
+  tanggalKegiatan DateTime
   activityLog     ActivityLog[]
   notification    Notification[]
   users           PengajuanOnUsers[]

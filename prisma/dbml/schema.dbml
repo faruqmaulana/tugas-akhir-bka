@@ -83,9 +83,9 @@ Table LampiranData {
 Table PrestasiDataTable {
   id String [pk]
   noSK String
-  tanggalSK String
+  tanggalSK DateTime
   kegiatan String [not null]
-  tanggalKegiatan String [not null]
+  tanggalKegiatan DateTime [not null]
   penyelenggara String
   createdAt DateTime [default: `now()`]
   orkemId String [not null]
@@ -126,7 +126,6 @@ Table PengajuanPKM {
   id String [pk]
   judul String [not null]
   deskripsi String [not null]
-  tanggalKegiatan String [not null]
   isValidated Boolean [not null, default: false]
   validatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
@@ -135,6 +134,7 @@ Table PengajuanPKM {
   anggaranDosen Int [not null]
   dosenId String [not null]
   status String [not null, default: 'Sedang Diproses']
+  tanggalKegiatan DateTime [not null]
   activityLog ActivityLog [not null]
   notification Notification [not null]
   users PengajuanOnUsers [not null]

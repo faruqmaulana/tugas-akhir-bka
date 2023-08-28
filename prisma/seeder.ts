@@ -36,39 +36,49 @@ async function seedUsers() {
 
   await prisma.user.createMany({
     data: [
-      // {
-      //   name: "faruqlulus",
-      //   npm: "faruqlulus",
-      //   alamat: "Alamat 2",
-      //   semester: "Semester 2",
-      //   phone: "Phone 2",
-      //   email: "user3@example.com",
-      //   password: await hash("faruqlulus"),
-      //   role: Role.ADMIN,
-      //   prodiId: prodi[1]!.id,
-      // },
-      // {
-      //   name: "dimasspeed",
-      //   npm: "dimasspeed",
-      //   alamat: "Alamat 2",
-      //   semester: "Semester 2",
-      //   phone: "Phone 2",
-      //   email: "user4@example.com",
-      //   password: await hash("dimasspeed"),
-      //   role: Role.MAHASISWA,
-      //   prodiId: prodi[1]!.id,
-      // },
-      // {
-      //   name: "angga",
-      //   npm: "angga",
-      //   alamat: "Alamat 3",
-      //   semester: "Semester 2",
-      //   phone: "08357857848",
-      //   email: "angga@example.com",
-      //   password: await hash("angga123"),
-      //   role: Role.MAHASISWA,
-      //   prodiId: prodi[1]!.id,
-      // },
+      {
+        name: "Mas Taufik",
+        npm: "taufik123",
+        alamat: "Alamat 2",
+        semester: "Semester 2",
+        phone: "Phone 2",
+        email: "taufik123@example.com",
+        password: await hash("taufik123"),
+        role: Role.ADMIN,
+      },
+      {
+        name: "faruqlulus",
+        npm: "faruqlulus",
+        alamat: "Alamat 2",
+        semester: "Semester 2",
+        phone: "Phone 2",
+        email: "user3@example.com",
+        password: await hash("faruqlulus"),
+        role: Role.MAHASISWA,
+        prodiId: prodi[1]!.id,
+      },
+      {
+        name: "dimasspeed",
+        npm: "dimasspeed",
+        alamat: "Alamat 2",
+        semester: "Semester 2",
+        phone: "Phone 2",
+        email: "user4@example.com",
+        password: await hash("dimasspeed"),
+        role: Role.MAHASISWA,
+        prodiId: prodi[1]!.id,
+      },
+      {
+        name: "angga",
+        npm: "angga",
+        alamat: "Alamat 3",
+        semester: "Semester 2",
+        phone: "08357857848",
+        email: "angga@example.com",
+        password: await hash("angga123"),
+        role: Role.MAHASISWA,
+        prodiId: prodi[1]!.id,
+      },
       {
         name: "John Doe",
         npm: "johndoee",
@@ -144,6 +154,12 @@ async function seedOrkem() {
       {
         name: "Silat",
       },
+      {
+        name: "Robotika",
+      },
+      {
+        name: "Kesenian",
+      },
       // Add more dosen data as needed
     ],
   });
@@ -180,15 +196,14 @@ async function seedOrkem() {
 
 async function seed() {
   const seedingFunctions = [
-    // seedFakultas,
-    // seedProdi,
+    seedFakultas,
+    seedProdi,
     seedUsers,
-    // seedTingkatKejuaraan,
-    // seedTingkatPrestasi,
-    // seedStatus,
-    // seedDosen,
+    seedTingkatKejuaraan,
+    seedTingkatPrestasi,
+    seedDosen,
     // seedPrestasiDataTable,
-    // seedOrkem,
+    seedOrkem,
   ];
 
   try {

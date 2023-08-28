@@ -30,6 +30,8 @@ const BaseTable = ({ columns, data, showColumnFilters = true }: any) => {
     csvExporter.generateCsv(data);
   };
 
+  console.log("datasss", data);
+
   return (
     <MaterialReactTable
       columns={columns}

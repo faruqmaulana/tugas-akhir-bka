@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/require-await */
+import { format } from "date-fns";
+import id from "date-fns/locale/id";
 import { type MRT_ColumnDef } from "material-react-table";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
@@ -48,6 +50,9 @@ const UserManagement = () => {
         header: "Tanggal Kegiatan",
         accessorKey: "tanggalKegiatan",
         enableClickToCopy: true,
+        Cell: ({ cell }) => (
+          <p>{format(cell.getValue() as Date, "PPP", { locale: id })}</p>
+        ),
       },
       {
         header: "Penyelenggara",
@@ -130,12 +135,10 @@ const UserManagement = () => {
         className="mt-[30px]"
       >
         {!transformedData && <Spinner className="m-auto" />}
-        {transformedData?.length > 0 && (
-          <BaseTable
-            data={transformedData.reverse().reverse()}
-            columns={columns}
-          />
-        )}
+        <BaseTable
+          data={transformedData?.reverse()?.reverse()}
+          columns={columns}
+        />
       </Card>
     </>
   );
