@@ -82,25 +82,7 @@ const Example = () => {
       />
       <div className="flex flex-col gap-5">
         <Card>
-          <div className="ml-auto flex flex-row gap-4">
-            <Button
-              isMedium
-              isDanger
-              className="w-fit"
-              onClick={() => handleButtonAction("reject")}
-            >
-              <span>Tolak</span>
-            </Button>
-            <Button
-              isMedium
-              isSuccess
-              className="w-fit"
-              onClick={() => handleButtonAction("approve")}
-            >
-              <span>Setuju</span>
-            </Button>
-          </div>
-          <div className="-mt-9 grid grid-cols-12 gap-2">
+          <div className="-mt-9 grid grid-cols-12 gap-2 py-5">
             <span className="col-span-2 font-semibold">Nama Mahasiswa</span>
             <span className="col-span-3">: {nama}</span>
             <span className="col-span-2 font-semibold">NBI</span>
@@ -158,6 +140,24 @@ const Example = () => {
                 src="https://www.buds.com.ua/images/Lorem_ipsum.pdf"
               ></iframe>
             </span>
+          </div>
+          <div className="mr-auto flex flex-row gap-4">
+            <Button
+              isMedium
+              isDanger
+              className="w-fit"
+              onClick={() => handleButtonAction("reject")}
+            >
+              <span>Tolak</span>
+            </Button>
+            <Button
+              isMedium
+              isSuccess
+              className="w-fit"
+              onClick={() => handleButtonAction("approve")}
+            >
+              <span>Setuju</span>
+            </Button>
           </div>
         </Card>
       </div>

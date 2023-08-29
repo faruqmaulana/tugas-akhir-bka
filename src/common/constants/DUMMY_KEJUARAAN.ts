@@ -14,6 +14,7 @@ export type KejuaraanData = {
   tingkatKejuaraan: string;
   tingkatPrestasi: string;
   dosen: string;
+  keterangan?: string;
   piagamPenghargaan: string; // URL gambar publik
   fotoPenyerahanPiala: string; // URL gambar publik
   undanganKejuaraan: string; // URL text PDF publik

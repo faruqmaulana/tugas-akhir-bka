@@ -1,11 +1,8 @@
 /* eslint-disable @typescript-eslint/require-await */
-import { format } from "date-fns";
-import id from "date-fns/locale/id";
 import { type MRT_ColumnDef } from "material-react-table";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { requireAuth } from "~/common/authentication/requireAuth";
-import Spinner from "~/common/components/svg/Spinner";
 import ViewDetailButton from "~/common/components/ui/button/ViewDetailButton";
 import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
@@ -50,9 +47,6 @@ const UserManagement = () => {
         header: "Tanggal Kegiatan",
         accessorKey: "tanggalKegiatan",
         enableClickToCopy: true,
-        Cell: ({ cell }) => (
-          <p>{format(cell.getValue() as Date, "PPP", { locale: id })}</p>
-        ),
       },
       {
         header: "Penyelenggara",
@@ -95,6 +89,11 @@ const UserManagement = () => {
         enableClickToCopy: true,
       },
       {
+        header: "Keterangan",
+        accessorKey: "keterangan",
+        enableClickToCopy: true,
+      },
+      {
         header: "Status",
         accessorKey: "status",
         enableClickToCopy: true,
@@ -134,11 +133,7 @@ const UserManagement = () => {
         header={"DATA Prestasi Lomba & Kejuaraan".toUpperCase()}
         className="mt-[30px]"
       >
-        {!transformedData && <Spinner className="m-auto" />}
-        <BaseTable
-          data={transformedData?.reverse()?.reverse()}
-          columns={columns}
-        />
+        <BaseTable data={transformedData} columns={columns} />
       </Card>
     </>
   );

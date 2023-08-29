@@ -3,6 +3,8 @@ import { pengajuanPrestasiForm } from "~/common/schemas/module/pengajuan/pengaju
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { ADD_PRESTASI_LOMBA_SUCCESS } from "~/common/message";
 import { type Prisma } from "@prisma/client";
+import id from "date-fns/locale/id";
+import { format } from "date-fns";
 
 export type SuccessPengajuanOnUsersType = {
   message: string;
@@ -30,26 +32,28 @@ export const prestasiLombaQuery = createTRPCRouter({
       });
 
       const transformedPrestasiData = prestasiData.map((data) => ({
-        status:
-          data.PrestasiDataTable!.status,
-        id: data.PrestasiDataTable!.id,
-        nama: data.user.name,
-        noSK: data.PrestasiDataTable!.noSK || "",
-        tanggalSK: data.PrestasiDataTable!.tanggalSK || "",
-        kegiatan: data.PrestasiDataTable!.kegiatan,
-        tanggalKegiatan: data.PrestasiDataTable!.tanggalKegiatan,
-        penyelenggara: data.PrestasiDataTable!.penyelenggara,
-        isValidated: data.PrestasiDataTable!.status === "Sedang Di Proses",
-        validatedAt: data.PrestasiDataTable!.createdAt,
-        createdAt: data.PrestasiDataTable!.createdAt,
-        orkem: data.PrestasiDataTable!.orkem.name,
-        tingkatKejuaraan: data.PrestasiDataTable!.tingkatKejuaraan.name,
-        tingkatPrestasi: data.PrestasiDataTable!.tingkatPrestasi.name,
-        dosen: data.dosen.name,
-        piagamPenghargaan: data.PrestasiDataTable!.lampiran.piagamPenghargaan,
+        nama: data.user.name || "-",
+        noSK: data.PrestasiDataTable!.noSK || "-",
+        tanggalSK: data.PrestasiDataTable!.tanggalSK || "-",
+        kegiatan: data.PrestasiDataTable!.kegiatan || "-",
+        tanggalKegiatan:
+          format(data.PrestasiDataTable!.tanggalKegiatan, "PPP", {
+            locale: id,
+          }) || "-",
+        penyelenggara: data.PrestasiDataTable!.penyelenggara || "-",
+        // validatedAt: data.PrestasiDataTable!.createdAt || "-",
+        orkem: data.PrestasiDataTable!.orkem.name || "-",
+        tingkatKejuaraan: data.PrestasiDataTable!.tingkatKejuaraan.name || "-",
+        tingkatPrestasi: data.PrestasiDataTable!.tingkatPrestasi.name || "-",
+        dosen: data.dosen.name || "-",
+        piagamPenghargaan:
+          data.PrestasiDataTable!.lampiran.piagamPenghargaan || "-",
         fotoPenyerahanPiala:
-          data.PrestasiDataTable!.lampiran.fotoPenyerahanPiala,
-        undanganKejuaraan: data.PrestasiDataTable!.lampiran.undanganKejuaraan,
+          data.PrestasiDataTable!.lampiran.fotoPenyerahanPiala || "-",
+        undanganKejuaraan:
+          data.PrestasiDataTable!.lampiran.undanganKejuaraan || "-",
+        keterangan: data.keterangan || "-",
+        status: data.PrestasiDataTable!.status || "-",
       }));
 
       return transformedPrestasiData;

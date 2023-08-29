@@ -30,7 +30,16 @@ const BaseTable = ({ columns, data, showColumnFilters = true }: any) => {
     csvExporter.generateCsv(data);
   };
 
-  console.log("datasss", data);
+  if (!data)
+    return (
+      <div className="animate-pulse">
+        <div className="mb-6 mt-3 h-4 rounded bg-gray-200"></div>
+        <div className="mb-6 h-4 rounded bg-gray-300"></div>
+        <div className="mb-6 h-4 rounded bg-gray-200"></div>
+        <div className="mb-6 h-4 rounded bg-gray-300"></div>
+        <div className="mb-6 h-4 rounded bg-gray-200"></div>
+      </div>
+    );
 
   return (
     <MaterialReactTable
