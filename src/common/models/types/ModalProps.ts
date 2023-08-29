@@ -38,4 +38,6 @@ export type ModalProps = {
   title?: string;
   titleCenter?: boolean;
   loaderIcon?: ReactNode;
+  showIconModal?:boolean
+  className?: string
 };

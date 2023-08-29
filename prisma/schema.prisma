@@ -211,12 +211,13 @@ model ActivityLog {
   id                  String             @id @default(cuid())
   catatan             String?
   userId              String
+  status              String             @default("Sedang Diproses")
+  createdAt           DateTime           @default(now())
   prestasiDataTableId String?
   PatenAndHakiTableId String?
   bukuId              String?
   pengajuanPKMId      String?
   pengajuanBeasiswaId String?
-  status              String             @default("Sedang Diproses")
   PatenAndHakiTable   PatenAndHakiTable? @relation(fields: [PatenAndHakiTableId], references: [id])
   Buku                Buku?              @relation(fields: [bukuId], references: [id])
   PengajuanBeasiswa   PengajuanBeasiswa? @relation(fields: [pengajuanBeasiswaId], references: [id])

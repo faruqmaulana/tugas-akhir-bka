@@ -211,6 +211,7 @@ Table ActivityLog {
   pengajuanPKMId String
   pengajuanBeasiswaId String
   status String [not null, default: 'Sedang Diproses']
+  createdAt DateTime [default: `now()`, not null]
   PatenAndHakiTable PatenAndHakiTable
   Buku Buku
   PengajuanBeasiswa PengajuanBeasiswa

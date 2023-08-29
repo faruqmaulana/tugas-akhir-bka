@@ -1,10 +1,14 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { pengajuanPrestasiForm } from "~/common/schemas/module/pengajuan/pengajuan-prestasi.shema";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
-import { ADD_PRESTASI_LOMBA_SUCCESS } from "~/common/message";
+import {
+  ADD_PRESTASI_LOMBA_SUCCESS,
+  APPROVE_PRESTASI_AND_LOMBA,
+} from "~/common/message";
 import { type Prisma } from "@prisma/client";
-import id from "date-fns/locale/id";
-import { format } from "date-fns";
+import { approvePrestasiForm } from "~/common/schemas/module/pengajuan/approve-prestasi.schema";
+import { STATUS } from "~/common/enums/STATUS";
+import { changeDateFormat } from "~/common/helpers/changeDateFormat";
 
 export type SuccessPengajuanOnUsersType = {
   message: string;
@@ -32,14 +36,14 @@ export const prestasiLombaQuery = createTRPCRouter({
       });
 
       const transformedPrestasiData = prestasiData.map((data) => ({
+        id: data.PrestasiDataTable!.id || "-",
         nama: data.user.name || "-",
         noSK: data.PrestasiDataTable!.noSK || "-",
-        tanggalSK: data.PrestasiDataTable!.tanggalSK || "-",
+        tanggalSK: changeDateFormat(data.PrestasiDataTable!.tanggalSK),
         kegiatan: data.PrestasiDataTable!.kegiatan || "-",
-        tanggalKegiatan:
-          format(data.PrestasiDataTable!.tanggalKegiatan, "PPP", {
-            locale: id,
-          }) || "-",
+        tanggalKegiatan: changeDateFormat(
+          data.PrestasiDataTable!.tanggalKegiatan
+        ),
         penyelenggara: data.PrestasiDataTable!.penyelenggara || "-",
         // validatedAt: data.PrestasiDataTable!.createdAt || "-",
         orkem: data.PrestasiDataTable!.orkem.name || "-",
@@ -129,6 +133,7 @@ export const prestasiLombaQuery = createTRPCRouter({
           data: {
             userId: ctx.session.user.userId,
             prestasiDataTableId: createPrestasiDataTable.id,
+            status: STATUS.PROCESSED,
           },
         });
 
@@ -137,6 +142,43 @@ export const prestasiLombaQuery = createTRPCRouter({
         return {
           message: ADD_PRESTASI_LOMBA_SUCCESS,
           data: createPengajuanOnUsers,
+        } as SuccessPengajuanOnUsersType;
+      } catch (error) {
+        throw error;
+      }
+    }),
+
+  approvePengajuanPrestasi: protectedProcedure
+    .input(approvePrestasiForm)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const { noSK, tanggalSK, catatan, prestasiDataTableId } = input;
+
+        // ** UPDATE PRESTASI DATA TABLE
+        await ctx.prisma.prestasiDataTable.update({
+          where: {
+            id: prestasiDataTableId,
+          },
+          data: {
+            noSK,
+            tanggalSK,
+            status: STATUS.APPROVE,
+            updatedAt: new Date(),
+          },
+        });
+
+        // ** CREATE ACTIVITY LOG
+        await ctx.prisma.activityLog.create({
+          data: {
+            catatan,
+            prestasiDataTableId,
+            status: STATUS.APPROVE,
+            userId: ctx.session.user.userId,
+          },
+        });
+
+        return {
+          message: APPROVE_PRESTASI_AND_LOMBA,
         } as SuccessPengajuanOnUsersType;
       } catch (error) {
         throw error;

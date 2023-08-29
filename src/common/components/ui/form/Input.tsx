@@ -125,7 +125,7 @@ const Input = (props: InputProps) => {
         )}
         {(type === "text" ||
           type === "file" ||
-          // type === "date" ||
+          type === "hidden" ||
           type === "number" ||
           type === "password" ||
           type === "color") && (

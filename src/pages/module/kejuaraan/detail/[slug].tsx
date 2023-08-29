@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -7,28 +8,18 @@ import { Button } from "~/common/components/ui/button/Button";
 import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import Modal from "~/common/components/ui/modal/Modal";
-import { useState } from "react";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Input from "~/common/components/ui/form/Input";
-import {
-  PENGAJUAN_BEASISWA,
-  type PengajuanBeasiswa,
-} from "~/common/constants/module/PENGAJUAN_BEASISWA";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
 import {
   DUMMY_KEJUARAAN,
   type KejuaraanData,
 } from "~/common/constants/DUMMY_KEJUARAAN";
-
-const INITIAL_STATE = {
-  isReject: false,
-  isApprove: false,
-  isSuccess: false,
-};
+import { useApproveKejuaraan } from "~/common/hooks/module/kejuaraan/useApproveKejuaraan";
+import BaseForm from "~/common/components/ui/form/BaseForm";
 
 const Example = () => {
   const router = useRouter();
-  const [state, setState] = useState(INITIAL_STATE);
   const {
     nama,
     dosen,
@@ -42,25 +33,13 @@ const Example = () => {
     tingkatPrestasi,
   } = DUMMY_KEJUARAAN[0] as KejuaraanData;
 
-  const handleButtonAction = (type: string) => {
-    if (type === "reject") {
-      setState({ ...state, isReject: true });
-    }
-
-    if (type === "approve") {
-      setState({ ...state, isApprove: true });
-    }
-
-    setTimeout(() => {
-      if (type === "success") {
-        setState({ ...INITIAL_STATE, isSuccess: true });
-      }
-    }, 500);
-
-    if (type === "close") {
-      setState(INITIAL_STATE);
-    }
-  };
+  const {
+    state,
+    handleButtonAction,
+    APPROVE_PRESTASI_FORM,
+    submitApproveKejuaraan,
+    onApproveKejuaraan,
+  } = useApproveKejuaraan();
 
   return (
     <>
@@ -111,7 +90,7 @@ const Example = () => {
             <span className="col-span-5">: {tingkatKejuaraan}</span>
             <span className="col-span-2 font-semibold">Prestasi</span>
             <span className="col-span-3">: {tingkatPrestasi}</span>
-            <span className="col-span-12 font-semibold">
+            {/* <span className="col-span-12 font-semibold">
               Piagam Penghargaan
             </span>
             <span className="col-span-12">
@@ -139,7 +118,7 @@ const Example = () => {
                 className="h-[600px] w-full"
                 src="https://www.buds.com.ua/images/Lorem_ipsum.pdf"
               ></iframe>
-            </span>
+            </span> */}
           </div>
           <div className="mr-auto flex flex-row gap-4">
             <Button
@@ -187,34 +166,50 @@ const Example = () => {
       <Modal
         confirm
         showClose
-        buttonCenter
+        showIconModal={false}
         isOpen={state.isApprove}
-        showButtonClose
-        showButtonSuccess
-        captionButtonSuccess="Setuju"
-        onClose={() => handleButtonAction("close")}
-        onCloseButton={() => handleButtonAction("close")}
-        onSuccessButton={() => handleButtonAction("success")}
+        className="!mb-0"
+        captionTitleConfirm="Approve Pengajuan Prestasi dan Kejuaraan"
+        // showButtonClose
+        // showButtonSuccess
+        // captionButtonSuccess="Setuju"
+        // onCloseButton={() => handleButtonAction("close")}
+        // onSuccessButton={() => handleButtonAction("success")}
         content={
-          <Input
-            labelFontSize="text-[16px]"
-            label="*Tambahkan Catatan :"
-            placeholder="Contoh: Dana Beasiswa Akan Cair Tanggal 12 Mei 2023. Diharapkan datang ke kantor BKA setelah dana beasiswa cair."
-            type="textarea"
-          />
+          <form onSubmit={submitApproveKejuaraan(onApproveKejuaraan)}>
+            <BaseForm data={APPROVE_PRESTASI_FORM} />
+            <div className="flex flex-row justify-end gap-4">
+              <Button
+                isGray
+                isMedium
+                onClick={() => handleButtonAction("close")}
+              >
+                Cancel
+              </Button>
+              <Button
+                isSubmit
+                isSuccess
+                isMedium
+                isLoading={state.loadingApprove}
+              >
+                Submit
+              </Button>
+            </div>
+          </form>
         }
       ></Modal>
-      <Modal
+      {/* <Modal
         success
         isOpen={state.isSuccess}
         buttonCenter
         showButtonSuccess
         captionButtonSuccess="Oke"
         onSuccessButton={() => {
+          handleButtonAction("close")
           void router.push("/master-data/beasiswa");
         }}
         content=""
-      ></Modal>
+      ></Modal> */}
     </>
   );
 };

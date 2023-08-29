@@ -49,6 +49,8 @@ const Modal = (props: ModalProps) => {
     title = "",
     titleCenter = false,
     loaderIcon = <Spinner />,
+    showIconModal = true,
+    className = "",
   } = props;
 
   const successContent = (
@@ -67,8 +69,10 @@ const Modal = (props: ModalProps) => {
 
   const confirmContent = (
     <div className="mb-5 flex flex-col items-center justify-center">
-      <ExclamationIcon width="150px" height="150px" />
-      <h1 className="text-3xl text-charcoal-900">{captionTitleConfirm}</h1>
+      {showIconModal && <ExclamationIcon width="150px" height="150px" />}
+      <h1 className="text-3xl font-semibold text-charcoal-900">
+        {captionTitleConfirm}
+      </h1>
     </div>
   );
 
@@ -152,7 +156,8 @@ const Modal = (props: ModalProps) => {
             {showClose && !isLoading && closeIcon}
           </div>
           <div
-            className={`my-5 mb-8 
+            className={`my-5 mb-8
+              ${className} 
               ${contentCenter && "text-center"} 
               ${modalScroll && style.scrollableTable}`}
           >
