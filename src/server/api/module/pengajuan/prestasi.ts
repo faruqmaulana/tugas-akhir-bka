@@ -56,7 +56,7 @@ export const prestasiLombaQuery = createTRPCRouter({
         status: data.PrestasiDataTable!.status || "-",
       }));
 
-      return transformedPrestasiData;
+      return transformedPrestasiData.reverse();
     } catch (error) {
       return error;
     }
