@@ -16,6 +16,7 @@ Table User {
   prodiId String
   activityLog ActivityLog [not null]
   Buku Buku [not null]
+  NotifMessage NotifMessage [not null]
   notification Notification [not null]
   PengajuanBeasiswa PengajuanBeasiswa [not null]
   prestasiDataTables PengajuanOnUsers [not null]
@@ -48,9 +49,9 @@ Table MasterDataFakultas {
 Table MasterDataProdi {
   id String [pk]
   name String [not null]
-  fakultasId String
+  fakultasId String [not null]
   Dosen Dosen [not null]
-  Fakultas MasterDataFakultas
+  Fakultas MasterDataFakultas [not null]
   user User [not null]
 }
 
@@ -216,13 +217,16 @@ Table ActivityLog {
   user User [not null]
 }
 
-Table NotificationMessage {
+Table NotifMessage {
   id String [pk]
   status String [not null]
   module String [not null]
   moduleId String [not null]
   notifMessage String [not null]
   userInfo String[] [not null]
+  createdAt DateTime [default: `now()`, not null]
+  userId String [not null]
+  createdBy User [not null]
   Notification Notification [not null]
 }
 
@@ -231,7 +235,7 @@ Table Notification {
   readed Boolean [not null, default: false]
   notificationMessageId String [not null]
   userId String [not null]
-  notificationMessage NotificationMessage [not null]
+  notificationMessage NotifMessage [not null]
   User User [not null]
 }
 
@@ -289,6 +293,8 @@ Ref: ActivityLog.prestasiDataTableId > PrestasiDataTable.id
 
 Ref: ActivityLog.userId > User.id
 
-Ref: Notification.notificationMessageId > NotificationMessage.id
+Ref: NotifMessage.userId > User.id
+
+Ref: Notification.notificationMessageId > NotifMessage.id
 
 Ref: Notification.userId > User.id

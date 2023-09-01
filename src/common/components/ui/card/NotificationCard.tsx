@@ -1,6 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React from "react";
-import { NOTIFICATION } from "~/common/constants/NOTIFICATION";
-import { handleBgColor } from "~/common/helpers/handleBgColor";
 import { Button, ViewDetailButton } from "~/common/components/ui/button/.";
 import TrashIcon from "../../svg/TrashIcon";
 import InfoIcon from "../../svg/InfoIcon";
@@ -9,58 +8,94 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/common/components/ui/popover/.";
+import { type AllNotificationType } from "~/server/api/module/notification/notification";
+import { changeDateFormat } from "~/common/helpers/changeDateFormat";
+import Spinner from "../../svg/Spinner";
+import { Anchor } from "~/common/components/ui/anchor/.";
+import { StatusBagde } from "~/common/components/ui/badge/.";
 
-const NotificationCard = ({ onOpen }: { onOpen: (args: any) => void }) => {
-  return NOTIFICATION.map((val) => (
+const NotificationCard = ({
+  onOpen,
+  userNotification,
+  handleReadMessage,
+}: {
+  onOpen: (args: any) => void;
+  handleReadMessage: (args: string) => void;
+  userNotification: AllNotificationType;
+}) => {
+  if (!userNotification) return <Spinner />;
+  return userNotification?.map((val) => (
     <div
       key={val.id}
       className={`flex flex-col gap-3 rounded-md px-5 py-3 ${
-        !val.isReaded ? "bg-slate-200" : "border-2"
+        !val.readed ? "bg-slate-200" : "border-2"
       }`}
     >
       <div className="flex justify-between">
-        <div
-          className={`rounded-full px-2 py-1 text-xs font-semibold opacity-95 
-        ${handleBgColor(val.status)}`}
-        >
-          {val.status}
-        </div>
+        <StatusBagde status={val.notificationMessage.status} />
         <Popover>
-          <PopoverTrigger type="button" className="mr-auto ml-3">
+          <PopoverTrigger type="button" className="ml-3 mr-auto">
             <InfoIcon />
           </PopoverTrigger>
-          <PopoverContent className="rounded-full border-red-500 bg-red-50 px-3 text-xs text-red-600 md:text-base">
-            Data default tidak bisa dihapus
+          <PopoverContent className="rounded-md border-red-300 px-3 text-xs md:text-base">
+            <p className="mb-2 font-semibold">*Dokumen diajukan</p>
+            <table>
+              <tr>
+                <td className="font-semibold">Oleh : </td>
+                <td>
+                  {val.notificationMessage.createdBy.name} (
+                  {val.notificationMessage.createdBy.prodi?.name})
+                </td>
+              </tr>
+              <tr>
+                <td className="font-semibold">Pada : </td>
+                <td>
+                  {changeDateFormat(val.notificationMessage.createdAt, true)}
+                </td>
+              </tr>
+            </table>
           </PopoverContent>
         </Popover>
-        {!val.isReaded && (
-          <span className="text-sm underline hover:cursor-pointer">
+        {!val.readed && (
+          <button
+            type="button"
+            className="text-sm underline hover:cursor-pointer"
+            onClick={() => handleReadMessage(val.id)}
+          >
             Tandai Sudah Dibaca
-          </span>
+          </button>
         )}
       </div>
       <div className="flex flex-col">
         <h2 className="text-xl font-bold">
-          {val.name}
-          {val.detail !== "" ? ` - ${val.detail}` : ""}
+          {val.notificationMessage.notifMessage}
         </h2>
-        <p className="font-semibold">
-          {val.nama_mahasiswa}&nbsp;-&nbsp;{val.prodi}
-        </p>
+        <div className="flex flex-wrap">
+          {val.notificationMessage.userInfo.map((subval, index) => (
+            <p key={subval} className="font-semibold">
+              {(index ? ", " : "") + subval}
+            </p>
+          ))}
+        </div>
         <div className="mt-2 flex justify-between">
-          <p className="text-sm">{val.createdAt}</p>
+          <p className="text-sm">
+            {changeDateFormat(val.notificationMessage.createdAt)}
+          </p>
           <div className="flex justify-between gap-2">
-            <ViewDetailButton />
+            <Anchor
+              href={`/module/${val.notificationMessage.module}/detail/${val.notificationMessage.moduleId}`}
+            >
+              <ViewDetailButton />
+            </Anchor>
             <Button
               isDanger
               isSmall
               className="flex w-fit items-center gap-2 !rounded-full text-center"
               onClick={() =>
                 onOpen({
+                  id: val.id,
                   showContent: true,
-                  detailInfo: `(${val.name} ${
-                    val.detail !== "" ? ` - ${val.detail}` : ""
-                  })`,
+                  detailInfo: val.notificationMessage.notifMessage,
                   content: "Data Berhasil Dihapus!",
                 })
               }

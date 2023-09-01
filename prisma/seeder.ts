@@ -12,8 +12,8 @@ const prisma = new PrismaClient();
 async function seedFakultas() {
   await prisma.masterDataFakultas.createMany({
     data: [
-      { name: "Fakultas A" },
-      { name: "Fakultas B" },
+      { name: "Fakultas Teknik" },
+      { name: "Fakultas Bahasa" },
       // Add more fakultas data as needed
     ],
   });
@@ -23,9 +23,9 @@ async function seedProdi() {
   const fakultas = await prisma.masterDataFakultas.findMany(); // Retrieve all users
   await prisma.masterDataProdi.createMany({
     data: [
-      { name: "Prodi A", fakultasId: fakultas[0]?.id },
-      { name: "Prodi B", fakultasId: fakultas[0]?.id },
-      { name: "Prodi C", fakultasId: fakultas[1]?.id },
+      { name: "Teknik Informatika", fakultasId: fakultas[0]?.id },
+      { name: "Teknik Mesin", fakultasId: fakultas[0]?.id },
+      { name: "Sastra Inggris", fakultasId: fakultas[1]?.id },
       // Add more prodi data as needed
     ],
   });
@@ -117,16 +117,6 @@ async function seedTingkatPrestasi() {
   });
 }
 
-// async function seedStatus() {
-//   await prisma.masterDataStatus.createMany({
-//     data: [
-//       { name: "Status A", backgroundColor: "#000000" },
-//       { name: "Status B", backgroundColor: "#FFFFFF" },
-//       // Add more status data as needed
-//     ],
-//   });
-// }
-
 async function seedDosen() {
   const prodi = await prisma.masterDataProdi.findMany();
   await prisma.dosen.createMany({
@@ -165,35 +155,6 @@ async function seedOrkem() {
   });
 }
 
-// async function seedPrestasiDataTable() {
-//   const users = await prisma.user.findMany(); // Retrieve all users
-//   const dosen = await prisma.dosen.findMany(); // Retrieve all users
-//   const tingkatKejuaraan = await prisma.masterDataTingkatKejuaraan.findMany(); // Retrieve all users
-//   const tingkatPrestasi = await prisma.masterDataTingkatPrestasi.findMany(); // Retrieve all users
-//   const status = await prisma.masterDataStatus.findMany(); // Retrieve all users
-
-//   await prisma.prestasiDataTable.create({
-//     data: {
-//       nama: "Prestasi 1",
-//       noSK: "no-sk-1",
-//       tanggalSK: new Date(),
-//       orkem: "Orkem 1",
-//       kegiatan: "Kegiatan 1",
-//       tanggalKegiatan: new Date(),
-//       penyelenggara: "Penyelenggara 1",
-//       keterangan: "Keterangan 1",
-//       isValidated: false,
-//       validatedAt: new Date(),
-//       tingkatKejuaraanId: tingkatKejuaraan[0]!.id,
-//       tingkatPrestasiId: tingkatPrestasi[0]!.id,
-//       statusId: status[0]!.id,
-//       dosenId: dosen[0]!.id,
-//       users: { connect: [{ id: users[0]?.id }, { id: users[1]?.id }] },
-//       // Connect the first user
-//     },
-//   });
-// }
-
 async function seed() {
   const seedingFunctions = [
     seedFakultas,
@@ -202,7 +163,6 @@ async function seed() {
     seedTingkatKejuaraan,
     seedTingkatPrestasi,
     seedDosen,
-    // seedPrestasiDataTable,
     seedOrkem,
   ];
 

@@ -1,20 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useState } from "react";
+import { customToast } from "~/common/components/ui/toast/showToast";
+import { DELETE_SUCCESS } from "~/common/constants/MESSAGE";
 
-import {
-  CREATE_SUCCESS,
-  DELETE_SUCCESS,
-  UPDATE_SUCCESS,
-} from "~/common/constants/MESSAGE";
-import {
-  DEFAULT_BUTTON_CONFRIM,
-  DEFAULT_MODAL_BUTTON_ACTION,
-  INITIAL_MODAL_BUTTON,
-} from "~/common/constants/ui/BUTTON";
-import { useHeadingTitle } from "~/common/hooks/useHeading";
+import { api } from "~/utils/api";
 
 export type ModalStateType = {
+  id: string | undefined;
   isOpen: boolean;
   confirm: boolean;
   content?: string;
@@ -30,9 +23,11 @@ export type ModalStateType = {
   showButtonDanger: boolean;
   captionButtonDanger?: string;
   detailInfo?: string;
+  loadingButton: boolean;
 };
 
 const INITIAL_STATE = {
+  id: undefined,
   isOpen: false,
   confirm: false,
   success: false,
@@ -47,10 +42,18 @@ const INITIAL_STATE = {
   showButtonDanger: false,
   captionButtonDanger: "",
   detailInfo: undefined,
+  loadingButton: false,
 };
 
 const useNotification = () => {
   const [modalState, setModalState] = useState<ModalStateType>(INITIAL_STATE);
+  const { data: userNotification, refetch: refetchNotification } =
+    api.notification.getUserNotif.useQuery();
+  const { mutate: updateReadNotification } =
+    api.notification.updateNotification.useMutation();
+
+  const { mutate: deleteSingleNotification } =
+    api.notification.deleteSingleNotification.useMutation();
 
   const {
     isOpen,
@@ -58,7 +61,6 @@ const useNotification = () => {
     content,
     success,
     titleContent,
-    successContent,
     showContent,
     captionTitleConfirm,
     showButtonSuccess,
@@ -67,6 +69,7 @@ const useNotification = () => {
     showButtonDanger,
     captionButtonDanger,
     detailInfo,
+    loadingButton
   } = modalState;
 
   const onClose = () => {
@@ -74,12 +77,14 @@ const useNotification = () => {
   };
 
   const onOpen = ({
+    id,
     titleContent,
     content,
     showContent,
     captionButtonDanger,
     detailInfo,
   }: {
+    id: string | undefined;
     titleContent?: string;
     content?: string;
     showContent?: boolean;
@@ -88,6 +93,7 @@ const useNotification = () => {
   }) => {
     setModalState({
       ...modalState,
+      id: id,
       captionTitleConfirm: titleContent,
       titleContent,
       isOpen: true,
@@ -104,22 +110,46 @@ const useNotification = () => {
   const onSubmit = () => {
     setModalState({
       ...modalState,
-      isOpen: false,
-      showContent: true,
-      detailInfo: undefined,
+      loadingButton: true,
     });
+    handleDeleteNotification(modalState.id as string);
+  };
 
-    setTimeout(() => {
-      setModalState({
-        ...modalState,
-        ...INITIAL_MODAL_BUTTON,
-        isOpen: true,
-        success: true,
-        detailInfo: undefined,
-        showButtonConfirm: true,
-        content: successContent,
-      });
-    }, 500);
+  const handleReadMessage = (id: string) => {
+    updateReadNotification(id, {
+      onSuccess: () => {
+        void refetchNotification();
+      },
+      onError: (error: { message: string | undefined }) => {
+        customToast("error", error?.message);
+      },
+    });
+  };
+
+  const handleDeleteNotification = (id: string) => {
+    deleteSingleNotification(id, {
+      onSuccess: () => {
+        void refetchNotification();
+        setModalState({
+          ...modalState,
+          loadingButton: false,
+          isOpen: false,
+          showContent: true,
+          detailInfo: undefined,
+        });
+        customToast("success", DELETE_SUCCESS);
+      },
+      onError: (error: { message: string | undefined }) => {
+        customToast("error", error?.message);
+        setModalState({
+          ...modalState,
+          loadingButton: false,
+          isOpen: false,
+          showContent: true,
+          detailInfo: undefined,
+        });
+      },
+    });
   };
 
   return {
@@ -139,6 +169,9 @@ const useNotification = () => {
     showButtonDanger,
     captionButtonDanger,
     detailInfo,
+    userNotification,
+    handleReadMessage,
+    loadingButton
   };
 };
 

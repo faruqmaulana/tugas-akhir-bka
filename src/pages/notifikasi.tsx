@@ -1,11 +1,19 @@
+/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React from "react";
+import { requireAuth } from "~/common/authentication/requireAuth";
 import Card from "~/common/components/ui/card/Card";
 import NotificationCard from "~/common/components/ui/card/NotificationCard";
+import { EmptyModulePageData } from "~/common/components/ui/empty";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import Modal from "~/common/components/ui/modal/Modal";
 import { DATA_CANT_RECOVER } from "~/common/constants/MESSAGE/index";
 import { useNotification } from "~/common/hooks/core/useNotification";
+import { type AllNotificationType } from "~/server/api/module/notification/notification";
+
+export const getServerSideProps = requireAuth(async (ctx) => {
+  return { props: {} };
+});
 
 const notifikasi = () => {
   const {
@@ -24,7 +32,13 @@ const notifikasi = () => {
     showButtonSuccess,
     success,
     detailInfo,
+    userNotification,
+    handleReadMessage,
+    loadingButton,
   } = useNotification();
+
+  if ((userNotification as AllNotificationType)?.length === 0)
+    return <EmptyModulePageData />;
 
   return (
     <>
@@ -34,35 +48,41 @@ const notifikasi = () => {
           <span className="text-2xl font-bold text-gray-800">
             Semua Notifikasi Anda
           </span>
-          <div className="flex justify-between gap-2">
-            <span
-              className="underline hover:cursor-pointer"
-              onClick={() =>
-                onOpen({
-                  titleContent: "Tandai Semua Notifikasi Sudah Dibaca?",
-                  showContent: false,
-                  content: "Semua Notifikasi Berhasil Ditandai Sudah Dibaca!",
-                  captionButtonDanger: "Oke",
-                })
-              }
-            >
-              Tandai Semua Sudah Dibaca
-            </span>
-            <span
-              className="underline hover:cursor-pointer"
-              onClick={() =>
-                onOpen({
-                  titleContent: "Yakin Ingin Menghapus Semua Notifikasi?",
-                  showContent: true,
-                  content: "Semua Notifikasi Berhasil Dihapus!",
-                })
-              }
-            >
-              Hapus Semua Notifikasi
-            </span>
-          </div>
+          {(userNotification as AllNotificationType) && (
+            <div className="flex justify-between gap-2">
+              <span
+                className="underline hover:cursor-pointer"
+                // onClick={() =>
+                //   onOpen({
+                //     titleContent: "Tandai Semua Notifikasi Sudah Dibaca?",
+                //     showContent: false,
+                //     content: "Semua Notifikasi Berhasil Ditandai Sudah Dibaca!",
+                //     captionButtonDanger: "Oke",
+                //   })
+                // }
+              >
+                Tandai Semua Sudah Dibaca
+              </span>
+              <span
+                className="underline hover:cursor-pointer"
+                // onClick={() =>
+                //   onOpen({
+                //     // titleContent: "Yakin Ingin Menghapus Semua Notifikasi?",
+                //     showContent: true,
+                //     content: "Semua Notifikasi Berhasil Dihapus!",
+                //   })
+                // }
+              >
+                Hapus Semua Notifikasi
+              </span>
+            </div>
+          )}
         </div>
-        <NotificationCard onOpen={onOpen} />
+        <NotificationCard
+          onOpen={onOpen}
+          handleReadMessage={handleReadMessage}
+          userNotification={userNotification as AllNotificationType}
+        />
         <Modal
           isOpen={isOpen}
           content={
@@ -74,6 +94,7 @@ const notifikasi = () => {
               detailInfo={detailInfo}
             />
           }
+          isLoading={loadingButton}
           captionTitleConfirm={captionTitleConfirm}
           onClose={onClose}
           success={success}

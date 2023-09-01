@@ -8,4 +8,3 @@ the algorithm should be:
 6. then status
 7. then dosen
 8. then prestasiDataTable
-

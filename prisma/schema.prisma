@@ -25,6 +25,7 @@ model User {
   prodiId            String?
   activityLog        ActivityLog[]
   Buku               Buku[]
+  NotifMessage       NotifMessage[]
   notification       Notification[]
   PengajuanBeasiswa  PengajuanBeasiswa[]
   prestasiDataTables PengajuanOnUsers[]
@@ -55,11 +56,11 @@ model MasterDataFakultas {
 }
 
 model MasterDataProdi {
-  id         String              @id @default(cuid())
+  id         String             @id @default(cuid())
   name       String
-  fakultasId String?
+  fakultasId String
   Dosen      Dosen[]
-  Fakultas   MasterDataFakultas? @relation(fields: [fakultasId], references: [id])
+  Fakultas   MasterDataFakultas @relation(fields: [fakultasId], references: [id])
   user       User[]
 }
 
@@ -222,23 +223,26 @@ model ActivityLog {
   user                User               @relation(fields: [userId], references: [id])
 }
 
-model NotificationMessage {
+model NotifMessage {
   id           String         @id @default(cuid())
   status       String
   module       String
   moduleId     String
   notifMessage String
   userInfo     String[]
+  createdAt    DateTime       @default(now())
+  userId       String
+  createdBy    User           @relation(fields: [userId], references: [id])
   Notification Notification[]
 }
 
 model Notification {
-  id                    String              @id @default(cuid())
-  readed                Boolean             @default(false)
+  id                    String       @id @default(cuid())
+  readed                Boolean      @default(false)
   notificationMessageId String
   userId                String
-  notificationMessage   NotificationMessage @relation(fields: [notificationMessageId], references: [id])
-  User                  User                @relation(fields: [userId], references: [id])
+  notificationMessage   NotifMessage @relation(fields: [notificationMessageId], references: [id])
+  User                  User         @relation(fields: [userId], references: [id])
 }
 
 enum Role {

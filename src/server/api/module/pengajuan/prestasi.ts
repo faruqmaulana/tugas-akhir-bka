@@ -137,7 +137,29 @@ export const prestasiLombaQuery = createTRPCRouter({
           },
         });
 
+        //** ADD NOTIFICATION MESSAGE */
+        const notificationMessage = await ctx.prisma.notifMessage.create({
+          data: {
+            module: "kejuaraan",
+            status: STATUS.PROCESSED,
+            notifMessage: `Pengajuan Prestasi - ${createPrestasiDataTable.kegiatan}`,
+            moduleId: createPrestasiDataTable.id,
+            userId: ctx.session.user.userId,
+            userInfo: users.map((val) => {
+              return `${val.label} - ${val.isKetua ? "Ketua Tim" : "Anggota"}`;
+            }),
+          },
+        });
+
         //** ADD NOTIFICATION */
+        await ctx.prisma.notification.createMany({
+          data: users.map((val) => {
+            return {
+              notificationMessageId: notificationMessage.id,
+              userId: val.value,
+            };
+          }),
+        });
 
         return {
           message: ADD_PRESTASI_LOMBA_SUCCESS,

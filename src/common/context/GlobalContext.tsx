@@ -8,6 +8,7 @@ import React, {
 } from "react";
 
 import {
+  ActionReducer,
   type ActionType,
   type GlobalState,
 } from "../types/context/GlobalContextType";
@@ -15,17 +16,17 @@ import {
 // Initial state
 const initialState: GlobalState = {
   user: undefined,
-  something: undefined,
+  notification: undefined,
   // Initial global state values here
 };
 
 // Reducer function
 const reducer = (state: GlobalState, action: ActionType): GlobalState => {
   switch (action.type) {
-    case "UPDATE_USER":
+    case ActionReducer.UPDATE_USER:
       return { ...state, user: action.payload };
-    case "UPDATE_USER":
-      return { ...state, user: action.payload };
+    case ActionReducer.UPDATE_NOTIFICATION_COUNT:
+      return { ...state, notification: action.payload };
     // Add more cases for different actions
     default:
       return state;

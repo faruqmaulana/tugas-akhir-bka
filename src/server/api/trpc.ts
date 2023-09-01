@@ -7,6 +7,8 @@
  * need to use are documented accordingly near the end.
  */
 
+import { type PrismaClient, type Prisma } from "@prisma/client";
+import { type DefaultArgs } from "@prisma/client/runtime";
 import { initTRPC, TRPCError } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { type Session } from "next-auth";
@@ -128,3 +130,8 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+
+export type trpcContextType =  {
+  session: Session | null;
+  prisma: PrismaClient<Prisma.PrismaClientOptions, never, Prisma.RejectOnNotFound | undefined, DefaultArgs>;
+};
