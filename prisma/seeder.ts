@@ -1,9 +1,4 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import { PrismaClient, Role } from "@prisma/client";
 import { hash } from "argon2";
 
@@ -23,9 +18,9 @@ async function seedProdi() {
   const fakultas = await prisma.masterDataFakultas.findMany(); // Retrieve all users
   await prisma.masterDataProdi.createMany({
     data: [
-      { name: "Teknik Informatika", fakultasId: fakultas[0]?.id },
-      { name: "Teknik Mesin", fakultasId: fakultas[0]?.id },
-      { name: "Sastra Inggris", fakultasId: fakultas[1]?.id },
+      { name: "Teknik Informatika", fakultasId: fakultas[0]?.id as string },
+      { name: "Teknik Mesin", fakultasId: fakultas[0]?.id as string },
+      { name: "Sastra Inggris", fakultasId: fakultas[1]?.id as string },
       // Add more prodi data as needed
     ],
   });
