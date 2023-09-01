@@ -44,7 +44,9 @@ const Button = (props: ButtonProps) => {
 
   return (
     <button
-      className={styleButton.join(" ")}
+      className={`${styleButton.join(" ")} ${
+        isDisabled || isLoading ? "cursor-not-allowed" : ""
+      }`}
       type={isSubmit ? "submit" : "button"}
       form={buttonForm}
       disabled={isDisabled || isLoading}

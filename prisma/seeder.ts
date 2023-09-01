@@ -65,7 +65,7 @@ async function seedUsers() {
       },
       {
         name: "angga",
-        npm: "angga",
+        npm: "angga123",
         alamat: "Alamat 3",
         semester: "Semester 2",
         phone: "08357857848",

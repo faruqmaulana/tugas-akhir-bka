@@ -34,6 +34,8 @@ const useMultiSelectUser = () => {
   useEffect(() => {
     if (user || mahasiswa) {
       if (mahasiswa?.length > 0) return;
+      if (mahasiswaPayload?.length > 0) return;
+
       const tempUser = user as CustomReactSelectOptionsType[];
       setMahasiswa(
         tempUser?.filter(

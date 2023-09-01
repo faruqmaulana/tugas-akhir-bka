@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { customToast } from "~/common/components/ui/toast/showToast";
 import { DELETE_SUCCESS } from "~/common/constants/MESSAGE";
+import { type AllNotificationType } from "~/server/api/module/notification/notification";
 
 import { api } from "~/utils/api";
 
@@ -54,6 +57,9 @@ const useNotification = () => {
 
   const { mutate: deleteSingleNotification } =
     api.notification.deleteSingleNotification.useMutation();
+  const [loadingState, setLoadingState] = useState<{ isLoading: boolean }[]>(
+    []
+  );
 
   const {
     isOpen,
@@ -69,7 +75,7 @@ const useNotification = () => {
     showButtonDanger,
     captionButtonDanger,
     detailInfo,
-    loadingButton
+    loadingButton,
   } = modalState;
 
   const onClose = () => {
@@ -115,10 +121,18 @@ const useNotification = () => {
     handleDeleteNotification(modalState.id as string);
   };
 
-  const handleReadMessage = (id: string) => {
+  const handleReadMessage = (id: string, index: number) => {
+    const tempLoading = [...loadingState];
+    tempLoading[index]!.isLoading = !tempLoading[index]!.isLoading;
+    setLoadingState(tempLoading);
+
     updateReadNotification(id, {
       onSuccess: () => {
         void refetchNotification();
+        setTimeout(() => {
+          tempLoading[index]!.isLoading = !tempLoading[index]!.isLoading;
+          setLoadingState(tempLoading);
+        }, 500);
       },
       onError: (error: { message: string | undefined }) => {
         customToast("error", error?.message);
@@ -152,6 +166,18 @@ const useNotification = () => {
     });
   };
 
+  useEffect(() => {
+    if (userNotification) {
+      setLoadingState(
+        (userNotification as AllNotificationType).map((_val, index) => {
+          return {
+            isLoading: loadingState[index]?.isLoading || false,
+          };
+        })
+      );
+    }
+  }, [userNotification]);
+
   return {
     isOpen,
     titleContent,
@@ -171,7 +197,8 @@ const useNotification = () => {
     detailInfo,
     userNotification,
     handleReadMessage,
-    loadingButton
+    loadingButton,
+    loadingState,
   };
 };
 

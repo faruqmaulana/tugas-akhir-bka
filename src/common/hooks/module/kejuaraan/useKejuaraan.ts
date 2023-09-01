@@ -1,9 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
@@ -15,6 +9,7 @@ import {
 } from "~/common/schemas/module/pengajuan/pengajuan-prestasi.shema";
 import { useMultiSelectUser } from "~/common/hooks/module/global/useMultiSelectUser";
 import { api } from "~/utils/api";
+import { useMainLayout } from "../../layout/useMainLayout";
 
 const useKejuaraan = () => {
   const {
@@ -24,6 +19,8 @@ const useKejuaraan = () => {
     handleDeleteSelectedMahasiswa,
     handleSelectMultipleUser,
   } = useMultiSelectUser();
+
+  const { refetchNotification } = useMainLayout();
 
   const router = useRouter();
   const { data: dosen } = api.dosen.getAllDosen.useQuery();
@@ -54,6 +51,7 @@ const useKejuaraan = () => {
     setLoading(true);
     createPrestasiLomba(userPayload, {
       onSuccess: (data) => {
+        void refetchNotification();
         customToast("success", data?.message);
         setLoading(false);
         void router.push("/module/kejuaraan");

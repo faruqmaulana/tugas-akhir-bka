@@ -1,6 +1,11 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-const Spinner = (props: any) => {
+export type SpinnerType = {
+  width?: string;
+  height?: string;
+  fill?: string;
+  className?: string;
+};
+
+const Spinner = (props: SpinnerType) => {
   const {
     width = "24",
     height = "24",

@@ -15,16 +15,19 @@ import { Anchor } from "~/common/components/ui/anchor/.";
 import { StatusBagde } from "~/common/components/ui/badge/.";
 
 const NotificationCard = ({
-  onOpen,
+  loadingState,
   userNotification,
+  onOpen,
   handleReadMessage,
 }: {
-  onOpen: (args: any) => void;
-  handleReadMessage: (args: string) => void;
+  loadingState: { isLoading: boolean }[];
   userNotification: AllNotificationType;
+  onOpen: (args: any) => void;
+  handleReadMessage: (id: string, index: number) => void;
 }) => {
+  console.log("loadingState", loadingState);
   if (!userNotification) return <Spinner />;
-  return userNotification?.map((val) => (
+  return userNotification?.map((val, index) => (
     <div
       key={val.id}
       className={`flex flex-col gap-3 rounded-md px-5 py-3 ${
@@ -41,15 +44,17 @@ const NotificationCard = ({
             <p className="mb-2 font-semibold">*Dokumen diajukan</p>
             <table>
               <tr>
-                <td className="font-semibold">Oleh : </td>
+                <td className="font-semibold">Oleh&nbsp;</td>
                 <td>
+                  :&nbsp;
                   {val.notificationMessage.createdBy.name} (
                   {val.notificationMessage.createdBy.prodi?.name})
                 </td>
               </tr>
               <tr>
-                <td className="font-semibold">Pada : </td>
+                <td className="font-semibold">Pada&nbsp;</td>
                 <td>
+                  :&nbsp;
                   {changeDateFormat(val.notificationMessage.createdAt, true)}
                 </td>
               </tr>
@@ -59,10 +64,22 @@ const NotificationCard = ({
         {!val.readed && (
           <button
             type="button"
-            className="text-sm underline hover:cursor-pointer"
-            onClick={() => handleReadMessage(val.id)}
+            disabled={loadingState[index]?.isLoading}
+            className={`relative text-sm underline ${
+              loadingState[index]?.isLoading
+                ? "cursor-not-allowed"
+                : "cursor-pointer"
+            }`}
+            onClick={() => handleReadMessage(val.id, index)}
           >
             Tandai Sudah Dibaca
+            {loadingState[index]?.isLoading && (
+              <Spinner
+                width="15"
+                height="15"
+                className="absolute -left-5 -top-1 !text-white"
+              />
+            )}
           </button>
         )}
       </div>

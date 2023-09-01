@@ -12,8 +12,11 @@ const useMainLayout = () => {
   const { state, dispatch } = useGlobalContext();
   const [showAside, setShowAside] = useState<boolean>(true);
   const { data: user, isLoading } = api.user.getUserProfile.useQuery();
-  const { data: userNotification, isLoading: loadingNotification } =
-    api.notification.getUserNotif.useQuery();
+  const {
+    data: userNotification,
+    isLoading: loadingNotification,
+    refetch: refetchNotification,
+  } = api.notification.getUserNotif.useQuery();
 
   useEffect(() => {
     if (!isLoading && user && !loadingNotification && userNotification) {
@@ -34,7 +37,7 @@ const useMainLayout = () => {
   const userData = state?.user;
   const userNotif = state?.notification;
 
-  return { showAside, setShowAside, userData, userNotif };
+  return { showAside, setShowAside, userData, userNotif, refetchNotification };
 };
 
 export { useMainLayout };

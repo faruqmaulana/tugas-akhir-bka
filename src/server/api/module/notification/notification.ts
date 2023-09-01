@@ -15,14 +15,16 @@ export const notificationQuery = createTRPCRouter({
   //** GET ALL PRODI */
   getUserNotif: protectedProcedure.query(async ({ ctx }) => {
     try {
-      return (await ctx.prisma.notification.findMany({
-        where: { userId: ctx.session.user.userId },
-        include: {
-          notificationMessage: {
-            include: { createdBy: { select: userQuery } },
+      return (
+        await ctx.prisma.notification.findMany({
+          where: { userId: ctx.session.user.userId },
+          include: {
+            notificationMessage: {
+              include: { createdBy: { select: userQuery } },
+            },
           },
-        },
-      })) as AllNotificationType;
+        })
+      ).reverse() as AllNotificationType;
     } catch (error) {
       return error;
     }

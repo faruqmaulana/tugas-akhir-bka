@@ -35,6 +35,7 @@ const notifikasi = () => {
     userNotification,
     handleReadMessage,
     loadingButton,
+    loadingState
   } = useNotification();
 
   if ((userNotification as AllNotificationType)?.length === 0)
@@ -81,6 +82,7 @@ const notifikasi = () => {
         <NotificationCard
           onOpen={onOpen}
           handleReadMessage={handleReadMessage}
+          loadingState={loadingState}
           userNotification={userNotification as AllNotificationType}
         />
         <Modal
