@@ -16,6 +16,7 @@ Table User {
   prodiId String
   activityLog ActivityLog [not null]
   Buku Buku [not null]
+  notification Notification [not null]
   PengajuanBeasiswa PengajuanBeasiswa [not null]
   prestasiDataTables PengajuanOnUsers [not null]
   prodi MasterDataProdi
@@ -96,7 +97,6 @@ Table PrestasiDataTable {
   updatedAt DateTime [default: `now()`]
   status String [not null, default: 'Sedang Diproses']
   activityLog ActivityLog [not null]
-  notification Notification [not null]
   users PengajuanOnUsers [not null]
   dosen Dosen [not null]
   lampiran LampiranData [not null]
@@ -136,7 +136,6 @@ Table PengajuanPKM {
   status String [not null, default: 'Sedang Diproses']
   tanggalKegiatan DateTime [not null]
   activityLog ActivityLog [not null]
-  notification Notification [not null]
   users PengajuanOnUsers [not null]
   dosen Dosen [not null]
 
@@ -154,7 +153,6 @@ Table PengajuanBeasiswa {
   userId String [not null]
   status String [not null]
   activityLog ActivityLog [not null]
-  notification Notification [not null]
   user User [not null]
 }
 
@@ -178,7 +176,6 @@ Table PatenAndHakiTable {
   isValidated Boolean [not null, default: false]
   jenis PatenAndHaki [not null]
   activityLog ActivityLog [not null]
-  notification Notification [not null]
   PengajuanOnUsers PengajuanOnUsers [not null]
 
   Note: '=== PENGAJUAN LUARAN TABLE === ///'
@@ -198,7 +195,6 @@ Table Buku {
   status String
   activityLog ActivityLog [not null]
   user User [not null]
-  notification Notification [not null]
 }
 
 Table ActivityLog {
@@ -220,19 +216,23 @@ Table ActivityLog {
   user User [not null]
 }
 
+Table NotificationMessage {
+  id String [pk]
+  status String [not null]
+  module String [not null]
+  moduleId String [not null]
+  notifMessage String [not null]
+  userInfo String[] [not null]
+  Notification Notification [not null]
+}
+
 Table Notification {
   id String [pk]
   readed Boolean [not null, default: false]
-  prestasiDataTableId String
-  PatenAndHakiTableId String
-  bukuId String
-  pengajuanPKMId String
-  pengajuanBeasiswaId String
-  PatenAndHakiTable PatenAndHakiTable
-  Buku Buku
-  PengajuanBeasiswa PengajuanBeasiswa
-  PengajuanPKM PengajuanPKM
-  PrestasiDataTable PrestasiDataTable
+  notificationMessageId String [not null]
+  userId String [not null]
+  notificationMessage NotificationMessage [not null]
+  User User [not null]
 }
 
 Enum Role {
@@ -289,12 +289,6 @@ Ref: ActivityLog.prestasiDataTableId > PrestasiDataTable.id
 
 Ref: ActivityLog.userId > User.id
 
-Ref: Notification.PatenAndHakiTableId > PatenAndHakiTable.id
+Ref: Notification.notificationMessageId > NotificationMessage.id
 
-Ref: Notification.bukuId > Buku.id
-
-Ref: Notification.pengajuanBeasiswaId > PengajuanBeasiswa.id
-
-Ref: Notification.pengajuanPKMId > PengajuanPKM.id
-
-Ref: Notification.prestasiDataTableId > PrestasiDataTable.id
+Ref: Notification.userId > User.id

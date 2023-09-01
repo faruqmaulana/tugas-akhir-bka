@@ -1,13 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React from "react";
-import TrashIcon from "~/common/components/svg/TrashIcon";
-import { Button } from "~/common/components/ui/button/Button";
-import ViewDetailButton from "~/common/components/ui/button/ViewDetailButton";
 import Card from "~/common/components/ui/card/Card";
+import NotificationCard from "~/common/components/ui/card/NotificationCard";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import Modal from "~/common/components/ui/modal/Modal";
 import { DATA_CANT_RECOVER } from "~/common/constants/MESSAGE/index";
-import { NOTIFICATION } from "~/common/constants/NOTIFICATION";
 import { useNotification } from "~/common/hooks/core/useNotification";
 
 const notifikasi = () => {
@@ -65,59 +62,7 @@ const notifikasi = () => {
             </span>
           </div>
         </div>
-        {NOTIFICATION.map((val) => (
-          <div
-            key={val.id}
-            className={`flex flex-col gap-3 rounded-md px-5 py-3 ${
-              !val.isReaded ? "bg-slate-200" : "border-2"
-            }`}
-          >
-            <div className="flex justify-between">
-              <div
-                className="rounded-full px-2 text-sm font-semibold opacity-95"
-                style={{ backgroundColor: val.color }}
-              >
-                {val.status}
-              </div>
-              {!val.isReaded && (
-                <span className="text-sm underline hover:cursor-pointer">
-                  Tandai Sudah Dibaca
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col">
-              <h2 className="text-xl font-bold">
-                {val.name}
-                {val.detail !== "" ? ` - ${val.detail}` : ""}
-              </h2>
-              <p className="font-semibold">
-                {val.nama_mahasiswa}&nbsp;-&nbsp;{val.prodi}
-              </p>
-              <div className="mt-2 flex justify-between">
-                <p className="text-sm">{val.createdAt}</p>
-                <div className="flex justify-between gap-2">
-                  <ViewDetailButton />
-                  <Button
-                    isDanger
-                    isSmall
-                    className="flex w-fit items-center gap-2 !rounded-full text-center"
-                    onClick={() =>
-                      onOpen({
-                        showContent: true,
-                        detailInfo: `(${val.name} ${
-                          val.detail !== "" ? ` - ${val.detail}` : ""
-                        })`,
-                        content: "Data Berhasil Dihapus!",
-                      })
-                    }
-                  >
-                    <TrashIcon color="#FFFFFF" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+        <NotificationCard onOpen={onOpen} />
         <Modal
           isOpen={isOpen}
           content={

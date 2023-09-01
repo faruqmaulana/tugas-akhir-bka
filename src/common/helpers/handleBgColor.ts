@@ -8,6 +8,8 @@ export const handleBgColor = (status: string): string => {
     return "border border-orange-500 bg-orange-50 text-orange-600";
   if (status === "Sedang Diproses")
     return "border border-yellow-500 bg-yellow-50 text-yellow-600";
+  if (status === "Baru")
+    return "border border-indigo-500 bg-indigo-50 text-indigo-600";
 
   return "";
 };
