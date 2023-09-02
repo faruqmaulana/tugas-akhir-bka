@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React from "react";
 import { Button, ViewDetailButton } from "~/common/components/ui/button/.";
@@ -116,7 +117,7 @@ const NotificationCard = ({
                 onOpen({
                   id: val.id,
                   showContent: true,
-                  detailInfo: val.notificationMessage.description as string,
+                  detailInfo: val.notificationMessage.description,
                   content: "Data Berhasil Dihapus!",
                 })
               }

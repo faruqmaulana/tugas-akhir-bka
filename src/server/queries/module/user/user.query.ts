@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import { type GetResult } from "@prisma/client/runtime";
 import { type Prisma } from "@prisma/client";
