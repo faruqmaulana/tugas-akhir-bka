@@ -26,7 +26,7 @@ const StatusBadge = (props: StatusBadgeType) => {
         ${handleBgColor(status)}
         ${sizeStyle}`}
     >
-      {status}
+      <p className="w-max">{status}</p>
     </div>
   );
 };

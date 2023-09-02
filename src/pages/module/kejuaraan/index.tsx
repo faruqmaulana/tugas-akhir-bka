@@ -3,13 +3,13 @@ import { type MRT_ColumnDef } from "material-react-table";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { requireAuth } from "~/common/authentication/requireAuth";
+import StatusBadge from "~/common/components/ui/badge/StatusBagde";
 import ViewDetailButton from "~/common/components/ui/button/ViewDetailButton";
 import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import BaseTable from "~/common/components/ui/table/BaseTable";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
 import { type KejuaraanData } from "~/common/constants/DUMMY_KEJUARAAN";
-import { handleBgColor } from "~/common/helpers/handleBgColor";
 import { useKejuaraan } from "~/common/hooks/module/kejuaraan/useKejuaraan";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
@@ -97,14 +97,7 @@ const UserManagement = () => {
         header: "Status",
         accessorKey: "status",
         enableClickToCopy: true,
-        Cell: ({ cell }) => (
-          <div
-            className={`rounded-full px-2 py-1 text-xs font-semibold opacity-95 
-            ${handleBgColor(cell.getValue() as string)}`}
-          >
-            {cell.getValue() as string}
-          </div>
-        ),
+        Cell: ({ cell }) => <StatusBadge status={cell.getValue() as string} />,
       },
       {
         header: "Action",

@@ -33,6 +33,7 @@ export const pengajuanPrestasiForm = z
     fotoPenyerahanPiala: z.string(),
     undanganKejuaraan: z.string(),
     dokumenPendukung: z.string(),
+    currentUserName: z.string(),
     custom: z.string().optional(),
   })
   .refine((data) => {

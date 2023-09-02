@@ -35,7 +35,7 @@ const notifikasi = () => {
     userNotification,
     handleReadMessage,
     loadingButton,
-    loadingState
+    loadingState,
   } = useNotification();
 
   if ((userNotification as AllNotificationType)?.length === 0)
@@ -45,12 +45,12 @@ const notifikasi = () => {
     <>
       <PageHeading />
       <Card className="flex flex-col gap-5">
-        <div className="flex justify-between border-b-2 pb-1">
+        <div className="flex flex-wrap justify-between border-b-2 pb-1">
           <span className="text-2xl font-bold text-gray-800">
             Semua Notifikasi Anda
           </span>
           {(userNotification as AllNotificationType) && (
-            <div className="flex justify-between gap-2">
+            <div className="flex flex-wrap justify-between gap-2">
               <span
                 className="underline hover:cursor-pointer"
                 // onClick={() =>

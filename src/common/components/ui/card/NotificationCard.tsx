@@ -31,7 +31,7 @@ const NotificationCard = ({
     <div
       key={val.id}
       className={`flex flex-col gap-3 rounded-md px-5 py-3 ${
-        !val.readed ? "bg-slate-200" : "border-2"
+        !val.readed ? "bg-slate-200" : "border-2 bg-white"
       }`}
     >
       <div className="flex justify-between">
@@ -41,7 +41,7 @@ const NotificationCard = ({
             <InfoIcon />
           </PopoverTrigger>
           <PopoverContent className="rounded-md border-red-300 px-3 text-xs md:text-base">
-            <p className="mb-2 font-semibold">*Dokumen diajukan</p>
+            <p className="font-semibold">*Dokumen diajukan</p>
             <table>
               <tr>
                 <td className="font-semibold">Oleh&nbsp;</td>
@@ -59,6 +59,13 @@ const NotificationCard = ({
                 </td>
               </tr>
             </table>
+            <p className="mt-3 font-semibold">*Detail info</p>
+            {val.notificationMessage.userInfo.map((subval, index) => (
+              <p key={subval}>
+                {subval.split("-")[0]} sebagai
+                {subval.split("-")[1]}
+              </p>
+            ))}
           </PopoverContent>
         </Popover>
         {!val.readed && (
@@ -85,16 +92,13 @@ const NotificationCard = ({
       </div>
       <div className="flex flex-col">
         <h2 className="text-xl font-bold">
-          {val.notificationMessage.notifMessage}
+          {val.notificationMessage.description}
         </h2>
-        <div className="flex flex-wrap">
-          {val.notificationMessage.userInfo.map((subval, index) => (
-            <p key={subval} className="font-semibold">
-              {(index ? ", " : "") + subval}
-            </p>
-          ))}
-        </div>
-        <div className="mt-2 flex justify-between">
+        <p className="font-semibold">
+          {val.notificationMessage.createdBy.name} -&nbsp;
+          {val.notificationMessage.createdBy.prodi?.name}
+        </p>
+        <div className="mt-2 flex flex-wrap justify-between gap-1">
           <p className="text-sm">
             {changeDateFormat(val.notificationMessage.createdAt)}
           </p>
@@ -112,7 +116,7 @@ const NotificationCard = ({
                 onOpen({
                   id: val.id,
                   showContent: true,
-                  detailInfo: val.notificationMessage.notifMessage,
+                  detailInfo: val.notificationMessage.description as string,
                   content: "Data Berhasil Dihapus!",
                 })
               }

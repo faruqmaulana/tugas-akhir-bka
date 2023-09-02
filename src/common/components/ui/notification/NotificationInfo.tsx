@@ -8,14 +8,17 @@ import {
 import Link from "next/link";
 import { useGlobalContext } from "~/common/context/GlobalContext";
 import { StatusBagde } from "../badge";
-import capitalizeFirstLetter from "~/common/helpers/capitalizeFirstLetter";
 import { Anchor } from "../anchor";
 import { EmptyData } from "../empty";
+import { useCurrentUser } from "~/common/hooks/module/profile";
 
 const NotificationInfo = () => {
   const {
     state: { notification },
   } = useGlobalContext();
+
+  const { isAdmin } = useCurrentUser();
+
   const haveNotification = notification && notification.length !== 0;
   const unreadNotif = notification?.filter((item) => !item.readed)?.length;
   const activeNotification = (unreadNotif as number) > 0;
@@ -59,10 +62,14 @@ const NotificationInfo = () => {
                 key={val.notificationMessage.module}
                 className="flex cursor-pointer flex-row items-center justify-between gap-2 p-2 transition-all duration-200 hover:bg-gray-200"
               >
-                <span className="truncate text-sm font-semibold">
-                  Pengajuan -{" "}
-                  {capitalizeFirstLetter(val.notificationMessage.module)}
-                </span>
+                <div
+                  className="text-sm"
+                  dangerouslySetInnerHTML={{
+                    __html: isAdmin
+                      ? (val.notificationMessage.forAdminMessage as string)
+                      : (val.notificationMessage.forUserMessage as string),
+                  }}
+                />
                 <StatusBagde
                   size="sm"
                   status={val.notificationMessage.status}

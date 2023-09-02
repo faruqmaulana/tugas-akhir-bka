@@ -10,6 +10,7 @@ import {
 import { useMultiSelectUser } from "~/common/hooks/module/global/useMultiSelectUser";
 import { api } from "~/utils/api";
 import { useMainLayout } from "../../layout/useMainLayout";
+import { useCurrentUser } from "../profile";
 
 const useKejuaraan = () => {
   const {
@@ -20,8 +21,8 @@ const useKejuaraan = () => {
     handleSelectMultipleUser,
   } = useMultiSelectUser();
 
-  const { refetchNotification } = useMainLayout();
-
+  const { refetchNotification, userData } = useMainLayout();
+  const { currentUserName } = useCurrentUser();
   const router = useRouter();
   const { data: dosen } = api.dosen.getAllDosen.useQuery();
   const { data: orkem } = api.orkem.getAllOrkem.useQuery();
@@ -45,7 +46,8 @@ const useKejuaraan = () => {
 
   useEffect(() => {
     setValue("users", mahasiswaPayload);
-  }, [mahasiswaPayload, setValue]);
+    setValue("currentUserName", currentUserName as string);
+  }, [mahasiswaPayload, currentUserName, setValue]);
 
   const onSubmit = useCallback((userPayload: IPengajuanPrestasiForm) => {
     setLoading(true);
@@ -185,6 +187,11 @@ const useKejuaraan = () => {
       type: "text",
       register: { ...register("dokumenPendukung") },
       error: errors.custom?.message,
+    },
+    {
+      type: "hidden",
+      register: { ...register("currentUserName") },
+      error: errors.currentUserName?.message,
     },
   ];
 

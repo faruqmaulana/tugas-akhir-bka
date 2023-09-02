@@ -224,16 +224,18 @@ model ActivityLog {
 }
 
 model NotifMessage {
-  id           String         @id @default(cuid())
-  status       String
-  module       String
-  moduleId     String
-  notifMessage String
-  userInfo     String[]
-  createdAt    DateTime       @default(now())
-  userId       String
-  createdBy    User           @relation(fields: [userId], references: [id])
-  Notification Notification[]
+  id              String         @id @default(cuid())
+  status          String
+  module          String
+  moduleId        String
+  description     String
+  forUserMessage  String?
+  forAdminMessage String?
+  userInfo        String[]
+  createdAt       DateTime       @default(now())
+  userId          String
+  createdBy       User           @relation(fields: [userId], references: [id])
+  Notification    Notification[]
 }
 
 model Notification {

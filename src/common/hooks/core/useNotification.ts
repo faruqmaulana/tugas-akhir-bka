@@ -144,14 +144,16 @@ const useNotification = () => {
     deleteSingleNotification(id, {
       onSuccess: () => {
         void refetchNotification();
-        setModalState({
-          ...modalState,
-          loadingButton: false,
-          isOpen: false,
-          showContent: true,
-          detailInfo: undefined,
-        });
-        customToast("success", DELETE_SUCCESS);
+        setTimeout(() => {
+          setModalState({
+            ...modalState,
+            loadingButton: false,
+            isOpen: false,
+            showContent: true,
+            detailInfo: undefined,
+          });
+          customToast("success", DELETE_SUCCESS);
+        }, 500);
       },
       onError: (error: { message: string | undefined }) => {
         customToast("error", error?.message);

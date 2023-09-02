@@ -9,6 +9,11 @@ import { type Prisma } from "@prisma/client";
 import { approvePrestasiForm } from "~/common/schemas/module/pengajuan/approve-prestasi.schema";
 import { STATUS } from "~/common/enums/STATUS";
 import { changeDateFormat } from "~/common/helpers/changeDateFormat";
+import {
+  MOUDLE_KEJUARAAN,
+  PENGAJUAN_MESSAGE_BY_ADMIN_SIDE,
+  PENGAJUAN_MESSAGE_BY_USER_SIDE,
+} from "~/common/constants/MESSAGE";
 
 export type SuccessPengajuanOnUsersType = {
   message: string;
@@ -88,6 +93,7 @@ export const prestasiLombaQuery = createTRPCRouter({
 
           // PENGAJUAN ON USER PAYLOAD
           users,
+          currentUserName,
         } = input;
 
         // ** CREATE A LAMPIRAN DATA FIRST TO GET A LAMPIRAN ID
@@ -142,21 +148,35 @@ export const prestasiLombaQuery = createTRPCRouter({
           data: {
             module: "kejuaraan",
             status: STATUS.PROCESSED,
-            notifMessage: `Pengajuan Prestasi - ${createPrestasiDataTable.kegiatan}`,
+            description: `Pengajuan Prestasi - ${createPrestasiDataTable.kegiatan}`,
             moduleId: createPrestasiDataTable.id,
             userId: ctx.session.user.userId,
+            forUserMessage: PENGAJUAN_MESSAGE_BY_USER_SIDE(MOUDLE_KEJUARAAN),
+            forAdminMessage: PENGAJUAN_MESSAGE_BY_ADMIN_SIDE(
+              currentUserName,
+              MOUDLE_KEJUARAAN
+            ),
             userInfo: users.map((val) => {
               return `${val.label} - ${val.isKetua ? "Ketua Tim" : "Anggota"}`;
             }),
           },
         });
 
-        //** ADD NOTIFICATION */
+        //** ADD NOTIFICATION IN ADMIN */
+        const admin = await ctx.prisma.user.findMany({
+          where: {
+            role: "ADMIN",
+          },
+        });
+
+        const mergeusers = [...admin, ...users];
+
+        //** ADD NOTIFICATION IN RELATED USERS AND ADMINS */
         await ctx.prisma.notification.createMany({
-          data: users.map((val) => {
+          data: mergeusers.map((val: { value?: string; id?: string }) => {
             return {
               notificationMessageId: notificationMessage.id,
-              userId: val.value,
+              userId: (val.value || val.id) as string,
             };
           }),
         });

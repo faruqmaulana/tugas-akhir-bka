@@ -42,7 +42,7 @@ async function seedUsers() {
         role: Role.ADMIN,
       },
       {
-        name: "faruqlulus",
+        name: "M. Faruq Maulana",
         npm: "faruqlulus",
         alamat: "Alamat 2",
         semester: "Semester 2",
