@@ -1,13 +1,36 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useEffect, useState } from "react";
 import { customToast } from "~/common/components/ui/toast/showToast";
-import { DELETE_SUCCESS } from "~/common/constants/MESSAGE";
+import {
+  DATA_SUCCESSFULLY_DELETED,
+  DELETE_ALL_MODULE,
+  MODULE_NOTIFIKASI,
+  UPDATE_ALL_MODULE,
+} from "~/common/constants/MESSAGE";
 import { type AllNotificationType } from "~/server/api/module/notification/notification";
 
 import { api } from "~/utils/api";
+
+export enum NOTIFICATION_ACTION {
+  DELETE_NOTIFICATION = "DELETE_NOTIFICATION",
+  MARK_ALL_NOTIFICATION = "MARK_ALL_NOTIFICATION",
+  DELETE_ALL_NOTIFICATION = "DELETE_ALL_NOTIFICATION",
+}
+
+export type onOpenNotificationType = {
+  id?: string | undefined;
+  titleContent?: string;
+  content?: string;
+  showContent?: boolean;
+  captionButtonDanger?: string;
+  detailInfo?: string;
+  action?:
+    | "DELETE_NOTIFICATION"
+    | "DELETE_ALL_NOTIFICATION"
+    | "MARK_ALL_NOTIFICATION"
+    | undefined;
+};
 
 export type ModalStateType = {
   id: string | undefined;
@@ -27,9 +50,14 @@ export type ModalStateType = {
   captionButtonDanger?: string;
   detailInfo?: string;
   loadingButton: boolean;
+  action?:
+    | "DELETE_NOTIFICATION"
+    | "DELETE_ALL_NOTIFICATION"
+    | "MARK_ALL_NOTIFICATION"
+    | undefined;
 };
 
-const INITIAL_STATE = {
+const INITIAL_STATE: ModalStateType = {
   id: undefined,
   isOpen: false,
   confirm: false,
@@ -46,6 +74,7 @@ const INITIAL_STATE = {
   captionButtonDanger: "",
   detailInfo: undefined,
   loadingButton: false,
+  action: undefined,
 };
 
 const useNotification = () => {
@@ -54,9 +83,11 @@ const useNotification = () => {
     api.notification.getUserNotif.useQuery();
   const { mutate: updateReadNotification } =
     api.notification.updateNotification.useMutation();
-
   const { mutate: deleteSingleNotification } =
     api.notification.deleteSingleNotification.useMutation();
+  const { mutate: actionToAllNotification } =
+    api.notification.actionToAllNotification.useMutation();
+
   const [loadingState, setLoadingState] = useState<{ isLoading: boolean }[]>(
     []
   );
@@ -82,21 +113,17 @@ const useNotification = () => {
     setModalState(INITIAL_STATE);
   };
 
-  const onOpen = ({
-    id,
-    titleContent,
-    content,
-    showContent,
-    captionButtonDanger,
-    detailInfo,
-  }: {
-    id: string | undefined;
-    titleContent?: string;
-    content?: string;
-    showContent?: boolean;
-    captionButtonDanger?: string;
-    detailInfo?: string;
-  }) => {
+  const onOpen = (props: onOpenNotificationType) => {
+    const {
+      id,
+      titleContent,
+      content,
+      showContent,
+      captionButtonDanger,
+      detailInfo,
+      action,
+    } = props;
+
     setModalState({
       ...modalState,
       id: id,
@@ -110,6 +137,7 @@ const useNotification = () => {
       showContent,
       captionButtonDanger: captionButtonDanger,
       detailInfo,
+      action,
     });
   };
 
@@ -118,7 +146,43 @@ const useNotification = () => {
       ...modalState,
       loadingButton: true,
     });
-    handleDeleteNotification(modalState.id as string);
+
+    if (modalState.action === NOTIFICATION_ACTION.MARK_ALL_NOTIFICATION) {
+      actionToAllNotification(NOTIFICATION_ACTION.MARK_ALL_NOTIFICATION, {
+        onSuccess: () => {
+          void refetchNotification();
+          customToast("success", UPDATE_ALL_MODULE(MODULE_NOTIFIKASI));
+          setModalState(INITIAL_STATE);
+        },
+        onError: (error: { message: string | undefined }) => {
+          customToast("error", error?.message);
+          setModalState(INITIAL_STATE);
+        },
+      });
+      return;
+    }
+
+    if (modalState.action === NOTIFICATION_ACTION.DELETE_ALL_NOTIFICATION) {
+      actionToAllNotification(NOTIFICATION_ACTION.DELETE_ALL_NOTIFICATION, {
+        onSuccess: () => {
+          void refetchNotification();
+          customToast("success", DELETE_ALL_MODULE(MODULE_NOTIFIKASI));
+          setModalState(INITIAL_STATE);
+        },
+        onError: (error: { message: string | undefined }) => {
+          customToast("error", error?.message);
+          setModalState(INITIAL_STATE);
+        },
+      });
+      return;
+    }
+
+    if (modalState.action === NOTIFICATION_ACTION.DELETE_NOTIFICATION) {
+      handleDeleteNotification(modalState.id as string);
+      return;
+    }
+
+    setModalState(INITIAL_STATE);
   };
 
   const handleReadMessage = (id: string, index: number) => {
@@ -145,25 +209,13 @@ const useNotification = () => {
       onSuccess: () => {
         void refetchNotification();
         setTimeout(() => {
-          setModalState({
-            ...modalState,
-            loadingButton: false,
-            isOpen: false,
-            showContent: true,
-            detailInfo: undefined,
-          });
-          customToast("success", DELETE_SUCCESS);
+          setModalState(INITIAL_STATE);
+          customToast("success", DATA_SUCCESSFULLY_DELETED);
         }, 500);
       },
       onError: (error: { message: string | undefined }) => {
         customToast("error", error?.message);
-        setModalState({
-          ...modalState,
-          loadingButton: false,
-          isOpen: false,
-          showContent: true,
-          detailInfo: undefined,
-        });
+        setModalState(INITIAL_STATE);
       },
     });
   };

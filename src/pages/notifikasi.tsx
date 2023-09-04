@@ -8,7 +8,10 @@ import { EmptyModulePageData } from "~/common/components/ui/empty";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import Modal from "~/common/components/ui/modal/Modal";
 import { DATA_CANT_RECOVER } from "~/common/constants/MESSAGE/index";
-import { useNotification } from "~/common/hooks/core/useNotification";
+import {
+  NOTIFICATION_ACTION,
+  useNotification,
+} from "~/common/hooks/core/useNotification";
 import { type AllNotificationType } from "~/server/api/module/notification/notification";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
@@ -53,26 +56,28 @@ const notifikasi = () => {
             <div className="flex flex-wrap justify-between gap-2">
               <span
                 className="underline hover:cursor-pointer"
-                // onClick={() =>
-                //   onOpen({
-                //     titleContent: "Tandai Semua Notifikasi Sudah Dibaca?",
-                //     showContent: false,
-                //     content: "Semua Notifikasi Berhasil Ditandai Sudah Dibaca!",
-                //     captionButtonDanger: "Oke",
-                //   })
-                // }
+                onClick={() =>
+                  onOpen({
+                    titleContent: "Tandai Semua Notifikasi Sudah Dibaca?",
+                    showContent: false,
+                    content: "Semua Notifikasi Berhasil Ditandai Sudah Dibaca!",
+                    captionButtonDanger: "Oke",
+                    action: NOTIFICATION_ACTION.MARK_ALL_NOTIFICATION,
+                  })
+                }
               >
                 Tandai Semua Sudah Dibaca
               </span>
               <span
                 className="underline hover:cursor-pointer"
-                // onClick={() =>
-                //   onOpen({
-                //     // titleContent: "Yakin Ingin Menghapus Semua Notifikasi?",
-                //     showContent: true,
-                //     content: "Semua Notifikasi Berhasil Dihapus!",
-                //   })
-                // }
+                onClick={() =>
+                  onOpen({
+                    titleContent: "Yakin Ingin Menghapus Semua Notifikasi?",
+                    showContent: true,
+                    content: "Semua Notifikasi Berhasil Dihapus!",
+                    action: NOTIFICATION_ACTION.DELETE_ALL_NOTIFICATION,
+                  })
+                }
               >
                 Hapus Semua Notifikasi
               </span>

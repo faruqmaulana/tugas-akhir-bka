@@ -2,6 +2,7 @@ import { userQuery } from "~/server/queries/module/user/user.query";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { type Prisma } from "@prisma/client";
 import { z } from "zod";
+import { NOTIFICATION_ACTION } from "~/common/hooks/core/useNotification";
 
 export type AllNotificationType = Prisma.NotificationGetPayload<{
   include: {
@@ -41,6 +42,31 @@ export const notificationQuery = createTRPCRouter({
             readed: true,
           },
         });
+      } catch (error) {
+        return error;
+      }
+    }),
+
+  actionToAllNotification: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      try {
+        if (input === NOTIFICATION_ACTION.MARK_ALL_NOTIFICATION) {
+          await ctx.prisma.notification.updateMany({
+            where: { userId: ctx.session.user.userId },
+            data: {
+              readed: true,
+            },
+          });
+          return;
+        }
+
+        if (input === NOTIFICATION_ACTION.DELETE_ALL_NOTIFICATION) {
+          await ctx.prisma.notification.deleteMany({
+            where: { userId: ctx.session.user.userId },
+          });
+          return;
+        }
       } catch (error) {
         return error;
       }

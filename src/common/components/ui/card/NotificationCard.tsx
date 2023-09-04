@@ -14,6 +14,7 @@ import { changeDateFormat } from "~/common/helpers/changeDateFormat";
 import Spinner from "../../svg/Spinner";
 import { Anchor } from "~/common/components/ui/anchor/.";
 import { StatusBagde } from "~/common/components/ui/badge/.";
+import { type onOpenNotificationType } from "~/common/hooks/core/useNotification";
 
 const NotificationCard = ({
   loadingState,
@@ -23,11 +24,19 @@ const NotificationCard = ({
 }: {
   loadingState: { isLoading: boolean }[];
   userNotification: AllNotificationType;
-  onOpen: (args: any) => void;
+  onOpen: ({
+    id,
+    titleContent,
+    content,
+    showContent,
+    captionButtonDanger,
+    detailInfo,
+    action,
+  }: onOpenNotificationType) => void;
   handleReadMessage: (id: string, index: number) => void;
 }) => {
-  console.log("loadingState", loadingState);
   if (!userNotification) return <Spinner />;
+
   return userNotification?.map((val, index) => (
     <div
       key={val.id}
@@ -119,6 +128,7 @@ const NotificationCard = ({
                   showContent: true,
                   detailInfo: val.notificationMessage.description,
                   content: "Data Berhasil Dihapus!",
+                  action: "DELETE_NOTIFICATION",
                 })
               }
             >

@@ -5,6 +5,14 @@ export const MOUDLE_BEASISWA = "Beasiswa";
 export const MOUDLE_HAKI = "HAKI";
 export const MOUDLE_PATEN = "Paten";
 export const MOUDLE_BUKU = "Buku";
+export const MODULE_NOTIFIKASI = "Notifikasi";
+
+export const ALL_DATA = "Semua Data";
+export const CREATE_SUCCESS = "Berhasil Ditambahkan!";
+export const UPDATE_SUCCESS = "Berhasil Diupdate!";
+export const DELETE_SUCCESS = "Berhasil Dihapus!";
+
+export const DATA_SUCCESSFULLY_DELETED = `Data ${DELETE_SUCCESS}`;
 
 // GENERAL MODULE MESSAGE
 export const PENGAJUAN_MESSAGE_BY_ADMIN_SIDE = (
@@ -18,9 +26,13 @@ export const PENGAJUAN_MESSAGE_BY_USER_SIDE = (module: string) => {
   return `Pengajuan <b>${module}</b> anda berhasil dikirim.`;
 };
 
-export const CREATE_SUCCESS = "Data Berhasil Ditambahkan!";
-export const UPDATE_SUCCESS = "Data Berhasil Diupdate!";
-export const DELETE_SUCCESS = "Data Berhasil Dihapus!";
+export const DELETE_ALL_MODULE = (module: string) => {
+  return `${ALL_DATA} ${module} ${DELETE_SUCCESS}`;
+};
+
+export const UPDATE_ALL_MODULE = (module: string) => {
+  return `${ALL_DATA} ${module} ${UPDATE_SUCCESS}`;
+};
 
 // module login
 export const LOGIN_SUCCES = "Berhasil Login!";
