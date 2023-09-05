@@ -25,7 +25,6 @@ export const userQuery = {
   prodiId: true,
   semester: true,
   Buku: true,
-  activityLog: true,
   prestasiDataTables: true,
   PengajuanBeasiswa: true,
   password: false,
