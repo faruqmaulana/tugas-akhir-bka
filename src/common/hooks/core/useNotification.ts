@@ -11,6 +11,8 @@ import {
 import { type AllNotificationType } from "~/server/api/module/notification/notification";
 
 import { api } from "~/utils/api";
+import { useCurrentUser } from "../module/profile";
+import { STATUS } from "~/common/enums/STATUS";
 
 export enum NOTIFICATION_ACTION {
   DELETE_NOTIFICATION = "DELETE_NOTIFICATION",
@@ -78,6 +80,8 @@ const INITIAL_STATE: ModalStateType = {
 };
 
 const useNotification = () => {
+  const { isAdmin } = useCurrentUser();
+
   const [modalState, setModalState] = useState<ModalStateType>(INITIAL_STATE);
   const { data: userNotification, refetch: refetchNotification } =
     api.notification.getUserNotif.useQuery();

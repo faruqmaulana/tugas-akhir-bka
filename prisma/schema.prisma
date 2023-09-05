@@ -23,7 +23,6 @@ model User {
   password           String
   role               Role                @default(MAHASISWA)
   prodiId            String?
-  activityLog        ActivityLog[]
   Buku               Buku[]
   NotifMessage       NotifMessage[]
   notification       Notification[]
@@ -107,7 +106,7 @@ model PrestasiDataTable {
   lampiranId         String
   updatedAt          DateTime?                  @default(now())
   status             String                     @default("Sedang Diproses")
-  activityLog        ActivityLog[]
+  activityLog        NotifMessage[]
   users              PengajuanOnUsers[]
   dosen              Dosen                      @relation(fields: [dosenId], references: [id])
   lampiran           LampiranData               @relation(fields: [lampiranId], references: [id])
@@ -145,23 +144,21 @@ model PengajuanPKM {
   dosenId         String
   status          String             @default("Sedang Diproses")
   tanggalKegiatan DateTime
-  activityLog     ActivityLog[]
   users           PengajuanOnUsers[]
   dosen           Dosen              @relation(fields: [dosenId], references: [id])
 }
 
 model PengajuanBeasiswa {
-  id               String        @id @default(cuid())
-  isValidated      Boolean       @default(false)
+  id               String   @id @default(cuid())
+  isValidated      Boolean  @default(false)
   validatedAt      DateTime
-  createdAt        DateTime      @default(now())
+  createdAt        DateTime @default(now())
   dokumenFormulir  String
   deskripsiDokumen String
   dokumenPendukung String
   userId           String
   status           String
-  activityLog      ActivityLog[]
-  user             User          @relation(fields: [userId], references: [id])
+  user             User     @relation(fields: [userId], references: [id])
 }
 
 model SKRektor {
@@ -184,12 +181,11 @@ model PatenAndHakiTable {
   validatedAt      DateTime
   isValidated      Boolean            @default(false)
   jenis            PatenAndHaki
-  activityLog      ActivityLog[]
   PengajuanOnUsers PengajuanOnUsers[]
 }
 
 model Buku {
-  id              String        @id @default(cuid())
+  id              String   @id @default(cuid())
   NomorISBN       String
   Penulis         String
   Pengarang       String
@@ -197,45 +193,29 @@ model Buku {
   tahunTerbit     DateTime
   jumlahEksemplar Int
   validatedAt     DateTime
-  createdAt       DateTime      @default(now())
+  createdAt       DateTime @default(now())
   userId          String
   status          String?
-  activityLog     ActivityLog[]
-  user            User          @relation(fields: [userId], references: [id])
-}
-
-model ActivityLog {
-  id                  String             @id @default(cuid())
-  catatan             String?
-  userId              String
-  prestasiDataTableId String?
-  PatenAndHakiTableId String?
-  bukuId              String?
-  pengajuanPKMId      String?
-  pengajuanBeasiswaId String?
-  status              String             @default("Sedang Diproses")
-  createdAt           DateTime           @default(now())
-  PatenAndHakiTable   PatenAndHakiTable? @relation(fields: [PatenAndHakiTableId], references: [id])
-  Buku                Buku?              @relation(fields: [bukuId], references: [id])
-  PengajuanBeasiswa   PengajuanBeasiswa? @relation(fields: [pengajuanBeasiswaId], references: [id])
-  PengajuanPKM        PengajuanPKM?      @relation(fields: [pengajuanPKMId], references: [id])
-  PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
-  user                User               @relation(fields: [userId], references: [id])
+  user            User     @relation(fields: [userId], references: [id])
 }
 
 model NotifMessage {
-  id              String         @id @default(cuid())
-  status          String
-  module          String
-  moduleId        String
-  description     String
-  forUserMessage  String?
-  forAdminMessage String?
-  userInfo        String[]
-  createdAt       DateTime       @default(now())
-  userId          String
-  createdBy       User           @relation(fields: [userId], references: [id])
-  Notification    Notification[]
+  id                  String             @id @default(cuid())
+  status              String
+  module              String
+  moduleId            String
+  description         String
+  forUserMessage      String?
+  forAdminMessage     String?
+  createdAt           DateTime           @default(now())
+  userId              String
+  userInfo            String[]
+  adminName           String?
+  prestasiDataTableId String?
+  catatan             String?
+  PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
+  createdBy           User               @relation(fields: [userId], references: [id])
+  Notification        Notification[]
 }
 
 model Notification {

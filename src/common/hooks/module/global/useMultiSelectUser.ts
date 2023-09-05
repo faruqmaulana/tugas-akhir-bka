@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useEffect, useState } from "react";
 import {
   type handleDeleteSelectedDataType,
@@ -9,7 +10,7 @@ import { api } from "~/utils/api";
 
 const useMultiSelectUser = () => {
   const {
-    state: { user: currentUser },
+    state: { user: userData },
   } = useGlobalContext();
   const { data: user } = api.user.getAllMahasiswa.useQuery();
 
@@ -34,24 +35,24 @@ const useMultiSelectUser = () => {
   useEffect(() => {
     if (user || mahasiswa) {
       if (mahasiswa?.length > 0) return;
-      if (mahasiswaPayload?.length > 0) return;
 
       const tempUser = user as CustomReactSelectOptionsType[];
-      setMahasiswa(
-        tempUser?.filter(
-          (val: CustomReactSelectOptionsType) => val.id !== currentUser?.id
-        )
+      const filteredMahasiswa = tempUser?.filter(
+        (val: CustomReactSelectOptionsType) => val.id !== userData?.id
       );
+      setMahasiswa(filteredMahasiswa);
+
+      if (mahasiswaPayload?.length > 0) return;
       setMahasiswaPayload([
         {
-          label: currentUser?.name as string,
-          value: currentUser?.id as string,
+          label: userData?.name as string,
+          value: userData?.id as string,
           isKetua: true,
           disableDelete: true,
         },
       ]);
     }
-  }, [user]);
+  }, [user, mahasiswa]);
 
   const handleDeleteSelectedMahasiswa = (
     params: handleDeleteSelectedDataType

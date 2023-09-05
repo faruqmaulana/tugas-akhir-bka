@@ -11,9 +11,12 @@ import { STATUS } from "~/common/enums/STATUS";
 import { changeDateFormat } from "~/common/helpers/changeDateFormat";
 import {
   MOUDLE_KEJUARAAN,
+  PENGAJUAN_ACCEPTED_BY_ADMIN_SIDE,
+  PENGAJUAN_ACCEPTED_BY_USER_SIDE,
   PENGAJUAN_MESSAGE_BY_ADMIN_SIDE,
   PENGAJUAN_MESSAGE_BY_USER_SIDE,
 } from "~/common/constants/MESSAGE";
+import { userQuery } from "~/server/queries/module/user/user.query";
 
 export type SuccessPengajuanOnUsersType = {
   message: string;
@@ -33,12 +36,18 @@ export const prestasiLombaQuery = createTRPCRouter({
               orkem: true,
               tingkatKejuaraan: true,
               tingkatPrestasi: true,
+              activityLog: true,
             },
           },
           dosen: { select: { name: true, nidn: true } },
           user: { select: { name: true, prodi: true } },
         },
       });
+
+      console.log(
+        "prestasiData",
+        prestasiData.map((val) => val.PrestasiDataTable?.activityLog).reverse()
+      );
 
       const transformedPrestasiData = prestasiData.map((data) => ({
         id: data.PrestasiDataTable!.id || "-",
@@ -134,15 +143,6 @@ export const prestasiLombaQuery = createTRPCRouter({
             }),
           });
 
-        // ** ADD ACTIVITY LOG
-        await ctx.prisma.activityLog.create({
-          data: {
-            userId: ctx.session.user.userId,
-            prestasiDataTableId: createPrestasiDataTable.id,
-            status: STATUS.PROCESSED,
-          },
-        });
-
         //** ADD NOTIFICATION MESSAGE */
         const notificationMessage = await ctx.prisma.notifMessage.create({
           data: {
@@ -190,6 +190,7 @@ export const prestasiLombaQuery = createTRPCRouter({
       }
     }),
 
+  //** ADMIN ACTION */
   approvePengajuanPrestasi: protectedProcedure
     .input(approvePrestasiForm)
     .mutation(async ({ ctx, input }) => {
@@ -209,14 +210,43 @@ export const prestasiLombaQuery = createTRPCRouter({
           },
         });
 
-        // ** CREATE ACTIVITY LOG
-        await ctx.prisma.activityLog.create({
-          data: {
-            catatan,
-            prestasiDataTableId,
-            status: STATUS.APPROVE,
-            userId: ctx.session.user.userId,
+        //** ADD NOTIFICATION MESSAGE */
+        const notificationMessage = await ctx.prisma.notifMessage.findFirst({
+          where: { moduleId: prestasiDataTableId },
+          include: {
+            Notification: { include: { User: { select: userQuery } } },
           },
+        });
+
+        const currentAdminName = notificationMessage!.Notification.filter(
+          (val) => val.userId === ctx.session.user.userId
+        )[0]?.User.name;
+
+        //** ADD NOTIFICATION MESSAGE */
+        const createNotificationMessage = await ctx.prisma.notifMessage.create({
+          data: {
+            status: STATUS.APPROVE,
+            module: notificationMessage!.module,
+            moduleId: notificationMessage!.moduleId,
+            description: notificationMessage!.description,
+            forUserMessage: PENGAJUAN_ACCEPTED_BY_USER_SIDE(MOUDLE_KEJUARAAN),
+            forAdminMessage: PENGAJUAN_ACCEPTED_BY_ADMIN_SIDE(MOUDLE_KEJUARAAN),
+            userInfo: notificationMessage?.userInfo,
+            userId: notificationMessage!.userId,
+            adminName: currentAdminName,
+          },
+        });
+
+        //** ADD NOTIFICATION IN RELATED USERS AND ADMINS */
+        await ctx.prisma.notification.createMany({
+          data: notificationMessage!.Notification.map(
+            (val: { userId?: string }) => {
+              return {
+                notificationMessageId: createNotificationMessage.id,
+                userId: val.userId as string,
+              };
+            }
+          ),
         });
 
         return {

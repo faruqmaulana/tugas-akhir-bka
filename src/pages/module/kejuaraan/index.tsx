@@ -20,7 +20,6 @@ const UserManagement = () => {
   const router = useRouter();
   const { allKejuaraan } = useKejuaraan();
   const transformedData = allKejuaraan as KejuaraanData[];
-
   const columns = useMemo<MRT_ColumnDef<KejuaraanData>[]>(
     () => [
       {

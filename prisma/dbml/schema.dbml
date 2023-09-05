@@ -14,7 +14,6 @@ Table User {
   password String [not null]
   role Role [not null, default: 'MAHASISWA']
   prodiId String
-  activityLog ActivityLog [not null]
   Buku Buku [not null]
   NotifMessage NotifMessage [not null]
   notification Notification [not null]
@@ -97,7 +96,7 @@ Table PrestasiDataTable {
   lampiranId String [not null]
   updatedAt DateTime [default: `now()`]
   status String [not null, default: 'Sedang Diproses']
-  activityLog ActivityLog [not null]
+  activityLog NotifMessage [not null]
   users PengajuanOnUsers [not null]
   dosen Dosen [not null]
   lampiran LampiranData [not null]
@@ -136,7 +135,6 @@ Table PengajuanPKM {
   dosenId String [not null]
   status String [not null, default: 'Sedang Diproses']
   tanggalKegiatan DateTime [not null]
-  activityLog ActivityLog [not null]
   users PengajuanOnUsers [not null]
   dosen Dosen [not null]
 
@@ -153,7 +151,6 @@ Table PengajuanBeasiswa {
   dokumenPendukung String [not null]
   userId String [not null]
   status String [not null]
-  activityLog ActivityLog [not null]
   user User [not null]
 }
 
@@ -176,7 +173,6 @@ Table PatenAndHakiTable {
   validatedAt DateTime [not null]
   isValidated Boolean [not null, default: false]
   jenis PatenAndHaki [not null]
-  activityLog ActivityLog [not null]
   PengajuanOnUsers PengajuanOnUsers [not null]
 
   Note: '=== PENGAJUAN LUARAN TABLE === ///'
@@ -194,26 +190,6 @@ Table Buku {
   createdAt DateTime [default: `now()`, not null]
   userId String [not null]
   status String
-  activityLog ActivityLog [not null]
-  user User [not null]
-}
-
-Table ActivityLog {
-  id String [pk]
-  catatan String
-  userId String [not null]
-  prestasiDataTableId String
-  PatenAndHakiTableId String
-  bukuId String
-  pengajuanPKMId String
-  pengajuanBeasiswaId String
-  status String [not null, default: 'Sedang Diproses']
-  createdAt DateTime [default: `now()`, not null]
-  PatenAndHakiTable PatenAndHakiTable
-  Buku Buku
-  PengajuanBeasiswa PengajuanBeasiswa
-  PengajuanPKM PengajuanPKM
-  PrestasiDataTable PrestasiDataTable
   user User [not null]
 }
 
@@ -225,9 +201,13 @@ Table NotifMessage {
   description String [not null]
   forUserMessage String
   forAdminMessage String
-  userInfo String[] [not null]
   createdAt DateTime [default: `now()`, not null]
   userId String [not null]
+  userInfo String[] [not null]
+  adminName String
+  prestasiDataTableId String
+  catatan String
+  PrestasiDataTable PrestasiDataTable
   createdBy User [not null]
   Notification Notification [not null]
 }
@@ -283,17 +263,7 @@ Ref: PengajuanBeasiswa.userId > User.id
 
 Ref: Buku.userId > User.id
 
-Ref: ActivityLog.PatenAndHakiTableId > PatenAndHakiTable.id
-
-Ref: ActivityLog.bukuId > Buku.id
-
-Ref: ActivityLog.pengajuanBeasiswaId > PengajuanBeasiswa.id
-
-Ref: ActivityLog.pengajuanPKMId > PengajuanPKM.id
-
-Ref: ActivityLog.prestasiDataTableId > PrestasiDataTable.id
-
-Ref: ActivityLog.userId > User.id
+Ref: NotifMessage.prestasiDataTableId > PrestasiDataTable.id
 
 Ref: NotifMessage.userId > User.id
 

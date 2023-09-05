@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React from "react";
@@ -15,6 +16,8 @@ import Spinner from "../../svg/Spinner";
 import { Anchor } from "~/common/components/ui/anchor/.";
 import { StatusBagde } from "~/common/components/ui/badge/.";
 import { type onOpenNotificationType } from "~/common/hooks/core/useNotification";
+import { useCurrentUser } from "~/common/hooks/module/profile";
+import { useStatus } from "~/common/hooks/module/status/useStatus";
 
 const NotificationCard = ({
   loadingState,
@@ -35,6 +38,9 @@ const NotificationCard = ({
   }: onOpenNotificationType) => void;
   handleReadMessage: (id: string, index: number) => void;
 }) => {
+  const { isAdmin } = useCurrentUser();
+  const { handleTransformedStatus } = useStatus();
+
   if (!userNotification) return <Spinner />;
 
   return userNotification?.map((val, index) => (
@@ -51,14 +57,25 @@ const NotificationCard = ({
             <InfoIcon />
           </PopoverTrigger>
           <PopoverContent className="rounded-md border-red-300 px-3 text-xs md:text-base">
-            <p className="font-semibold">*Dokumen diajukan</p>
+            <p className="font-semibold">
+              *Dokumen{" "}
+              {handleTransformedStatus({
+                status: val.notificationMessage.status,
+                isNotification: true,
+              })}
+            </p>
             <table>
               <tr>
                 <td className="font-semibold">Oleh&nbsp;</td>
                 <td>
                   :&nbsp;
-                  {val.notificationMessage.createdBy.name} (
-                  {val.notificationMessage.createdBy.prodi?.name})
+                  {val.notificationMessage.adminName ||
+                    val.notificationMessage.createdBy.name}
+                  &nbsp; (
+                  {isAdmin
+                    ? "Admin"
+                    : val.notificationMessage.createdBy.prodi?.name}
+                  )
                 </td>
               </tr>
               <tr>
@@ -126,7 +143,7 @@ const NotificationCard = ({
                 onOpen({
                   id: val.id,
                   showContent: true,
-                  detailInfo: val.notificationMessage.description,
+                  detailInfo: val.notificationMessage.description!,
                   content: "Data Berhasil Dihapus!",
                   action: "DELETE_NOTIFICATION",
                 })

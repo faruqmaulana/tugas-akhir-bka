@@ -2,6 +2,7 @@ import React from "react";
 import { STATUS } from "~/common/enums/STATUS";
 import { handleBgColor } from "~/common/helpers/handleBgColor";
 import { useCurrentUser } from "~/common/hooks/module/profile";
+import { useStatus } from "~/common/hooks/module/status/useStatus";
 
 export type StatusBadgeType = {
   status: string;
@@ -21,21 +22,15 @@ const getSizeStyle = (size: StatusBadgeType["size"]) => {
 const StatusBadge = (props: StatusBadgeType) => {
   const { status, size = "md" } = props;
   const sizeStyle = getSizeStyle(size);
-  const { isAdmin } = useCurrentUser();
-
-  const handleTransformedStatus = () => {
-    if (isAdmin && status === STATUS.PROCESSED) return "Baru";
-
-    return status;
-  };
+  const { handleTransformedStatus } = useStatus();
 
   return (
     <div
       className={`rounded-full font-semibold opacity-95 
-        ${handleBgColor(handleTransformedStatus())}
+        ${handleBgColor(handleTransformedStatus({ status }))}
         ${sizeStyle}`}
     >
-      <p className="w-max">{handleTransformedStatus()}</p>
+      <p className="w-max">{handleTransformedStatus({ status })}</p>
     </div>
   );
 };

@@ -20,8 +20,7 @@ const useKejuaraan = () => {
     handleDeleteSelectedMahasiswa,
     handleSelectMultipleUser,
   } = useMultiSelectUser();
-
-  const { refetchNotification, userData } = useMainLayout();
+  const { refetchNotification } = useMainLayout();
   const { currentUserName } = useCurrentUser();
   const router = useRouter();
   const { data: dosen } = api.dosen.getAllDosen.useQuery();

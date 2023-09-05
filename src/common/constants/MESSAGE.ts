@@ -26,6 +26,14 @@ export const PENGAJUAN_MESSAGE_BY_USER_SIDE = (module: string) => {
   return `Pengajuan <b>${module}</b> anda berhasil dikirim.`;
 };
 
+export const PENGAJUAN_ACCEPTED_BY_USER_SIDE = (module: string) => {
+  return `Pengajuan <b>${module}</b> anda telah disetujui oleh admin.`;
+};
+
+export const PENGAJUAN_ACCEPTED_BY_ADMIN_SIDE = (module: string) => {
+  return `Pengajuan <b>${module}</b> berhasil disetujui.`;
+};
+
 export const DELETE_ALL_MODULE = (module: string) => {
   return `${ALL_DATA} ${module} ${DELETE_SUCCESS}`;
 };

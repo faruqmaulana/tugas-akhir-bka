@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -17,6 +18,11 @@ import {
 } from "~/common/constants/DUMMY_KEJUARAAN";
 import { useApproveKejuaraan } from "~/common/hooks/module/kejuaraan/useApproveKejuaraan";
 import BaseForm from "~/common/components/ui/form/BaseForm";
+import { requireAuth } from "~/common/authentication/requireAuth";
+
+export const getServerSideProps = requireAuth(async (ctx) => {
+  return { props: {} };
+});
 
 const Example = () => {
   const router = useRouter();
@@ -171,7 +177,7 @@ const Example = () => {
         className="!mb-0"
         captionTitleConfirm="Approve Pengajuan Prestasi dan Kejuaraan"
         // showButtonClose
-        // showButtonSuccess
+        // showButtonSuccessx
         // captionButtonSuccess="Setuju"
         // onCloseButton={() => handleButtonAction("close")}
         // onSuccessButton={() => handleButtonAction("success")}

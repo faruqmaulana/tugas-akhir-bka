@@ -8,6 +8,7 @@ import {
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import { customToast } from "~/common/components/ui/toast/showToast";
+import { useMainLayout } from "../../layout/useMainLayout";
 
 const INITIAL_STATE = {
   isReject: false,
@@ -18,8 +19,9 @@ const INITIAL_STATE = {
 };
 
 const useApproveKejuaraan = () => {
-  const [state, setState] = useState(INITIAL_STATE);
   const router = useRouter();
+  const [state, setState] = useState(INITIAL_STATE);
+  const { refetchNotification } = useMainLayout();
   const prestasiDataTableId = router.query.slug;
   const { mutate: approvePengajuanPrestasi } =
     api.prestasiLomba.approvePengajuanPrestasi.useMutation();
@@ -44,6 +46,7 @@ const useApproveKejuaraan = () => {
       setState({ ...state, loadingApprove: true });
       approvePengajuanPrestasi(approvePayload, {
         onSuccess: (data) => {
+          void refetchNotification();
           customToast("success", data?.message);
           setState({ ...state, loadingApprove: false });
           if (data?.message) {
@@ -69,7 +72,6 @@ const useApproveKejuaraan = () => {
     }
 
     if (type === "success") {
-      console.log("aaa");
       setState({ ...INITIAL_STATE, isSuccess: true });
     }
 
