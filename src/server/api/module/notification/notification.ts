@@ -30,7 +30,9 @@ export const notificationQueryData = {
 };
 
 export type AllNotificationType = Prisma.NotificationGetPayload<{
-  include: {
+  select: {
+    id: true;
+    readed: true;
     notificationMessage: typeof notificationQueryData;
   };
 }>[];
@@ -46,6 +48,8 @@ export const notificationQuery = createTRPCRouter({
         await ctx.prisma.notification.findMany({
           where: { userId: ctx.session.user.userId },
           select: {
+            id: true,
+            readed: true,
             notificationMessage: notificationQueryData,
           },
         })

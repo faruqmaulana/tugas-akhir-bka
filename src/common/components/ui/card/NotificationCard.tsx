@@ -54,7 +54,7 @@ const NotificationCard = ({
   };
 
   if (!userNotification) return <Spinner />;
-
+  console.log("userNotification", userNotification);
   return userNotification?.map((val, index) => (
     <div
       key={val.id}

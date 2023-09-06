@@ -212,6 +212,7 @@ const useNotification = () => {
       },
       onError: (error: { message: string | undefined }) => {
         customToast("error", error?.message);
+        setLoadingState(tempLoading);
       },
     });
   };
