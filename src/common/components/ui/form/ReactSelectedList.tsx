@@ -12,6 +12,7 @@ import {
   PopoverTrigger,
 } from "~/common/components/ui/popover/popover";
 import { type RegisterOptions } from "react-hook-form";
+import { getUserLead } from "~/common/helpers";
 
 export type ReactSelectedList = {
   register?: (
@@ -91,7 +92,7 @@ const ReactSelectedList = (props: ReactSelectedList) => {
                       }
                     }}
                   />
-                  {value.isKetua ? "Ketua Tim" : "Anggota"}
+                  {getUserLead(value.isKetua)}
                 </div>
               </td>
             )}

@@ -15,10 +15,14 @@ import { changeDateFormat } from "~/common/helpers/changeDateFormat";
 import Spinner from "../../svg/Spinner";
 import { Anchor } from "~/common/components/ui/anchor/.";
 import { StatusBagde } from "~/common/components/ui/badge/.";
-import { type onOpenNotificationType } from "~/common/hooks/core/useNotification";
+import {
+  type getActionUserType,
+  type onOpenNotificationType,
+} from "~/common/hooks/core/useNotification";
 import { useCurrentUser } from "~/common/hooks/module/profile";
 import { useStatus } from "~/common/hooks/module/status/useStatus";
-
+import { getUserLead } from "~/common/helpers";
+import "~/common/types/prismaJsonType";
 const NotificationCard = ({
   loadingState,
   userNotification,
@@ -38,8 +42,16 @@ const NotificationCard = ({
   }: onOpenNotificationType) => void;
   handleReadMessage: (id: string, index: number) => void;
 }) => {
-  const { isAdmin } = useCurrentUser();
+  const { user } = useCurrentUser();
   const { handleTransformedStatus } = useStatus();
+
+  const getActionUser = ({ data, id }: getActionUserType) => {
+    return data.filter((val) => val.User.id === id)[0];
+  };
+
+  const relatedMahasiwa = ({ data, id }: getActionUserType) => {
+    return data.filter((val) => val.User.id === id)[0];
+  };
 
   if (!userNotification) return <Spinner />;
 
@@ -69,12 +81,21 @@ const NotificationCard = ({
                 <td className="font-semibold">Oleh&nbsp;</td>
                 <td>
                   :&nbsp;
-                  {val.notificationMessage.adminName ||
-                    val.notificationMessage.createdBy.name}
+                  {
+                    getActionUser({
+                      data: val.notificationMessage.Notification,
+                      id:
+                        val.notificationMessage.actionByAdminId ||
+                        val.notificationMessage.actionByMahasiswaId,
+                    })?.User.name
+                  }
                   &nbsp; (
-                  {isAdmin
-                    ? "Admin"
-                    : val.notificationMessage.createdBy.prodi?.name}
+                  {getActionUser({
+                    data: val.notificationMessage.Notification,
+                    id:
+                      val.notificationMessage.actionByAdminId ||
+                      val.notificationMessage.actionByMahasiswaId,
+                  })?.User.prodi?.name || "Admin"}
                   )
                 </td>
               </tr>
@@ -87,12 +108,19 @@ const NotificationCard = ({
               </tr>
             </table>
             <p className="mt-3 font-semibold">*Detail info</p>
-            {val.notificationMessage.userInfo.map((subval, index) => (
-              <p key={subval}>
-                {subval.split("-")[0]} sebagai
-                {subval.split("-")[1]}
-              </p>
-            ))}
+            {(val.notificationMessage.userInfo as PrismaJson.UserInfoType).map(
+              (subval) => (
+                <p key={subval.value}>
+                  {
+                    relatedMahasiwa({
+                      data: val.notificationMessage.Notification,
+                      id: subval.value,
+                    })?.User.name
+                  }{" "}
+                  - {getUserLead(subval.isKetua)}
+                </p>
+              )
+            )}
           </PopoverContent>
         </Popover>
         {!val.readed && (
@@ -122,8 +150,8 @@ const NotificationCard = ({
           {val.notificationMessage.description}
         </h2>
         <p className="font-semibold">
-          {val.notificationMessage.createdBy.name} -&nbsp;
-          {val.notificationMessage.createdBy.prodi?.name}
+          {/* {val.notificationMessage.createdBy.name} -&nbsp;
+          {val.notificationMessage.createdBy.prodi?.name} */}
         </p>
         <div className="mt-2 flex flex-wrap justify-between gap-1">
           <p className="text-sm">
@@ -143,7 +171,7 @@ const NotificationCard = ({
                 onOpen({
                   id: val.id,
                   showContent: true,
-                  detailInfo: val.notificationMessage.description!,
+                  detailInfo: val.notificationMessage.description,
                   content: "Data Berhasil Dihapus!",
                   action: "DELETE_NOTIFICATION",
                 })

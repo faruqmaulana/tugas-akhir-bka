@@ -2,23 +2,31 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useEffect, useState } from "react";
 import { customToast } from "~/common/components/ui/toast/showToast";
+
 import {
   DATA_SUCCESSFULLY_DELETED,
   DELETE_ALL_MODULE,
   MODULE_NOTIFIKASI,
   UPDATE_ALL_MODULE,
 } from "~/common/constants/MESSAGE";
-import { type AllNotificationType } from "~/server/api/module/notification/notification";
+import {
+  type NotificationType,
+  type AllNotificationType,
+} from "~/server/api/module/notification/notification";
 
 import { api } from "~/utils/api";
 import { useCurrentUser } from "../module/profile";
-import { STATUS } from "~/common/enums/STATUS";
 
 export enum NOTIFICATION_ACTION {
   DELETE_NOTIFICATION = "DELETE_NOTIFICATION",
   MARK_ALL_NOTIFICATION = "MARK_ALL_NOTIFICATION",
   DELETE_ALL_NOTIFICATION = "DELETE_ALL_NOTIFICATION",
 }
+
+export type getActionUserType = {
+  data: NotificationType;
+  id: string;
+};
 
 export type onOpenNotificationType = {
   id?: string | undefined;

@@ -4,13 +4,39 @@ import { type Prisma } from "@prisma/client";
 import { z } from "zod";
 import { NOTIFICATION_ACTION } from "~/common/hooks/core/useNotification";
 
+export const notificationQueryData = {
+  select: {
+    id: true,
+    status: true,
+    module: true,
+    moduleId: true,
+    description: true,
+    forUserMessage: true,
+    forAdminMessage: true,
+    createdAt: true,
+    prestasiDataTableId: true,
+    catatan: true,
+    actionByAdminId: true,
+    actionByMahasiswaId: true,
+    userInfo: true,
+    Notification: {
+      select: {
+        User: {
+          select: { ...userQuery, prestasiDataTables: false },
+        },
+      },
+    },
+  },
+};
+
 export type AllNotificationType = Prisma.NotificationGetPayload<{
   include: {
-    notificationMessage: {
-      include: { createdBy: { include: { prodi: true } } };
-    };
+    notificationMessage: typeof notificationQueryData;
   };
 }>[];
+
+export type NotificationType =
+  AllNotificationType[0]["notificationMessage"]["Notification"];
 
 export const notificationQuery = createTRPCRouter({
   //** GET ALL PRODI */
@@ -19,10 +45,8 @@ export const notificationQuery = createTRPCRouter({
       return (
         await ctx.prisma.notification.findMany({
           where: { userId: ctx.session.user.userId },
-          include: {
-            notificationMessage: {
-              include: { createdBy: { select: userQuery } },
-            },
+          select: {
+            notificationMessage: notificationQueryData,
           },
         })
       ).reverse() as AllNotificationType;

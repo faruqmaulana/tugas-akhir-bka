@@ -8,7 +8,7 @@ const useCurrentUser = () => {
   const isAdmin = user?.role === "ADMIN";
   const currentUserName = user?.name;
 
-  return { isAdmin, currentUserName };
+  return { isAdmin, currentUserName, user };
 };
 
 export { useCurrentUser };

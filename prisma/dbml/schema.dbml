@@ -15,7 +15,6 @@ Table User {
   role Role [not null, default: 'MAHASISWA']
   prodiId String
   Buku Buku [not null]
-  NotifMessage NotifMessage [not null]
   notification Notification [not null]
   PengajuanBeasiswa PengajuanBeasiswa [not null]
   prestasiDataTables PengajuanOnUsers [not null]
@@ -202,13 +201,12 @@ Table NotifMessage {
   forUserMessage String
   forAdminMessage String
   createdAt DateTime [default: `now()`, not null]
-  userId String [not null]
-  userInfo String[] [not null]
-  adminName String
   prestasiDataTableId String
   catatan String
+  actionByAdminId String
+  actionByMahasiswaId String [not null]
+  userInfo Json[] [not null, note: '[UserInfoType]']
   PrestasiDataTable PrestasiDataTable
-  createdBy User [not null]
   Notification Notification [not null]
 }
 
@@ -264,8 +262,6 @@ Ref: PengajuanBeasiswa.userId > User.id
 Ref: Buku.userId > User.id
 
 Ref: NotifMessage.prestasiDataTableId > PrestasiDataTable.id
-
-Ref: NotifMessage.userId > User.id
 
 Ref: Notification.notificationMessageId > NotifMessage.id
 

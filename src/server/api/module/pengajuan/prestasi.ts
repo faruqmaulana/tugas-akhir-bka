@@ -44,11 +44,6 @@ export const prestasiLombaQuery = createTRPCRouter({
         },
       });
 
-      console.log(
-        "prestasiData",
-        prestasiData.map((val) => val.PrestasiDataTable?.activityLog).reverse()
-      );
-
       const transformedPrestasiData = prestasiData.map((data) => ({
         id: data.PrestasiDataTable!.id || "-",
         nama: data.user.name || "-",
@@ -150,15 +145,13 @@ export const prestasiLombaQuery = createTRPCRouter({
             status: STATUS.PROCESSED,
             description: `Pengajuan Prestasi - ${createPrestasiDataTable.kegiatan}`,
             moduleId: createPrestasiDataTable.id,
-            userId: ctx.session.user.userId,
+            actionByMahasiswaId: ctx.session.user.userId,
             forUserMessage: PENGAJUAN_MESSAGE_BY_USER_SIDE(MOUDLE_KEJUARAAN),
             forAdminMessage: PENGAJUAN_MESSAGE_BY_ADMIN_SIDE(
               currentUserName,
               MOUDLE_KEJUARAAN
             ),
-            userInfo: users.map((val) => {
-              return `${val.label} - ${val.isKetua ? "Ketua Tim" : "Anggota"}`;
-            }),
+            userInfo: users,
           },
         });
 
@@ -195,7 +188,7 @@ export const prestasiLombaQuery = createTRPCRouter({
     .input(approvePrestasiForm)
     .mutation(async ({ ctx, input }) => {
       try {
-        const { noSK, tanggalSK, catatan, prestasiDataTableId } = input;
+        const { noSK, tanggalSK, prestasiDataTableId } = input;
 
         // ** UPDATE PRESTASI DATA TABLE
         await ctx.prisma.prestasiDataTable.update({
@@ -218,10 +211,6 @@ export const prestasiLombaQuery = createTRPCRouter({
           },
         });
 
-        const currentAdminName = notificationMessage!.Notification.filter(
-          (val) => val.userId === ctx.session.user.userId
-        )[0]?.User.name;
-
         //** ADD NOTIFICATION MESSAGE */
         const createNotificationMessage = await ctx.prisma.notifMessage.create({
           data: {
@@ -231,9 +220,9 @@ export const prestasiLombaQuery = createTRPCRouter({
             description: notificationMessage!.description,
             forUserMessage: PENGAJUAN_ACCEPTED_BY_USER_SIDE(MOUDLE_KEJUARAAN),
             forAdminMessage: PENGAJUAN_ACCEPTED_BY_ADMIN_SIDE(MOUDLE_KEJUARAAN),
+            actionByMahasiswaId: notificationMessage!.actionByMahasiswaId,
+            actionByAdminId: ctx.session.user.userId,
             userInfo: notificationMessage?.userInfo,
-            userId: notificationMessage!.userId,
-            adminName: currentAdminName,
           },
         });
 
