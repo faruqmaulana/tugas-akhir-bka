@@ -22,7 +22,7 @@ import {
 import { useCurrentUser } from "~/common/hooks/module/profile";
 import { useStatus } from "~/common/hooks/module/status/useStatus";
 import { getUserLead } from "~/common/helpers";
-import "~/common/types/prismaJsonType";
+
 const NotificationCard = ({
   loadingState,
   userNotification,
