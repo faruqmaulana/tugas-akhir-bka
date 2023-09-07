@@ -26,3 +26,9 @@ TUGAS AKHIR BKA PROGRESS
 - delete notification ✅
 - delete all notification ✅
 - mark as readed ✅
+- fix all notification bug ✅
+
+
+=== MODULE PENGAJUAN 090923 ===
+- reject from admin
+- reprocess from users 

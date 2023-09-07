@@ -150,8 +150,19 @@ const NotificationCard = ({
           {val.notificationMessage.description}
         </h2>
         <p className="font-semibold">
-          {/* {val.notificationMessage.createdBy.name} -&nbsp;
-          {val.notificationMessage.createdBy.prodi?.name} */}
+          {
+            getActionUser({
+              data: val.notificationMessage.Notification,
+              id: val.notificationMessage.actionByMahasiswaId,
+            })?.User.name
+          }
+          &nbsp;-&nbsp;
+          {
+            getActionUser({
+              data: val.notificationMessage.Notification,
+              id: val.notificationMessage.actionByMahasiswaId,
+            })?.User.prodi?.name
+          }
         </p>
         <div className="mt-2 flex flex-wrap justify-between gap-1">
           <p className="text-sm">

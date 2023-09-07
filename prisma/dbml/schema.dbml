@@ -215,6 +215,7 @@ Table Notification {
   readed Boolean [not null, default: false]
   notificationMessageId String [not null]
   userId String [not null]
+  createdAt DateTime [default: `now()`, not null]
   notificationMessage NotifMessage [not null]
   User User [not null]
 }

@@ -27,11 +27,19 @@ export const PENGAJUAN_MESSAGE_BY_USER_SIDE = (module: string) => {
 };
 
 export const PENGAJUAN_ACCEPTED_BY_USER_SIDE = (module: string) => {
-  return `Pengajuan <b>${module}</b> anda telah disetujui oleh admin.`;
+  return `Pengajuan <b>${module}</b> anda disetujui oleh admin.`;
 };
 
 export const PENGAJUAN_ACCEPTED_BY_ADMIN_SIDE = (module: string) => {
   return `Pengajuan <b>${module}</b> berhasil disetujui.`;
+};
+
+export const PENGAJUAN_REJECTED_BY_USER_SIDE = (module: string) => {
+  return `Pengajuan <b>${module}</b> anda ditolak oleh admin.`;
+};
+
+export const PENGAJUAN_REJECTED_BY_ADMIN_SIDE = (module: string) => {
+  return `Pengajuan <b>${module}</b> berhasil ditolak.`;
 };
 
 export const DELETE_ALL_MODULE = (module: string) => {

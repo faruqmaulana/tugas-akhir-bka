@@ -4,6 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   type IApprovePrestasiForm,
   approvePrestasiForm,
+  type IRejectPrestasiForm,
+  rejectPrestasiForm,
 } from "~/common/schemas/module/pengajuan/approve-prestasi.schema";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
@@ -25,6 +27,17 @@ const useApproveKejuaraan = () => {
   const prestasiDataTableId = router.query.slug;
   const { mutate: approvePengajuanPrestasi } =
     api.prestasiLomba.approvePengajuanPrestasi.useMutation();
+  const { mutate: rejectPengajuanPrestasi } =
+    api.prestasiLomba.rejectPengajuanPrestasi.useMutation();
+
+  const {
+    register: registerRejectForm,
+    setValue: setDefautlRejectValue,
+    handleSubmit: submitRejectKejuaraan,
+    formState: { errors: errorsRejectForm },
+  } = useForm<IRejectPrestasiForm>({
+    resolver: zodResolver(rejectPrestasiForm),
+  });
 
   const {
     register,
@@ -39,7 +52,26 @@ const useApproveKejuaraan = () => {
 
   useEffect(() => {
     setValue("prestasiDataTableId", prestasiDataTableId as string);
-  }, [prestasiDataTableId, setValue]);
+    setDefautlRejectValue("prestasiDataTableId", prestasiDataTableId as string);
+  }, [prestasiDataTableId, setValue, setDefautlRejectValue]);
+
+  const handleButtonAction = (type: string) => {
+    if (type === "reject") {
+      setState({ ...state, isReject: true });
+    }
+
+    if (type === "approve") {
+      setState({ ...state, isApprove: true });
+    }
+
+    if (type === "success") {
+      setState({ ...INITIAL_STATE, isSuccess: true });
+    }
+
+    if (type === "close") {
+      setState(INITIAL_STATE);
+    }
+  };
 
   const onApproveKejuaraan = useCallback(
     (approvePayload: IApprovePrestasiForm) => {
@@ -62,23 +94,43 @@ const useApproveKejuaraan = () => {
     []
   );
 
-  const handleButtonAction = (type: string) => {
-    if (type === "reject") {
-      setState({ ...state, isReject: true });
-    }
+  const onRejectKejuaraan = useCallback(
+    (rejectPayload: IRejectPrestasiForm) => {
+      setState({ ...state, loadingReject: true });
+      rejectPengajuanPrestasi(rejectPayload, {
+        onSuccess: (data) => {
+          void refetchNotification();
+          customToast("success", data?.message);
+          setState({ ...state, loadingReject: false });
+          if (data?.message) {
+            handleButtonAction("close");
+          }
+        },
+        onError: (error) => {
+          customToast("error", error?.message);
+          setState({ ...state, loadingReject: false });
+        },
+      });
+    },
+    []
+  );
 
-    if (type === "approve") {
-      setState({ ...state, isApprove: true });
-    }
-
-    if (type === "success") {
-      setState({ ...INITIAL_STATE, isSuccess: true });
-    }
-
-    if (type === "close") {
-      setState(INITIAL_STATE);
-    }
-  };
+  const REJECT_PRESTASI_FORM = [
+    {
+      className: "col-span-2",
+      type: "hidden",
+      register: { ...registerRejectForm("prestasiDataTableId") },
+    },
+    {
+      labelFontSize: "text-[16px]",
+      label: "*Berikan Alasan Anda :",
+      placeholder: "Contoh: Dokumen tidak valid",
+      type: "textarea",
+      className: "col-span-2",
+      register: { ...registerRejectForm("catatan") },
+      error: errorsRejectForm.catatan?.message,
+    },
+  ];
 
   const APPROVE_PRESTASI_FORM = [
     {
@@ -117,6 +169,7 @@ const useApproveKejuaraan = () => {
       error: errors.catatan?.message,
     },
   ];
+
   return {
     state,
     setState,
@@ -124,6 +177,9 @@ const useApproveKejuaraan = () => {
     APPROVE_PRESTASI_FORM,
     submitApproveKejuaraan,
     onApproveKejuaraan,
+    REJECT_PRESTASI_FORM,
+    onRejectKejuaraan,
+    submitRejectKejuaraan,
   };
 };
 

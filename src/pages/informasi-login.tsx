@@ -19,7 +19,7 @@ const InformasiLogin = () => {
 
   const INFORMASI_LOGIN = [
     {
-      className: "col-span-1",
+      className: "col-span-2",
       placeholder: "email",
       leftAddonComponent: <Email />,
       label: "Email",
@@ -27,7 +27,7 @@ const InformasiLogin = () => {
       register: { ...register("email") },
     },
     {
-      className: "col-span-1",
+      className: "col-span-2",
       placeholder: "Old password",
       leftAddonComponent: <LockIcon />,
       label: "Kata Sandi Lama",
@@ -38,7 +38,7 @@ const InformasiLogin = () => {
       error: errors.requireOldPassword?.message,
     },
     {
-      className: "col-span-1",
+      className: "col-span-2",
       placeholder: "New password",
       leftAddonComponent: <LockIcon />,
       label: "Kata Sandi Baru",
@@ -48,7 +48,7 @@ const InformasiLogin = () => {
       error: errors.customErrorPassword?.message,
     },
     {
-      className: "col-span-1",
+      className: "col-span-2",
       placeholder: "Confirm password",
       leftAddonComponent: <LockIcon />,
       label: "Konfirmasi Kata Sandi",
@@ -72,7 +72,7 @@ const InformasiLogin = () => {
             isSuccess
             isMedium
             isLoading={loading}
-            className="col-span-1 ml-auto"
+            className="col-span-2 ml-auto"
           >
             Simpan
           </Button>

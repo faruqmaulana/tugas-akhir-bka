@@ -41,10 +41,14 @@ const Example = () => {
 
   const {
     state,
+    setState,
     handleButtonAction,
     APPROVE_PRESTASI_FORM,
     submitApproveKejuaraan,
     onApproveKejuaraan,
+    REJECT_PRESTASI_FORM,
+    onRejectKejuaraan,
+    submitRejectKejuaraan,
   } = useApproveKejuaraan();
 
   return (
@@ -150,23 +154,29 @@ const Example = () => {
         confirm
         showClose
         isOpen={state.isReject}
-        buttonCenter
-        showButtonClose
-        showButtonDanger
+        className="!mb-0"
         captionButtonDanger="Tolak"
-        onClose={() => handleButtonAction("close")}
-        onCloseButton={() => handleButtonAction("close")}
-        onDangerButton={() => handleButtonAction("success")}
-        onSuccessButton={() => {
-          void router.push("/master-data/beasiswa");
-        }}
         content={
-          <Input
-            labelFontSize="text-[16px]"
-            label="*Berikan Alasan Anda :"
-            placeholder="Contoh: Dokumen tidak valid"
-            type="textarea"
-          />
+          <form onSubmit={submitRejectKejuaraan(onRejectKejuaraan)}>
+            <BaseForm data={REJECT_PRESTASI_FORM} />
+            <div className="flex flex-row justify-end gap-4">
+              <Button
+                isGray
+                isMedium
+                onClick={() => handleButtonAction("close")}
+              >
+                Cancel
+              </Button>
+              <Button
+                isSubmit
+                isDanger
+                isMedium
+                isLoading={state.loadingReject}
+              >
+                Tolak
+              </Button>
+            </div>
+          </form>
         }
       ></Modal>
       <Modal
@@ -204,6 +214,7 @@ const Example = () => {
           </form>
         }
       ></Modal>
+      `
       {/* <Modal
         success
         isOpen={state.isSuccess}
@@ -216,6 +227,7 @@ const Example = () => {
         }}
         content=""
       ></Modal> */}
+      `
     </>
   );
 };

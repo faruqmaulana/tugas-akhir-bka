@@ -4,9 +4,13 @@ import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import {
   ADD_PRESTASI_LOMBA_SUCCESS,
   APPROVE_PRESTASI_AND_LOMBA,
+  REJECT_PRESTASI_AND_LOMBA,
 } from "~/common/message";
 import { type Prisma } from "@prisma/client";
-import { approvePrestasiForm } from "~/common/schemas/module/pengajuan/approve-prestasi.schema";
+import {
+  approvePrestasiForm,
+  rejectPrestasiForm,
+} from "~/common/schemas/module/pengajuan/approve-prestasi.schema";
 import { STATUS } from "~/common/enums/STATUS";
 import { changeDateFormat } from "~/common/helpers/changeDateFormat";
 import {
@@ -15,6 +19,8 @@ import {
   PENGAJUAN_ACCEPTED_BY_USER_SIDE,
   PENGAJUAN_MESSAGE_BY_ADMIN_SIDE,
   PENGAJUAN_MESSAGE_BY_USER_SIDE,
+  PENGAJUAN_REJECTED_BY_ADMIN_SIDE,
+  PENGAJUAN_REJECTED_BY_USER_SIDE,
 } from "~/common/constants/MESSAGE";
 import { userQuery } from "~/server/queries/module/user/user.query";
 
@@ -240,6 +246,67 @@ export const prestasiLombaQuery = createTRPCRouter({
 
         return {
           message: APPROVE_PRESTASI_AND_LOMBA,
+        } as SuccessPengajuanOnUsersType;
+      } catch (error) {
+        throw error;
+      }
+    }),
+
+  //** ADMIN ACTION */
+  rejectPengajuanPrestasi: protectedProcedure
+    .input(rejectPrestasiForm)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const { prestasiDataTableId, catatan } = input;
+
+        // ** UPDATE PRESTASI DATA TABLE
+        await ctx.prisma.prestasiDataTable.update({
+          where: {
+            id: prestasiDataTableId,
+          },
+          data: {
+            status: STATUS.REJECT,
+            updatedAt: new Date(),
+          },
+        });
+
+        //** ADD NOTIFICATION MESSAGE */
+        const notificationMessage = await ctx.prisma.notifMessage.findFirst({
+          where: { moduleId: prestasiDataTableId },
+          include: {
+            Notification: { include: { User: { select: userQuery } } },
+          },
+        });
+
+        //** ADD NOTIFICATION MESSAGE */
+        const createNotificationMessage = await ctx.prisma.notifMessage.create({
+          data: {
+            status: STATUS.REJECT,
+            module: notificationMessage!.module,
+            moduleId: notificationMessage!.moduleId,
+            description: notificationMessage!.description,
+            forUserMessage: PENGAJUAN_REJECTED_BY_USER_SIDE(MOUDLE_KEJUARAAN),
+            forAdminMessage: PENGAJUAN_REJECTED_BY_ADMIN_SIDE(MOUDLE_KEJUARAAN),
+            actionByMahasiswaId: notificationMessage!.actionByMahasiswaId,
+            actionByAdminId: ctx.session.user.userId,
+            userInfo: notificationMessage?.userInfo,
+          },
+        });
+
+        //** ADD NOTIFICATION IN RELATED USERS AND ADMINS */
+        await ctx.prisma.notification.createMany({
+          data: notificationMessage!.Notification.map(
+            (val: { userId?: string }) => {
+              return {
+                notificationMessageId: createNotificationMessage.id,
+                userId: val.userId as string,
+              };
+            }
+          ),
+        });
+
+        return {
+          message: REJECT_PRESTASI_AND_LOMBA,
         } as SuccessPengajuanOnUsersType;
       } catch (error) {
         throw error;

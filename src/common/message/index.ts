@@ -3,6 +3,7 @@
 export const UPDATE_SUCCESS = "Berhasil Diperbarui!";
 export const ADD_SUCCESS = "Berhasil Menambah Data";
 export const APPROVE = "Berhasil Menyetujui Pengajuan";
+export const REJECT = "Berhasil Menolak Pengajuan";
 
 // ** MODULE USER **//
 // SUCCESS MESSAGE //
@@ -17,3 +18,4 @@ export const PASSWORD_NOT_MATCH =
 export const PRESTASI_AND_LOMBA = "Prestasi Lomba & Kejuaraan";
 export const ADD_PRESTASI_LOMBA_SUCCESS = `${ADD_SUCCESS} ${PRESTASI_AND_LOMBA}!`;
 export const APPROVE_PRESTASI_AND_LOMBA = `${APPROVE} ${PRESTASI_AND_LOMBA}!`;
+export const REJECT_PRESTASI_AND_LOMBA = `${REJECT} ${PRESTASI_AND_LOMBA}!`;
