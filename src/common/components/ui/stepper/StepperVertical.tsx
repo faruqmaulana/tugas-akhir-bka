@@ -11,12 +11,14 @@ export type StepperVerticalProp = {
   id: string;
   status: string;
   userName: string;
-  catatan?: string;
+  catatan: string | null;
   date: string;
 };
 
-const StepperVertical = (props: { data: StepperVerticalProp[] }) => {
-  const { data} = props;
+const StepperVertical = (props: {
+  data: StepperVerticalProp[] | undefined;
+}) => {
+  const { data } = props;
 
   return (
     <table className={styles.container}>
@@ -36,7 +38,7 @@ const StepperVertical = (props: { data: StepperVerticalProp[] }) => {
             </td>
             <div className="flex flex-col">
               <td className={styles.desc}>{step.userName}</td>
-              <td className={styles.desc}>{step.catatan}</td>
+              {step.catatan && <td className={styles.desc}>{step.catatan}</td>}
               <td className={styles.desc}>{step.date}</td>
             </div>
           </tr>
