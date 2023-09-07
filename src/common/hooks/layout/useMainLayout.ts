@@ -11,7 +11,13 @@ import { api } from "~/utils/api";
 const useMainLayout = () => {
   const { state, dispatch } = useGlobalContext();
   const [showAside, setShowAside] = useState<boolean>(true);
-  const { data: user, isLoading } = api.user.getUserProfile.useQuery();
+  const { data: user, isLoading } = api.user.getUserProfile.useQuery(
+    undefined,
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
   const {
     data: userNotification,
     isLoading: loadingNotification,

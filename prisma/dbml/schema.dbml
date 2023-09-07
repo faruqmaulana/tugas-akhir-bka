@@ -14,6 +14,7 @@ Table User {
   password String [not null]
   role Role [not null, default: 'MAHASISWA']
   prodiId String
+  ActivityLog ActivityLog [not null]
   Buku Buku [not null]
   notification Notification [not null]
   PengajuanBeasiswa PengajuanBeasiswa [not null]
@@ -95,7 +96,7 @@ Table PrestasiDataTable {
   lampiranId String [not null]
   updatedAt DateTime [default: `now()`]
   status String [not null, default: 'Sedang Diproses']
-  activityLog NotifMessage [not null]
+  activityLog ActivityLog [not null]
   users PengajuanOnUsers [not null]
   dosen Dosen [not null]
   lampiran LampiranData [not null]
@@ -206,7 +207,6 @@ Table NotifMessage {
   actionByAdminId String
   actionByMahasiswaId String [not null]
   userInfo Json[] [not null, note: '[UserInfoType]']
-  PrestasiDataTable PrestasiDataTable
   Notification Notification [not null]
 }
 
@@ -217,6 +217,17 @@ Table Notification {
   userId String [not null]
   createdAt DateTime [default: `now()`, not null]
   notificationMessage NotifMessage [not null]
+  User User [not null]
+}
+
+Table ActivityLog {
+  id String [pk]
+  catatan String
+  userId String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  status String [not null, default: 'Diajukan']
+  prestasiDataTableId String
+  PrestasiDataTable PrestasiDataTable
   User User [not null]
 }
 
@@ -262,8 +273,10 @@ Ref: PengajuanBeasiswa.userId > User.id
 
 Ref: Buku.userId > User.id
 
-Ref: NotifMessage.prestasiDataTableId > PrestasiDataTable.id
-
 Ref: Notification.notificationMessageId > NotifMessage.id
 
 Ref: Notification.userId > User.id
+
+Ref: ActivityLog.prestasiDataTableId > PrestasiDataTable.id
+
+Ref: ActivityLog.userId > User.id

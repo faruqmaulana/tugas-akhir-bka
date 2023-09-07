@@ -1,7 +1,10 @@
 import { format } from "date-fns";
 import id from "date-fns/locale/id";
 
-export const changeDateFormat = (date: Date | null, detail = false) => {
+export const changeDateFormat = (
+  date: Date | null | undefined,
+  detail = false
+) => {
   if (!date) return "-";
   // get date formate
   const formattedDate = format(date, "PPP", {

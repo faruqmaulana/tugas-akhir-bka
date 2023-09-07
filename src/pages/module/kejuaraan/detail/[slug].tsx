@@ -19,6 +19,7 @@ import {
 import { useApproveKejuaraan } from "~/common/hooks/module/kejuaraan/useApproveKejuaraan";
 import BaseForm from "~/common/components/ui/form/BaseForm";
 import { requireAuth } from "~/common/authentication/requireAuth";
+import StepperVertical from "~/common/components/ui/stepper/StepperVertical";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -49,6 +50,7 @@ const Example = () => {
     REJECT_PRESTASI_FORM,
     onRejectKejuaraan,
     submitRejectKejuaraan,
+    activityLog
   } = useApproveKejuaraan();
 
   return (
@@ -100,36 +102,8 @@ const Example = () => {
             <span className="col-span-5">: {tingkatKejuaraan}</span>
             <span className="col-span-2 font-semibold">Prestasi</span>
             <span className="col-span-3">: {tingkatPrestasi}</span>
-            {/* <span className="col-span-12 font-semibold">
-              Piagam Penghargaan
-            </span>
-            <span className="col-span-12">
-              <iframe
-                className="h-[600px] w-full"
-                // src="https://drive.google.com/uc?id=1WCEiV1Ovxga261bLEs_rlNoS4I0hANiN"
-                src="https://drive.google.com/uc?id=1iSoVWRPyyQVJ_tn0oMGNs8Bttw7u6UtP"
-                title="Embedded Google Drive File"
-              ></iframe>
-            </span>
-            <span className="col-span-2 font-semibold">
-              Foto Penyerahan Piala
-            </span>
-            <span className="col-span-10">:</span>
-            <span className="col-span-12">
-              <iframe
-                className="h-[600px] w-full"
-                src="https://www.buds.com.ua/images/Lorem_ipsum.pdf"
-              ></iframe>
-            </span>
-            <span className="col-span-2 font-semibold">Undangan Kejuaraan</span>
-            <span className="col-span-10">:</span>
-            <span className="col-span-12">
-              <iframe
-                className="h-[600px] w-full"
-                src="https://www.buds.com.ua/images/Lorem_ipsum.pdf"
-              ></iframe>
-            </span> */}
           </div>
+          <StepperVertical data={activityLog}/>
           <div className="mr-auto flex flex-row gap-4">
             <Button
               isMedium

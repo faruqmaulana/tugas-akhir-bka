@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { pengajuanPrestasiForm } from "~/common/schemas/module/pengajuan/pengajuan-prestasi.shema";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import {
@@ -23,13 +25,40 @@ import {
   PENGAJUAN_REJECTED_BY_USER_SIDE,
 } from "~/common/constants/MESSAGE";
 import { userQuery } from "~/server/queries/module/user/user.query";
+import { z } from "zod";
 
 export type SuccessPengajuanOnUsersType = {
   message: string;
   data: Prisma.PengajuanOnUsersSelect;
 };
 
+export type KejuaraanByIdType = Prisma.PrestasiDataTableGetPayload<{
+  include: {
+    activityLog: {
+      include: {
+        User: { select: typeof userQuery };
+      };
+    };
+  };
+}>;
+
 export const prestasiLombaQuery = createTRPCRouter({
+  //** GET KEJUARAAN BY ID */
+  getKejuaraanById: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      return (await ctx.prisma.prestasiDataTable.findUnique({
+        where: { id: input },
+        include: {
+          activityLog: {
+            include: {
+              User: { select: userQuery },
+            },
+          },
+        },
+      })) as KejuaraanByIdType;
+    }),
+
   //** GET ALL KEJUARAAN */
   getAllKejuaraan: protectedProcedure.query(async ({ ctx }) => {
     try {
@@ -51,28 +80,28 @@ export const prestasiLombaQuery = createTRPCRouter({
       });
 
       const transformedPrestasiData = prestasiData.map((data) => ({
-        id: data.PrestasiDataTable!.id || "-",
+        id: data.PrestasiDataTable?.id || "-",
         nama: data.user.name || "-",
-        noSK: data.PrestasiDataTable!.noSK || "-",
-        tanggalSK: changeDateFormat(data.PrestasiDataTable!.tanggalSK),
-        kegiatan: data.PrestasiDataTable!.kegiatan || "-",
+        noSK: data.PrestasiDataTable?.noSK || "-",
+        tanggalSK: changeDateFormat(data.PrestasiDataTable?.tanggalSK),
+        kegiatan: data.PrestasiDataTable?.kegiatan || "-",
         tanggalKegiatan: changeDateFormat(
-          data.PrestasiDataTable!.tanggalKegiatan
+          data.PrestasiDataTable?.tanggalKegiatan
         ),
-        penyelenggara: data.PrestasiDataTable!.penyelenggara || "-",
-        // validatedAt: data.PrestasiDataTable!.createdAt || "-",
-        orkem: data.PrestasiDataTable!.orkem.name || "-",
-        tingkatKejuaraan: data.PrestasiDataTable!.tingkatKejuaraan.name || "-",
-        tingkatPrestasi: data.PrestasiDataTable!.tingkatPrestasi.name || "-",
+        penyelenggara: data.PrestasiDataTable?.penyelenggara || "-",
+        // validatedAt: data.PrestasiDataTable?.createdAt || "-",
+        orkem: data.PrestasiDataTable?.orkem.name || "-",
+        tingkatKejuaraan: data.PrestasiDataTable?.tingkatKejuaraan.name || "-",
+        tingkatPrestasi: data.PrestasiDataTable?.tingkatPrestasi.name || "-",
         dosen: data.dosen.name || "-",
         piagamPenghargaan:
-          data.PrestasiDataTable!.lampiran.piagamPenghargaan || "-",
+          data.PrestasiDataTable?.lampiran.piagamPenghargaan || "-",
         fotoPenyerahanPiala:
-          data.PrestasiDataTable!.lampiran.fotoPenyerahanPiala || "-",
+          data.PrestasiDataTable?.lampiran.fotoPenyerahanPiala || "-",
         undanganKejuaraan:
-          data.PrestasiDataTable!.lampiran.undanganKejuaraan || "-",
+          data.PrestasiDataTable?.lampiran.undanganKejuaraan || "-",
         keterangan: data.keterangan || "-",
-        status: data.PrestasiDataTable!.status || "-",
+        status: data.PrestasiDataTable?.status || "-",
       }));
 
       return transformedPrestasiData.reverse();
@@ -180,6 +209,15 @@ export const prestasiLombaQuery = createTRPCRouter({
           }),
         });
 
+        //** ADD ACTIVITY LOG */
+        await ctx.prisma.activityLog.create({
+          data: {
+            prestasiDataTableId: createPrestasiDataTable.id,
+            userId: ctx.session.user.userId,
+            status: STATUS.PROCESSED,
+          },
+        });
+
         return {
           message: ADD_PRESTASI_LOMBA_SUCCESS,
           data: createPengajuanOnUsers,
@@ -244,6 +282,15 @@ export const prestasiLombaQuery = createTRPCRouter({
           ),
         });
 
+        //** ADD ACTIVITY LOG */
+        await ctx.prisma.activityLog.create({
+          data: {
+            prestasiDataTableId,
+            userId: ctx.session.user.userId,
+            status: STATUS.APPROVE,
+          },
+        });
+
         return {
           message: APPROVE_PRESTASI_AND_LOMBA,
         } as SuccessPengajuanOnUsersType;
@@ -270,7 +317,7 @@ export const prestasiLombaQuery = createTRPCRouter({
           },
         });
 
-        //** ADD NOTIFICATION MESSAGE */
+        //** FIND NOTIFICATION MESSAGE */
         const notificationMessage = await ctx.prisma.notifMessage.findFirst({
           where: { moduleId: prestasiDataTableId },
           include: {
@@ -281,6 +328,7 @@ export const prestasiLombaQuery = createTRPCRouter({
         //** ADD NOTIFICATION MESSAGE */
         const createNotificationMessage = await ctx.prisma.notifMessage.create({
           data: {
+            catatan,
             status: STATUS.REJECT,
             module: notificationMessage!.module,
             moduleId: notificationMessage!.moduleId,
@@ -303,6 +351,16 @@ export const prestasiLombaQuery = createTRPCRouter({
               };
             }
           ),
+        });
+
+        //** ADD ACTIVITY LOG */
+        await ctx.prisma.activityLog.create({
+          data: {
+            catatan,
+            prestasiDataTableId,
+            userId: ctx.session.user.userId,
+            status: STATUS.REJECT,
+          },
         });
 
         return {

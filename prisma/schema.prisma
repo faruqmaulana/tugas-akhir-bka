@@ -8,9 +8,9 @@ generator client {
 
 generator json {
   provider     = "prisma-json-types-generator"
-  allowAny     = "false"
   namespace    = "PrismaJson"
   clientOutput = "finds automatically"
+  allowAny     = "false"
   useType      = "PrismaJson.GlobalType"
 }
 
@@ -31,6 +31,7 @@ model User {
   password           String
   role               Role                @default(MAHASISWA)
   prodiId            String?
+  ActivityLog        ActivityLog[]
   Buku               Buku[]
   notification       Notification[]
   PengajuanBeasiswa  PengajuanBeasiswa[]
@@ -113,7 +114,7 @@ model PrestasiDataTable {
   lampiranId         String
   updatedAt          DateTime?                  @default(now())
   status             String                     @default("Sedang Diproses")
-  activityLog        NotifMessage[]
+  activityLog        ActivityLog[]
   users              PengajuanOnUsers[]
   dosen              Dosen                      @relation(fields: [dosenId], references: [id])
   lampiran           LampiranData               @relation(fields: [lampiranId], references: [id])
@@ -207,21 +208,20 @@ model Buku {
 }
 
 model NotifMessage {
-  id                  String             @id @default(cuid())
+  id                  String         @id @default(cuid())
   status              String
   module              String
   moduleId            String
   description         String
   forUserMessage      String?
   forAdminMessage     String?
-  createdAt           DateTime           @default(now())
+  createdAt           DateTime       @default(now())
   prestasiDataTableId String?
   catatan             String?
   actionByAdminId     String?
   actionByMahasiswaId String
   /// [UserInfoType]
   userInfo            Json[]
-  PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
   Notification        Notification[]
 }
 
@@ -233,6 +233,17 @@ model Notification {
   createdAt             DateTime     @default(now())
   notificationMessage   NotifMessage @relation(fields: [notificationMessageId], references: [id])
   User                  User         @relation(fields: [userId], references: [id])
+}
+
+model ActivityLog {
+  id                  String             @id @default(cuid())
+  userId              String
+  createdAt           DateTime           @default(now())
+  status              String             @default("Diajukan")
+  catatan             String?
+  prestasiDataTableId String?
+  PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
+  User                User               @relation(fields: [userId], references: [id])
 }
 
 enum Role {
