@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,6 +12,10 @@ import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import { customToast } from "~/common/components/ui/toast/showToast";
 import { useMainLayout } from "../../layout/useMainLayout";
+import { type StepperVerticalProp } from "~/common/components/ui/stepper/StepperVertical";
+import { changeDateFormat } from "~/common/helpers/changeDateFormat";
+import { type KejuaraanByIdType } from "~/server/api/module/pengajuan/prestasi";
+import { transformActivityLog } from "~/common/transforms/transformActiviryLog";
 
 const INITIAL_STATE = {
   isReject: false,
@@ -24,16 +29,26 @@ const useApproveKejuaraan = () => {
   const router = useRouter();
   const [state, setState] = useState(INITIAL_STATE);
   const { refetchNotification } = useMainLayout();
-  const prestasiDataTableId = router.query.slug;
+  const prestasiDataTableId = router.query.slug as string;
   const { mutate: approvePengajuanPrestasi } =
     api.prestasiLomba.approvePengajuanPrestasi.useMutation();
   const { mutate: rejectPengajuanPrestasi } =
     api.prestasiLomba.rejectPengajuanPrestasi.useMutation();
 
+  const { data: prestasi } = api.prestasiLomba.getKejuaraanById.useQuery(
+    prestasiDataTableId,
+    {
+      enabled: !!prestasiDataTableId,
+    }
+  );
+
+  const activityLog = transformActivityLog(prestasi?.activityLog);
+
   const {
     register: registerRejectForm,
     setValue: setDefautlRejectValue,
     handleSubmit: submitRejectKejuaraan,
+    reset: resetRejectForm,
     formState: { errors: errorsRejectForm },
   } = useForm<IRejectPrestasiForm>({
     resolver: zodResolver(rejectPrestasiForm),
@@ -42,17 +57,18 @@ const useApproveKejuaraan = () => {
   const {
     register,
     setValue,
-    handleSubmit: submitApproveKejuaraan,
     trigger,
     control,
+    reset: resetApproveForm,
+    handleSubmit: submitApproveKejuaraan,
     formState: { errors },
   } = useForm<IApprovePrestasiForm>({
     resolver: zodResolver(approvePrestasiForm),
   });
 
   useEffect(() => {
-    setValue("prestasiDataTableId", prestasiDataTableId as string);
-    setDefautlRejectValue("prestasiDataTableId", prestasiDataTableId as string);
+    setValue("prestasiDataTableId", prestasiDataTableId);
+    setDefautlRejectValue("prestasiDataTableId", prestasiDataTableId);
   }, [prestasiDataTableId, setValue, setDefautlRejectValue]);
 
   const handleButtonAction = (type: string) => {
@@ -75,13 +91,14 @@ const useApproveKejuaraan = () => {
 
   const onApproveKejuaraan = useCallback(
     (approvePayload: IApprovePrestasiForm) => {
-      setState({ ...state, loadingApprove: true });
+      setState((prev) => ({ ...prev, loadingReject: true }));
       approvePengajuanPrestasi(approvePayload, {
         onSuccess: (data) => {
           void refetchNotification();
           customToast("success", data?.message);
           setState({ ...state, loadingApprove: false });
           if (data?.message) {
+            resetApproveForm();
             handleButtonAction("close");
           }
         },
@@ -96,13 +113,14 @@ const useApproveKejuaraan = () => {
 
   const onRejectKejuaraan = useCallback(
     (rejectPayload: IRejectPrestasiForm) => {
-      setState({ ...state, loadingReject: true });
+      setState((prev) => ({ ...prev, loadingReject: true }));
       rejectPengajuanPrestasi(rejectPayload, {
         onSuccess: (data) => {
           void refetchNotification();
           customToast("success", data?.message);
           setState({ ...state, loadingReject: false });
           if (data?.message) {
+            resetRejectForm();
             handleButtonAction("close");
           }
         },
@@ -180,6 +198,7 @@ const useApproveKejuaraan = () => {
     REJECT_PRESTASI_FORM,
     onRejectKejuaraan,
     submitRejectKejuaraan,
+    activityLog
   };
 };
 

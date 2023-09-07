@@ -50,10 +50,12 @@ export default function LoginForm() {
 
       // check error login
       const error = !request?.ok;
-      setLoading(false);
-      if (!error) {
-        void router.push("/dashboard");
+      if (error) {
+        setLoading(false);
+        return;
       }
+      
+      void router.push("/dashboard");
     },
     [loading]
   );

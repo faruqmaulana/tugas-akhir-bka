@@ -1,14 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
-import { type GetResult } from "@prisma/client/runtime";
 import { type Prisma } from "@prisma/client";
-
-export type Prodi =
-  | (GetResult<
-      { id: string; name: string; fakultasId: string | null },
-      any
-    > & {})
-  | null;
 
 export type UserProfileType = Prisma.UserGetPayload<{
   include: { prodi: { include: { Fakultas: true } } };
@@ -24,9 +16,6 @@ export const userQuery = {
   phone: true,
   prodiId: true,
   semester: true,
-  Buku: true,
-  prestasiDataTables: true,
-  PengajuanBeasiswa: true,
   password: false,
   prodi: {
     include: {

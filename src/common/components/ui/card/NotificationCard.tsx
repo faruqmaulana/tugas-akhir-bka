@@ -19,7 +19,6 @@ import {
   type getActionUserType,
   type onOpenNotificationType,
 } from "~/common/hooks/core/useNotification";
-import { useCurrentUser } from "~/common/hooks/module/profile";
 import { useStatus } from "~/common/hooks/module/status/useStatus";
 import { getUserLead } from "~/common/helpers";
 
@@ -42,7 +41,6 @@ const NotificationCard = ({
   }: onOpenNotificationType) => void;
   handleReadMessage: (id: string, index: number) => void;
 }) => {
-  const { user } = useCurrentUser();
   const { handleTransformedStatus } = useStatus();
 
   const getActionUser = ({ data, id }: getActionUserType) => {
@@ -54,7 +52,7 @@ const NotificationCard = ({
   };
 
   if (!userNotification) return <Spinner />;
-  console.log("userNotification", userNotification);
+
   return userNotification?.map((val, index) => (
     <div
       key={val.id}
@@ -120,6 +118,12 @@ const NotificationCard = ({
                   - {getUserLead(subval.isKetua)}
                 </p>
               )
+            )}
+            {val.notificationMessage.catatan && (
+              <React.Fragment>
+                <p className="mt-3 font-semibold">*Catatan</p>
+                <p>{val.notificationMessage.catatan}</p>
+              </React.Fragment>
             )}
           </PopoverContent>
         </Popover>
