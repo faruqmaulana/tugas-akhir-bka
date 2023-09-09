@@ -21,8 +21,11 @@ export type StepperVerticalProp = {
 
 const StepperVertical = (props: {
   data: StepperVerticalProp[] | undefined;
+  focusContent?: boolean;
+  activityLogId?: string;
+  loading?: boolean;
 }) => {
-  const { data } = props;
+  const { data, focusContent = false, activityLogId, loading } = props;
 
   const handleIcon = (status: string) => {
     if (status === STATUS.PROCESSED) {
@@ -39,7 +42,11 @@ const StepperVertical = (props: {
     }
   };
 
-  if (!data)
+  const handleFocusContent = (id: string) => {
+    if (focusContent && activityLogId !== id) return "opacity-60";
+  };
+
+  if (loading || !data)
     return (
       <div className="flex min-h-[80vh] items-center justify-center">
         <Spinner fill="fill-primary-500" />
@@ -49,7 +56,10 @@ const StepperVertical = (props: {
   return (
     <table className={styles.container}>
       {data?.map((step) => (
-        <tbody className={`${styles.wrapper} opacity-60`} key={`${step.id}`}>
+        <tbody
+          className={`${styles.wrapper} ${handleFocusContent(step.id)}`}
+          key={`${step.id}`}
+        >
           <tr className={styles.header}>
             <td>
               <div
@@ -69,7 +79,7 @@ const StepperVertical = (props: {
               <div className={`${styles.divider}`} />
             </td>
             <td>
-              <div className="flex max-w-[210px] flex-col">
+              <div className="flex min-w-[210px] max-w-[210px] flex-col">
                 <p className={styles.desc}>{step.userName}</p>
                 <p className={styles.desc}>{step.date}</p>
                 {step.catatan && (

@@ -8,10 +8,10 @@ generator client {
 
 generator json {
   provider     = "prisma-json-types-generator"
-  namespace    = "PrismaJson"
-  clientOutput = "finds automatically"
-  allowAny     = "false"
   useType      = "PrismaJson.GlobalType"
+  clientOutput = "finds automatically"
+  namespace    = "PrismaJson"
+  allowAny     = "false"
 }
 
 datasource db {
@@ -231,9 +231,9 @@ model Notification {
   notificationMessageId String
   userId                String
   createdAt             DateTime     @default(now())
+  activityLogId         String
   notificationMessage   NotifMessage @relation(fields: [notificationMessageId], references: [id])
   User                  User         @relation(fields: [userId], references: [id])
-  activityId            String
 }
 
 model ActivityLog {

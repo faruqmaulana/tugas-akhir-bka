@@ -275,6 +275,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
     onSubmit,
     handleSubmit,
     setDefaultValue,
+    isAdmin
   };
 };
 

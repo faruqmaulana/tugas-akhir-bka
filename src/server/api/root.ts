@@ -8,6 +8,7 @@ import { tingkatKejuaraanQuery } from "./module/master-data/tingkatKejuaraan";
 import { tingkatPrestasiQuery } from "./module/master-data/tingkatPrestasi";
 import { prestasiLombaQuery } from "./module/pengajuan/prestasi";
 import { notificationQuery } from "./module/notification/notification";
+import { activityLogQuery } from "./module/activity-log/activityLog";
 
 /**
  * This is the primary router for your server.
@@ -30,6 +31,9 @@ export const appRouter = createTRPCRouter({
 
   // ** NOTIFICATION
   notification: notificationQuery,
+
+  // ** ACTIVITY LOG
+  activityLog: activityLogQuery,
 });
 
 // export type definition of API

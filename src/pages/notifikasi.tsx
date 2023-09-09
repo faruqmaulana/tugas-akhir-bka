@@ -1,12 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React from "react";
 import { requireAuth } from "~/common/authentication/requireAuth";
 import Card from "~/common/components/ui/card/Card";
 import NotificationCard from "~/common/components/ui/card/NotificationCard";
+import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
 import { EmptyModulePageData } from "~/common/components/ui/empty";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import Modal from "~/common/components/ui/modal/Modal";
+import StepperVertical from "~/common/components/ui/stepper/StepperVertical";
 import { DATA_CANT_RECOVER } from "~/common/constants/MESSAGE/index";
 import {
   NOTIFICATION_ACTION,
@@ -39,6 +42,12 @@ const notifikasi = () => {
     handleReadMessage,
     loadingButton,
     loadingState,
+    handleNotificationDrawer,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    activityLog,
+    activityLogId,
+    isActivityLogLoading
   } = useNotification();
 
   if ((userNotification as AllNotificationType)?.length === 0)
@@ -86,9 +95,23 @@ const notifikasi = () => {
         </div>
         <NotificationCard
           onOpen={onOpen}
+          handleNotificationDrawer={handleNotificationDrawer}
           handleReadMessage={handleReadMessage}
           loadingState={loadingState}
           userNotification={userNotification as AllNotificationType}
+        />
+        <BaseDrawer
+          header="Log Activity"
+          isDrawerOpen={isDrawerOpen}
+          setDrawerOpen={setIsDrawerOpen}
+          content={
+            <StepperVertical
+              focusContent
+              activityLogId={activityLogId}
+              data={activityLog}
+              loading={isActivityLogLoading}
+            />
+          }
         />
         <Modal
           isOpen={isOpen}

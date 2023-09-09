@@ -11,7 +11,12 @@ export type BaseDrawerPropsType = {
 };
 
 const BaseDrawer = (props: BaseDrawerPropsType) => {
-  const { header, content, setDrawerOpen, isDrawerOpen } = props;
+  const {
+    header,
+    content,
+    setDrawerOpen,
+    isDrawerOpen,
+  } = props;
 
   return (
     <main className={`${styles.main} ${isDrawerOpen && styles.drawerOpen}`}>

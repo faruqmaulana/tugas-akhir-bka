@@ -12,6 +12,7 @@ import {
 import { type SingleValue } from "react-select";
 import { DatePicker } from "../calendar/DatePicker";
 import CustomEditIcon from "../../svg/CustomEditIcon";
+import { useCurrentUser } from "~/common/hooks/module/profile";
 
 export type InputProps = {
   isEditForm?: boolean;
@@ -44,6 +45,8 @@ export type InputProps = {
 };
 
 const Input = (props: InputProps) => {
+  const { isAdmin } = useCurrentUser();
+
   const {
     isEditForm = false,
     trigger,
@@ -70,6 +73,7 @@ const Input = (props: InputProps) => {
   } = props;
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(disabled || isEditForm);
+  const editForm = isEditForm && !isAdmin;
 
   const editIconAction = (
     <CustomEditIcon
@@ -101,7 +105,7 @@ const Input = (props: InputProps) => {
             handleSelectMultipleUser={handleSelectMultipleUser}
             handleSelectOptionChange={handleSelectOptionChange}
             editIconAction={editIconAction}
-            isEditForm={isEditForm}
+            isEditForm={editForm}
           />
         )}
         {type === "textarea" && (
@@ -142,7 +146,7 @@ const Input = (props: InputProps) => {
             register={register}
             error={error}
             disabled={isDisabled}
-            isEditForm={isEditForm}
+            isEditForm={editForm}
             editIconAction={editIconAction}
           />
         )}
@@ -180,7 +184,7 @@ const Input = (props: InputProps) => {
           <button
             type="button"
             className={`absolute top-1/2 z-[99] -translate-y-1/2 cursor-pointer ${
-              isEditForm ? "right-[52px]" : "right-2"
+              editForm ? "right-[52px]" : "right-2"
             }`}
             onClick={() => {
               setShowPassword(!showPassword);
@@ -189,7 +193,7 @@ const Input = (props: InputProps) => {
             {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
           </button>
         )}
-        {isEditForm &&
+        {editForm &&
           type !== "hidden" &&
           type !== "date" &&
           type !== "select" &&

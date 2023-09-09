@@ -4,6 +4,14 @@ import { type KejuaraanByIdType } from "~/server/api/module/pengajuan/prestasi";
 import { changeDateFormatToNumeric } from "../helpers/changeDateFormat";
 import capitalizeFirstLetter from "../helpers/capitalizeFirstLetter";
 
+export type transformedActivityLogType = {
+  id: string;
+  status: string;
+  userName: string;
+  catatan: string | null;
+  date: string;
+};
+
 export const transformActivityLog = (
   data: KejuaraanByIdType["activityLog"] | undefined
 ) => {
@@ -15,5 +23,5 @@ export const transformActivityLog = (
       catatan: val.catatan,
       date: changeDateFormatToNumeric(val.createdAt),
     };
-  });
+  }) as transformedActivityLogType[] | undefined;
 };

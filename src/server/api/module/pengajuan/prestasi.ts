@@ -218,6 +218,7 @@ export const prestasiLombaQuery = createTRPCRouter({
             return {
               notificationMessageId: notificationMessage.id,
               userId: (val.value || val.id) as string,
+              activityLogId: createActivityLog.id,
             };
           }),
         });
@@ -275,6 +276,16 @@ export const prestasiLombaQuery = createTRPCRouter({
           },
         });
 
+        //** ADD ACTIVITY LOG */
+        const createActivityLog = await ctx.prisma.activityLog.create({
+          data: {
+            catatan,
+            prestasiDataTableId,
+            userId: ctx.session.user.userId,
+            status: STATUS.APPROVE,
+          },
+        });
+
         //** ADD NOTIFICATION IN RELATED USERS AND ADMINS */
         await ctx.prisma.notification.createMany({
           data: notificationMessage!.Notification.map(
@@ -282,19 +293,10 @@ export const prestasiLombaQuery = createTRPCRouter({
               return {
                 notificationMessageId: createNotificationMessage.id,
                 userId: val.userId as string,
+                activityLogId: createActivityLog.id,
               };
             }
           ),
-        });
-
-        //** ADD ACTIVITY LOG */
-        await ctx.prisma.activityLog.create({
-          data: {
-            catatan,
-            prestasiDataTableId,
-            userId: ctx.session.user.userId,
-            status: STATUS.APPROVE,
-          },
         });
 
         return {
@@ -347,6 +349,16 @@ export const prestasiLombaQuery = createTRPCRouter({
           },
         });
 
+        //** ADD ACTIVITY LOG */
+        const createActivityLog = await ctx.prisma.activityLog.create({
+          data: {
+            catatan,
+            prestasiDataTableId,
+            userId: ctx.session.user.userId,
+            status: STATUS.REJECT,
+          },
+        });
+
         //** ADD NOTIFICATION IN RELATED USERS AND ADMINS */
         await ctx.prisma.notification.createMany({
           data: notificationMessage!.Notification.map(
@@ -354,19 +366,10 @@ export const prestasiLombaQuery = createTRPCRouter({
               return {
                 notificationMessageId: createNotificationMessage.id,
                 userId: val.userId as string,
+                activityLogId: createActivityLog.id,
               };
             }
           ),
-        });
-
-        //** ADD ACTIVITY LOG */
-        await ctx.prisma.activityLog.create({
-          data: {
-            catatan,
-            prestasiDataTableId,
-            userId: ctx.session.user.userId,
-            status: STATUS.REJECT,
-          },
         });
 
         return {

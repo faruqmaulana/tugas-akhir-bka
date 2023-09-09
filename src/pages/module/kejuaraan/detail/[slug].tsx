@@ -25,7 +25,6 @@ const Example = ({ slug }: { slug: string }) => {
 
   const {
     state,
-    setState,
     handleButtonAction,
     APPROVE_PRESTASI_FORM,
     submitApproveKejuaraan,
@@ -42,6 +41,7 @@ const Example = ({ slug }: { slug: string }) => {
     handleSubmit,
     setDefaultValue,
     prestasi,
+    isAdmin,
   } = useApproveKejuaraan({ slug });
 
   return (
@@ -92,36 +92,30 @@ const Example = ({ slug }: { slug: string }) => {
             </Button>
           </div>
         )}
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex flex-row justify-end gap-4">
-            <Button
-              disabled={!prestasi}
-              isSecondary
-              isMedium
-              onClick={() => setDefaultValue()}
-            >
-              Reset
-            </Button>
-            <Button
-              isSubmit
-              isSuccess
-              isMedium
-              isLoading={state.loadingApprove}
-            >
-              {prestasi?.status === STATUS.PROCESSED
-                ? "Submit Perubahan"
-                : "Ajukan Ulang"}
-            </Button>
-          </div>
-        </form>
-        {/* <Button
-          isMedium
-          isSuccess
-          className="w-fit"
-          onClick={() => handleButtonAction("approve")}
-        >
-          <span>Ajukan Ulang</span>
-        </Button> */}
+        {!isAdmin && (
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex flex-row justify-end gap-4">
+              <Button
+                disabled={!prestasi}
+                isSecondary
+                isMedium
+                onClick={() => setDefaultValue()}
+              >
+                Reset
+              </Button>
+              <Button
+                isSubmit
+                isSuccess
+                isMedium
+                isLoading={state.loadingApprove}
+              >
+                {prestasi?.status === STATUS.PROCESSED
+                  ? "Submit Perubahan"
+                  : "Ajukan Ulang"}
+              </Button>
+            </div>
+          </form>
+        )}
       </Card>
       <BaseDrawer
         header="Pengajuan Info"
