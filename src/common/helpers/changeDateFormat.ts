@@ -20,3 +20,12 @@ export const changeDateFormat = (
 
   return `${formattedDate}, pukul ${formattedTime}`;
 };
+
+export const changeDateFormatToNumeric = (date: Date | null | undefined) => {
+  if (!date) return "-";
+  const formattedDate = format(date, "dd/MM/yyyy HH:mm", {
+    locale: id,
+  });
+
+  return formattedDate;
+};

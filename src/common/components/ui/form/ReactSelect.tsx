@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
@@ -19,6 +21,7 @@ export type CustomReactSelectOptionsType = {
   id?: string;
   name?: string;
   title?: string;
+  keterangan?: string;
 };
 
 export type handleDeleteSelectedDataType = {
@@ -47,6 +50,8 @@ export type ReactSelectType = {
   ) => (ref: HTMLInputElement | null) => void;
   trigger?: (fieldName?: string | string[]) => Promise<boolean>;
   control: any;
+  isEditForm?: boolean;
+  editIconAction: React.ReactNode;
 };
 
 export const ReactSelect = (props: ReactSelectType) => {
@@ -65,6 +70,8 @@ export const ReactSelect = (props: ReactSelectType) => {
     handleSelectMultipleUser,
     handleDeleteSelectedData,
     handleSelectOptionChange,
+    editIconAction,
+    isEditForm,
   } = props;
 
   const options: ReactSelectOptionType[] =
@@ -78,7 +85,6 @@ export const ReactSelect = (props: ReactSelectType) => {
 
   const defaultOption: ReactSelectOptionType[] =
     options && options?.filter((val) => val.value === defaultValue);
-
   const [currentValue, setCurrentValue] = useState<any>(defaultOption);
 
   const handleOptionChange = (
@@ -103,12 +109,18 @@ export const ReactSelect = (props: ReactSelectType) => {
         void trigger(register?.name);
       });
     }
-
-    const filterCurrentOption = options?.filter((val) => val === obj);
+    const clonedOptions = JSON?.parse(JSON?.stringify(options));
+    const filterCurrentOption = clonedOptions?.filter(
+      (val: ReactSelectOptionType) => val === obj
+    );
     setCurrentValue(filterCurrentOption);
   };
 
-  const handleValue = () => {
+  const handleValue = (value: string | undefined) => {
+    if (value) {
+      return options?.filter((opt: { value: string }) => opt.value === value);
+    }
+
     if (handleSelectMultipleUser) return "";
     return (disabled && defaultOption) || currentValue;
   };
@@ -126,31 +138,38 @@ export const ReactSelect = (props: ReactSelectType) => {
         {...(register || {})}
         name={register?.name || "temp"}
         control={control}
-        render={
-          ({ field: { ref, onChange } }) => (
-          <div className="flex w-full flex-col gap-2">
-            <Select
-              ref={ref}
-              isClearable
-              isSearchable
-              placeholder={handlePlaceholder()}
-              className={`basic-single w-full rounded ${
-                error
-                  ? "error border !border-red-500 hover:border-red-500 focus:!border-red-500 focus:outline-none"
-                  : ""
-              }`}
-              classNamePrefix="select"
-              value={handleValue()}
-              defaultValue={currentValue}
-              isDisabled={disabled}
-              isLoading={isLoading || !options}
-              options={options}
-              onChange={(val: any) => {
-                handleOptionChange(onChange, val);
-              }}
-            />
+        render={({ field: { value, ref, onChange } }) => (
+          <div
+            className={`flex w-full flex-col gap-2 ${
+              disabled ? "cursor-not-allowed" : ""
+            }`}
+          >
+            <div className="flex flex-row gap-[1px]">
+              <Select
+                ref={ref}
+                isClearable
+                isSearchable
+                placeholder={handlePlaceholder()}
+                className={`basic-single w-full rounded ${
+                  error
+                    ? "error border !border-red-500 hover:border-red-500 focus:!border-red-500 focus:outline-none"
+                    : ""
+                }`}
+                classNamePrefix="select"
+                value={handleValue(value)}
+                defaultValue={currentValue}
+                isDisabled={disabled}
+                isLoading={isLoading || !options}
+                options={options}
+                onChange={(val: any) => {
+                  handleOptionChange(onChange, val);
+                }}
+              />
+              {isEditForm && editIconAction}
+            </div>
             {selectedData.length > 0 && (
               <ReactSelectedList
+                disabled={disabled}
                 selectedData={selectedData}
                 handleSwitch={handleSwitch}
                 handleDeleteSelectedData={handleDeleteSelectedData}

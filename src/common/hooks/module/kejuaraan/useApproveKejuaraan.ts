@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -8,14 +10,14 @@ import {
   type IRejectPrestasiForm,
   rejectPrestasiForm,
 } from "~/common/schemas/module/pengajuan/approve-prestasi.schema";
-import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import { customToast } from "~/common/components/ui/toast/showToast";
 import { useMainLayout } from "../../layout/useMainLayout";
-import { type StepperVerticalProp } from "~/common/components/ui/stepper/StepperVertical";
-import { changeDateFormat } from "~/common/helpers/changeDateFormat";
-import { type KejuaraanByIdType } from "~/server/api/module/pengajuan/prestasi";
 import { transformActivityLog } from "~/common/transforms/transformActiviryLog";
+import { STATUS } from "~/common/enums/STATUS";
+import { useCurrentUser } from "../profile";
+import { useKejuaraan } from "./useKejuaraan";
+import { type IPengajuanPrestasiForm } from "~/common/schemas/module/pengajuan/pengajuan-prestasi.shema";
 
 const INITIAL_STATE = {
   isReject: false,
@@ -25,24 +27,78 @@ const INITIAL_STATE = {
   loadingReject: false,
 };
 
-const useApproveKejuaraan = () => {
-  const router = useRouter();
-  const [state, setState] = useState(INITIAL_STATE);
+const useApproveKejuaraan = ({ slug }: { slug: string }) => {
+  const { isAdmin } = useCurrentUser();
   const { refetchNotification } = useMainLayout();
-  const prestasiDataTableId = router.query.slug as string;
+
+  const [state, setState] = useState(INITIAL_STATE);
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
+  const prestasiDataTableId = slug;
   const { mutate: approvePengajuanPrestasi } =
     api.prestasiLomba.approvePengajuanPrestasi.useMutation();
   const { mutate: rejectPengajuanPrestasi } =
     api.prestasiLomba.rejectPengajuanPrestasi.useMutation();
 
-  const { data: prestasi } = api.prestasiLomba.getKejuaraanById.useQuery(
-    prestasiDataTableId,
-    {
+  const { data: prestasi, refetch: refetchPrestasi } =
+    api.prestasiLomba.getKejuaraanById.useQuery(prestasiDataTableId, {
       enabled: !!prestasiDataTableId,
-    }
-  );
+    });
+
+  const {
+    KEJUARAAN_FORM,
+    setValue: setDefaultKejuaraanValue,
+    handleSubmit,
+  } = useKejuaraan(prestasi?.users);
 
   const activityLog = transformActivityLog(prestasi?.activityLog);
+
+  useEffect(() => {
+    if (prestasi) {
+      setDefaultKejuaraanValue("kegiatan", prestasi.kegiatan);
+      setDefaultKejuaraanValue("tanggalKegiatan", prestasi.tanggalKegiatan);
+      setDefaultKejuaraanValue("penyelenggara", prestasi.penyelenggara || "");
+      setDefaultKejuaraanValue("tanggalKegiatan", prestasi.tanggalKegiatan);
+      setDefaultKejuaraanValue("dosenId", prestasi.dosenId);
+      setDefaultKejuaraanValue("orkemId", prestasi.orkemId);
+      setDefaultKejuaraanValue("tingkatPrestasiId", prestasi.tingkatPrestasiId);
+      setDefaultKejuaraanValue(
+        "tingkatKejuaraanId",
+        prestasi.tingkatKejuaraanId
+      );
+      setDefaultKejuaraanValue(
+        "piagamPenghargaan",
+        prestasi?.lampiran?.piagamPenghargaan as string
+      );
+      setDefaultKejuaraanValue(
+        "fotoPenyerahanPiala",
+        prestasi?.lampiran?.fotoPenyerahanPiala as string
+      );
+      setDefaultKejuaraanValue(
+        "undanganKejuaraan",
+        prestasi?.lampiran?.undanganKejuaraan as string
+      );
+      setDefaultKejuaraanValue(
+        "dokumenPendukung",
+        prestasi?.lampiran?.dokumenPendukung as string
+      );
+    }
+  }, [prestasi, setDefaultKejuaraanValue]);
+
+  const onSubmit = useCallback((userPayload: IPengajuanPrestasiForm) => {
+    console.log("userPayload", userPayload);
+  }, []);
+
+  const renderActionButton = () => {
+    switch (true) {
+      case isAdmin &&
+        (prestasi?.status === STATUS.PROCESSED ||
+          prestasi?.status === STATUS.REPROCESS):
+        return true;
+      default:
+        return false;
+    }
+  };
 
   const {
     register: registerRejectForm,
@@ -89,17 +145,23 @@ const useApproveKejuaraan = () => {
     }
   };
 
+  const onSuccesAction = async () => {
+    await refetchNotification();
+    await refetchPrestasi();
+    resetApproveForm();
+    resetRejectForm();
+    handleButtonAction("close");
+  };
+
   const onApproveKejuaraan = useCallback(
     (approvePayload: IApprovePrestasiForm) => {
-      setState((prev) => ({ ...prev, loadingReject: true }));
+      setState((prev) => ({ ...prev, loadingApprove: true }));
       approvePengajuanPrestasi(approvePayload, {
-        onSuccess: (data) => {
-          void refetchNotification();
+        onSuccess: async (data) => {
           customToast("success", data?.message);
           setState({ ...state, loadingApprove: false });
           if (data?.message) {
-            resetApproveForm();
-            handleButtonAction("close");
+            await onSuccesAction();
           }
         },
         onError: (error) => {
@@ -115,13 +177,11 @@ const useApproveKejuaraan = () => {
     (rejectPayload: IRejectPrestasiForm) => {
       setState((prev) => ({ ...prev, loadingReject: true }));
       rejectPengajuanPrestasi(rejectPayload, {
-        onSuccess: (data) => {
-          void refetchNotification();
+        onSuccess: async (data) => {
           customToast("success", data?.message);
           setState({ ...state, loadingReject: false });
           if (data?.message) {
-            resetRejectForm();
-            handleButtonAction("close");
+            await onSuccesAction();
           }
         },
         onError: (error) => {
@@ -198,7 +258,14 @@ const useApproveKejuaraan = () => {
     REJECT_PRESTASI_FORM,
     onRejectKejuaraan,
     submitRejectKejuaraan,
-    activityLog
+    activityLog,
+    prestasi,
+    renderActionButton,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    KEJUARAAN_FORM,
+    onSubmit,
+    handleSubmit,
   };
 };
 

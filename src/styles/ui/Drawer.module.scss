@@ -1,0 +1,78 @@
+.main {
+  @apply fixed overflow-hidden z-10 bg-gray-900 bg-opacity-25 inset-0 transform ease-in-out
+    transition-opacity delay-100 opacity-0 translate-x-full;
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 0px;
+  }
+
+  &.drawerOpen {
+    @apply transition-opacity opacity-100 duration-300 translate-x-0;
+  }
+
+  .container {
+    @apply w-screen max-w-max right-0 absolute bg-white h-full shadow-xl delay-100 duration-100 ease-in-out transition-all 
+      transform translate-x-full;
+
+    &.drawerOpen {
+      @apply translate-x-0;
+    }
+
+    .content {
+      @apply relative w-screen max-w-max py-6 px-8 flex flex-col space-y-6 overflow-y-auto h-full;
+
+      .header {
+        @apply flex justify-between font-bold text-[25px] text-primary-600;
+
+        .closeButton {
+          @apply cursor-pointer;
+        }
+      }
+    }
+  }
+}
+
+.detailVTMContainer {
+  .wrapper {
+    .title {
+      @apply font-bold text-[20px] text-primary-600;
+    }
+
+    .item {
+      @apply py-3;
+
+      .label {
+        @apply text-[15px] text-charcoal-700;
+      }
+
+      .value {
+        @apply text-[18px] text-charcoal-1000;
+      }
+
+      .bold {
+        @apply font-semibold;
+      }
+    }
+
+    .statusDetail {
+      @apply flex flex-col;
+
+      .item {
+        @apply py-3;
+
+        .label {
+          @apply mb-1 font-semibold text-[16px] text-aqua-200;
+
+          &.done {
+            @apply text-[#4EC873];
+          }
+        }
+
+        .value {
+          @apply text-[14px] text-charcoal-1000;
+        }
+      }
+    }
+  }
+}

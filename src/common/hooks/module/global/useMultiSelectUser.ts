@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useEffect, useState } from "react";
 import {
@@ -6,9 +7,10 @@ import {
   type ReactSelectOptionType,
 } from "~/common/components/ui/form/ReactSelect";
 import { useGlobalContext } from "~/common/context/GlobalContext";
+import { getUserLeadBoolean } from "~/common/helpers/getUserLead";
 import { api } from "~/utils/api";
 
-const useMultiSelectUser = () => {
+const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
   const {
     state: { user: userData },
   } = useGlobalContext();
@@ -33,8 +35,44 @@ const useMultiSelectUser = () => {
   };
 
   useEffect(() => {
-    if (user || mahasiswa) {
+    if (user || mahasiswa || defaultSelected) {
       if (mahasiswa?.length > 0) return;
+
+      if (defaultSelected) {
+        const userIdToKeteranganMap = new Map(
+          (defaultSelected as { userId: string; keterangan: string }[])?.map(
+            (item) => [item.userId, item.keterangan]
+          )
+        );
+
+        const userDataWithKeterangan = (
+          user as CustomReactSelectOptionsType[]
+        )?.map((item) => ({
+          ...item,
+          keterangan: userIdToKeteranganMap.get(item.id as string),
+        }));
+
+        const filterUserDataWithKeterangan = userDataWithKeterangan?.filter(
+          (item) => item.keterangan
+        );
+
+        const filterUserWithNoKeterangan = userDataWithKeterangan?.filter(
+          (item) => !item.keterangan
+        );
+
+        const transformedData = filterUserDataWithKeterangan?.map((item) => ({
+          label: item.name as string,
+          value: item.id as string,
+          isKetua: getUserLeadBoolean(item.keterangan as string),
+          disableDelete: true,
+        }));
+
+        setMahasiswa(filterUserWithNoKeterangan);
+        setMahasiswaPayload(transformedData);
+
+        // STOP PROCESS
+        return;
+      }
 
       const tempUser = user as CustomReactSelectOptionsType[];
       const filteredMahasiswa = tempUser?.filter(
@@ -52,7 +90,12 @@ const useMultiSelectUser = () => {
         },
       ]);
     }
-  }, [user, mahasiswa]);
+  }, [user, mahasiswa, defaultSelected]);
+
+  // useEffect(() => {
+  //   console.log("mahasiswaPayload", mahasiswaPayload);
+  //   console.log("mahasiswa", mahasiswa);
+  // }, [mahasiswa, mahasiswaPayload]);
 
   const handleDeleteSelectedMahasiswa = (
     params: handleDeleteSelectedDataType

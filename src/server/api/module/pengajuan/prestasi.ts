@@ -34,6 +34,8 @@ export type SuccessPengajuanOnUsersType = {
 
 export type KejuaraanByIdType = Prisma.PrestasiDataTableGetPayload<{
   include: {
+    lampiran: true;
+    users: { select: { userId: true; keterangan: true } };
     activityLog: {
       include: {
         User: { select: typeof userQuery };
@@ -50,6 +52,8 @@ export const prestasiLombaQuery = createTRPCRouter({
       return (await ctx.prisma.prestasiDataTable.findUnique({
         where: { id: input },
         include: {
+          lampiran: true,
+          users: { select: { userId: true, keterangan: true } },
           activityLog: {
             include: {
               User: { select: userQuery },
@@ -232,7 +236,7 @@ export const prestasiLombaQuery = createTRPCRouter({
     .input(approvePrestasiForm)
     .mutation(async ({ ctx, input }) => {
       try {
-        const { noSK, tanggalSK, prestasiDataTableId } = input;
+        const { noSK, tanggalSK, catatan, prestasiDataTableId } = input;
 
         // ** UPDATE PRESTASI DATA TABLE
         await ctx.prisma.prestasiDataTable.update({
@@ -258,6 +262,7 @@ export const prestasiLombaQuery = createTRPCRouter({
         //** ADD NOTIFICATION MESSAGE */
         const createNotificationMessage = await ctx.prisma.notifMessage.create({
           data: {
+            catatan,
             status: STATUS.APPROVE,
             module: notificationMessage!.module,
             moduleId: notificationMessage!.moduleId,
@@ -285,6 +290,7 @@ export const prestasiLombaQuery = createTRPCRouter({
         //** ADD ACTIVITY LOG */
         await ctx.prisma.activityLog.create({
           data: {
+            catatan,
             prestasiDataTableId,
             userId: ctx.session.user.userId,
             status: STATUS.APPROVE,

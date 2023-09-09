@@ -44,8 +44,8 @@ export function DatePicker(props: DatePickerProps) {
               )}
             >
               <CalendarIcon className="mr-2" />
-              {date ? (
-                format(date, "PPP", { locale: id })
+              {date || value ? (
+                format(date || value, "PPP", { locale: id })
               ) : (
                 <span>Pilih Tanggal</span>
               )}

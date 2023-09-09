@@ -56,7 +56,7 @@ const NotificationCard = ({
   return userNotification?.map((val, index) => (
     <div
       key={val.id}
-      className={`flex flex-col gap-3 rounded-md px-5 py-3 ${
+      className={`mb-2 flex flex-col gap-3 rounded-md px-5 py-3 ${
         !val.readed ? "bg-slate-200" : "border-2 bg-white"
       }`}
     >

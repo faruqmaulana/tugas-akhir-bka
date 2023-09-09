@@ -48,7 +48,7 @@ const Card = (props: CardProps) => {
           {subHeader}
         </p>
       )}
-      {children}
+      <div className="">{children}</div>
     </div>
   );
 };
