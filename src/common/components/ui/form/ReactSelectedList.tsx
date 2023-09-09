@@ -58,8 +58,10 @@ const ReactSelectedList = (props: ReactSelectedList) => {
                       ? "Data default tidak bisa dihapus"
                       : "Hapus data"
                   }
-                  className={`flex cursor-pointer rounded-full border border-red-600 bg-red-300 p-[3px] ${
-                    !disabled ? "hover:bg-red-200" : ""
+                  className={`flex rounded-full border border-red-600 bg-red-300 p-[3px] ${
+                    !disabled
+                      ? "cursor-pointer hover:bg-red-200"
+                      : "cursor-not-allowed"
                   }`}
                   onClick={() => {
                     if (disabled) return;
@@ -93,6 +95,7 @@ const ReactSelectedList = (props: ReactSelectedList) => {
               >
                 <div className="ml-5 flex flex-row items-center gap-2">
                   <Switch
+                    className={disabled ? "!cursor-not-allowed" : ""}
                     title={value.isKetua ? "" : "Jadikan ketua"}
                     checked={value.isKetua}
                     onClick={() => {

@@ -8,7 +8,7 @@ const CustomEditIcon = (props: any) => {
   return (
     <div
       className={`m-auto ml-2 cursor-pointer rounded-lg border bg-slate-100 p-[8px] ${
-        disabled ? "border-slate-600" : "border-slate-400"
+        disabled ? "border-slate-600 hover:bg-slate-200" : "border-slate-400"
       }`}
       {...props}
     >

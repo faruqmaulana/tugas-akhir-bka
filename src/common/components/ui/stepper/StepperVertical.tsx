@@ -9,6 +9,7 @@ import HourglassIcon from "../../svg/HourglassIcon";
 import { STATUS } from "~/common/enums/STATUS";
 import { handleBgColor, handleTextColor } from "~/common/helpers/handleBgColor";
 import { FileX, Repeat } from "lucide-react";
+import Spinner from "../../svg/Spinner";
 
 export type StepperVerticalProp = {
   id: string;
@@ -38,10 +39,17 @@ const StepperVertical = (props: {
     }
   };
 
+  if (!data)
+    return (
+      <div className="flex min-h-[80vh] items-center justify-center">
+        <Spinner fill="fill-primary-500" />
+      </div>
+    );
+
   return (
     <table className={styles.container}>
       {data?.map((step) => (
-        <tbody className={styles.wrapper} key={`${step.id}`}>
+        <tbody className={`${styles.wrapper} opacity-60`} key={`${step.id}`}>
           <tr className={styles.header}>
             <td>
               <div
@@ -61,7 +69,7 @@ const StepperVertical = (props: {
               <div className={`${styles.divider}`} />
             </td>
             <td>
-              <div className="flex flex-col">
+              <div className="flex max-w-[210px] flex-col">
                 <p className={styles.desc}>{step.userName}</p>
                 <p className={styles.desc}>{step.date}</p>
                 {step.catatan && (

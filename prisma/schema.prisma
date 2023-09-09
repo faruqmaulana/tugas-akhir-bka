@@ -233,6 +233,7 @@ model Notification {
   createdAt             DateTime     @default(now())
   notificationMessage   NotifMessage @relation(fields: [notificationMessageId], references: [id])
   User                  User         @relation(fields: [userId], references: [id])
+  activityId            String
 }
 
 model ActivityLog {

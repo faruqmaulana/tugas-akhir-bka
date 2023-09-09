@@ -107,11 +107,11 @@ const Input = (props: InputProps) => {
         {type === "textarea" && (
           <textarea
             {...(register || {})}
-            className={`peer block min-h-[auto] w-full rounded border border-neutral-300 bg-transparent px-3 py-[0.32rem] leading-[1.6] ease-linear focus:border-primary focus:text-neutral-700 focus:outline-none data-[te-input-state-active]:placeholder:opacity-100 
+            className={`peer block min-h-[auto] w-full rounded border border-neutral-400 bg-transparent px-3 py-[0.32rem] leading-[1.6] ease-linear focus:border-primary focus:text-neutral-700 focus:outline-none data-[te-input-state-active]:placeholder:opacity-100 
             ${
               error
                 ? "!border-red-500 focus:!border-red-500"
-                : "border-neutral-300"
+                : "border-neutral-400"
             }
             ${
               value
@@ -124,12 +124,12 @@ const Input = (props: InputProps) => {
         )}
         {leftAddonComponent && (
           <span
-            className={`bg-grey-900 flex items-center whitespace-nowrap rounded-l border border-r-0 border-solid border-neutral-300 px-3 py-[0.25rem] text-center text-base font-normal leading-[1.6] text-neutral-700 dark:border-neutral-600 dark:text-neutral-900 dark:placeholder:text-neutral-200 
+            className={`bg-grey-900 flex items-center whitespace-nowrap rounded-l border border-r-0 border-solid border-neutral-400 px-3 py-[0.25rem] text-center text-base font-normal leading-[1.6] text-neutral-700 dark:border-neutral-600 dark:text-neutral-900 dark:placeholder:text-neutral-200 
             ${isDisabled ? "cursor-not-allowed opacity-60" : ""} 
             ${
               error
                 ? "!border-red-500 focus:!border-red-500"
-                : "border-neutral-300"
+                : "border-neutral-400"
             }`}
             id="basic-addon1"
           >
@@ -137,7 +137,14 @@ const Input = (props: InputProps) => {
           </span>
         )}
         {type === "date" && (
-          <DatePicker control={control} register={register} error={error} />
+          <DatePicker
+            control={control}
+            register={register}
+            error={error}
+            disabled={isDisabled}
+            isEditForm={isEditForm}
+            editIconAction={editIconAction}
+          />
         )}
         {(type === "text" ||
           type === "file" ||
@@ -151,13 +158,13 @@ const Input = (props: InputProps) => {
             disabled={isDisabled}
             type={showPassword ? "text" : type}
             data-te-inline="true"
-            className={`relative m-0 block w-[1px] min-w-0 flex-auto rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:text-neutral-900 dark:focus:border-primary ${
+            className={`relative m-0 block w-[1px] min-w-0 flex-auto rounded-r border border-solid border-neutral-400 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:text-neutral-900 dark:focus:border-primary ${
               !leftAddonComponent ? "rounded-l" : ""
             }
             ${
               error
                 ? "!border-red-500 focus:!border-red-500"
-                : "border-neutral-300"
+                : "border-neutral-400"
             }
           ${
             value

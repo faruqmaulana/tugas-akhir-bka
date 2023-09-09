@@ -203,6 +203,15 @@ export const prestasiLombaQuery = createTRPCRouter({
 
         const mergeusers = [...admin, ...users];
 
+        //** ADD ACTIVITY LOG */
+        const createActivityLog = await ctx.prisma.activityLog.create({
+          data: {
+            prestasiDataTableId: createPrestasiDataTable.id,
+            userId: ctx.session.user.userId,
+            status: STATUS.PROCESSED,
+          },
+        });
+
         //** ADD NOTIFICATION IN RELATED USERS AND ADMINS */
         await ctx.prisma.notification.createMany({
           data: mergeusers.map((val: { value?: string; id?: string }) => {
@@ -211,15 +220,6 @@ export const prestasiLombaQuery = createTRPCRouter({
               userId: (val.value || val.id) as string,
             };
           }),
-        });
-
-        //** ADD ACTIVITY LOG */
-        await ctx.prisma.activityLog.create({
-          data: {
-            prestasiDataTableId: createPrestasiDataTable.id,
-            userId: ctx.session.user.userId,
-            status: STATUS.PROCESSED,
-          },
         });
 
         return {

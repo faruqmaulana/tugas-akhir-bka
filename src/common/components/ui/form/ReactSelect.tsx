@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { useState } from "react";
 import { Controller, type RegisterOptions } from "react-hook-form";
-import Select, { type SingleValue } from "react-select";
+import Select, { type StylesConfig, type SingleValue } from "react-select";
 
 import ReactSelectedList from "./ReactSelectedList";
 
@@ -132,6 +132,13 @@ export const ReactSelect = (props: ReactSelectType) => {
     return `Pilih ${placeholder}`;
   };
 
+  const customstyles: StylesConfig = {
+    control: (provided: Record<string, unknown>, state: any) => ({
+      ...provided,
+      borderColor: error ? "#ef4444" : "#a3a3a3",
+    }),
+  };
+
   return (
     <>
       <Controller
@@ -150,11 +157,7 @@ export const ReactSelect = (props: ReactSelectType) => {
                 isClearable
                 isSearchable
                 placeholder={handlePlaceholder()}
-                className={`basic-single w-full rounded ${
-                  error
-                    ? "error border !border-red-500 hover:border-red-500 focus:!border-red-500 focus:outline-none"
-                    : ""
-                }`}
+                className={`basic-single w-full rounded`}
                 classNamePrefix="select"
                 value={handleValue(value)}
                 defaultValue={currentValue}
@@ -164,6 +167,7 @@ export const ReactSelect = (props: ReactSelectType) => {
                 onChange={(val: any) => {
                   handleOptionChange(onChange, val);
                 }}
+                styles={customstyles}
               />
               {isEditForm && editIconAction}
             </div>

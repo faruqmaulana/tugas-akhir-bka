@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -28,6 +29,7 @@ const INITIAL_STATE = {
 };
 
 const useApproveKejuaraan = ({ slug }: { slug: string }) => {
+  const router = useRouter();
   const { isAdmin } = useCurrentUser();
   const { refetchNotification } = useMainLayout();
 
@@ -52,6 +54,12 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
   } = useKejuaraan(prestasi?.users);
 
   const activityLog = transformActivityLog(prestasi?.activityLog);
+
+  const setDefaultValue = async () => {
+    if (prestasi) {
+      await router.push(router.asPath);
+    }
+  };
 
   useEffect(() => {
     if (prestasi) {
@@ -266,6 +274,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
     KEJUARAAN_FORM,
     onSubmit,
     handleSubmit,
+    setDefaultValue,
   };
 };
 

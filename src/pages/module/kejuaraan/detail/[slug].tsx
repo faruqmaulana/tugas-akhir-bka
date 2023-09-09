@@ -13,6 +13,8 @@ import { requireAuth } from "~/common/authentication/requireAuth";
 import StepperVertical from "~/common/components/ui/stepper/StepperVertical";
 import InfoIcon from "~/common/components/svg/InfoIcon";
 import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
+import { RefreshCcw } from "lucide-react";
+import { STATUS } from "~/common/enums/STATUS";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: { slug: ctx.query.slug } };
@@ -38,6 +40,8 @@ const Example = ({ slug }: { slug: string }) => {
     KEJUARAAN_FORM,
     onSubmit,
     handleSubmit,
+    setDefaultValue,
+    prestasi,
   } = useApproveKejuaraan({ slug });
 
   return (
@@ -91,12 +95,22 @@ const Example = ({ slug }: { slug: string }) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-row justify-end gap-4">
             <Button
+              disabled={!prestasi}
+              isSecondary
+              isMedium
+              onClick={() => setDefaultValue()}
+            >
+              Reset
+            </Button>
+            <Button
               isSubmit
               isSuccess
               isMedium
               isLoading={state.loadingApprove}
             >
-              Submit
+              {prestasi?.status === STATUS.PROCESSED
+                ? "Submit Perubahan"
+                : "Ajukan Ulang"}
             </Button>
           </div>
         </form>

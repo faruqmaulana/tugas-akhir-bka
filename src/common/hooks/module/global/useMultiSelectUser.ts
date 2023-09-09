@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import {
   type handleDeleteSelectedDataType,
   type CustomReactSelectOptionsType,
@@ -15,13 +16,30 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
     state: { user: userData },
   } = useGlobalContext();
   const { data: user } = api.user.getAllMahasiswa.useQuery();
+  const router = useRouter();
 
   const [mahasiswa, setMahasiswa] = useState<
-    CustomReactSelectOptionsType[] | []
-  >([]);
+    CustomReactSelectOptionsType[] | [] | undefined
+  >(undefined);
   const [mahasiswaPayload, setMahasiswaPayload] = useState<
     ReactSelectOptionType[]
   >([]);
+
+  // ** RESET STATE WHEN ROUTE WAS CHANGED */
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      // Perform actions when the route changes
+      setMahasiswa(undefined);
+      setMahasiswaPayload([]);
+    };
+
+    router.events.on("routeChangeComplete", handleRouteChange);
+
+    // Remove the event listener when the component unmounts
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, [router.events]);
 
   const handleSelectMultipleUser = (ctx: ReactSelectOptionType) => {
     if (!ctx) return;
@@ -36,7 +54,7 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
 
   useEffect(() => {
     if (user || mahasiswa || defaultSelected) {
-      if (mahasiswa?.length > 0) return;
+      if (mahasiswa) return;
 
       if (defaultSelected) {
         const userIdToKeteranganMap = new Map(
@@ -64,7 +82,7 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
           label: item.name as string,
           value: item.id as string,
           isKetua: getUserLeadBoolean(item.keterangan as string),
-          disableDelete: true,
+          disableDelete: item.id === userData?.id,
         }));
 
         setMahasiswa(filterUserWithNoKeterangan);
@@ -118,7 +136,10 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
       ) as CustomReactSelectOptionsType[];
 
       setMahasiswaPayload(updatedMahasiswa);
-      setMahasiswa([...mahasiswa, ...deletedData]);
+      setMahasiswa([
+        ...(mahasiswa as CustomReactSelectOptionsType[] | []),
+        ...deletedData,
+      ]);
     }
   };
 
