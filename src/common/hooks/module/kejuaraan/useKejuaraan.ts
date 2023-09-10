@@ -80,6 +80,7 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
       handleSwitch: handleMahasiswaLead,
       handleDeleteSelectedData: handleDeleteSelectedMahasiswa,
       handleSelectMultipleUser: handleSelectMultipleUser,
+      formFlag: "IS_MUTIPLE_SELECT_MAHASISWA_FORM",
     },
     {
       trigger: trigger,
@@ -202,6 +203,7 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
     onSubmit,
     loading,
     allKejuaraan,
+    register,
   };
 };
 

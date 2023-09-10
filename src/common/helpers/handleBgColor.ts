@@ -11,6 +11,8 @@ export const handleBgColor = (status: string): string => {
     return "border border-orange-500 bg-orange-50 text-orange-600";
   if (status === STATUS.PROCESSED)
     return "border border-yellow-500 bg-yellow-50 text-yellow-600";
+  if (status === STATUS.EDITED)
+    return "border border-primary-500 bg-primary-50 text-primary-600";
   if (status === "Baru")
     return "border border-indigo-500 bg-indigo-50 text-indigo-600";
 
@@ -23,6 +25,7 @@ export const handleTextColor = (status: string): string => {
   if (status === STATUS.REJECT) return "text-red-600";
   if (status === STATUS.REPROCESS) return "text-orange-600";
   if (status === STATUS.PROCESSED) return "text-yellow-600";
+  if (status === STATUS.EDITED) return "text-primary-600";
   if (status === "Baru") return "text-indigo-600";
 
   return "";

@@ -8,7 +8,7 @@ import React from "react";
 import HourglassIcon from "../../svg/HourglassIcon";
 import { STATUS } from "~/common/enums/STATUS";
 import { handleBgColor, handleTextColor } from "~/common/helpers/handleBgColor";
-import { FileX, Repeat } from "lucide-react";
+import { FileEdit, FileX, Repeat } from "lucide-react";
 import Spinner from "../../svg/Spinner";
 
 export type StepperVerticalProp = {
@@ -39,6 +39,9 @@ const StepperVertical = (props: {
     }
     if (status === STATUS.REPROCESS) {
       return <Repeat width={20} />;
+    }
+    if (status === STATUS.EDITED) {
+      return <FileEdit width={20} />;
     }
   };
 
@@ -81,7 +84,9 @@ const StepperVertical = (props: {
             <td>
               <div className="flex min-w-[210px] max-w-[210px] flex-col">
                 <p className={styles.desc}>{step.userName}</p>
-                <p className={styles.desc}>{step.date}</p>
+                <p className={`${styles.desc} !font-medium !text-gray-900`}>
+                  {step.date}
+                </p>
                 {step.catatan && (
                   <p className={`${styles.desc} mt-2`}>
                     Catatan: {step.catatan}

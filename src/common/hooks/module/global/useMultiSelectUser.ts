@@ -10,11 +10,13 @@ import {
 import { useGlobalContext } from "~/common/context/GlobalContext";
 import { getUserLeadBoolean } from "~/common/helpers/getUserLead";
 import { api } from "~/utils/api";
+import { Role } from "@prisma/client";
 
 const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
   const {
     state: { user: userData },
   } = useGlobalContext();
+
   const { data: user } = api.user.getAllMahasiswa.useQuery();
   const router = useRouter();
 
@@ -24,22 +26,6 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
   const [mahasiswaPayload, setMahasiswaPayload] = useState<
     ReactSelectOptionType[]
   >([]);
-
-  // ** RESET STATE WHEN ROUTE WAS CHANGED */
-  useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      // Perform actions when the route changes
-      setMahasiswa(undefined);
-      setMahasiswaPayload([]);
-    };
-
-    router.events.on("routeChangeComplete", handleRouteChange);
-
-    // Remove the event listener when the component unmounts
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChange);
-    };
-  }, [router.events]);
 
   const handleSelectMultipleUser = (ctx: ReactSelectOptionType) => {
     if (!ctx) return;
@@ -54,8 +40,6 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
 
   useEffect(() => {
     if (user || mahasiswa || defaultSelected) {
-      if (mahasiswa) return;
-
       if (defaultSelected) {
         const userIdToKeteranganMap = new Map(
           (defaultSelected as { userId: string; keterangan: string }[])?.map(
@@ -99,21 +83,18 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
       setMahasiswa(filteredMahasiswa);
 
       if (mahasiswaPayload?.length > 0) return;
-      setMahasiswaPayload([
-        {
-          label: userData?.name as string,
-          value: userData?.id as string,
-          isKetua: true,
-          disableDelete: true,
-        },
-      ]);
+      if (userData?.role !== Role.ADMIN) {
+        setMahasiswaPayload([
+          {
+            label: userData?.name as string,
+            value: userData?.id as string,
+            isKetua: true,
+            disableDelete: true,
+          },
+        ]);
+      }
     }
-  }, [user, mahasiswa, defaultSelected]);
-
-  // useEffect(() => {
-  //   console.log("mahasiswaPayload", mahasiswaPayload);
-  //   console.log("mahasiswa", mahasiswa);
-  // }, [mahasiswa, mahasiswaPayload]);
+  }, [user, defaultSelected, router]);
 
   const handleDeleteSelectedMahasiswa = (
     params: handleDeleteSelectedDataType

@@ -90,6 +90,7 @@ Table PrestasiDataTable {
   penyelenggara String
   createdAt DateTime [default: `now()`]
   orkemId String [not null]
+  createdById String [not null]
   tingkatKejuaraanId String [not null]
   tingkatPrestasiId String [not null]
   dosenId String [not null]

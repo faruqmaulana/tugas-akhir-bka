@@ -14,7 +14,7 @@
   }
 
   .title {
-    @apply text-[22px] font-bold uppercase tracking-wide text-red-700;
+    @apply hidden text-[22px] font-bold uppercase tracking-wide text-red-700 md:block;
   }
 
   .profileCorner {

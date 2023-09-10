@@ -36,6 +36,7 @@ const ReactSelectedList = (props: ReactSelectedList) => {
     disabled,
   } = props;
 
+
   return (
     <table
       className={`w-fit border-spacing-10 overflow-auto ${

@@ -8,7 +8,7 @@ import {
   APPROVE_PRESTASI_AND_LOMBA,
   REJECT_PRESTASI_AND_LOMBA,
 } from "~/common/message";
-import { type Prisma } from "@prisma/client";
+import { Role, type Prisma } from "@prisma/client";
 import {
   approvePrestasiForm,
   rejectPrestasiForm,
@@ -19,6 +19,8 @@ import {
   MOUDLE_KEJUARAAN,
   PENGAJUAN_ACCEPTED_BY_ADMIN_SIDE,
   PENGAJUAN_ACCEPTED_BY_USER_SIDE,
+  PENGAJUAN_EDITED_BY_ADMIN_SIDE,
+  PENGAJUAN_EDITED_BY_USER_SIDE,
   PENGAJUAN_MESSAGE_BY_ADMIN_SIDE,
   PENGAJUAN_MESSAGE_BY_USER_SIDE,
   PENGAJUAN_REJECTED_BY_ADMIN_SIDE,
@@ -161,6 +163,7 @@ export const prestasiLombaQuery = createTRPCRouter({
               tingkatKejuaraanId,
               tingkatPrestasiId,
               lampiranId: createLampiran.id,
+              createdById: ctx.session.user.userId,
             },
           });
 
@@ -370,6 +373,179 @@ export const prestasiLombaQuery = createTRPCRouter({
               };
             }
           ),
+        });
+
+        return {
+          message: REJECT_PRESTASI_AND_LOMBA,
+        } as SuccessPengajuanOnUsersType;
+      } catch (error) {
+        throw error;
+      }
+    }),
+
+  //** MAHASISWA ACTION */
+  editPengajuanPrestasi: protectedProcedure
+    .input(pengajuanPrestasiForm)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const {
+          prestasiDataTableId,
+          catatan,
+
+          // THESE LAMPIRAN PAYLOAD
+          dokumenPendukung,
+          fotoPenyerahanPiala,
+          piagamPenghargaan,
+          undanganKejuaraan,
+
+          // PRESTASI DATA TABLE PAYLOAD
+          kegiatan,
+          tanggalKegiatan,
+          penyelenggara,
+          dosenId,
+          orkemId,
+          tingkatKejuaraanId,
+          tingkatPrestasiId,
+          status,
+
+          // PENGAJUAN ON USER PAYLOAD
+          users: selectedUsers,
+          currentUserName,
+        } = input;
+
+        const handleUpdateStatus = () => {
+          if (status === STATUS.PROCESSED || status === STATUS.EDITED) {
+            return STATUS.EDITED;
+          }
+          return STATUS.REPROCESS;
+        };
+
+        // ** UPDATE NEW PRESTASI DATA TABLE
+        const updatedPrestasiDataTable =
+          await ctx.prisma.prestasiDataTable.update({
+            where: { id: prestasiDataTableId },
+            include: {
+              users: true,
+            },
+            data: {
+              status: handleUpdateStatus(),
+              kegiatan,
+              tanggalKegiatan,
+              penyelenggara,
+              dosenId,
+              orkemId,
+              tingkatKejuaraanId,
+              tingkatPrestasiId,
+            },
+          });
+
+        // ** UPDATE A LAMPIRAN DATA FIRST TO GET A LAMPIRAN ID
+        await ctx.prisma.lampiranData.update({
+          where: { id: updatedPrestasiDataTable.lampiranId },
+          data: {
+            dokumenPendukung,
+            fotoPenyerahanPiala,
+            piagamPenghargaan,
+            undanganKejuaraan,
+          },
+        });
+
+        await ctx.prisma.pengajuanOnUsers.deleteMany({
+          where: {
+            AND: {
+              prestasiDataTableId,
+              userId: {
+                in: updatedPrestasiDataTable.users.map((val) => val.userId),
+              },
+            },
+          },
+        });
+
+        // ** CREATE NEW ENTITY PENGAJUAN ON USERS BASED ON PRETASI DATA TABLE AND USERS
+        await ctx.prisma.pengajuanOnUsers.createMany({
+          data: selectedUsers.map((val) => {
+            return {
+              dosenId,
+              userId: val.value,
+              keterangan: val.isKetua ? "Ketua Tim" : "Anggota",
+              prestasiDataTableId,
+            };
+          }),
+        });
+
+        // //** FIND NOTIFICATION MESSAGE */
+        const notificationMessage = await ctx.prisma.notifMessage.findFirst({
+          where: { moduleId: prestasiDataTableId },
+          include: {
+            Notification: { include: { User: { select: userQuery } } },
+          },
+        });
+
+        // //** FILTERS NOT RELATED USER * //
+        const filteredDeletedUsers = notificationMessage!.Notification.filter(
+          (val) => {
+            return (
+              val.User.role !== "ADMIN" &&
+              !selectedUsers.some((subval) => subval.value === val.userId)
+            );
+          }
+        );
+        // //** FILTER AND MERGE ADMIN AND RELATED USER * //
+        const getAllAdmin = notificationMessage!.Notification.filter(
+          (val) => val.User.role === Role.ADMIN
+        );
+        const transformedAdmin = getAllAdmin.map((val) => val.userId);
+        const transformedUsers = selectedUsers.map((val) => val.value);
+        const mergeAdminAndRelatedUsers = [
+          ...transformedAdmin,
+          ...transformedUsers,
+        ];
+
+        // //** DELETE NOTIFICATION THAT NOT RELATED USER * //
+        await ctx.prisma.notification.deleteMany({
+          where: {
+            AND: {
+              userId: { in: filteredDeletedUsers.map((val) => val.userId) },
+              notificationMessage: { moduleId: prestasiDataTableId },
+            },
+          },
+        });
+
+        // //** ADD NOTIFICATION MESSAGE */
+        const createNotificationMessage = await ctx.prisma.notifMessage.create({
+          data: {
+            catatan,
+            status: handleUpdateStatus(),
+            module: notificationMessage!.module,
+            moduleId: notificationMessage!.moduleId,
+            description: notificationMessage!.description,
+            forUserMessage: PENGAJUAN_EDITED_BY_USER_SIDE(MOUDLE_KEJUARAAN),
+            forAdminMessage: PENGAJUAN_EDITED_BY_ADMIN_SIDE(MOUDLE_KEJUARAAN),
+            actionByMahasiswaId: notificationMessage!.actionByMahasiswaId,
+            actionByAdminId: ctx.session.user.userId,
+            userInfo: notificationMessage?.userInfo,
+          },
+        });
+
+        // //** ADD ACTIVITY LOG */
+        const createActivityLog = await ctx.prisma.activityLog.create({
+          data: {
+            catatan,
+            prestasiDataTableId,
+            userId: ctx.session.user.userId,
+            status: handleUpdateStatus(),
+          },
+        });
+
+        // //** ADD NOTIFICATION IN RELATED USERS AND ADMINS */
+        await ctx.prisma.notification.createMany({
+          data: mergeAdminAndRelatedUsers.map((val: string) => {
+            return {
+              notificationMessageId: createNotificationMessage.id,
+              userId: val,
+              activityLogId: createActivityLog.id,
+            };
+          }),
         });
 
         return {

@@ -13,6 +13,7 @@ import { type SingleValue } from "react-select";
 import { DatePicker } from "../calendar/DatePicker";
 import CustomEditIcon from "../../svg/CustomEditIcon";
 import { useCurrentUser } from "~/common/hooks/module/profile";
+import { type FORM_FLAG } from "~/common/enums/FORM_FLAG";
 
 export type InputProps = {
   isEditForm?: boolean;
@@ -32,6 +33,7 @@ export type InputProps = {
   control?: any;
   isLoading?: boolean;
   selectedData?: ReactSelectOptionType[];
+  formFlag: string;
   onChange?: (value: string) => void;
   handleSwitch?: (value: string) => void;
   handleDeleteSelectedData?: (params: handleDeleteSelectedDataType) => void;
@@ -48,6 +50,7 @@ const Input = (props: InputProps) => {
   const { isAdmin } = useCurrentUser();
 
   const {
+    formFlag,
     isEditForm = false,
     trigger,
     disabled = false,
@@ -90,10 +93,11 @@ const Input = (props: InputProps) => {
       <div className="relative flex flex-wrap items-stretch">
         {type === "select" && (
           <ReactSelect
+            disabled={isDisabled}
+            setIsDisabled={setIsDisabled}
             trigger={trigger}
             isLoading={isLoading}
             control={control}
-            disabled={isDisabled}
             register={register}
             placeholder={placeholder}
             defaultValue={value}
@@ -104,8 +108,8 @@ const Input = (props: InputProps) => {
             handleDeleteSelectedData={handleDeleteSelectedData}
             handleSelectMultipleUser={handleSelectMultipleUser}
             handleSelectOptionChange={handleSelectOptionChange}
-            editIconAction={editIconAction}
             isEditForm={editForm}
+            formFlag={formFlag}
           />
         )}
         {type === "textarea" && (

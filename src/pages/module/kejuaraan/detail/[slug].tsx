@@ -13,7 +13,6 @@ import { requireAuth } from "~/common/authentication/requireAuth";
 import StepperVertical from "~/common/components/ui/stepper/StepperVertical";
 import InfoIcon from "~/common/components/svg/InfoIcon";
 import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
-import { RefreshCcw } from "lucide-react";
 import { STATUS } from "~/common/enums/STATUS";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
@@ -37,11 +36,13 @@ const Example = ({ slug }: { slug: string }) => {
     isDrawerOpen,
     setIsDrawerOpen,
     KEJUARAAN_FORM,
+    EDIT_PRESTASI_FORM,
     onSubmit,
     handleSubmit,
     setDefaultValue,
     prestasi,
     isAdmin,
+    isLoadingPrestasiData,
   } = useApproveKejuaraan({ slug });
 
   return (
@@ -92,9 +93,9 @@ const Example = ({ slug }: { slug: string }) => {
             </Button>
           </div>
         )}
-        {!isAdmin && (
+        {!isAdmin && !isLoadingPrestasiData && (
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex flex-row justify-end gap-4">
+            <div className="mr-auto flex flex-row gap-4">
               <Button
                 disabled={!prestasi}
                 isSecondary
@@ -104,10 +105,9 @@ const Example = ({ slug }: { slug: string }) => {
                 Reset
               </Button>
               <Button
-                isSubmit
                 isSuccess
                 isMedium
-                isLoading={state.loadingApprove}
+                onClick={() => handleButtonAction("edit")}
               >
                 {prestasi?.status === STATUS.PROCESSED
                   ? "Submit Perubahan"
@@ -175,6 +175,37 @@ const Example = ({ slug }: { slug: string }) => {
                 isSuccess
                 isMedium
                 isLoading={state.loadingApprove}
+              >
+                Submit
+              </Button>
+            </div>
+          </form>
+        }
+      ></Modal>
+      <Modal
+        confirm
+        showClose
+        isOpen={state.isEdited}
+        className="!mb-0"
+        content={
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <p className="text-center">
+              Anda melakukan perubahan pada dokumen yang sudah diajukan.
+            </p>
+            <BaseForm data={EDIT_PRESTASI_FORM} />
+            <div className="flex flex-row justify-end gap-4">
+              <Button
+                isGray
+                isMedium
+                onClick={() => handleButtonAction("close")}
+              >
+                Cancel
+              </Button>
+              <Button
+                isSubmit
+                isSuccess
+                isMedium
+                isLoading={state.loadingEdited}
               >
                 Submit
               </Button>

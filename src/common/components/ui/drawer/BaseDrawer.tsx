@@ -11,12 +11,13 @@ export type BaseDrawerPropsType = {
 };
 
 const BaseDrawer = (props: BaseDrawerPropsType) => {
-  const {
-    header,
-    content,
-    setDrawerOpen,
-    isDrawerOpen,
-  } = props;
+  const { header, content, setDrawerOpen, isDrawerOpen } = props;
+
+  if (isDrawerOpen) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "auto";
+  }
 
   return (
     <main className={`${styles.main} ${isDrawerOpen && styles.drawerOpen}`}>

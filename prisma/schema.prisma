@@ -108,6 +108,7 @@ model PrestasiDataTable {
   penyelenggara      String?
   createdAt          DateTime?                  @default(now())
   orkemId            String
+  createdById        String
   tingkatKejuaraanId String
   tingkatPrestasiId  String
   dosenId            String

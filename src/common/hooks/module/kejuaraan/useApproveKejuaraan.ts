@@ -21,9 +21,11 @@ import { useKejuaraan } from "./useKejuaraan";
 import { type IPengajuanPrestasiForm } from "~/common/schemas/module/pengajuan/pengajuan-prestasi.shema";
 
 const INITIAL_STATE = {
+  isEdited: false,
   isReject: false,
   isApprove: false,
   isSuccess: false,
+  loadingEdited: false,
   loadingApprove: false,
   loadingReject: false,
 };
@@ -42,15 +44,22 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
   const { mutate: rejectPengajuanPrestasi } =
     api.prestasiLomba.rejectPengajuanPrestasi.useMutation();
 
-  const { data: prestasi, refetch: refetchPrestasi } =
-    api.prestasiLomba.getKejuaraanById.useQuery(prestasiDataTableId, {
-      enabled: !!prestasiDataTableId,
-    });
+  const { mutate: editPengajuanPrestasi } =
+    api.prestasiLomba.editPengajuanPrestasi.useMutation();
 
   const {
-    KEJUARAAN_FORM,
-    setValue: setDefaultKejuaraanValue,
+    data: prestasi,
+    refetch: refetchPrestasi,
+    isLoading: isLoadingPrestasiData,
+  } = api.prestasiLomba.getKejuaraanById.useQuery(prestasiDataTableId, {
+    enabled: !!prestasiDataTableId,
+  });
+
+  const {
     handleSubmit,
+    KEJUARAAN_FORM,
+    register: registerKejuaraanForm,
+    setValue: setDefaultKejuaraanValue,
   } = useKejuaraan(prestasi?.users);
 
   const activityLog = transformActivityLog(prestasi?.activityLog);
@@ -62,7 +71,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
   };
 
   useEffect(() => {
-    if (prestasi) {
+    if (!isLoadingPrestasiData && prestasi) {
       setDefaultKejuaraanValue("kegiatan", prestasi.kegiatan);
       setDefaultKejuaraanValue("tanggalKegiatan", prestasi.tanggalKegiatan);
       setDefaultKejuaraanValue("penyelenggara", prestasi.penyelenggara || "");
@@ -70,6 +79,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
       setDefaultKejuaraanValue("dosenId", prestasi.dosenId);
       setDefaultKejuaraanValue("orkemId", prestasi.orkemId);
       setDefaultKejuaraanValue("tingkatPrestasiId", prestasi.tingkatPrestasiId);
+      setDefaultKejuaraanValue("status", prestasi.status);
       setDefaultKejuaraanValue(
         "tingkatKejuaraanId",
         prestasi.tingkatKejuaraanId
@@ -91,16 +101,13 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
         prestasi?.lampiran?.dokumenPendukung as string
       );
     }
-  }, [prestasi, setDefaultKejuaraanValue]);
-
-  const onSubmit = useCallback((userPayload: IPengajuanPrestasiForm) => {
-    console.log("userPayload", userPayload);
-  }, []);
+  }, [isLoadingPrestasiData, setDefaultKejuaraanValue]);
 
   const renderActionButton = () => {
     switch (true) {
       case isAdmin &&
         (prestasi?.status === STATUS.PROCESSED ||
+          prestasi?.status === STATUS.EDITED ||
           prestasi?.status === STATUS.REPROCESS):
         return true;
       default:
@@ -133,13 +140,21 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
   useEffect(() => {
     setValue("prestasiDataTableId", prestasiDataTableId);
     setDefautlRejectValue("prestasiDataTableId", prestasiDataTableId);
-  }, [prestasiDataTableId, setValue, setDefautlRejectValue]);
+    setDefaultKejuaraanValue("prestasiDataTableId", prestasiDataTableId);
+  }, [
+    prestasiDataTableId,
+    setValue,
+    setDefautlRejectValue,
+    setDefaultKejuaraanValue,
+  ]);
 
   const handleButtonAction = (type: string) => {
+    if (type === "edit") {
+      setState({ ...state, isEdited: true });
+    }
     if (type === "reject") {
       setState({ ...state, isReject: true });
     }
-
     if (type === "approve") {
       setState({ ...state, isApprove: true });
     }
@@ -200,6 +215,45 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
     },
     []
   );
+
+  const onSubmit = useCallback((userPayload: IPengajuanPrestasiForm) => {
+    setState((prev) => ({ ...prev, loadingEdited: true }));
+    editPengajuanPrestasi(userPayload, {
+      onSuccess: async (data) => {
+        customToast("success", data?.message);
+        setState({ ...state, loadingEdited: false });
+        if (data?.message) {
+          await onSuccesAction();
+        }
+      },
+      onError: (error) => {
+        customToast("error", error?.message);
+        setState({ ...state, loadingEdited: false });
+      },
+    });
+  }, []);
+
+  const EDIT_PRESTASI_FORM = [
+    {
+      className: "col-span-2",
+      type: "hidden",
+      register: { ...registerKejuaraanForm("prestasiDataTableId") },
+    },
+    {
+      className: "col-span-2",
+      type: "hidden",
+      register: { ...registerKejuaraanForm("status") },
+    },
+    {
+      labelFontSize: "text-[16px]",
+      label: "*Berikan Alasan Anda :",
+      placeholder: "Contoh: Dokumen tidak valid",
+      type: "textarea",
+      className: "col-span-2",
+      register: { ...registerKejuaraanForm("catatan") },
+      error: errorsRejectForm.catatan?.message,
+    },
+  ];
 
   const REJECT_PRESTASI_FORM = [
     {
@@ -271,11 +325,13 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
     renderActionButton,
     isDrawerOpen,
     setIsDrawerOpen,
-    KEJUARAAN_FORM,
     onSubmit,
+    KEJUARAAN_FORM,
     handleSubmit,
     setDefaultValue,
-    isAdmin
+    isAdmin,
+    isLoadingPrestasiData,
+    EDIT_PRESTASI_FORM,
   };
 };
 
