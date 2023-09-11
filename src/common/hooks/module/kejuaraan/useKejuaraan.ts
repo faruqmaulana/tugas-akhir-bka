@@ -158,7 +158,7 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
       className: "col-span-2 lg:col-span-1",
       placeholder: "Piagam Penghargaan",
       label: "Piagam Penghargaan",
-      type: "text",
+      type: "file",
       register: { ...register("piagamPenghargaan") },
       error: errors.custom?.message,
     },
