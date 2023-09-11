@@ -47,7 +47,7 @@ const notifikasi = () => {
     setIsDrawerOpen,
     activityLog,
     activityLogId,
-    isActivityLogLoading
+    isActivityLogLoading,
   } = useNotification();
 
   if ((userNotification as AllNotificationType)?.length === 0)
@@ -57,7 +57,7 @@ const notifikasi = () => {
     <>
       <PageHeading />
       <Card className="flex flex-col gap-5">
-        <div className="flex flex-wrap justify-between border-b-2 pb-1">
+        <div className="mb-2 flex flex-wrap justify-between border-b-2 pb-1">
           <span className="text-2xl font-bold text-gray-800">
             Semua Notifikasi Anda
           </span>
