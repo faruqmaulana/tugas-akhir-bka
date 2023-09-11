@@ -1,6 +1,16 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { type KejuaraanByIdType } from "~/server/api/module/pengajuan/prestasi";
-import { changeDateFormat } from "../helpers/changeDateFormat";
+import { changeDateFormatToNumeric } from "../helpers/changeDateFormat";
+import capitalizeFirstLetter from "../helpers/capitalizeFirstLetter";
+
+export type transformedActivityLogType = {
+  id: string;
+  status: string;
+  userName: string;
+  catatan: string | null;
+  date: string;
+};
 
 export const transformActivityLog = (
   data: KejuaraanByIdType["activityLog"] | undefined
@@ -9,9 +19,9 @@ export const transformActivityLog = (
     return {
       id: val.id,
       status: val.status,
-      userName: val.User.name,
+      userName: `${val.User.name} (${capitalizeFirstLetter(val.User.role)})`,
       catatan: val.catatan,
-      date: changeDateFormat(val.createdAt),
+      date: changeDateFormatToNumeric(val.createdAt),
     };
-  });
+  }) as transformedActivityLogType[] | undefined;
 };

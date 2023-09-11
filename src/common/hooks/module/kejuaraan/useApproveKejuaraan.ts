@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -8,41 +11,109 @@ import {
   type IRejectPrestasiForm,
   rejectPrestasiForm,
 } from "~/common/schemas/module/pengajuan/approve-prestasi.schema";
-import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import { customToast } from "~/common/components/ui/toast/showToast";
 import { useMainLayout } from "../../layout/useMainLayout";
-import { type StepperVerticalProp } from "~/common/components/ui/stepper/StepperVertical";
-import { changeDateFormat } from "~/common/helpers/changeDateFormat";
-import { type KejuaraanByIdType } from "~/server/api/module/pengajuan/prestasi";
 import { transformActivityLog } from "~/common/transforms/transformActiviryLog";
+import { STATUS } from "~/common/enums/STATUS";
+import { useCurrentUser } from "../profile";
+import { useKejuaraan } from "./useKejuaraan";
+import { type IPengajuanPrestasiForm } from "~/common/schemas/module/pengajuan/pengajuan-prestasi.shema";
 
 const INITIAL_STATE = {
+  isEdited: false,
   isReject: false,
   isApprove: false,
   isSuccess: false,
+  loadingEdited: false,
   loadingApprove: false,
   loadingReject: false,
 };
 
-const useApproveKejuaraan = () => {
+const useApproveKejuaraan = ({ slug }: { slug: string }) => {
   const router = useRouter();
-  const [state, setState] = useState(INITIAL_STATE);
+  const { isAdmin } = useCurrentUser();
   const { refetchNotification } = useMainLayout();
-  const prestasiDataTableId = router.query.slug as string;
+
+  const [state, setState] = useState(INITIAL_STATE);
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
+  const prestasiDataTableId = slug;
   const { mutate: approvePengajuanPrestasi } =
     api.prestasiLomba.approvePengajuanPrestasi.useMutation();
   const { mutate: rejectPengajuanPrestasi } =
     api.prestasiLomba.rejectPengajuanPrestasi.useMutation();
 
-  const { data: prestasi } = api.prestasiLomba.getKejuaraanById.useQuery(
-    prestasiDataTableId,
-    {
-      enabled: !!prestasiDataTableId,
-    }
-  );
+  const { mutate: editPengajuanPrestasi } =
+    api.prestasiLomba.editPengajuanPrestasi.useMutation();
+
+  const {
+    data: prestasi,
+    refetch: refetchPrestasi,
+    isLoading: isLoadingPrestasiData,
+  } = api.prestasiLomba.getKejuaraanById.useQuery(prestasiDataTableId, {
+    enabled: !!prestasiDataTableId,
+  });
+
+  const {
+    handleSubmit,
+    KEJUARAAN_FORM,
+    register: registerKejuaraanForm,
+    setValue: setDefaultKejuaraanValue,
+  } = useKejuaraan(prestasi?.users);
 
   const activityLog = transformActivityLog(prestasi?.activityLog);
+
+  const setDefaultValue = async () => {
+    if (prestasi) {
+      await router.push(router.asPath);
+    }
+  };
+
+  useEffect(() => {
+    if (!isLoadingPrestasiData && prestasi) {
+      setDefaultKejuaraanValue("kegiatan", prestasi.kegiatan);
+      setDefaultKejuaraanValue("tanggalKegiatan", prestasi.tanggalKegiatan);
+      setDefaultKejuaraanValue("penyelenggara", prestasi.penyelenggara || "");
+      setDefaultKejuaraanValue("tanggalKegiatan", prestasi.tanggalKegiatan);
+      setDefaultKejuaraanValue("dosenId", prestasi.dosenId);
+      setDefaultKejuaraanValue("orkemId", prestasi.orkemId);
+      setDefaultKejuaraanValue("tingkatPrestasiId", prestasi.tingkatPrestasiId);
+      setDefaultKejuaraanValue("status", prestasi.status);
+      setDefaultKejuaraanValue(
+        "tingkatKejuaraanId",
+        prestasi.tingkatKejuaraanId
+      );
+      setDefaultKejuaraanValue(
+        "piagamPenghargaan",
+        prestasi?.lampiran?.piagamPenghargaan as string
+      );
+      setDefaultKejuaraanValue(
+        "fotoPenyerahanPiala",
+        prestasi?.lampiran?.fotoPenyerahanPiala as string
+      );
+      setDefaultKejuaraanValue(
+        "undanganKejuaraan",
+        prestasi?.lampiran?.undanganKejuaraan as string
+      );
+      setDefaultKejuaraanValue(
+        "dokumenPendukung",
+        prestasi?.lampiran?.dokumenPendukung as string
+      );
+    }
+  }, [isLoadingPrestasiData, setDefaultKejuaraanValue]);
+
+  const renderActionButton = () => {
+    switch (true) {
+      case isAdmin &&
+        (prestasi?.status === STATUS.PROCESSED ||
+          prestasi?.status === STATUS.EDITED ||
+          prestasi?.status === STATUS.REPROCESS):
+        return true;
+      default:
+        return false;
+    }
+  };
 
   const {
     register: registerRejectForm,
@@ -69,13 +140,21 @@ const useApproveKejuaraan = () => {
   useEffect(() => {
     setValue("prestasiDataTableId", prestasiDataTableId);
     setDefautlRejectValue("prestasiDataTableId", prestasiDataTableId);
-  }, [prestasiDataTableId, setValue, setDefautlRejectValue]);
+    setDefaultKejuaraanValue("prestasiDataTableId", prestasiDataTableId);
+  }, [
+    prestasiDataTableId,
+    setValue,
+    setDefautlRejectValue,
+    setDefaultKejuaraanValue,
+  ]);
 
   const handleButtonAction = (type: string) => {
+    if (type === "edit") {
+      setState({ ...state, isEdited: true });
+    }
     if (type === "reject") {
       setState({ ...state, isReject: true });
     }
-
     if (type === "approve") {
       setState({ ...state, isApprove: true });
     }
@@ -89,17 +168,23 @@ const useApproveKejuaraan = () => {
     }
   };
 
+  const onSuccesAction = async () => {
+    await refetchNotification();
+    await refetchPrestasi();
+    resetApproveForm();
+    resetRejectForm();
+    handleButtonAction("close");
+  };
+
   const onApproveKejuaraan = useCallback(
     (approvePayload: IApprovePrestasiForm) => {
-      setState((prev) => ({ ...prev, loadingReject: true }));
+      setState((prev) => ({ ...prev, loadingApprove: true }));
       approvePengajuanPrestasi(approvePayload, {
-        onSuccess: (data) => {
-          void refetchNotification();
+        onSuccess: async (data) => {
           customToast("success", data?.message);
           setState({ ...state, loadingApprove: false });
           if (data?.message) {
-            resetApproveForm();
-            handleButtonAction("close");
+            await onSuccesAction();
           }
         },
         onError: (error) => {
@@ -115,13 +200,11 @@ const useApproveKejuaraan = () => {
     (rejectPayload: IRejectPrestasiForm) => {
       setState((prev) => ({ ...prev, loadingReject: true }));
       rejectPengajuanPrestasi(rejectPayload, {
-        onSuccess: (data) => {
-          void refetchNotification();
+        onSuccess: async (data) => {
           customToast("success", data?.message);
           setState({ ...state, loadingReject: false });
           if (data?.message) {
-            resetRejectForm();
-            handleButtonAction("close");
+            await onSuccesAction();
           }
         },
         onError: (error) => {
@@ -132,6 +215,45 @@ const useApproveKejuaraan = () => {
     },
     []
   );
+
+  const onSubmit = useCallback((userPayload: IPengajuanPrestasiForm) => {
+    setState((prev) => ({ ...prev, loadingEdited: true }));
+    editPengajuanPrestasi(userPayload, {
+      onSuccess: async (data) => {
+        customToast("success", data?.message);
+        setState({ ...state, loadingEdited: false });
+        if (data?.message) {
+          await onSuccesAction();
+        }
+      },
+      onError: (error) => {
+        customToast("error", error?.message);
+        setState({ ...state, loadingEdited: false });
+      },
+    });
+  }, []);
+
+  const EDIT_PRESTASI_FORM = [
+    {
+      className: "col-span-2",
+      type: "hidden",
+      register: { ...registerKejuaraanForm("prestasiDataTableId") },
+    },
+    {
+      className: "col-span-2",
+      type: "hidden",
+      register: { ...registerKejuaraanForm("status") },
+    },
+    {
+      labelFontSize: "text-[16px]",
+      label: "*Berikan Alasan Anda :",
+      placeholder: "Contoh: Dokumen tidak valid",
+      type: "textarea",
+      className: "col-span-2",
+      register: { ...registerKejuaraanForm("catatan") },
+      error: errorsRejectForm.catatan?.message,
+    },
+  ];
 
   const REJECT_PRESTASI_FORM = [
     {
@@ -198,7 +320,18 @@ const useApproveKejuaraan = () => {
     REJECT_PRESTASI_FORM,
     onRejectKejuaraan,
     submitRejectKejuaraan,
-    activityLog
+    activityLog,
+    prestasi,
+    renderActionButton,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    onSubmit,
+    KEJUARAAN_FORM,
+    handleSubmit,
+    setDefaultValue,
+    isAdmin,
+    isLoadingPrestasiData,
+    EDIT_PRESTASI_FORM,
   };
 };
 

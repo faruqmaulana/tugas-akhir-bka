@@ -62,21 +62,22 @@ const InformasiLogin = () => {
   return (
     <>
       <PageHeading />
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Card className="bg-grey mx-auto grid h-fit w-full grid-cols-2 gap-5 rounded-md p-5 shadow-md md:w-4/5 md:p-8 lg:w-3/5 xl:w-2/5">
-          {INFORMASI_LOGIN.map((val, index) => (
-            <Input {...val} key={index} />
-          ))}
-          <Button
-            isSubmit
-            isSuccess
-            isMedium
-            isLoading={loading}
-            className="col-span-2 ml-auto"
-          >
-            Simpan
-          </Button>
-        </Card>
+      <form
+        className="mx-auto grid h-fit w-full grid-cols-2 gap-5 rounded-md bg-white p-5 shadow-md md:w-4/5 md:p-8 lg:w-3/5 xl:w-2/5"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        {INFORMASI_LOGIN.map((val, index) => (
+          <Input {...val} key={index} />
+        ))}
+        <Button
+          isSubmit
+          isSuccess
+          isMedium
+          isLoading={loading}
+          className="col-span-2 ml-auto"
+        >
+          Simpan
+        </Button>
       </form>
     </>
   );

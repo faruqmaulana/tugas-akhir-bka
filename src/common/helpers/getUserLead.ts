@@ -3,3 +3,9 @@ export const getUserLead = (isKetua: boolean): string => {
 
   return "Anggota";
 };
+
+export const getUserLeadBoolean = (isKetua: string): boolean => {
+  if (isKetua === "Ketua Tim") return true;
+
+  return false;
+};

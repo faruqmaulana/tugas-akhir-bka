@@ -1,3 +1,4 @@
+import { Role } from "@prisma/client";
 import { useGlobalContext } from "~/common/context/GlobalContext";
 
 const useCurrentUser = () => {
@@ -5,7 +6,7 @@ const useCurrentUser = () => {
     state: { user },
   } = useGlobalContext();
 
-  const isAdmin = user?.role === "ADMIN";
+  const isAdmin = user?.role === Role.ADMIN;
   const currentUserName = user?.name;
 
   return { isAdmin, currentUserName, user };

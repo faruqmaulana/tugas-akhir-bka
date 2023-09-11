@@ -5,11 +5,7 @@ import React from "react";
 import { Button, ViewDetailButton } from "~/common/components/ui/button/.";
 import TrashIcon from "../../svg/TrashIcon";
 import InfoIcon from "../../svg/InfoIcon";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/common/components/ui/popover/.";
+
 import { type AllNotificationType } from "~/server/api/module/notification/notification";
 import { changeDateFormat } from "~/common/helpers/changeDateFormat";
 import Spinner from "../../svg/Spinner";
@@ -19,17 +15,17 @@ import {
   type getActionUserType,
   type onOpenNotificationType,
 } from "~/common/hooks/core/useNotification";
-import { useStatus } from "~/common/hooks/module/status/useStatus";
-import { getUserLead } from "~/common/helpers";
 
 const NotificationCard = ({
   loadingState,
   userNotification,
+  handleNotificationDrawer,
   onOpen,
   handleReadMessage,
 }: {
   loadingState: { isLoading: boolean }[];
   userNotification: AllNotificationType;
+  handleNotificationDrawer: (arg: AllNotificationType[0]) => void;
   onOpen: ({
     id,
     titleContent,
@@ -41,30 +37,35 @@ const NotificationCard = ({
   }: onOpenNotificationType) => void;
   handleReadMessage: (id: string, index: number) => void;
 }) => {
-  const { handleTransformedStatus } = useStatus();
+  // const { handleTransformedStatus } = useStatus();
 
   const getActionUser = ({ data, id }: getActionUserType) => {
     return data.filter((val) => val.User.id === id)[0];
   };
 
-  const relatedMahasiwa = ({ data, id }: getActionUserType) => {
-    return data.filter((val) => val.User.id === id)[0];
-  };
+  // const relatedMahasiwa = ({ data, id }: getActionUserType) => {
+  //   return data.filter((val) => val.User.id === id)[0];
+  // };
 
   if (!userNotification) return <Spinner />;
 
   return userNotification?.map((val, index) => (
     <div
       key={val.id}
-      className={`flex flex-col gap-3 rounded-md px-5 py-3 ${
+      className={`mb-2 flex flex-col gap-3 rounded-md px-5 py-3 ${
         !val.readed ? "bg-slate-200" : "border-2 bg-white"
       }`}
     >
       <div className="flex justify-between">
         <StatusBagde status={val.notificationMessage.status} />
-        <Popover>
+        <button
+          className="m-auto ml-3 cursor-pointer"
+          onClick={() => handleNotificationDrawer(val)}
+        >
+          <InfoIcon />
+        </button>
+        {/* <Popover>
           <PopoverTrigger type="button" className="ml-3 mr-auto">
-            <InfoIcon />
           </PopoverTrigger>
           <PopoverContent className="rounded-md border-red-300 px-3 text-xs md:text-base">
             <p className="font-semibold">
@@ -126,7 +127,7 @@ const NotificationCard = ({
               </React.Fragment>
             )}
           </PopoverContent>
-        </Popover>
+        </Popover> */}
         {!val.readed && (
           <button
             type="button"

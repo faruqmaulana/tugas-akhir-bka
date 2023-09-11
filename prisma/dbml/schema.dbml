@@ -90,6 +90,7 @@ Table PrestasiDataTable {
   penyelenggara String
   createdAt DateTime [default: `now()`]
   orkemId String [not null]
+  createdById String [not null]
   tingkatKejuaraanId String [not null]
   tingkatPrestasiId String [not null]
   dosenId String [not null]
@@ -216,16 +217,17 @@ Table Notification {
   notificationMessageId String [not null]
   userId String [not null]
   createdAt DateTime [default: `now()`, not null]
+  activityLogId String [not null]
   notificationMessage NotifMessage [not null]
   User User [not null]
 }
 
 Table ActivityLog {
   id String [pk]
-  catatan String
   userId String [not null]
   createdAt DateTime [default: `now()`, not null]
   status String [not null, default: 'Diajukan']
+  catatan String
   prestasiDataTableId String
   PrestasiDataTable PrestasiDataTable
   User User [not null]

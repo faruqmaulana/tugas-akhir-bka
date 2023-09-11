@@ -4,4 +4,5 @@ export enum STATUS {
   REJECT = "Ditolak",
   REPROCESS = "Diajukan Ulang",
   PROCESSED = "Sedang Diproses",
+  EDITED = "Diperbarui",
 }

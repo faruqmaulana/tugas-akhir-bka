@@ -12,14 +12,15 @@ import { api } from "~/utils/api";
 import { useMainLayout } from "../../layout/useMainLayout";
 import { useCurrentUser } from "../profile";
 
-const useKejuaraan = () => {
+const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
   const {
     mahasiswa,
     mahasiswaPayload,
     handleMahasiswaLead,
     handleDeleteSelectedMahasiswa,
     handleSelectMultipleUser,
-  } = useMultiSelectUser();
+  } = useMultiSelectUser(defaultSelected);
+
   const { refetchNotification } = useMainLayout();
   const { currentUserName } = useCurrentUser();
   const router = useRouter();
@@ -79,6 +80,7 @@ const useKejuaraan = () => {
       handleSwitch: handleMahasiswaLead,
       handleDeleteSelectedData: handleDeleteSelectedMahasiswa,
       handleSelectMultipleUser: handleSelectMultipleUser,
+      formFlag: "IS_MUTIPLE_SELECT_MAHASISWA_FORM",
     },
     {
       trigger: trigger,
@@ -194,7 +196,15 @@ const useKejuaraan = () => {
     },
   ];
 
-  return { KEJUARAAN_FORM, handleSubmit, onSubmit, loading, allKejuaraan };
+  return {
+    KEJUARAAN_FORM,
+    setValue,
+    handleSubmit,
+    onSubmit,
+    loading,
+    allKejuaraan,
+    register,
+  };
 };
 
 export { useKejuaraan };

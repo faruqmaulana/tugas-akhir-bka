@@ -15,7 +15,8 @@ import {
 } from "~/server/api/module/notification/notification";
 
 import { api } from "~/utils/api";
-import { useCurrentUser } from "../module/profile";
+import { type KejuaraanByIdType } from "~/server/api/module/pengajuan/prestasi";
+import { transformActivityLog } from "~/common/transforms/transformActiviryLog";
 
 export enum NOTIFICATION_ACTION {
   DELETE_NOTIFICATION = "DELETE_NOTIFICATION",
@@ -88,7 +89,14 @@ const INITIAL_STATE: ModalStateType = {
 };
 
 const useNotification = () => {
-  const { isAdmin } = useCurrentUser();
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
+  const [currentActivityLogId, setCurrentActivityLogId] = useState<
+    string | undefined
+  >(undefined);
+  const [activityLogId, setActivityLogId] = useState<string | undefined>(
+    undefined
+  );
 
   const [modalState, setModalState] = useState<ModalStateType>(INITIAL_STATE);
   const { data: userNotification, refetch: refetchNotification } =
@@ -99,6 +107,18 @@ const useNotification = () => {
     api.notification.deleteSingleNotification.useMutation();
   const { mutate: actionToAllNotification } =
     api.notification.actionToAllNotification.useMutation();
+  const {
+    // mutate: getModuleActivityLog,
+    data: getActivityLog,
+    isLoading: isActivityLogLoading,
+  } = api.activityLog.getModuleLogActivity.useQuery(
+    { id: currentActivityLogId },
+    { enabled: !!currentActivityLogId }
+  );
+
+  const activityLog = transformActivityLog(
+    getActivityLog as KejuaraanByIdType["activityLog"]
+  );
 
   const [loadingState, setLoadingState] = useState<{ isLoading: boolean }[]>(
     []
@@ -233,6 +253,14 @@ const useNotification = () => {
     });
   };
 
+  const handleNotificationDrawer = (data: AllNotificationType[0]) => {
+    const { activityLogId, notificationMessage } = data;
+    const { moduleId } = notificationMessage;
+    setIsDrawerOpen(true);
+    setActivityLogId(activityLogId);
+    setCurrentActivityLogId(moduleId);
+  };
+
   useEffect(() => {
     if (userNotification) {
       setLoadingState(
@@ -266,6 +294,12 @@ const useNotification = () => {
     handleReadMessage,
     loadingButton,
     loadingState,
+    handleNotificationDrawer,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    activityLog,
+    activityLogId,
+    isActivityLogLoading,
   };
 };
 

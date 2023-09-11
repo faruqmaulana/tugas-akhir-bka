@@ -1,22 +1,28 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import {
   type handleDeleteSelectedDataType,
   type CustomReactSelectOptionsType,
   type ReactSelectOptionType,
 } from "~/common/components/ui/form/ReactSelect";
 import { useGlobalContext } from "~/common/context/GlobalContext";
+import { getUserLeadBoolean } from "~/common/helpers/getUserLead";
 import { api } from "~/utils/api";
+import { Role } from "@prisma/client";
 
-const useMultiSelectUser = () => {
+const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
   const {
     state: { user: userData },
   } = useGlobalContext();
+
   const { data: user } = api.user.getAllMahasiswa.useQuery();
+  const router = useRouter();
 
   const [mahasiswa, setMahasiswa] = useState<
-    CustomReactSelectOptionsType[] | []
-  >([]);
+    CustomReactSelectOptionsType[] | [] | undefined
+  >(undefined);
   const [mahasiswaPayload, setMahasiswaPayload] = useState<
     ReactSelectOptionType[]
   >([]);
@@ -33,8 +39,42 @@ const useMultiSelectUser = () => {
   };
 
   useEffect(() => {
-    if (user || mahasiswa) {
-      if (mahasiswa?.length > 0) return;
+    if (user || mahasiswa || defaultSelected) {
+      if (defaultSelected) {
+        const userIdToKeteranganMap = new Map(
+          (defaultSelected as { userId: string; keterangan: string }[])?.map(
+            (item) => [item.userId, item.keterangan]
+          )
+        );
+
+        const userDataWithKeterangan = (
+          user as CustomReactSelectOptionsType[]
+        )?.map((item) => ({
+          ...item,
+          keterangan: userIdToKeteranganMap.get(item.id as string),
+        }));
+
+        const filterUserDataWithKeterangan = userDataWithKeterangan?.filter(
+          (item) => item.keterangan
+        );
+
+        const filterUserWithNoKeterangan = userDataWithKeterangan?.filter(
+          (item) => !item.keterangan
+        );
+
+        const transformedData = filterUserDataWithKeterangan?.map((item) => ({
+          label: item.name as string,
+          value: item.id as string,
+          isKetua: getUserLeadBoolean(item.keterangan as string),
+          disableDelete: item.id === userData?.id,
+        }));
+
+        setMahasiswa(filterUserWithNoKeterangan);
+        setMahasiswaPayload(transformedData);
+
+        // STOP PROCESS
+        return;
+      }
 
       const tempUser = user as CustomReactSelectOptionsType[];
       const filteredMahasiswa = tempUser?.filter(
@@ -43,16 +83,18 @@ const useMultiSelectUser = () => {
       setMahasiswa(filteredMahasiswa);
 
       if (mahasiswaPayload?.length > 0) return;
-      setMahasiswaPayload([
-        {
-          label: userData?.name as string,
-          value: userData?.id as string,
-          isKetua: true,
-          disableDelete: true,
-        },
-      ]);
+      if (userData?.role !== Role.ADMIN) {
+        setMahasiswaPayload([
+          {
+            label: userData?.name as string,
+            value: userData?.id as string,
+            isKetua: true,
+            disableDelete: true,
+          },
+        ]);
+      }
     }
-  }, [user, mahasiswa]);
+  }, [user, defaultSelected, router]);
 
   const handleDeleteSelectedMahasiswa = (
     params: handleDeleteSelectedDataType
@@ -75,7 +117,10 @@ const useMultiSelectUser = () => {
       ) as CustomReactSelectOptionsType[];
 
       setMahasiswaPayload(updatedMahasiswa);
-      setMahasiswa([...mahasiswa, ...deletedData]);
+      setMahasiswa([
+        ...(mahasiswa as CustomReactSelectOptionsType[] | []),
+        ...deletedData,
+      ]);
     }
   };
 

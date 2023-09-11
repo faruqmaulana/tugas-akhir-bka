@@ -1,0 +1,73 @@
+.main {
+  @apply fixed inset-0 z-10 translate-x-full transform overflow-hidden bg-gray-900 bg-opacity-25
+    opacity-0 transition-opacity delay-100 ease-in-out;
+
+  &.drawerOpen {
+    @apply translate-x-0 opacity-100 transition-opacity duration-300;
+  }
+
+  .container {
+    @apply absolute right-0 h-full w-screen max-w-max translate-x-full transform bg-white shadow-xl transition-all duration-100 
+      delay-100 ease-in-out;
+
+    &.drawerOpen {
+      @apply translate-x-0;
+    }
+
+    .content {
+      @apply relative flex h-full w-screen max-w-max flex-col space-y-6 overflow-y-auto px-8 py-6;
+
+      .header {
+        @apply flex justify-between text-[25px] font-bold text-primary-600;
+
+        .closeButton {
+          @apply cursor-pointer;
+        }
+      }
+    }
+  }
+}
+
+.detailVTMContainer {
+  .wrapper {
+    .title {
+      @apply text-[20px] font-bold text-primary-600;
+    }
+
+    .item {
+      @apply py-3;
+
+      .label {
+        @apply text-[15px] text-charcoal-700;
+      }
+
+      .value {
+        @apply text-[18px] text-charcoal-1000;
+      }
+
+      .bold {
+        @apply font-semibold;
+      }
+    }
+
+    .statusDetail {
+      @apply flex flex-col;
+
+      .item {
+        @apply py-3;
+
+        .label {
+          @apply mb-1 text-[16px] font-semibold text-aqua-200;
+
+          &.done {
+            @apply text-[#4EC873];
+          }
+        }
+
+        .value {
+          @apply text-[14px] text-charcoal-1000;
+        }
+      }
+    }
+  }
+}

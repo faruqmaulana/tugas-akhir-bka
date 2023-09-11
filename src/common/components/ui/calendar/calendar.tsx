@@ -23,7 +23,7 @@ function Calendar({
         caption_label: "text-sm font-medium",
         nav: "space-x-1 flex items-center",
         nav_button: cn(
-          "border border-neutral-300 bg-transparent rounded shadow-sm hover:bg-accent hover:text-accent-foreground h-7 w-7 bg-transparent p-0 flex justify-center items-center"
+          "border border-neutral-400 bg-transparent rounded shadow-sm hover:bg-accent hover:text-accent-foreground h-7 w-7 bg-transparent p-0 flex justify-center items-center"
         ),
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",

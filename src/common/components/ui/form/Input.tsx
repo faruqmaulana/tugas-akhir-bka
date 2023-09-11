@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React, { useState } from "react";
@@ -10,8 +11,12 @@ import {
 } from "./ReactSelect";
 import { type SingleValue } from "react-select";
 import { DatePicker } from "../calendar/DatePicker";
+import CustomEditIcon from "../../svg/CustomEditIcon";
+import { useCurrentUser } from "~/common/hooks/module/profile";
+import { type FORM_FLAG } from "~/common/enums/FORM_FLAG";
 
 export type InputProps = {
+  isEditForm?: boolean;
   disabled?: boolean;
   leftAddonComponent?: React.ReactNode | string;
   className?: string;
@@ -28,6 +33,7 @@ export type InputProps = {
   control?: any;
   isLoading?: boolean;
   selectedData?: ReactSelectOptionType[];
+  formFlag?: string;
   onChange?: (value: string) => void;
   handleSwitch?: (value: string) => void;
   handleDeleteSelectedData?: (params: handleDeleteSelectedDataType) => void;
@@ -41,7 +47,11 @@ export type InputProps = {
 };
 
 const Input = (props: InputProps) => {
+  const { isAdmin } = useCurrentUser();
+
   const {
+    formFlag,
+    isEditForm = false,
     trigger,
     disabled = false,
     leftAddonComponent = false,
@@ -65,6 +75,17 @@ const Input = (props: InputProps) => {
     handleSelectOptionChange,
   } = props;
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isDisabled, setIsDisabled] = useState<boolean>(disabled || isEditForm);
+  const editForm = isEditForm && !isAdmin;
+
+  const editIconAction = (
+    <CustomEditIcon
+      disabled={isDisabled}
+      onClick={() => {
+        setIsDisabled(!isDisabled);
+      }}
+    />
+  );
 
   return (
     <div className={`relative flex flex-col gap-1 ${className}`}>
@@ -72,10 +93,11 @@ const Input = (props: InputProps) => {
       <div className="relative flex flex-wrap items-stretch">
         {type === "select" && (
           <ReactSelect
+            disabled={isDisabled}
+            setIsDisabled={setIsDisabled}
             trigger={trigger}
             isLoading={isLoading}
             control={control}
-            disabled={disabled}
             register={register}
             placeholder={placeholder}
             defaultValue={value}
@@ -86,16 +108,18 @@ const Input = (props: InputProps) => {
             handleDeleteSelectedData={handleDeleteSelectedData}
             handleSelectMultipleUser={handleSelectMultipleUser}
             handleSelectOptionChange={handleSelectOptionChange}
+            isEditForm={editForm}
+            formFlag={formFlag}
           />
         )}
         {type === "textarea" && (
           <textarea
             {...(register || {})}
-            className={`peer block min-h-[auto] w-full rounded border border-neutral-300 bg-transparent px-3 py-[0.32rem] leading-[1.6] ease-linear focus:border-primary focus:text-neutral-700 focus:outline-none data-[te-input-state-active]:placeholder:opacity-100 
+            className={`peer block min-h-[auto] w-full rounded border border-neutral-400 bg-transparent px-3 py-[0.32rem] leading-[1.6] ease-linear focus:border-primary focus:text-neutral-700 focus:outline-none data-[te-input-state-active]:placeholder:opacity-100 
             ${
               error
                 ? "!border-red-500 focus:!border-red-500"
-                : "border-neutral-300"
+                : "border-neutral-400"
             }
             ${
               value
@@ -108,12 +132,12 @@ const Input = (props: InputProps) => {
         )}
         {leftAddonComponent && (
           <span
-            className={`bg-grey-900 flex items-center whitespace-nowrap rounded-l border border-r-0 border-solid border-neutral-300 px-3 py-[0.25rem] text-center text-base font-normal leading-[1.6] text-neutral-700 dark:border-neutral-600 dark:text-neutral-900 dark:placeholder:text-neutral-200 
-            ${disabled ? "cursor-not-allowed opacity-60" : ""} 
+            className={`bg-grey-900 flex items-center whitespace-nowrap rounded-l border border-r-0 border-solid border-neutral-400 px-3 py-[0.25rem] text-center text-base font-normal leading-[1.6] text-neutral-700 dark:border-neutral-600 dark:text-neutral-900 dark:placeholder:text-neutral-200 
+            ${isDisabled ? "cursor-not-allowed opacity-60" : ""} 
             ${
               error
                 ? "!border-red-500 focus:!border-red-500"
-                : "border-neutral-300"
+                : "border-neutral-400"
             }`}
             id="basic-addon1"
           >
@@ -121,7 +145,14 @@ const Input = (props: InputProps) => {
           </span>
         )}
         {type === "date" && (
-          <DatePicker control={control} register={register} error={error} />
+          <DatePicker
+            control={control}
+            register={register}
+            error={error}
+            disabled={isDisabled}
+            isEditForm={editForm}
+            editIconAction={editIconAction}
+          />
         )}
         {(type === "text" ||
           type === "file" ||
@@ -132,16 +163,16 @@ const Input = (props: InputProps) => {
           <input
             {...(register || {})}
             autoComplete={autocomplete || "off"}
-            disabled={disabled}
+            disabled={isDisabled}
             type={showPassword ? "text" : type}
             data-te-inline="true"
-            className={`relative m-0 block w-[1px] min-w-0 flex-auto rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:text-neutral-900 dark:focus:border-primary ${
+            className={`relative m-0 block w-[1px] min-w-0 flex-auto rounded-r border border-solid border-neutral-400 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:text-neutral-900 dark:focus:border-primary ${
               !leftAddonComponent ? "rounded-l" : ""
             }
             ${
               error
                 ? "!border-red-500 focus:!border-red-500"
-                : "border-neutral-300"
+                : "border-neutral-400"
             }
           ${
             value
@@ -156,7 +187,9 @@ const Input = (props: InputProps) => {
         {type === "password" && (
           <button
             type="button"
-            className="absolute right-2 top-1/2 z-[99] -translate-y-1/2 cursor-pointer"
+            className={`absolute top-1/2 z-[99] -translate-y-1/2 cursor-pointer ${
+              editForm ? "right-[52px]" : "right-2"
+            }`}
             onClick={() => {
               setShowPassword(!showPassword);
             }}
@@ -164,6 +197,11 @@ const Input = (props: InputProps) => {
             {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
           </button>
         )}
+        {editForm &&
+          type !== "hidden" &&
+          type !== "date" &&
+          type !== "select" &&
+          editIconAction}
       </div>
       {additionalInfo && (
         <p className="text-sm text-red-500">*{additionalInfo}</p>

@@ -33,6 +33,7 @@ export type AllNotificationType = Prisma.NotificationGetPayload<{
   select: {
     id: true;
     readed: true;
+    activityLogId: true;
     notificationMessage: typeof notificationQueryData;
   };
 }>[];
@@ -49,6 +50,7 @@ export const notificationQuery = createTRPCRouter({
         select: {
           id: true,
           readed: true,
+          activityLogId: true,
           notificationMessage: notificationQueryData,
         },
         orderBy: {

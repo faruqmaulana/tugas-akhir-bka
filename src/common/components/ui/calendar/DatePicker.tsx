@@ -17,6 +17,9 @@ import { id } from "date-fns/locale";
 import { Controller, type RegisterOptions } from "react-hook-form";
 
 export type DatePickerProps = {
+  disabled: boolean;
+  isEditForm: boolean;
+  editIconAction: React.ReactNode;
   control: any;
   error?: string;
   register?: (
@@ -26,7 +29,8 @@ export type DatePickerProps = {
 };
 
 export function DatePicker(props: DatePickerProps) {
-  const { control, register, error } = props;
+  const { control, register, error, disabled, isEditForm, editIconAction } =
+    props;
   const [date, setDate] = React.useState<Date>();
   return (
     <Controller
@@ -35,22 +39,29 @@ export function DatePicker(props: DatePickerProps) {
       control={control}
       render={({ field: { value, onChange } }) => (
         <Popover>
-          <PopoverTrigger asChild>
-            <button
-              className={cn(
-                "flex w-full flex-wrap items-center justify-start rounded border bg-transparent px-3 py-[0.25rem] text-left font-normal text-neutral-700 shadow-sm hover:bg-accent hover:text-accent-foreground",
-                !date && "text-muted-foreground",
-                error ? "border-red-500" : "border-neutral-300"
-              )}
-            >
-              <CalendarIcon className="mr-2" />
-              {date ? (
-                format(date, "PPP", { locale: id })
-              ) : (
-                <span>Pilih Tanggal</span>
-              )}
-            </button>
-          </PopoverTrigger>
+          <div className="flex w-full flex-row gap-[1px]">
+            <PopoverTrigger asChild>
+              <button
+                disabled={disabled}
+                className={cn(
+                  "flex w-full flex-wrap items-center justify-start rounded border bg-transparent px-3 py-[0.25rem] text-left font-normal text-neutral-700 shadow-sm disabled:opacity-60",
+                  !date && "text-muted-foreground",
+                  error ? "border-red-500" : "border-neutral-400",
+                  disabled
+                    ? "cursor-not-allowed"
+                    : "hover:bg-accent hover:text-accent-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2" />
+                {date || value ? (
+                  format(date || value, "PPP", { locale: id })
+                ) : (
+                  <span>Pilih Tanggal</span>
+                )}
+              </button>
+            </PopoverTrigger>
+            {isEditForm && editIconAction}
+          </div>
           <PopoverContent className="w-auto p-0" align="start">
             <Calendar
               mode="single"

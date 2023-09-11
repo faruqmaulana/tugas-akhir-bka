@@ -4,11 +4,17 @@
 import React from "react";
 import Input from "./Input";
 
-const BaseForm = ({ data }: { data: any }) => {
+const BaseForm = ({
+  data,
+  isEditForm,
+}: {
+  data: any;
+  isEditForm?: boolean;
+}) => {
   return (
     <div className="mx-auto mb-5 grid h-fit w-full grid-cols-2 gap-3 md:gap-5">
-      {data.map((val: any, index: number) => (
-        <Input {...val} key={index} />
+      {data?.map((val: any, index: number) => (
+        <Input {...val} key={index} isEditForm={isEditForm} />
       ))}
     </div>
   );

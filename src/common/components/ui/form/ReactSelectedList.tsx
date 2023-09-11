@@ -23,6 +23,7 @@ export type ReactSelectedList = {
   selectedData: ReactSelectOptionType[];
   handleSwitch?: (value: string) => void;
   handleDeleteSelectedData?: (params: handleDeleteSelectedDataType) => void;
+  disabled: boolean;
 };
 
 const ReactSelectedList = (props: ReactSelectedList) => {
@@ -32,13 +33,19 @@ const ReactSelectedList = (props: ReactSelectedList) => {
     trigger,
     handleSwitch,
     handleDeleteSelectedData,
+    disabled,
   } = props;
 
+
   return (
-    <table className="w-full border-spacing-10 overflow-auto md:w-[80%]">
+    <table
+      className={`w-fit border-spacing-10 overflow-auto ${
+        disabled ? "cursor-not-allowed opacity-70" : ""
+      }`}
+    >
       <tbody className="space-y-4">
         {selectedData.map((value, index) => (
-          <tr key={value.value}>
+          <tr key={index}>
             <td
               className={`flex flex-row items-center gap-2 ${
                 selectedData.length - 1 === index ? "pb-0" : "pb-2"
@@ -52,8 +59,13 @@ const ReactSelectedList = (props: ReactSelectedList) => {
                       ? "Data default tidak bisa dihapus"
                       : "Hapus data"
                   }
-                  className="flex cursor-pointer rounded-full border border-red-600 bg-red-300 p-[3px] hover:bg-red-200"
+                  className={`flex rounded-full border border-red-600 bg-red-300 p-[3px] ${
+                    !disabled
+                      ? "cursor-pointer hover:bg-red-200"
+                      : "cursor-not-allowed"
+                  }`}
                   onClick={() => {
+                    if (disabled) return;
                     if (handleDeleteSelectedData && !value.disableDelete) {
                       handleDeleteSelectedData({
                         context: value,
@@ -70,7 +82,7 @@ const ReactSelectedList = (props: ReactSelectedList) => {
                 >
                   <X className="m-auto" size={14} />
                 </PopoverTrigger>
-                {value.disableDelete && (
+                {value.disableDelete && !disabled && (
                   <PopoverContent className="rounded-full border-red-500 bg-red-50 px-3 text-xs text-red-600 md:text-base">
                     Data default tidak bisa dihapus
                   </PopoverContent>
@@ -82,11 +94,13 @@ const ReactSelectedList = (props: ReactSelectedList) => {
               <td
                 className={selectedData.length - 1 === index ? "pb-0" : "pb-2"}
               >
-                <div className="flex flex-row items-center gap-2">
+                <div className="ml-5 flex flex-row items-center gap-2">
                   <Switch
+                    className={disabled ? "!cursor-not-allowed" : ""}
                     title={value.isKetua ? "" : "Jadikan ketua"}
                     checked={value.isKetua}
                     onClick={() => {
+                      if (disabled) return;
                       if (handleSwitch) {
                         handleSwitch(value.value);
                       }

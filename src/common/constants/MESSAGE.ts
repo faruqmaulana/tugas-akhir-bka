@@ -42,6 +42,13 @@ export const PENGAJUAN_REJECTED_BY_ADMIN_SIDE = (module: string) => {
   return `Pengajuan <b>${module}</b> berhasil ditolak.`;
 };
 
+export const PENGAJUAN_EDITED_BY_USER_SIDE = (module: string) => {
+  return `Pengajuan <b>${module}</b> berhasil diperbarui.`;
+};
+
+export const PENGAJUAN_EDITED_BY_ADMIN_SIDE = (module: string) => {
+  return `Pengajuan <b>${module}</b> telah diperbarui.`;
+};
 export const DELETE_ALL_MODULE = (module: string) => {
   return `${ALL_DATA} ${module} ${DELETE_SUCCESS}`;
 };

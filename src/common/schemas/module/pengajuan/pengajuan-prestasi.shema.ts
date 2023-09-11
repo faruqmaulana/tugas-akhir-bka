@@ -35,6 +35,9 @@ export const pengajuanPrestasiForm = z
     dokumenPendukung: z.string(),
     currentUserName: z.string(),
     custom: z.string().optional(),
+    prestasiDataTableId: z.string().optional(),
+    catatan: z.string().optional(),
+    status: z.string().optional(),
   })
   .refine((data) => {
     const filledFields = [
