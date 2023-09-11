@@ -33,7 +33,7 @@ export type InputProps = {
   control?: any;
   isLoading?: boolean;
   selectedData?: ReactSelectOptionType[];
-  formFlag: string;
+  formFlag?: string;
   onChange?: (value: string) => void;
   handleSwitch?: (value: string) => void;
   handleDeleteSelectedData?: (params: handleDeleteSelectedDataType) => void;

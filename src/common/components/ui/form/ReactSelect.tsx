@@ -38,7 +38,7 @@ export type handleDeleteSelectedDataType = {
 };
 
 export type ReactSelectType = {
-  formFlag: string;
+  formFlag?: string;
   control: any;
   error?: string;
   placeholder: string;
