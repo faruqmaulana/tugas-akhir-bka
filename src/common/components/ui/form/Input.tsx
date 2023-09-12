@@ -15,6 +15,8 @@ import CustomEditIcon from "../../svg/CustomEditIcon";
 import { useCurrentUser } from "~/common/hooks/module/profile";
 import Image from "next/image";
 import PdfViewer from "../file-viewer/PdfViewer";
+import InputFile from "./InputFile";
+import { type RegisterOptions } from "react-hook-form";
 
 export type InputProps = {
   isEditForm?: boolean;
@@ -25,7 +27,6 @@ export type InputProps = {
   value?: string | Date | any;
   label?: string;
   type?: string;
-  register?: any;
   additionalInfo?: string;
   selectData?: any;
   labelFontSize?: string;
@@ -35,6 +36,10 @@ export type InputProps = {
   isLoading?: boolean;
   selectedData?: ReactSelectOptionType[];
   formFlag?: string;
+  register?: (
+    name: string,
+    options?: RegisterOptions
+  ) => (ref: HTMLInputElement | null) => void;
   onChange?: (value: string) => void;
   handleSwitch?: (value: string) => void;
   handleDeleteSelectedData?: (params: handleDeleteSelectedDataType) => void;
@@ -78,53 +83,6 @@ const Input = (props: InputProps) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(disabled || isEditForm);
   const editForm = isEditForm && !isAdmin;
-
-  // PREVIEW FILE STATE
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | undefined>(undefined);
-  const [fileType, setFileType] = useState<string | null>(null);
-
-  // Function to handle file selection
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        setSelectedFile(file);
-        setFileType(file.type);
-        setPreviewUrl(reader.result as string);
-      };
-
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const renderPreview = () => {
-    if (fileType && fileType.startsWith("image/")) {
-      return (
-        <Image
-          width={0}
-          height={0}
-          sizes="100vw"
-          src={"previewUrl as string"}
-          alt="File Preview"
-          className="mt-2 h-auto w-full"
-        />
-      );
-    } else if (fileType === "application/pdf") {
-      return (
-        <PdfViewer
-          className="mt-2"
-          url={
-            // https://drive.google.com/file/d/1_fQjbN4w7G_Xx9uKkGymKausygQqdUQr/view?usp=sharing
-            "https://drive.google.com/uc?id=1_fQjbN4w7G_Xx9uKkGymKausygQqdUQr"
-          }
-        />
-      );
-    }
-    return null; // Handle other file types as needed
-  };
 
   const editIconAction = (
     <CustomEditIcon
@@ -231,18 +189,8 @@ const Input = (props: InputProps) => {
             aria-describedby="basic-addon1"
           />
         )}
-        {type === "file" && (
-          <input
-            type="file"
-            accept="image/*,.pdf"
-            onChange={handleFileSelect}
-            className={`relative m-0 block w-[1px] min-w-0 flex-auto rounded-r border border-solid border-neutral-400 bg-transparent bg-clip-padding px-3 py-[0.10rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:text-neutral-900 dark:focus:border-primary ${
-              !leftAddonComponent ? "rounded-l" : ""
-            }`}
-          />
-        )}
-        {previewUrl && renderPreview()}
-        {selectedFile && <p>Selected File: {selectedFile.name}</p>}
+        {type === "file" && <InputFile register={register} />}
+
         {type === "password" && (
           <button
             type="button"
