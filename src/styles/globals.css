@@ -115,3 +115,22 @@ body {
 .error-react-select .css-t3ipsp-control:hover {
   border-color: #ef4444 !important;
 }
+
+.rpv-toolbar__center {
+  position: relative !important;
+}
+
+.rpv-toolbar__left {
+  display: none !important;
+}
+.rpv-toolbar__right {
+  position: absolute !important;
+  right: 0 !important;
+}
+.rpv-toolbar__right > *:not(:nth-child(4)) {
+  display: none;
+}
+
+.rpv-default-layout__sidebar-headers {
+  display: none !important;
+}

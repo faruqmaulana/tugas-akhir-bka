@@ -13,7 +13,8 @@ import { type SingleValue } from "react-select";
 import { DatePicker } from "../calendar/DatePicker";
 import CustomEditIcon from "../../svg/CustomEditIcon";
 import { useCurrentUser } from "~/common/hooks/module/profile";
-import { type FORM_FLAG } from "~/common/enums/FORM_FLAG";
+import InputFile from "./InputFile";
+import { type RegisterOptions } from "react-hook-form";
 
 export type InputProps = {
   isEditForm?: boolean;
@@ -24,7 +25,6 @@ export type InputProps = {
   value?: string | Date | any;
   label?: string;
   type?: string;
-  register?: any;
   additionalInfo?: string;
   selectData?: any;
   labelFontSize?: string;
@@ -34,6 +34,7 @@ export type InputProps = {
   isLoading?: boolean;
   selectedData?: ReactSelectOptionType[];
   formFlag?: string;
+  register?: any;
   onChange?: (value: string) => void;
   handleSwitch?: (value: string) => void;
   handleDeleteSelectedData?: (params: handleDeleteSelectedDataType) => void;
@@ -155,7 +156,6 @@ const Input = (props: InputProps) => {
           />
         )}
         {(type === "text" ||
-          type === "file" ||
           type === "hidden" ||
           type === "number" ||
           type === "password" ||
@@ -184,6 +184,8 @@ const Input = (props: InputProps) => {
             aria-describedby="basic-addon1"
           />
         )}
+        {type === "file" && <InputFile register={register} />}
+
         {type === "password" && (
           <button
             type="button"

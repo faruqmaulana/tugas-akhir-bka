@@ -6,7 +6,9 @@ import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import {
   ADD_PRESTASI_LOMBA_SUCCESS,
   APPROVE_PRESTASI_AND_LOMBA,
+  EDIT_PRESTASI_AND_LOMBA,
   REJECT_PRESTASI_AND_LOMBA,
+  REPROCESS_PRESTASI_AND_LOMBA,
 } from "~/common/message";
 import { Role, type Prisma } from "@prisma/client";
 import {
@@ -25,6 +27,8 @@ import {
   PENGAJUAN_MESSAGE_BY_USER_SIDE,
   PENGAJUAN_REJECTED_BY_ADMIN_SIDE,
   PENGAJUAN_REJECTED_BY_USER_SIDE,
+  PENGAJUAN_REPROCESS_BY_ADMIN_SIDE,
+  PENGAJUAN_REPROCESS_BY_USER_SIDE,
 } from "~/common/constants/MESSAGE";
 import { userQuery } from "~/server/queries/module/user/user.query";
 import { z } from "zod";
@@ -258,6 +262,9 @@ export const prestasiLombaQuery = createTRPCRouter({
         //** ADD NOTIFICATION MESSAGE */
         const notificationMessage = await ctx.prisma.notifMessage.findFirst({
           where: { moduleId: prestasiDataTableId },
+          orderBy: {
+            createdAt: "desc",
+          },
           include: {
             Notification: { include: { User: { select: userQuery } } },
           },
@@ -288,6 +295,11 @@ export const prestasiLombaQuery = createTRPCRouter({
             status: STATUS.APPROVE,
           },
         });
+
+        console.log(
+          "notificationMessage!.Notification",
+          notificationMessage!.Notification
+        );
 
         //** ADD NOTIFICATION IN RELATED USERS AND ADMINS */
         await ctx.prisma.notification.createMany({
@@ -331,6 +343,9 @@ export const prestasiLombaQuery = createTRPCRouter({
         //** FIND NOTIFICATION MESSAGE */
         const notificationMessage = await ctx.prisma.notifMessage.findFirst({
           where: { moduleId: prestasiDataTableId },
+          orderBy: {
+            createdAt: "desc",
+          },
           include: {
             Notification: { include: { User: { select: userQuery } } },
           },
@@ -412,7 +427,8 @@ export const prestasiLombaQuery = createTRPCRouter({
           users: selectedUsers,
           currentUserName,
         } = input;
-
+        const isReprocessMsg =
+          status === STATUS.REJECT || status === STATUS.APPROVE;
         const handleUpdateStatus = () => {
           if (status === STATUS.PROCESSED || status === STATUS.EDITED) {
             return STATUS.EDITED;
@@ -476,6 +492,9 @@ export const prestasiLombaQuery = createTRPCRouter({
         // //** FIND NOTIFICATION MESSAGE */
         const notificationMessage = await ctx.prisma.notifMessage.findFirst({
           where: { moduleId: prestasiDataTableId },
+          orderBy: {
+            createdAt: "desc",
+          },
           include: {
             Notification: { include: { User: { select: userQuery } } },
           },
@@ -519,8 +538,12 @@ export const prestasiLombaQuery = createTRPCRouter({
             module: notificationMessage!.module,
             moduleId: notificationMessage!.moduleId,
             description: notificationMessage!.description,
-            forUserMessage: PENGAJUAN_EDITED_BY_USER_SIDE(MOUDLE_KEJUARAAN),
-            forAdminMessage: PENGAJUAN_EDITED_BY_ADMIN_SIDE(MOUDLE_KEJUARAAN),
+            forUserMessage: isReprocessMsg
+              ? PENGAJUAN_REPROCESS_BY_USER_SIDE(MOUDLE_KEJUARAAN)
+              : PENGAJUAN_EDITED_BY_USER_SIDE(MOUDLE_KEJUARAAN),
+            forAdminMessage: isReprocessMsg
+              ? PENGAJUAN_REPROCESS_BY_ADMIN_SIDE(MOUDLE_KEJUARAAN)
+              : PENGAJUAN_EDITED_BY_ADMIN_SIDE(MOUDLE_KEJUARAAN),
             actionByMahasiswaId: notificationMessage!.actionByMahasiswaId,
             actionByAdminId: ctx.session.user.userId,
             userInfo: notificationMessage?.userInfo,
@@ -549,7 +572,9 @@ export const prestasiLombaQuery = createTRPCRouter({
         });
 
         return {
-          message: REJECT_PRESTASI_AND_LOMBA,
+          message: isReprocessMsg
+            ? REPROCESS_PRESTASI_AND_LOMBA
+            : EDIT_PRESTASI_AND_LOMBA,
         } as SuccessPengajuanOnUsersType;
       } catch (error) {
         throw error;

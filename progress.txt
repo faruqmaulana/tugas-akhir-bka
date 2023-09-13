@@ -32,5 +32,5 @@ TUGAS AKHIR BKA PROGRESS
 === MODULE PENGAJUAN 090923 ===
 - reject from admin ✅
 - reprocess from users ✅
-    -> edit ✅ -> notif belum benar
+    -> edit ✅ -> notif belum benar ✅
     -> reprocess ✅
