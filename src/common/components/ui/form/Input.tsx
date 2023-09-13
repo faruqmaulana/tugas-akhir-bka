@@ -13,8 +13,6 @@ import { type SingleValue } from "react-select";
 import { DatePicker } from "../calendar/DatePicker";
 import CustomEditIcon from "../../svg/CustomEditIcon";
 import { useCurrentUser } from "~/common/hooks/module/profile";
-import Image from "next/image";
-import PdfViewer from "../file-viewer/PdfViewer";
 import InputFile from "./InputFile";
 import { type RegisterOptions } from "react-hook-form";
 
@@ -36,10 +34,7 @@ export type InputProps = {
   isLoading?: boolean;
   selectedData?: ReactSelectOptionType[];
   formFlag?: string;
-  register?: (
-    name: string,
-    options?: RegisterOptions
-  ) => (ref: HTMLInputElement | null) => void;
+  register?: any;
   onChange?: (value: string) => void;
   handleSwitch?: (value: string) => void;
   handleDeleteSelectedData?: (params: handleDeleteSelectedDataType) => void;

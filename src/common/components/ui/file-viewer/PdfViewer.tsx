@@ -9,12 +9,8 @@ import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 const PdfViewer = (props: { url: string; className?: string }) => {
   const { url, className = "" } = props;
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
-  console.log("url", url);
 
   const handleResource = () => {
-    if (url.includes("https")) {
-      return `/api/server-pdf/pdf?url=${encodeURIComponent(url)}`;
-    }
     return url;
   };
 

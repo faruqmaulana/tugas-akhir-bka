@@ -28,7 +28,6 @@ const InputFile = (props: InputFileType) => {
         setFileType(file.type);
         setPreviewUrl(reader.result as string);
       };
-      console.log(file);
       reader.readAsDataURL(file);
     }
   };
