@@ -4,7 +4,6 @@ import { requireAuth } from "~/common/authentication/requireAuth";
 import Email from "~/common/components/svg/Email";
 import LockIcon from "~/common/components/svg/Lock";
 import { Button } from "~/common/components/ui/button/Button";
-import Card from "~/common/components/ui/card/Card";
 import Input from "~/common/components/ui/form/Input";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import { useLoginInformation } from "~/common/hooks/module/profile/useLoginInformation";
