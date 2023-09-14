@@ -91,10 +91,14 @@ model MasterDataTingkatPrestasi {
 
 model LampiranData {
   id                  String              @id @default(cuid())
-  piagamPenghargaan   String?
-  fotoPenyerahanPiala String?
-  undanganKejuaraan   String?
-  dokumenPendukung    String?
+  /// [FileResponse]
+  piagamPenghargaan   Json?
+  /// [FileResponse]
+  fotoPenyerahanPiala Json?
+  /// [FileResponse]
+  undanganKejuaraan   Json?
+  /// [FileResponse]
+  dokumenPendukung    Json?
   PrestasiDataTable   PrestasiDataTable[]
 }
 

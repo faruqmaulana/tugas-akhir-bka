@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import React, { useState } from "react";
 import PdfViewer from "../file-viewer/PdfViewer";
 import Image from "next/image";
@@ -19,16 +21,16 @@ const InputFile = (props: InputFileType) => {
 
   // Function to handle file selection
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
+    const currentfile = e.target.files?.[0];
+    if (currentfile) {
       const reader = new FileReader();
 
       reader.onload = () => {
-        setSelectedFile(file);
-        setFileType(file.type);
+        setSelectedFile(currentfile);
+        setFileType(currentfile.type);
         setPreviewUrl(reader.result as string);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(currentfile);
     }
   };
 
@@ -49,16 +51,21 @@ const InputFile = (props: InputFileType) => {
     }
     return null; // Handle other file types as needed
   };
+
   return (
     <>
-      <input
-        {...(register || {})}
-        type="file"
-        accept="image/*,.pdf"
-        onChange={handleFileSelect}
-        className={`relative m-0 block w-[1px] min-w-0 flex-auto rounded-r border border-solid border-neutral-400 bg-transparent bg-clip-padding px-3 py-[0.10rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:text-neutral-900 dark:focus:border-primary`}
-      />
-      {previewUrl && renderPreview()}
+      <div className="flex flex-row gap-2">
+        <input
+          {...(register || {})}
+          type="file"
+          accept="image/*,.pdf"
+          onChange={handleFileSelect}
+          className={`relative m-0 block w-full min-w-0 flex-auto rounded-r border border-solid border-neutral-400 bg-transparent bg-clip-padding px-3 py-[0.10rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:text-neutral-900 dark:focus:border-primary`}
+        />
+      </div>
+      {previewUrl && (
+        <div className="max-h-[200px] overflow-auto">{renderPreview()}</div>
+      )}
       {selectedFile && <p>Selected File: {selectedFile.name}</p>}
     </>
   );

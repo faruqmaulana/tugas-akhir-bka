@@ -127,9 +127,10 @@ body {
   position: absolute !important;
   right: 0 !important;
 }
-.rpv-toolbar__right > *:not(:nth-child(4)) {
+.rpv-toolbar__right > *:not(:nth-child(4)):not(:nth-child(6)) {
   display: none;
 }
+
 
 .rpv-default-layout__sidebar-headers {
   display: none !important;

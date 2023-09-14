@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { z, ZodError, type ZodIssue } from "zod";
 
 export const pengajuanPrestasiForm = z
@@ -60,4 +62,22 @@ export const pengajuanPrestasiForm = z
     return true;
   });
 
+const imageMimeTypes = ["image/jpeg", "image/png"];
+const pdfMimeType = "application/pdf";
+
+export const uploadFileForm = z.object({
+  piagamPenghargaan: z.any().refine(
+    (value) => {
+      // Check if the file has a valid MIME type
+      const isValidMimeType =
+        imageMimeTypes.includes(value[0].type) || value[0].type === pdfMimeType;
+      return isValidMimeType;
+    },
+    {
+      message: "File type must be an image (JPEG, PNG) or a PDF.",
+    }
+  ),
+});
+
+export type IuploadFileForm = z.infer<typeof uploadFileForm>;
 export type IPengajuanPrestasiForm = z.infer<typeof pengajuanPrestasiForm>;
