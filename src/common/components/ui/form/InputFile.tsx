@@ -4,8 +4,12 @@ import React, { useState } from "react";
 import PdfViewer from "../file-viewer/PdfViewer";
 import Image from "next/image";
 import { type RegisterOptions } from "react-hook-form";
+import { type FileResponse } from "~/common/libs/upload-file.lib";
 
 export type InputFileType = {
+  isEditForm?: boolean;
+  disabled?: boolean;
+  fileData?: FileResponse;
   register?: (
     name: string,
     options?: RegisterOptions
@@ -13,24 +17,28 @@ export type InputFileType = {
 };
 
 const InputFile = (props: InputFileType) => {
-  const { register } = props;
+  const { disabled, isEditForm, fileData, register } = props;
+
   // PREVIEW FILE STATE
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(undefined);
   const [fileType, setFileType] = useState<string | null>(null);
 
   // Function to handle file selection
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const currentfile = e.target.files?.[0];
-    if (currentfile) {
-      const reader = new FileReader();
+    if (e.target.files && e.target.files?.length > 0) {
+      const currentfile = e.target.files?.[0];
+      if (currentfile) {
+        const reader = new FileReader();
 
-      reader.onload = () => {
-        setSelectedFile(currentfile);
-        setFileType(currentfile.type);
-        setPreviewUrl(reader.result as string);
-      };
-      reader.readAsDataURL(currentfile);
+        reader.onload = () => {
+          setFileType(currentfile.type);
+          setPreviewUrl(reader.result as string);
+        };
+        reader.readAsDataURL(currentfile);
+      }
+    } else {
+      setFileType(null);
+      setPreviewUrl(undefined);
     }
   };
 
@@ -53,21 +61,21 @@ const InputFile = (props: InputFileType) => {
   };
 
   return (
-    <>
-      <div className="flex flex-row gap-2">
-        <input
-          {...(register || {})}
-          type="file"
-          accept="image/*,.pdf"
-          onChange={handleFileSelect}
-          className={`relative m-0 block w-full min-w-0 flex-auto rounded-r border border-solid border-neutral-400 bg-transparent bg-clip-padding px-3 py-[0.10rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:text-neutral-900 dark:focus:border-primary`}
-        />
-      </div>
+    <div className="flex w-full flex-col gap-1">
+      <input
+        {...(register || {})}
+        disabled={disabled}
+        type="file"
+        accept="image/*,.pdf"
+        onChange={handleFileSelect}
+        className={`relative m-0 block w-full min-w-0 flex-auto rounded-r border border-solid border-neutral-400 bg-transparent bg-clip-padding px-3 py-[0.10rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:text-neutral-900 dark:focus:border-primary`}
+      />
       {previewUrl && (
-        <div className="max-h-[200px] overflow-auto">{renderPreview()}</div>
+        <div className="h-auto w-full overflow-y-auto md:max-h-[200px]">
+          {renderPreview()}
+        </div>
       )}
-      {selectedFile && <p>Selected File: {selectedFile.name}</p>}
-    </>
+    </div>
   );
 };
 

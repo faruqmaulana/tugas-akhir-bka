@@ -3,7 +3,9 @@ import { type MRT_ColumnDef } from "material-react-table";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { requireAuth } from "~/common/authentication/requireAuth";
+import { Anchor } from "~/common/components/ui/anchor";
 import StatusBadge from "~/common/components/ui/badge/StatusBagde";
+import ButtonLink from "~/common/components/ui/button/ButtonLink";
 import ViewDetailButton from "~/common/components/ui/button/ViewDetailButton";
 import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
@@ -76,16 +78,31 @@ const UserManagement = () => {
         header: "Piagam Penghargaan",
         accessorKey: "piagamPenghargaan",
         enableClickToCopy: true,
+        Cell: ({ cell }) => (
+          <Anchor href={cell.getValue() as string}>
+            <ButtonLink />
+          </Anchor>
+        ),
       },
       {
         header: "Penyerahan Piala",
         accessorKey: "fotoPenyerahanPiala",
         enableClickToCopy: true,
+        Cell: ({ cell }) => (
+          <Anchor href={cell.getValue() as string}>
+            <ButtonLink />
+          </Anchor>
+        ),
       },
       {
         header: "Undangan Kejuaraan",
         accessorKey: "undanganKejuaraan",
         enableClickToCopy: true,
+        Cell: ({ cell }) => (
+          <Anchor href={cell.getValue() as string}>
+            <ButtonLink />
+          </Anchor>
+        ),
       },
       {
         header: "Keterangan",

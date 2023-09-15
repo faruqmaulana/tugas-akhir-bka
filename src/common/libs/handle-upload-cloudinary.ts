@@ -2,7 +2,9 @@
 import { getSignature } from "./get-cloudinary-signature.lib";
 import { uploadFile } from "./upload-file.lib";
 
-export const handleUploadCloudinary = async (file: File) => {
+export const handleUploadCloudinary = async (file: File | null | undefined) => {
+  if (!file) return null;
+
   const { signature, timestamp } = await getSignature();
   const formData = new FormData();
   formData.append("signature", signature);

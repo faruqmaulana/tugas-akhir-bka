@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
@@ -19,6 +22,9 @@ import { STATUS } from "~/common/enums/STATUS";
 import { useCurrentUser } from "../profile";
 import { useKejuaraan } from "./useKejuaraan";
 import { type IPengajuanPrestasiForm } from "~/common/schemas/module/pengajuan/pengajuan-prestasi.shema";
+import { replaceForms } from "~/common/helpers/replaceForms";
+import { handleUploadCloudinary } from "~/common/libs/handle-upload-cloudinary";
+import { handleDocumentMetaToString } from "~/common/libs/handle-document-data";
 
 const INITIAL_STATE = {
   isEdited: false,
@@ -60,6 +66,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
     KEJUARAAN_FORM,
     register: registerKejuaraanForm,
     setValue: setDefaultKejuaraanValue,
+    errors: errorsKejuaraanForm,
   } = useKejuaraan(prestasi?.users);
 
   const activityLog = transformActivityLog(prestasi?.activityLog);
@@ -86,19 +93,19 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
       );
       setDefaultKejuaraanValue(
         "piagamPenghargaan",
-        prestasi?.lampiran?.piagamPenghargaan as string
+        prestasi?.lampiran?.piagamPenghargaan
       );
       setDefaultKejuaraanValue(
         "fotoPenyerahanPiala",
-        prestasi?.lampiran?.fotoPenyerahanPiala as string
+        prestasi?.lampiran?.fotoPenyerahanPiala
       );
       setDefaultKejuaraanValue(
         "undanganKejuaraan",
-        prestasi?.lampiran?.undanganKejuaraan as string
+        prestasi?.lampiran?.undanganKejuaraan
       );
       setDefaultKejuaraanValue(
         "dokumenPendukung",
-        prestasi?.lampiran?.dokumenPendukung as string
+        prestasi?.lampiran?.dokumenPendukung
       );
     }
   }, [isLoadingPrestasiData, setDefaultKejuaraanValue]);
@@ -216,21 +223,51 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
     []
   );
 
-  const onSubmit = useCallback((userPayload: IPengajuanPrestasiForm) => {
+  const onSubmit = useCallback(async (userPayload: IPengajuanPrestasiForm) => {
     setState((prev) => ({ ...prev, loadingEdited: true }));
-    editPengajuanPrestasi(userPayload, {
-      onSuccess: async (data) => {
-        customToast("success", data?.message);
-        setState({ ...state, loadingEdited: false });
-        if (data?.message) {
-          await onSuccesAction();
-        }
-      },
-      onError: (error) => {
-        customToast("error", error?.message);
-        setState({ ...state, loadingEdited: false });
-      },
+    const {
+      dokumenPendukung,
+      fotoPenyerahanPiala,
+      piagamPenghargaan,
+      undanganKejuaraan,
+    } = userPayload;
+
+    const uploadDokumenPendukung = await handleUploadCloudinary(
+      dokumenPendukung?.[0] as File
+    );
+    const uploadPenyerahanPiala = await handleUploadCloudinary(
+      fotoPenyerahanPiala?.[0] as File
+    );
+    const uploadPiagamPenghargaan = await handleUploadCloudinary(
+      piagamPenghargaan?.[0] as File
+    );
+    const uploadUndanganKejuaraan = await handleUploadCloudinary(
+      undanganKejuaraan?.[0] as File
+    );
+
+    const transformDocument = handleDocumentMetaToString({
+      dokumenPendukung: uploadDokumenPendukung!,
+      fotoPenyerahanPiala: uploadPenyerahanPiala!,
+      piagamPenghargaan: uploadPiagamPenghargaan!,
+      undanganKejuaraan: uploadUndanganKejuaraan!,
     });
+
+    editPengajuanPrestasi(
+      { ...userPayload, ...transformDocument },
+      {
+        onSuccess: async (data) => {
+          customToast("success", data?.message);
+          setState({ ...state, loadingEdited: false });
+          if (data?.message) {
+            await onSuccesAction();
+          }
+        },
+        onError: (error) => {
+          customToast("error", error?.message);
+          setState({ ...state, loadingEdited: false });
+        },
+      }
+    );
   }, []);
 
   const EDIT_PRESTASI_FORM = [
@@ -310,6 +347,51 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
     },
   ];
 
+  const NEW_EDIT_FORMS = [
+    {
+      trigger: trigger,
+      className: "col-span-2 lg:col-span-1",
+      placeholder: "Piagam Penghargaan",
+      label: "Piagam Penghargaan",
+      type: "file",
+      register: { ...registerKejuaraanForm("piagamPenghargaan") },
+      error: errorsKejuaraanForm.custom?.message,
+      fileData: prestasi?.lampiran.piagamPenghargaan,
+    },
+    {
+      trigger: trigger,
+      className: "col-span-2 lg:col-span-1",
+      placeholder: "Foto Penyerahan Piala",
+      label: "Foto Penyerahan Piala",
+      type: "file",
+      register: { ...registerKejuaraanForm("fotoPenyerahanPiala") },
+      error: errorsKejuaraanForm.custom?.message,
+      fileData: prestasi?.lampiran.fotoPenyerahanPiala,
+    },
+    {
+      trigger: trigger,
+      className: "col-span-2 lg:col-span-1",
+      placeholder: "Undangan Kejuaraan",
+      label: "Undangan Kejuaraan",
+      type: "file",
+      register: { ...registerKejuaraanForm("undanganKejuaraan") },
+      error: errorsKejuaraanForm.custom?.message,
+      fileData: prestasi?.lampiran.undanganKejuaraan,
+    },
+    {
+      trigger: trigger,
+      className: "col-span-2 lg:col-span-1",
+      placeholder: "Dokumen Pendukung",
+      label: "Dokumen Pendukung",
+      type: "file",
+      register: { ...registerKejuaraanForm("dokumenPendukung") },
+      error: errorsKejuaraanForm.custom?.message,
+      fileData: prestasi?.lampiran.dokumenPendukung,
+    },
+  ];
+
+  const TRANSFORM_KEJUARAAN = replaceForms(KEJUARAAN_FORM, NEW_EDIT_FORMS);
+
   return {
     state,
     setState,
@@ -332,6 +414,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
     isAdmin,
     isLoadingPrestasiData,
     EDIT_PRESTASI_FORM,
+    TRANSFORM_KEJUARAAN,
   };
 };
 

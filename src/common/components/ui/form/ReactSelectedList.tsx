@@ -36,7 +36,6 @@ const ReactSelectedList = (props: ReactSelectedList) => {
     disabled,
   } = props;
 
-
   return (
     <table
       className={`w-fit border-spacing-10 overflow-auto ${
@@ -88,7 +87,7 @@ const ReactSelectedList = (props: ReactSelectedList) => {
                   </PopoverContent>
                 )}
               </Popover>
-              {value.label}
+              <p className="text-sm sm:text-base">{value.label}</p>
             </td>
             {handleSwitch && (
               <td
@@ -106,7 +105,9 @@ const ReactSelectedList = (props: ReactSelectedList) => {
                       }
                     }}
                   />
-                  {getUserLead(value.isKetua)}
+                  <p className="w-max text-sm sm:text-base">
+                    {getUserLead(value.isKetua)}
+                  </p>
                 </div>
               </td>
             )}

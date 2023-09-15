@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { v2 as cloudinary } from "cloudinary";
-import { authOptions } from "~/server/auth";
-import { getServerSession } from "next-auth";
+import sessionMiddleware from "~/common/libs/sessionMiddleware";
 
 export default async function signature(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const session = await getServerSession(req, res, authOptions);
-  if (!session) return res.status(401).json({ error: "Unauthorized" });
+  await sessionMiddleware(req, res);
 
   // Get the timestamp in seconds
   const timestamp = Math.round(new Date().getTime() / 1000);

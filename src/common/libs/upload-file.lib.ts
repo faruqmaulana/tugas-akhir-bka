@@ -1,6 +1,6 @@
 import axios from "axios";
 
-type FileResponse = {
+export type FileResponse = {
   bytes: string;
   asset_id: string;
   public_id: string;

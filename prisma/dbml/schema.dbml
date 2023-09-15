@@ -74,10 +74,10 @@ Table MasterDataTingkatPrestasi {
 
 Table LampiranData {
   id String [pk]
-  piagamPenghargaan String
-  fotoPenyerahanPiala String
-  undanganKejuaraan String
-  dokumenPendukung String
+  piagamPenghargaan Json [note: '[FileResponse]']
+  fotoPenyerahanPiala Json [note: '[FileResponse]']
+  undanganKejuaraan Json [note: '[FileResponse]']
+  dokumenPendukung Json [note: '[FileResponse]']
   PrestasiDataTable PrestasiDataTable [not null]
 }
 

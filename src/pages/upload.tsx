@@ -33,10 +33,8 @@ const UploadForm = () => {
     },
   ];
   const onSubmit = async (userPayload: IuploadFileForm) => {
-    console.log(userPayload.piagamPenghargaan[0]);
     const file = userPayload.piagamPenghargaan[0];
     const upload = await handleUploadCloudinary(file);
-    console.log(upload);
   };
 
   return (

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
@@ -32,6 +33,7 @@ import {
 } from "~/common/constants/MESSAGE";
 import { userQuery } from "~/server/queries/module/user/user.query";
 import { z } from "zod";
+import { handleDocumentMetaToJSON } from "~/common/libs/handle-document-data";
 
 export type SuccessPengajuanOnUsersType = {
   message: string;
@@ -99,17 +101,25 @@ export const prestasiLombaQuery = createTRPCRouter({
           data.PrestasiDataTable?.tanggalKegiatan
         ),
         penyelenggara: data.PrestasiDataTable?.penyelenggara || "-",
-        // validatedAt: data.PrestasiDataTable?.createdAt || "-",
         orkem: data.PrestasiDataTable?.orkem.name || "-",
         tingkatKejuaraan: data.PrestasiDataTable?.tingkatKejuaraan.name || "-",
         tingkatPrestasi: data.PrestasiDataTable?.tingkatPrestasi.name || "-",
         dosen: data.dosen.name || "-",
         piagamPenghargaan:
-          data.PrestasiDataTable?.lampiran.piagamPenghargaan || "-",
+          (
+            data.PrestasiDataTable?.lampiran
+              .piagamPenghargaan as PrismaJson.FileResponse
+          )?.secure_url || "-",
         fotoPenyerahanPiala:
-          data.PrestasiDataTable?.lampiran.fotoPenyerahanPiala || "-",
+          (
+            data.PrestasiDataTable?.lampiran
+              .fotoPenyerahanPiala as PrismaJson.FileResponse
+          )?.secure_url || "-",
         undanganKejuaraan:
-          data.PrestasiDataTable?.lampiran.undanganKejuaraan || "-",
+          (
+            data.PrestasiDataTable?.lampiran
+              .undanganKejuaraan as PrismaJson.FileResponse
+          )?.secure_url || "-",
         keterangan: data.keterangan || "-",
         status: data.PrestasiDataTable?.status || "-",
       }));
@@ -147,12 +157,12 @@ export const prestasiLombaQuery = createTRPCRouter({
 
         // ** CREATE A LAMPIRAN DATA FIRST TO GET A LAMPIRAN ID
         const createLampiran = await ctx.prisma.lampiranData.create({
-          data: {
+          data: handleDocumentMetaToJSON({
             dokumenPendukung,
             fotoPenyerahanPiala,
             piagamPenghargaan,
             undanganKejuaraan,
-          },
+          }),
         });
 
         // ** CREATE NEW PRESTASI DATA TABLE AND GET THE DATA ID
@@ -295,11 +305,6 @@ export const prestasiLombaQuery = createTRPCRouter({
             status: STATUS.APPROVE,
           },
         });
-
-        console.log(
-          "notificationMessage!.Notification",
-          notificationMessage!.Notification
-        );
 
         //** ADD NOTIFICATION IN RELATED USERS AND ADMINS */
         await ctx.prisma.notification.createMany({
@@ -458,12 +463,12 @@ export const prestasiLombaQuery = createTRPCRouter({
         // ** UPDATE A LAMPIRAN DATA FIRST TO GET A LAMPIRAN ID
         await ctx.prisma.lampiranData.update({
           where: { id: updatedPrestasiDataTable.lampiranId },
-          data: {
+          data: handleDocumentMetaToJSON({
             dokumenPendukung,
             fotoPenyerahanPiala,
             piagamPenghargaan,
             undanganKejuaraan,
-          },
+          }),
         });
 
         await ctx.prisma.pengajuanOnUsers.deleteMany({

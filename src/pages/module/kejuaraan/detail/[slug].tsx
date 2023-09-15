@@ -43,6 +43,7 @@ const Example = ({ slug }: { slug: string }) => {
     prestasi,
     isAdmin,
     isLoadingPrestasiData,
+    TRANSFORM_KEJUARAAN,
   } = useApproveKejuaraan({ slug });
 
   return (
@@ -63,6 +64,25 @@ const Example = ({ slug }: { slug: string }) => {
           </Button>
         }
       />
+      <button
+        onClick={() => {
+          // DESTROY FILE in Cloudinary
+          void (async () => {
+            const response = await fetch(
+              `/api/cloudinary/destroy/gqnwyqvp0vmdm9jy5mam`,
+              {
+                method: "post",
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                },
+              }
+            );
+          })();
+        }}
+      >
+        delete{" "}
+      </button>
       <Card className="mt-[20px]">
         <button
           type="button"
@@ -72,7 +92,7 @@ const Example = ({ slug }: { slug: string }) => {
           <InfoIcon />
           <p className="font-bold text-primary-600">Log Activity</p>
         </button>
-        <BaseForm isEditForm data={KEJUARAAN_FORM} />
+        <BaseForm isEditForm data={TRANSFORM_KEJUARAAN} />
         {renderActionButton() && (
           <div className="mr-auto flex flex-row gap-4">
             <Button
