@@ -8,10 +8,10 @@ generator client {
 
 generator json {
   provider     = "prisma-json-types-generator"
-  useType      = "PrismaJson.GlobalType"
-  clientOutput = "finds automatically"
   allowAny     = "false"
   namespace    = "PrismaJson"
+  clientOutput = "finds automatically"
+  useType      = "PrismaJson.GlobalType"
 }
 
 datasource db {

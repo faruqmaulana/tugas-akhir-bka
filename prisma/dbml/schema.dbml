@@ -116,6 +116,7 @@ Table PengajuanOnUsers {
   PengajuanPatenAndHakiTableId String
   keterangan String [not null, default: 'Ketua Tim']
   id String [pk]
+  createdAt DateTime [default: `now()`, not null]
   PengajuanPKM PengajuanPKM
   PengajuanPatenAndHakiTable PatenAndHakiTable
   dosen Dosen [not null]
