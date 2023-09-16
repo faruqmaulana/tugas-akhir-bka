@@ -77,7 +77,7 @@ const UserManagement = () => {
       {
         header: "Piagam Penghargaan",
         accessorKey: "piagamPenghargaan",
-        enableClickToCopy: true,
+        enableClickToCopy: false,
         Cell: ({ cell }) => (
           <Anchor href={cell.getValue() as string}>
             <ButtonLink />
@@ -87,7 +87,7 @@ const UserManagement = () => {
       {
         header: "Penyerahan Piala",
         accessorKey: "fotoPenyerahanPiala",
-        enableClickToCopy: true,
+        enableClickToCopy: false,
         Cell: ({ cell }) => (
           <Anchor href={cell.getValue() as string}>
             <ButtonLink />
@@ -97,7 +97,17 @@ const UserManagement = () => {
       {
         header: "Undangan Kejuaraan",
         accessorKey: "undanganKejuaraan",
-        enableClickToCopy: true,
+        enableClickToCopy: false,
+        Cell: ({ cell }) => (
+          <Anchor href={cell.getValue() as string}>
+            <ButtonLink />
+          </Anchor>
+        ),
+      },
+      {
+        header: "Dokumen Pendukung",
+        accessorKey: "dokumenPendukung",
+        enableClickToCopy: false,
         Cell: ({ cell }) => (
           <Anchor href={cell.getValue() as string}>
             <ButtonLink />

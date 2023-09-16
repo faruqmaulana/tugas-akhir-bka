@@ -8,7 +8,7 @@ import {
   PENGAJUAN_REJECTED_BY_USER_SIDE,
 } from "~/common/constants/MESSAGE";
 import { REJECT_PRESTASI_AND_LOMBA } from "~/common/message";
-import { type SuccessPengajuanOnUsersType } from "./prestasi";
+import { type SuccessPengajuanOnUsersType } from "./_router";
 
 const rejectChampionshipHandler = protectedProcedure
   .input(rejectPrestasiForm)

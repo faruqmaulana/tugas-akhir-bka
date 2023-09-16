@@ -15,7 +15,7 @@ import {
 } from "~/server/api/module/notification/notification";
 
 import { api } from "~/utils/api";
-import { type KejuaraanByIdType } from "~/server/api/module/pengajuan/prestasi";
+import { type KejuaraanByIdType } from "~/server/api/module/pengajuan/_router";
 import { transformActivityLog } from "~/common/transforms/transformActiviryLog";
 
 export enum NOTIFICATION_ACTION {

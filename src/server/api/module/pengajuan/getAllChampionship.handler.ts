@@ -54,6 +54,11 @@ const getAllChampionshipHandler = protectedProcedure.query(async ({ ctx }) => {
           data.PrestasiDataTable?.lampiran
             .undanganKejuaraan as PrismaJson.FileResponse
         )?.secure_url || "-",
+      dokumenPendukung:
+        (
+          data.PrestasiDataTable?.lampiran
+            .dokumenPendukung as PrismaJson.FileResponse
+        )?.secure_url || "-",
       keterangan: data.keterangan || "-",
       status: data.PrestasiDataTable?.status || "-",
     }));

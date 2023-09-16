@@ -12,6 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/common/components/ui/popover/popover";
+import timeAgo from "~/common/helpers/timeAgo";
 
 const NotificationInfo = () => {
   const {
@@ -21,7 +22,7 @@ const NotificationInfo = () => {
   const { isAdmin } = useCurrentUser();
 
   const haveNotification = notification && notification.length !== 0;
-  const unreadNotif = notification?.filter((item) => !item.readed)?.length;
+  const unreadNotif = notification && notification?.filter((item) => !item.readed)?.length;
   const activeNotification = (unreadNotif as number) > 0;
   return (
     <Popover>
@@ -55,27 +56,31 @@ const NotificationInfo = () => {
             }`}
           >
             {!haveNotification && <EmptyData />}
-            {notification?.map((val) => (
+            {notification?.slice(0, 5).map((val) => (
               <Anchor
                 key={val.id}
                 href={`/module/${val.notificationMessage.module}/detail/${val.notificationMessage.moduleId}`}
+                className="border-b border-t p-2 transition-all duration-200 hover:bg-gray-200"
               >
                 <div
+                  className="text-sm"
+                  dangerouslySetInnerHTML={{
+                    __html: isAdmin
+                      ? (val.notificationMessage.forAdminMessage as string)
+                      : (val.notificationMessage.forUserMessage as string),
+                  }}
+                />
+                <div
                   key={val.notificationMessage.module}
-                  className="flex cursor-pointer flex-row items-center justify-between gap-2 p-2 transition-all duration-200 hover:bg-gray-200"
+                  className="mt-2 flex flex-row items-center justify-between gap-2"
                 >
-                  <div
-                    className="text-sm"
-                    dangerouslySetInnerHTML={{
-                      __html: isAdmin
-                        ? (val.notificationMessage.forAdminMessage as string)
-                        : (val.notificationMessage.forUserMessage as string),
-                    }}
-                  />
                   <StatusBagde
-                    size="sm"
+                    size="xs"
                     status={val.notificationMessage.status}
                   />
+                  <p className="text-xs">
+                    {timeAgo(val.notificationMessage.createdAt)}
+                  </p>
                 </div>
               </Anchor>
             ))}

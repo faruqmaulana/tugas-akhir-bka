@@ -17,10 +17,10 @@ import {
   EDIT_PRESTASI_AND_LOMBA,
   REPROCESS_PRESTASI_AND_LOMBA,
 } from "~/common/message";
-import { type SuccessPengajuanOnUsersType } from "./prestasi";
+import { type SuccessPengajuanOnUsersType } from "./_router";
 import { userQuery } from "~/server/queries/module/user/user.query";
 
- const editChampionshipHanlder = protectedProcedure
+const editChampionshipHanlder = protectedProcedure
   .input(pengajuanPrestasiForm)
   .mutation(async ({ ctx, input }) => {
     try {
@@ -202,5 +202,4 @@ import { userQuery } from "~/server/queries/module/user/user.query";
     }
   });
 
-
-export default editChampionshipHanlder
+export default editChampionshipHanlder;

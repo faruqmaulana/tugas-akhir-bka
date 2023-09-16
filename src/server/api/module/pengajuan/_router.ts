@@ -26,7 +26,7 @@ export type KejuaraanByIdType = Prisma.PrestasiDataTableGetPayload<{
   };
 }>;
 
-export const prestasiLombaQuery = createTRPCRouter({
+export const championshipQueryHandler = createTRPCRouter({
   //** GET KEJUARAAN BY ID */
   getKejuaraanById: getChampionshipByIdHandler,
 

@@ -6,7 +6,7 @@ import { dosenQuery } from "./module/master-data/dosen";
 import { orkemQuery } from "./module/master-data/orkem";
 import { tingkatKejuaraanQuery } from "./module/master-data/tingkatKejuaraan";
 import { tingkatPrestasiQuery } from "./module/master-data/tingkatPrestasi";
-import { prestasiLombaQuery } from "./module/pengajuan/prestasi";
+import { championshipQueryHandler } from "./module/pengajuan/_router";
 import { notificationQuery } from "./module/notification/notification";
 import { activityLogQuery } from "./module/activity-log/activityLog";
 
@@ -27,7 +27,7 @@ export const appRouter = createTRPCRouter({
   prestasi: tingkatPrestasiQuery,
 
   // ** PENGAJUAN DATA
-  prestasiLomba: prestasiLombaQuery,
+  prestasiLomba: championshipQueryHandler,
 
   // ** NOTIFICATION
   notification: notificationQuery,

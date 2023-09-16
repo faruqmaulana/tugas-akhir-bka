@@ -8,7 +8,7 @@ import {
   PENGAJUAN_ACCEPTED_BY_USER_SIDE,
 } from "~/common/constants/MESSAGE";
 import { APPROVE_PRESTASI_AND_LOMBA } from "~/common/message";
-import { type SuccessPengajuanOnUsersType } from "./prestasi";
+import { type SuccessPengajuanOnUsersType } from "./_router";
 import { userQuery } from "~/server/queries/module/user/user.query";
 
 const approveChampionshipHandler = protectedProcedure

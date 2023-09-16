@@ -9,7 +9,7 @@ import {
 } from "~/common/constants/MESSAGE";
 import { STATUS } from "~/common/enums/STATUS";
 import { ADD_PRESTASI_LOMBA_SUCCESS } from "~/common/message";
-import { type SuccessPengajuanOnUsersType } from "./prestasi";
+import { type SuccessPengajuanOnUsersType } from "./_router";
 
 const createChampionshipHandler = protectedProcedure
   .input(pengajuanPrestasiForm)

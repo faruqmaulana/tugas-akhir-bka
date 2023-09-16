@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { protectedProcedure } from "../../trpc";
-import { type KejuaraanByIdType } from "./prestasi";
+import { type KejuaraanByIdType } from "./_router";
 import { userQuery } from "~/server/queries/module/user/user.query";
 
 const getChampionshipByIdHandler = protectedProcedure

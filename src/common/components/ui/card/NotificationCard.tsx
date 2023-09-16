@@ -15,6 +15,9 @@ import {
   type getActionUserType,
   type onOpenNotificationType,
 } from "~/common/hooks/core/useNotification";
+import { formatDistance } from "date-fns";
+import id from "date-fns/locale/id";
+import timeAgo from "~/common/helpers/timeAgo";
 
 const NotificationCard = ({
   loadingState,
@@ -170,8 +173,8 @@ const NotificationCard = ({
           }
         </p>
         <div className="mt-2 flex flex-wrap justify-between gap-1">
-          <p className="text-sm">
-            {changeDateFormat(val.notificationMessage.createdAt)}
+          <p className="text-base">
+            {timeAgo(val.notificationMessage.createdAt)}
           </p>
           <div className="flex justify-between gap-2">
             <Anchor

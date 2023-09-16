@@ -1,16 +1,16 @@
 import React from "react";
-import { STATUS } from "~/common/enums/STATUS";
 import { handleBgColor } from "~/common/helpers/handleBgColor";
-import { useCurrentUser } from "~/common/hooks/module/profile";
 import { useStatus } from "~/common/hooks/module/status/useStatus";
 
 export type StatusBadgeType = {
   status: string;
-  size?: "sm" | "md";
+  size?: "xs" | "sm" | "md";
 };
 
 const getSizeStyle = (size: StatusBadgeType["size"]) => {
   switch (size) {
+    case "xs":
+      return "px-2 text-[10px]";
     case "sm":
       return "px-2 py-1 text-[10px]";
     case "md":

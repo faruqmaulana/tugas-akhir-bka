@@ -5,7 +5,7 @@
 Table User {
   id String [pk]
   name String [not null]
-  npm String [not null]
+  npm String [unique, not null]
   alamat String
   semester String
   phone String [not null]
@@ -14,6 +14,8 @@ Table User {
   password String [not null]
   role Role [not null, default: 'MAHASISWA']
   prodiId String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
   ActivityLog ActivityLog [not null]
   Buku Buku [not null]
   notification Notification [not null]
@@ -31,8 +33,10 @@ Table Beasiswa {
 Table Dosen {
   id String [pk]
   name String [not null]
-  nidn String [not null]
+  nidn String [unique, not null]
   prodiId String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
   prodi MasterDataProdi
   PengajuanOnUsers PengajuanOnUsers [not null]
   PengajuanPKM PengajuanPKM [not null]
@@ -42,6 +46,8 @@ Table Dosen {
 Table MasterDataFakultas {
   id String [pk]
   name String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
   prodi MasterDataProdi [not null]
 }
 
@@ -49,6 +55,8 @@ Table MasterDataProdi {
   id String [pk]
   name String [not null]
   fakultasId String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
   Dosen Dosen [not null]
   Fakultas MasterDataFakultas [not null]
   user User [not null]
@@ -57,18 +65,24 @@ Table MasterDataProdi {
 Table MasterDataOrkem {
   id String [pk]
   name String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
   PrestasiDataTable PrestasiDataTable [not null]
 }
 
 Table MasterDataTingkatKejuaraan {
   id String [pk]
   name String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
   PrestasiDataTable PrestasiDataTable [not null]
 }
 
 Table MasterDataTingkatPrestasi {
   id String [pk]
   name String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
   PrestasiDataTable PrestasiDataTable [not null]
 }
 
@@ -131,6 +145,7 @@ Table PengajuanPKM {
   isValidated Boolean [not null, default: false]
   validatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
   lampiran String
   totalAnggaran Int [not null]
   anggaranDosen Int [not null]
@@ -148,6 +163,7 @@ Table PengajuanBeasiswa {
   isValidated Boolean [not null, default: false]
   validatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
   dokumenFormulir String [not null]
   deskripsiDokumen String [not null]
   dokumenPendukung String [not null]
@@ -163,6 +179,8 @@ Table SKRektor {
   tanggal DateTime [not null]
   keterangan String [not null]
   lampiran String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
 }
 
 Table PatenAndHakiTable {
@@ -175,6 +193,7 @@ Table PatenAndHakiTable {
   validatedAt DateTime [not null]
   isValidated Boolean [not null, default: false]
   jenis PatenAndHaki [not null]
+  updatedAt DateTime [default: `now()`, not null]
   PengajuanOnUsers PengajuanOnUsers [not null]
 
   Note: '=== PENGAJUAN LUARAN TABLE === ///'
@@ -190,6 +209,7 @@ Table Buku {
   jumlahEksemplar Int [not null]
   validatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
   userId String [not null]
   status String
   user User [not null]
