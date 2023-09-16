@@ -56,25 +56,37 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
 
   const onSubmit = useCallback(async (userPayload: IPengajuanPrestasiForm) => {
     setLoading(true);
-      const {
-        dokumenPendukung,
-        fotoPenyerahanPiala,
-        piagamPenghargaan,
-        undanganKejuaraan,
-      } = userPayload;
+    const {
+      dokumenPendukung,
+      fotoPenyerahanPiala,
+      piagamPenghargaan,
+      undanganKejuaraan,
+    } = userPayload;
 
-    const uploadDokumenPendukung = await handleUploadCloudinary(
-      dokumenPendukung[0] as File
-    );
-    const uploadPenyerahanPiala = await handleUploadCloudinary(
-      fotoPenyerahanPiala[0] as File
-    );
-    const uploadPiagamPenghargaan = await handleUploadCloudinary(
-      piagamPenghargaan[0] as File
-    );
-    const uploadUndanganKejuaraan = await handleUploadCloudinary(
-      undanganKejuaraan[0] as File
-    );
+    const uploadDokumenPendukungPromise = handleUploadCloudinary({
+      file: dokumenPendukung[0] as File,
+    });
+    const uploadPenyerahanPialaPromise = handleUploadCloudinary({
+      file: fotoPenyerahanPiala[0] as File,
+    });
+    const uploadPiagamPenghargaanPromise = handleUploadCloudinary({
+      file: piagamPenghargaan[0] as File,
+    });
+    const uploadUndanganKejuaraanPromise = handleUploadCloudinary({
+      file: undanganKejuaraan[0] as File,
+    });
+
+    const [
+      uploadDokumenPendukung,
+      uploadPenyerahanPiala,
+      uploadPiagamPenghargaan,
+      uploadUndanganKejuaraan,
+    ] = await Promise.all([
+      uploadDokumenPendukungPromise,
+      uploadPenyerahanPialaPromise,
+      uploadPiagamPenghargaanPromise,
+      uploadUndanganKejuaraanPromise,
+    ]);
 
     const transformDocument = handleDocumentMetaToString({
       dokumenPendukung: uploadDokumenPendukung!,
@@ -99,7 +111,6 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
       }
     );
   }, []);
-
 
   const KEJUARAAN_FORM = [
     {
@@ -240,7 +251,7 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
     loading,
     allKejuaraan,
     register,
-    errors
+    errors,
   };
 };
 

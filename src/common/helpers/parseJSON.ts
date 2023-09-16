@@ -6,8 +6,8 @@ export const stringToJSON = (data: string | undefined) => {
 };
 
 export const JSONtoString = (
-  data: Prisma.JsonObject | undefined
-): string | undefined => {
+  data: Prisma.JsonObject | undefined | null
+): string | undefined | null => {
   if (!data) undefined;
 
   return JSON.stringify(data);

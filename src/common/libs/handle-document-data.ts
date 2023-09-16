@@ -9,10 +9,10 @@ export type DocumentTypeString = {
 };
 
 export type DocumentTypeJSONObject = {
-  dokumenPendukung: Prisma.JsonObject;
-  fotoPenyerahanPiala: Prisma.JsonObject;
-  piagamPenghargaan: Prisma.JsonObject;
-  undanganKejuaraan: Prisma.JsonObject;
+  dokumenPendukung: Prisma.JsonObject | null;
+  fotoPenyerahanPiala: Prisma.JsonObject | null;
+  piagamPenghargaan: Prisma.JsonObject | null;
+  undanganKejuaraan: Prisma.JsonObject | null;
 };
 
 export const handleDocumentMetaToJSON = (props: DocumentTypeString) => {

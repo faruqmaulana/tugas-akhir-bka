@@ -35,7 +35,6 @@ const Example = ({ slug }: { slug: string }) => {
     renderActionButton,
     isDrawerOpen,
     setIsDrawerOpen,
-    KEJUARAAN_FORM,
     EDIT_PRESTASI_FORM,
     onSubmit,
     handleSubmit,
@@ -64,25 +63,6 @@ const Example = ({ slug }: { slug: string }) => {
           </Button>
         }
       />
-      <button
-        onClick={() => {
-          // DESTROY FILE in Cloudinary
-          void (async () => {
-            const response = await fetch(
-              `/api/cloudinary/destroy/gqnwyqvp0vmdm9jy5mam`,
-              {
-                method: "post",
-                headers: {
-                  "Content-Type": "application/json",
-                  Accept: "application/json",
-                },
-              }
-            );
-          })();
-        }}
-      >
-        delete{" "}
-      </button>
       <Card className="mt-[20px]">
         <button
           type="button"

@@ -60,10 +60,18 @@ const InputFile = (props: InputFileType) => {
     return null; // Handle other file types as needed
   };
 
+  const handleFileName = () => {
+    if(!fileData?.original_filename) return
+    const fileName = fileData?.original_filename || "";
+    const fileType = fileData?.secure_url?.split(".")?.pop() || "";
+    return `${fileName}.${fileType}`;
+  };
+
   return (
     <div className="flex w-full flex-col gap-1">
       <input
         {...(register || {})}
+        id="img"
         disabled={disabled}
         type="file"
         accept="image/*,.pdf"
@@ -75,6 +83,7 @@ const InputFile = (props: InputFileType) => {
           {renderPreview()}
         </div>
       )}
+      {handleFileName()}
     </div>
   );
 };

@@ -136,6 +136,7 @@ model PengajuanOnUsers {
   PengajuanPatenAndHakiTableId String?
   keterangan                   String             @default("Ketua Tim")
   id                           String             @id @default(cuid())
+  createdAt                    DateTime           @default(now())
   PengajuanPKM                 PengajuanPKM?      @relation(fields: [PengajuanPKMId], references: [id])
   PengajuanPatenAndHakiTable   PatenAndHakiTable? @relation(fields: [PengajuanPatenAndHakiTableId], references: [id])
   dosen                        Dosen              @relation(fields: [dosenId], references: [id])

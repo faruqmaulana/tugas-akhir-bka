@@ -223,8 +223,9 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
     []
   );
 
-  const onSubmit = useCallback(async (userPayload: IPengajuanPrestasiForm) => {
+  const onSubmit = async (userPayload: IPengajuanPrestasiForm) => {
     setState((prev) => ({ ...prev, loadingEdited: true }));
+    if (!prestasi) return;
     const {
       dokumenPendukung,
       fotoPenyerahanPiala,
@@ -232,24 +233,51 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
       undanganKejuaraan,
     } = userPayload;
 
-    const uploadDokumenPendukung = await handleUploadCloudinary(
-      dokumenPendukung?.[0] as File
-    );
-    const uploadPenyerahanPiala = await handleUploadCloudinary(
-      fotoPenyerahanPiala?.[0] as File
-    );
-    const uploadPiagamPenghargaan = await handleUploadCloudinary(
-      piagamPenghargaan?.[0] as File
-    );
-    const uploadUndanganKejuaraan = await handleUploadCloudinary(
-      undanganKejuaraan?.[0] as File
-    );
+    const uploadDokumenPendukungPromise = handleUploadCloudinary({
+      file: dokumenPendukung?.[0] as File,
+      previusFileId: (
+        prestasi?.lampiran.dokumenPendukung as PrismaJson.FileResponse
+      )?.public_id,
+    });
+
+    const uploadPenyerahanPialaPromise = handleUploadCloudinary({
+      file: fotoPenyerahanPiala?.[0] as File,
+      previusFileId: (
+        prestasi?.lampiran.fotoPenyerahanPiala as PrismaJson.FileResponse
+      )?.public_id,
+    });
+
+    const uploadPiagamPenghargaanPromise = handleUploadCloudinary({
+      file: piagamPenghargaan?.[0] as File,
+      previusFileId: (
+        prestasi?.lampiran.piagamPenghargaan as PrismaJson.FileResponse
+      )?.public_id,
+    });
+
+    const uploadUndanganKejuaraanPromise = handleUploadCloudinary({
+      file: undanganKejuaraan?.[0] as File,
+      previusFileId: (
+        prestasi?.lampiran.undanganKejuaraan as PrismaJson.FileResponse
+      )?.public_id,
+    });
+
+    const [
+      uploadDokumenPendukung,
+      uploadPenyerahanPiala,
+      uploadPiagamPenghargaan,
+      uploadUndanganKejuaraan,
+    ] = await Promise.all([
+      uploadDokumenPendukungPromise,
+      uploadPenyerahanPialaPromise,
+      uploadPiagamPenghargaanPromise,
+      uploadUndanganKejuaraanPromise,
+    ]);
 
     const transformDocument = handleDocumentMetaToString({
-      dokumenPendukung: uploadDokumenPendukung!,
-      fotoPenyerahanPiala: uploadPenyerahanPiala!,
-      piagamPenghargaan: uploadPiagamPenghargaan!,
-      undanganKejuaraan: uploadUndanganKejuaraan!,
+      dokumenPendukung: uploadDokumenPendukung,
+      fotoPenyerahanPiala: uploadPenyerahanPiala,
+      piagamPenghargaan: uploadPiagamPenghargaan,
+      undanganKejuaraan: uploadUndanganKejuaraan,
     });
 
     editPengajuanPrestasi(
@@ -268,7 +296,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
         },
       }
     );
-  }, []);
+  };
 
   const EDIT_PRESTASI_FORM = [
     {
@@ -408,7 +436,6 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
     isDrawerOpen,
     setIsDrawerOpen,
     onSubmit,
-    KEJUARAAN_FORM,
     handleSubmit,
     setDefaultValue,
     isAdmin,

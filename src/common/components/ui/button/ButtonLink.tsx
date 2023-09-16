@@ -3,9 +3,9 @@ import React from "react";
 
 const ButtonLink = () => {
   return (
-    <div className="flex flex-row items-center gap-1 rounded-full border border-gray-400 bg-gray-200 px-3 py-1 text-xs">
-      <ExternalLink size={15} />
-      <p className="text-xs font-semibold">Link</p>
+    <div className="flex flex-row items-center gap-1 rounded-full border border-slate-400 bg-slate-100 px-3 py-1 text-xs hover:bg-slate-200">
+      <ExternalLink size={14} />
+      <p className="text-xs">Link</p>
     </div>
   );
 };
