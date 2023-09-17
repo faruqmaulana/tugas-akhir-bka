@@ -2,13 +2,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import React from "react";
-import Input, { type InputPropsType } from "./Input";
+import Input from "./Input";
 
 const BaseForm = ({
   data,
   isEditForm,
 }: {
-  data: InputPropsType[];
+  data: any;
   isEditForm?: boolean;
 }) => {
   return (
