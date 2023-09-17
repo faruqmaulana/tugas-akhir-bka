@@ -23,7 +23,6 @@ const rejectChampionshipHandler = protectedProcedure
         },
         data: {
           status: STATUS.REJECT,
-          updatedAt: new Date(),
         },
       });
 

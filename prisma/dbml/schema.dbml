@@ -109,7 +109,7 @@ Table PrestasiDataTable {
   tingkatPrestasiId String [not null]
   dosenId String [not null]
   lampiranId String [not null]
-  updatedAt DateTime [default: `now()`]
+  updatedAt DateTime [default: `now()`, not null]
   status String [not null, default: 'Sedang Diproses']
   activityLog ActivityLog [not null]
   users PengajuanOnUsers [not null]

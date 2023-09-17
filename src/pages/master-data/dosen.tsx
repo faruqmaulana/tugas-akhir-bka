@@ -13,6 +13,7 @@ import { useDosen } from "~/common/hooks/master-data/dosen/useDosen";
 import BaseForm from "~/common/components/ui/form/BaseForm";
 import { type AllDosenType } from "~/server/api/module/master-data/lecturer/_router";
 import { Button } from "~/common/components/ui/button";
+import DefaultModalDelete from "~/common/components/ui/modal/DefaultModalDelete";
 
 const Example = () => {
   const {
@@ -23,9 +24,10 @@ const Example = () => {
     handleClose,
     handleUpdateSubmit,
     onUpdateSubmit,
+    handleDelete,
   } = useDosen();
 
-  const { handleAdd, handleDelete } = useStatusPengajuan();
+  const { handleAdd } = useStatusPengajuan();
 
   const columns = useMemo<MRT_ColumnDef<AllDosenType[0]>[]>(
     () => [
@@ -80,6 +82,15 @@ const Example = () => {
           </form>
         }
         onCloseButton={handleClose}
+      />
+      <Modal
+        confirm
+        content={<DefaultModalDelete detailInfo={modalState.detailInfo} />}
+        buttonCenter
+        showButtonDanger
+        showButtonClose
+        onCloseButton={handleClose}
+        isOpen={modalState.isDeleteModalOpen}
       />
       <BaseTable data={dosenData} columns={columns} />
     </>

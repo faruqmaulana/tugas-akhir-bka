@@ -19,6 +19,7 @@ export type ModalStateType = {
   isEditLoading: boolean;
   isAddLoading: boolean;
   isDeleteLoading: boolean;
+  detailInfo: string | undefined;
 };
 
 const INITIAL_MODAL_STATE = {
@@ -30,6 +31,9 @@ const INITIAL_MODAL_STATE = {
   isEditLoading: false,
   isAddLoading: false,
   isDeleteLoading: false,
+
+  // detail info
+  detailInfo: undefined,
 };
 
 const useDosen = () => {
@@ -38,6 +42,8 @@ const useDosen = () => {
   const { data: prodi } = api.prodi.getAllProdi.useQuery();
   const { mutate: updateLecturerData } =
     api.lecturer.updateLecturer.useMutation();
+  const { mutate: deleteLecturerData } =
+    api.lecturer.deleteLecturer.useMutation();
 
   // ** FAKULTAS STATE
   const [modalState, setModalState] =
@@ -66,9 +72,29 @@ const useDosen = () => {
   });
 
   // ** MODAL ACTION */
+  // ** HANDLE DELETE DOSEN */
+  const handleDelete = (data: AllDosenType[0]) => {
+    setModalState({
+      ...INITIAL_MODAL_STATE,
+      detailInfo: data.name,
+      isDeleteModalOpen: true,
+    });
+    // deleteLecturerData(
+    //   { id },
+    //   {
+    //     onSuccess: (data) => {
+    //       void refetchLecturerData();
+    //       setModalState(INITIAL_MODAL_STATE);
+    //     },
+    //     onError: (error) => {
+    //       customToast("error", error?.message);
+    //       setModalState((prev) => ({ ...prev, isDeleteLoading: false }));
+    //     },
+    //   }
+    // );
+  };
 
   // ** HANDLE UPDATE FORM */
-
   const onUpdateSubmit = useCallback((userPayload: IlecturerSchema) => {
     setModalState((prev) => ({ ...prev, isEditLoading: true }));
     updateLecturerData(userPayload, {
@@ -185,6 +211,7 @@ const useDosen = () => {
     handleClose,
     handleUpdateSubmit,
     onUpdateSubmit,
+    handleDelete,
   };
 };
 
