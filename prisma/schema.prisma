@@ -9,9 +9,9 @@ generator client {
 generator json {
   provider     = "prisma-json-types-generator"
   namespace    = "PrismaJson"
-  useType      = "PrismaJson.GlobalType"
-  clientOutput = "finds automatically"
   allowAny     = "false"
+  clientOutput = "finds automatically"
+  useType      = "PrismaJson.GlobalType"
 }
 
 datasource db {
@@ -50,7 +50,7 @@ model Beasiswa {
 model Dosen {
   id                String              @id @default(cuid())
   name              String
-  nidn              String              @unique
+  nidn              String
   prodiId           String?
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @default(now()) @updatedAt

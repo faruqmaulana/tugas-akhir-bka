@@ -16,7 +16,7 @@ import { useCurrentUser } from "~/common/hooks/module/profile";
 import InputFile from "./InputFile";
 import { type FileResponse } from "~/common/libs/upload-file.lib";
 
-export type InputProps = {
+export type InputPropsType = {
   isEditForm?: boolean;
   disabled?: boolean;
   leftAddonComponent?: React.ReactNode | string;
@@ -48,7 +48,7 @@ export type InputProps = {
   trigger?: (fieldName?: string | string[]) => Promise<boolean>;
 };
 
-const Input = (props: InputProps) => {
+const Input = (props: InputPropsType) => {
   const { isAdmin } = useCurrentUser();
 
   const {
@@ -217,7 +217,11 @@ const Input = (props: InputProps) => {
       {additionalInfo && (
         <p className="text-sm text-red-500">*{additionalInfo}</p>
       )}
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && (
+        <p className="text-sm text-red-500">
+          {error.replaceAll("Required", "Required!")}
+        </p>
+      )}
     </div>
   );
 };

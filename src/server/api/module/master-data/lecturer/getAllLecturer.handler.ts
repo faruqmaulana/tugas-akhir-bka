@@ -5,7 +5,10 @@ const getAllLecturerHandle = protectedProcedure.query(async ({ ctx }) => {
   try {
     return (await ctx.prisma.dosen.findMany({
       orderBy: { updatedAt: "desc" },
-      include: { prodi: { include: { Fakultas: true } } },
+      include: {
+        prodi: { include: { Fakultas: true } },
+        prestasiDataTable: true,
+      },
     })) as AllDosenType;
   } catch (error) {
     return error;

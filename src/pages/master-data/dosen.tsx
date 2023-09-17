@@ -14,20 +14,24 @@ import BaseForm from "~/common/components/ui/form/BaseForm";
 import { type AllDosenType } from "~/server/api/module/master-data/lecturer/_router";
 import { Button } from "~/common/components/ui/button";
 import DefaultModalDelete from "~/common/components/ui/modal/DefaultModalDelete";
+import DefaultModalForms from "~/common/components/ui/modal/ModalForm";
+import DefaultModalForm from "~/common/components/ui/modal/ModalForm";
+import ModalForm from "~/common/components/ui/modal/ModalForm";
 
 const Example = () => {
   const {
     dosenData,
-    handleEdit,
     modalState,
     DOSEN_FORM,
     handleClose,
+    handleEdit,
     handleUpdateSubmit,
     onUpdateSubmit,
     handleDelete,
+    onDeleteData,
+    handleAdd,
+    onAddSubmit,
   } = useDosen();
-
-  const { handleAdd } = useStatusPengajuan();
 
   const columns = useMemo<MRT_ColumnDef<AllDosenType[0]>[]>(
     () => [
@@ -55,6 +59,7 @@ const Example = () => {
           <TableAction
             onEdit={() => handleEdit(row.original)}
             onDelete={() => handleDelete(row.original)}
+            disableDelete={row.original.prestasiDataTable.length > 0}
           />
         ),
       },
@@ -66,20 +71,26 @@ const Example = () => {
     <>
       <PageHeading showCreateButton onOpen={handleAdd} />
       <Modal
+        isOpen={modalState.isAddModalOpen}
+        content={
+          <ModalForm
+            onSubmit={handleUpdateSubmit(onAddSubmit)}
+            FORMS={DOSEN_FORM}
+            loadingSubmit={modalState.isAddLoading}
+            onClose={handleClose}
+          />
+        }
+        onCloseButton={handleClose}
+      />
+      <Modal
         isOpen={modalState.isEditModalOpen}
         content={
-          <form onSubmit={handleUpdateSubmit(onUpdateSubmit)}>
-            <BaseForm data={DOSEN_FORM} />
-            <Button
-              isSubmit
-              isSuccess
-              isMedium
-              isLoading={modalState.isEditLoading}
-              className="flex w-fit items-center gap-2"
-            >
-              Submit
-            </Button>
-          </form>
+          <ModalForm
+            onSubmit={handleUpdateSubmit(onUpdateSubmit)}
+            FORMS={DOSEN_FORM}
+            loadingSubmit={modalState.isEditLoading}
+            onClose={handleClose}
+          />
         }
         onCloseButton={handleClose}
       />
@@ -90,6 +101,7 @@ const Example = () => {
         showButtonDanger
         showButtonClose
         onCloseButton={handleClose}
+        onDangerButton={onDeleteData}
         isOpen={modalState.isDeleteModalOpen}
       />
       <BaseTable data={dosenData} columns={columns} />
