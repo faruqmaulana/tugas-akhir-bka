@@ -7,6 +7,11 @@
 import { type Dispatch, type SetStateAction, useState } from "react";
 import { Controller, type RegisterOptions } from "react-hook-form";
 import Select, { type StylesConfig, type SingleValue } from "react-select";
+import {
+  type FieldError,
+  type FieldErrorsImpl,
+  type Merge,
+} from "react-hook-form";
 
 import ReactSelectedList from "./ReactSelectedList";
 import { useGlobalContext } from "~/common/context/GlobalContext";
@@ -40,7 +45,6 @@ export type handleDeleteSelectedDataType = {
 export type ReactSelectType = {
   formFlag?: string;
   control: any;
-  error?: string;
   placeholder: string;
   disabled?: boolean;
   isLoading: boolean;
@@ -62,6 +66,11 @@ export type ReactSelectType = {
   setIsDisabled: Dispatch<SetStateAction<boolean>>;
   trigger?: (fieldName?: string | string[]) => Promise<boolean>;
   handleDeleteSelectedData?: (params: handleDeleteSelectedDataType) => void;
+  error?:
+    | string
+    | FieldError
+    | Merge<FieldError, FieldErrorsImpl<any>>
+    | undefined;
 };
 
 export const ReactSelect = (props: ReactSelectType) => {

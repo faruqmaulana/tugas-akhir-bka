@@ -12,6 +12,7 @@ import { type ReactSelectOptionType } from "~/common/components/ui/form/ReactSel
 import { type AllMasterDataProdiType } from "~/server/api/module/master-data/prodi";
 import { type AllDosenType } from "~/server/api/module/master-data/lecturer/_router";
 import { customToast } from "~/common/components/ui/toast/showToast";
+import { type InputPropsType } from "~/common/components/ui/form/Input";
 
 export type ModalStateType = {
   isEditModalOpen: boolean;
@@ -189,7 +190,7 @@ const useDosen = () => {
     });
   };
 
-  const DOSEN_FORM = [
+  const DOSEN_FORM: InputPropsType[] = [
     {
       key: "name",
       className: "col-span-2",

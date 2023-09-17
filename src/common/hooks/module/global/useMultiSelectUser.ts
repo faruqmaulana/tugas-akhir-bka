@@ -11,6 +11,7 @@ import { useGlobalContext } from "~/common/context/GlobalContext";
 import { getUserLeadBoolean } from "~/common/helpers/getUserLead";
 import { api } from "~/utils/api";
 import { Role } from "@prisma/client";
+import { type SingleValue } from "react-select";
 
 const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
   const {
@@ -27,7 +28,9 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
     ReactSelectOptionType[]
   >([]);
 
-  const handleSelectMultipleUser = (ctx: ReactSelectOptionType) => {
+  const handleSelectMultipleUser = (
+    ctx: SingleValue<ReactSelectOptionType>
+  ) => {
     if (!ctx) return;
     setMahasiswaPayload([
       ...mahasiswaPayload,

@@ -15,13 +15,20 @@ import CustomEditIcon from "../../svg/CustomEditIcon";
 import { useCurrentUser } from "~/common/hooks/module/profile";
 import InputFile from "./InputFile";
 import { type FileResponse } from "~/common/libs/upload-file.lib";
+import {
+  type FieldError,
+  type FieldErrorsImpl,
+  type Merge,
+  type UseFormTrigger,
+} from "react-hook-form";
 
 export type InputPropsType = {
+  key?: string | number;
   isEditForm?: boolean;
   disabled?: boolean;
   leftAddonComponent?: React.ReactNode | string;
   className?: string;
-  placeholder: string;
+  placeholder?: string;
   value?: string | Date | any;
   label?: string;
   type?: string;
@@ -29,7 +36,11 @@ export type InputPropsType = {
   selectData?: any;
   labelFontSize?: string;
   autocomplete?: string;
-  error?: string;
+  error?:
+    | string
+    | FieldError
+    | Merge<FieldError, FieldErrorsImpl<any>>
+    | undefined;
   control?: any;
   isLoading?: boolean;
   selectedData?: ReactSelectOptionType[];
@@ -45,7 +56,7 @@ export type InputPropsType = {
   handleSelectOptionChange?: (
     newValue: SingleValue<ReactSelectOptionType>
   ) => void;
-  trigger?: (fieldName?: string | string[]) => Promise<boolean>;
+  trigger?: UseFormTrigger<any>;
 };
 
 const Input = (props: InputPropsType) => {
@@ -219,7 +230,7 @@ const Input = (props: InputPropsType) => {
       )}
       {error && (
         <p className="text-sm text-red-500">
-          {error.replaceAll("Required", "Required!")}
+          {(error as string).replaceAll("Required", "Required!")}
         </p>
       )}
     </div>

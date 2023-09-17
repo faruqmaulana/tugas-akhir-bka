@@ -1,21 +1,15 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React, { useMemo } from "react";
 
 import { type MRT_ColumnDef } from "material-react-table";
 import BaseTable from "~/common/components/ui/table/BaseTable";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
 import TableAction from "~/common/components/ui/table/TableAction";
-import { useStatusPengajuan } from "~/common/hooks/master-data/useStatusPengajuan";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import Modal from "~/common/components/ui/modal/Modal";
 import { useDosen } from "~/common/hooks/master-data/dosen/useDosen";
-import BaseForm from "~/common/components/ui/form/BaseForm";
 import { type AllDosenType } from "~/server/api/module/master-data/lecturer/_router";
-import { Button } from "~/common/components/ui/button";
 import DefaultModalDelete from "~/common/components/ui/modal/DefaultModalDelete";
-import DefaultModalForms from "~/common/components/ui/modal/ModalForm";
-import DefaultModalForm from "~/common/components/ui/modal/ModalForm";
 import ModalForm from "~/common/components/ui/modal/ModalForm";
 
 const Example = () => {
