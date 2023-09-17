@@ -9,6 +9,7 @@ import { championshipQueryHandler } from "./module/pengajuan/_router";
 import { notificationQuery } from "./module/notification/notification";
 import { activityLogQuery } from "./module/activity-log/activityLog";
 import { lecturerQuery } from "./module/master-data/lecturer/_router";
+import { facultyQuery } from "./module/master-data/faculty/_router";
 
 /**
  * This is the primary router for your server.
@@ -18,9 +19,10 @@ import { lecturerQuery } from "./module/master-data/lecturer/_router";
 export const appRouter = createTRPCRouter({
   example: exampleRouter,
   user: userData,
-  lecturer: lecturerQuery,
-
+  
   // ** MASTER DATA QUERY
+  lecturer: lecturerQuery,
+  faculty: facultyQuery,
   prodi: prodiQuery,
   orkem: orkemQuery,
   kejuaraan: tingkatKejuaraanQuery,

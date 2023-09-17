@@ -1,10 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import {
-  type IlecturerSchema,
-  lecturerSchema,
-} from "~/common/schemas/module/master-data/lecturer/lecturer.schema";
 import { api } from "~/utils/api";
 import { useCallback, useState } from "react";
 import { type SingleValue } from "react-select";
@@ -13,6 +9,10 @@ import { type AllMasterDataProdiType } from "~/server/api/module/master-data/pro
 import { type AllDosenType } from "~/server/api/module/master-data/lecturer/_router";
 import { customToast } from "~/common/components/ui/toast/showToast";
 import { type InputPropsType } from "~/common/components/ui/form/Input";
+import {
+  type IlecturerSchema,
+  lecturerSchema,
+} from "~/common/schemas/module/master-data/lecturer.schema";
 
 export type ModalStateType = {
   isEditModalOpen: boolean;

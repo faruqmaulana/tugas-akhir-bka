@@ -1,5 +1,5 @@
 import { ADD_SUCCESS, UPDATE_SUCCESS } from "~/common/message";
-import { facultySchema } from "~/common/schemas/module/master-data/faculty/faculty.schema";
+import { facultySchema } from "~/common/schemas/module/master-data/faculty.schema";
 import { protectedProcedure } from "~/server/api/trpc";
 
 const upsertLecturerHandle = protectedProcedure

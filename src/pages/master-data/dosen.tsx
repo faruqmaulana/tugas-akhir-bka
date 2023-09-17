@@ -7,7 +7,7 @@ import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
 import TableAction from "~/common/components/ui/table/TableAction";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import Modal from "~/common/components/ui/modal/Modal";
-import { useDosen } from "~/common/hooks/master-data/dosen/useDosen";
+import { useDosen } from "~/common/hooks/master-data/useDosen";
 import { type AllDosenType } from "~/server/api/module/master-data/lecturer/_router";
 import DefaultModalDelete from "~/common/components/ui/modal/DefaultModalDelete";
 import ModalForm from "~/common/components/ui/modal/ModalForm";
