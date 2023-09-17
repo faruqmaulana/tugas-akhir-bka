@@ -74,6 +74,7 @@ const Example = () => {
         isOpen={modalState.isAddModalOpen}
         content={
           <ModalForm
+            formTitle="Tambah Data Dosen"
             onSubmit={handleUpdateSubmit(onAddSubmit)}
             FORMS={DOSEN_FORM}
             loadingSubmit={modalState.isAddLoading}
@@ -86,6 +87,7 @@ const Example = () => {
         isOpen={modalState.isEditModalOpen}
         content={
           <ModalForm
+            formTitle="ubah data dosen"
             onSubmit={handleUpdateSubmit(onUpdateSubmit)}
             FORMS={DOSEN_FORM}
             loadingSubmit={modalState.isEditLoading}
@@ -103,6 +105,7 @@ const Example = () => {
         onCloseButton={handleClose}
         onDangerButton={onDeleteData}
         isOpen={modalState.isDeleteModalOpen}
+        isLoading={modalState.isDeleteLoading}
       />
       <BaseTable data={dosenData} columns={columns} />
     </>
