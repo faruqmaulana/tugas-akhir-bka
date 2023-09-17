@@ -7,6 +7,7 @@ export const DEFAULT_BUTTON_CONFRIM = {
   showButtonConfirm: true,
   showButtonClose: true,
 };
+
 export const INITIAL_MODAL_BUTTON = {
   showButtonSuccess: false,
   showButtonConfirm: false,

@@ -80,7 +80,7 @@ const Modal = (props: ModalProps) => {
     <button
       type="button"
       className="modal-close absolute right-0 z-50 cursor-pointer"
-      onClick={onClose}
+      onClick={onClose || onCloseButton}
     >
       <XmarkIcon />
     </button>

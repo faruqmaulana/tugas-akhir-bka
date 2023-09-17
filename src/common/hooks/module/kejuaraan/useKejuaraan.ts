@@ -29,7 +29,7 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
   const { refetchNotification } = useMainLayout();
   const { currentUserName } = useCurrentUser();
   const router = useRouter();
-  const { data: dosen } = api.dosen.getAllDosen.useQuery();
+  const { data: dosen } = api.lecturer.getAllDosen.useQuery();
   const { data: orkem } = api.orkem.getAllOrkem.useQuery();
   const { data: kejuaraan } = api.kejuaraan.getAllTingkatKejuaraan.useQuery();
   const { data: prestasi } = api.prestasi.getAllTingkatPrestasi.useQuery();

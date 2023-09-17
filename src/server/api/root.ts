@@ -2,13 +2,13 @@ import { exampleRouter } from "~/server/api/routers/example";
 import { createTRPCRouter } from "~/server/api/trpc";
 import { userData } from "./module/user/user";
 import { prodiQuery } from "./module/master-data/prodi";
-import { dosenQuery } from "./module/master-data/dosen";
 import { orkemQuery } from "./module/master-data/orkem";
 import { tingkatKejuaraanQuery } from "./module/master-data/tingkatKejuaraan";
 import { tingkatPrestasiQuery } from "./module/master-data/tingkatPrestasi";
 import { championshipQueryHandler } from "./module/pengajuan/_router";
 import { notificationQuery } from "./module/notification/notification";
 import { activityLogQuery } from "./module/activity-log/activityLog";
+import { lecturerQuery } from "./module/master-data/lecturer/_router";
 
 /**
  * This is the primary router for your server.
@@ -18,7 +18,7 @@ import { activityLogQuery } from "./module/activity-log/activityLog";
 export const appRouter = createTRPCRouter({
   example: exampleRouter,
   user: userData,
-  dosen: dosenQuery,
+  lecturer: lecturerQuery,
 
   // ** MASTER DATA QUERY
   prodi: prodiQuery,
