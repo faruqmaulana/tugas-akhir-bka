@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { type ButtonHTMLAttributes, type ReactNode } from "react";
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   buttonForm?: string;
@@ -18,6 +18,7 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   isSubmit?: boolean;
   isSmall?: boolean;
   isMedium?: boolean;
+  isLarge?: boolean;
   isUppercase?: boolean;
   isLoading?: boolean;
   hover?: boolean;

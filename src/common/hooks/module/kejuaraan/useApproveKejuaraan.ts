@@ -176,11 +176,10 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
   };
 
   const onSuccesAction = async () => {
-    await refetchNotification();
-    await refetchPrestasi();
     resetApproveForm();
     resetRejectForm();
-    handleButtonAction("close");
+    setState(INITIAL_STATE);
+    await Promise.all([refetchNotification(), refetchPrestasi()]);
   };
 
   const onApproveKejuaraan = useCallback(
@@ -303,11 +302,6 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
       className: "col-span-2",
       type: "hidden",
       register: { ...registerKejuaraanForm("prestasiDataTableId") },
-    },
-    {
-      className: "col-span-2",
-      type: "hidden",
-      register: { ...registerKejuaraanForm("status") },
     },
     {
       labelFontSize: "text-[16px]",

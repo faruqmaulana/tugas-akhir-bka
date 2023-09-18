@@ -18,6 +18,7 @@ const Button = (props: ButtonProps) => {
     isPurple,
     isSmall,
     isMedium,
+    isLarge,
     isUppercase,
     isSubmit,
     isLoading,
@@ -36,6 +37,7 @@ const Button = (props: ButtonProps) => {
   if (isPurple) styleButton.push(styles.purple);
   if (isSmall) styleButton.push(styles.small);
   if (isMedium) styleButton.push(styles.medium);
+  if (isLarge) styleButton.push(styles.large);
   if (isUppercase) styleButton.push(styles.textUppercase);
   if (isDisabled) styleButton.push(styles.disabled);
   if (className) styleButton.push(className);
