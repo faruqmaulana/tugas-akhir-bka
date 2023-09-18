@@ -65,7 +65,7 @@ const Example = () => {
         isOpen={modalState.isAddModalOpen}
         content={
           <ModalForm
-            formTitle="Tambah Data Fakultas"
+            formTitle="Tambah Data Program Studi"
             onSubmit={handleUpdateSubmit(onAddSubmit)}
             FORMS={STUDY_PROGRAM_FORM}
             loadingSubmit={modalState.isAddLoading}
@@ -78,7 +78,7 @@ const Example = () => {
         isOpen={modalState.isEditModalOpen}
         content={
           <ModalForm
-            formTitle="ubah Data Fakultas"
+            formTitle="Ubah Data Program Studi"
             onSubmit={handleUpdateSubmit(onUpdateSubmit)}
             FORMS={STUDY_PROGRAM_FORM}
             loadingSubmit={modalState.isEditLoading}

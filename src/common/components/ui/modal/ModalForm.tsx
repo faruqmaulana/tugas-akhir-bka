@@ -18,7 +18,7 @@ const ModalForm = (props: ModalFormsType) => {
   return (
     <form onSubmit={onSubmit}>
       {formTitle && (
-        <p className="text text-center text-2xl font-semibold">
+        <p className="text mb-4 text-center text-2xl font-semibold">
           Form {capitalizeFirstLetter(formTitle)}
         </p>
       )}
