@@ -72,7 +72,7 @@ const Example = () => {
         isOpen={modalState.isEditModalOpen}
         content={
           <ModalForm
-            formTitle="Uabh Data Tingkat Kejuaraan"
+            formTitle="Ubah Data Tingkat Kejuaraan"
             onSubmit={handleUpdateSubmit(onUpdateSubmit)}
             FORMS={CHAMPIONSHIP_LEVEL_FORM}
             loadingSubmit={modalState.isEditLoading}

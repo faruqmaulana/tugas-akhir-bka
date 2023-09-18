@@ -230,7 +230,9 @@ const Input = (props: InputPropsType) => {
       )}
       {error && (
         <p className="text-sm text-red-500">
-          {(error as string).replaceAll("Required", "Required!")}
+          {(error as string)
+            .replaceAll("Required", "Required!")
+            .replaceAll("!!", "!")}
         </p>
       )}
     </div>

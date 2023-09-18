@@ -13,6 +13,7 @@ import { facultyQuery } from "./module/master-data/faculty/_router";
 import { studyProgramQuery } from "./module/master-data/study-program/_router";
 import { studentOrganizationQuery } from "./module/master-data/student-organization/_router";
 import { championshipLevelQuery } from "./module/master-data/championship-level/_router";
+import { achievementLevelQuery } from "./module/master-data/achievement-level/_router";
 
 /**
  * This is the primary router for your server.
@@ -29,6 +30,7 @@ export const appRouter = createTRPCRouter({
   studyProgram: studyProgramQuery,
   studentOrganization: studentOrganizationQuery,
   championshipLevel: championshipLevelQuery,
+  achievementLevel: achievementLevelQuery,
 
   prodi: prodiQuery,
   orkem: orkemQuery,

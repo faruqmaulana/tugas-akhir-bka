@@ -15,11 +15,8 @@ export const DELETE_SUCCESS = "Berhasil Dihapus!";
 export const DATA_SUCCESSFULLY_DELETED = `Data ${DELETE_SUCCESS}`;
 
 // GENERAL MODULE MESSAGE
-export const PENGAJUAN_MESSAGE_BY_ADMIN_SIDE = (
-  username: string,
-  module: string
-) => {
-  return `<b>${username}</b> menambahkan pengajuan <b>${module}</b>, mohon segera segera divalidasi.`;
+export const PENGAJUAN_MESSAGE_BY_ADMIN_SIDE = (module: string) => {
+  return `<b>{{user}}</b> menambahkan pengajuan <b>${module}</b>, mohon segera segera divalidasi.`;
 };
 
 export const PENGAJUAN_MESSAGE_BY_USER_SIDE = (module: string) => {

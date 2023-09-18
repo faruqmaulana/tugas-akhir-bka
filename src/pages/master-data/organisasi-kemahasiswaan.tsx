@@ -34,6 +34,10 @@ const Example = () => {
         accessorKey: "name",
       },
       {
+        header: "Total",
+        accessorKey: "_count.PrestasiDataTable",
+      },
+      {
         header: "Action",
         ...tableActionConfig,
         Cell: ({ row }) => (
