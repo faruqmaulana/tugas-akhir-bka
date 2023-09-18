@@ -1,9 +1,6 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import {
-  type IlecturerSchema,
-  lecturerSchema,
-} from "~/common/schemas/module/master-data/lecturer/lecturer.schema";
 import { api } from "~/utils/api";
 import { useCallback, useState } from "react";
 import { type SingleValue } from "react-select";
@@ -11,6 +8,11 @@ import { type ReactSelectOptionType } from "~/common/components/ui/form/ReactSel
 import { type AllMasterDataProdiType } from "~/server/api/module/master-data/prodi";
 import { type AllDosenType } from "~/server/api/module/master-data/lecturer/_router";
 import { customToast } from "~/common/components/ui/toast/showToast";
+import { type InputPropsType } from "~/common/components/ui/form/Input";
+import {
+  type IlecturerSchema,
+  lecturerSchema,
+} from "~/common/schemas/module/master-data/lecturer.schema";
 
 export type ModalStateType = {
   isEditModalOpen: boolean;
@@ -19,6 +21,7 @@ export type ModalStateType = {
   isEditLoading: boolean;
   isAddLoading: boolean;
   isDeleteLoading: boolean;
+  detailInfo: string | undefined;
 };
 
 const INITIAL_MODAL_STATE = {
@@ -30,14 +33,18 @@ const INITIAL_MODAL_STATE = {
   isEditLoading: false,
   isAddLoading: false,
   isDeleteLoading: false,
+
+  // detail info
+  detailInfo: undefined,
 };
 
 const useDosen = () => {
+  const { data: prodi } = api.prodi.getAllProdi.useQuery();
+  const { mutate: upsertLecturer } = api.lecturer.upsertLecturer.useMutation();
   const { data: dosenData, refetch: refetchLecturerData } =
     api.lecturer.getAllDosen.useQuery();
-  const { data: prodi } = api.prodi.getAllProdi.useQuery();
-  const { mutate: updateLecturerData } =
-    api.lecturer.updateLecturer.useMutation();
+  const { mutate: deleteLecturerData } =
+    api.lecturer.deleteLecturer.useMutation();
 
   // ** FAKULTAS STATE
   const [modalState, setModalState] =
@@ -58,6 +65,7 @@ const useDosen = () => {
   const {
     register,
     setValue,
+    reset,
     handleSubmit: handleUpdateSubmit,
     control,
     formState: { errors },
@@ -66,12 +74,67 @@ const useDosen = () => {
   });
 
   // ** MODAL ACTION */
+  // ** HANDLE DELETE LECTURER */
+  const handleAdd = () => {
+    reset();
+    setValue("id", "");
+    setFakultasState(undefined);
+    setFilteredLecturer(undefined);
+    setModalState({ ...INITIAL_MODAL_STATE, isAddModalOpen: true });
+  };
+
+  const onAddSubmit = (userPayload: IlecturerSchema) => {
+    setModalState((prev) => ({ ...prev, isAddLoading: true }));
+    upsertLecturer(userPayload, {
+      onSuccess: (data) => {
+        void refetchLecturerData();
+        customToast("success", data?.message);
+        setModalState(INITIAL_MODAL_STATE);
+      },
+      onError: (error) => {
+        customToast("error", error?.message);
+        setModalState((prev) => ({ ...prev, isEditLoading: false }));
+      },
+    });
+  };
+
+  // ** HANDLE DELETE LECTURER */
+  const handleDelete = (data: AllDosenType[0]) => {
+    setModalState({
+      ...INITIAL_MODAL_STATE,
+      detailInfo: data.name,
+      isDeleteModalOpen: true,
+    });
+
+    const getFilteredLecturer = (dosenData as AllDosenType)?.filter(
+      (val) => val.id === data.id
+    )[0];
+
+    setFilteredLecturer(getFilteredLecturer);
+  };
+
+  const onDeleteData = () => {
+    setModalState((prev) => ({ ...prev, isDeleteLoading: true }));
+    deleteLecturerData(
+      { id: filteredLecturer!.id },
+      {
+        onSuccess: (data) => {
+          void refetchLecturerData();
+          customToast("success", data.message);
+          setModalState(INITIAL_MODAL_STATE);
+        },
+        onError: (error) => {
+          customToast("error", error?.message);
+          setModalState((prev) => ({ ...prev, isDeleteLoading: false }));
+        },
+      }
+    );
+  };
 
   // ** HANDLE UPDATE FORM */
-
   const onUpdateSubmit = useCallback((userPayload: IlecturerSchema) => {
     setModalState((prev) => ({ ...prev, isEditLoading: true }));
-    updateLecturerData(userPayload, {
+    upsertLecturer(userPayload, {
       onSuccess: (data) => {
         void refetchLecturerData();
         customToast("success", data?.message);
@@ -127,13 +190,14 @@ const useDosen = () => {
     });
   };
 
-  const DOSEN_FORM = [
+  const DOSEN_FORM: InputPropsType[] = [
     {
       key: "name",
       className: "col-span-2",
       placeholder: "Nama Dosen",
       label: "Dosen",
       register: register("name"),
+      error: errors.name?.message,
     },
     {
       key: "nidn",
@@ -141,6 +205,7 @@ const useDosen = () => {
       placeholder: "NIDN Dosen",
       label: "NIDN",
       register: register("nidn"),
+      error: errors.nidn?.message,
     },
     {
       disabled: true,
@@ -185,6 +250,10 @@ const useDosen = () => {
     handleClose,
     handleUpdateSubmit,
     onUpdateSubmit,
+    handleDelete,
+    onDeleteData,
+    handleAdd,
+    onAddSubmit,
   };
 };
 

@@ -85,10 +85,7 @@ const createChampionshipHandler = protectedProcedure
           moduleId: createPrestasiDataTable.id,
           actionByMahasiswaId: ctx.session.user.userId,
           forUserMessage: PENGAJUAN_MESSAGE_BY_USER_SIDE(MOUDLE_KEJUARAAN),
-          forAdminMessage: PENGAJUAN_MESSAGE_BY_ADMIN_SIDE(
-            currentUserName,
-            MOUDLE_KEJUARAAN
-          ),
+          forAdminMessage: PENGAJUAN_MESSAGE_BY_ADMIN_SIDE(MOUDLE_KEJUARAAN),
           userInfo: users,
         },
       });

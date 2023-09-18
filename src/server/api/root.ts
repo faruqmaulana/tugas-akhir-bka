@@ -9,6 +9,11 @@ import { championshipQueryHandler } from "./module/pengajuan/_router";
 import { notificationQuery } from "./module/notification/notification";
 import { activityLogQuery } from "./module/activity-log/activityLog";
 import { lecturerQuery } from "./module/master-data/lecturer/_router";
+import { facultyQuery } from "./module/master-data/faculty/_router";
+import { studyProgramQuery } from "./module/master-data/study-program/_router";
+import { studentOrganizationQuery } from "./module/master-data/student-organization/_router";
+import { championshipLevelQuery } from "./module/master-data/championship-level/_router";
+import { achievementLevelQuery } from "./module/master-data/achievement-level/_router";
 
 /**
  * This is the primary router for your server.
@@ -18,9 +23,15 @@ import { lecturerQuery } from "./module/master-data/lecturer/_router";
 export const appRouter = createTRPCRouter({
   example: exampleRouter,
   user: userData,
-  lecturer: lecturerQuery,
 
   // ** MASTER DATA QUERY
+  lecturer: lecturerQuery,
+  faculty: facultyQuery,
+  studyProgram: studyProgramQuery,
+  studentOrganization: studentOrganizationQuery,
+  championshipLevel: championshipLevelQuery,
+  achievementLevel: achievementLevelQuery,
+
   prodi: prodiQuery,
   orkem: orkemQuery,
   kejuaraan: tingkatKejuaraanQuery,

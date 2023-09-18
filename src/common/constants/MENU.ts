@@ -3,7 +3,6 @@ import {
   BookIcon,
   DashboardIcon,
   MasterDataIcon,
-  RoleManagementIcon,
   UserManagementIcon,
 } from "~/common/components/svg";
 
@@ -91,12 +90,6 @@ const LIST_MENU: MenuItemType[] = [
         title: "Tingkat Prestasi",
         url: "/master-data/tingkat-prestasi",
         module: "check-point",
-      },
-      {
-        id: 45,
-        title: "Status Pengajuan",
-        url: "/master-data/status-pengajuan",
-        module: "consumption",
       },
     ],
   },

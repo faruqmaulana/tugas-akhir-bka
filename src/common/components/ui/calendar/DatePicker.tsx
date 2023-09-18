@@ -15,13 +15,22 @@ import CalendarIcon from "../../svg/CalendarIcon";
 import { cn } from "~/common/utils";
 import { id } from "date-fns/locale";
 import { Controller, type RegisterOptions } from "react-hook-form";
+import {
+  type FieldError,
+  type FieldErrorsImpl,
+  type Merge,
+} from "react-hook-form";
 
 export type DatePickerProps = {
   disabled: boolean;
   isEditForm: boolean;
   editIconAction: React.ReactNode;
   control: any;
-  error?: string;
+  error?:
+    | string
+    | FieldError
+    | Merge<FieldError, FieldErrorsImpl<any>>
+    | undefined;
   register?: (
     name: string,
     options?: RegisterOptions

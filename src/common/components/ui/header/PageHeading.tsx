@@ -62,7 +62,9 @@ const PageHeading = (props: PageTypeHeading) => {
               void router.push(link);
               return;
             }
-            onOpen;
+            if (onOpen) {
+              onOpen();
+            }
           }}
         >
           <PlusIcon />

@@ -26,7 +26,6 @@ const approveChampionshipHandler = protectedProcedure
           noSK,
           tanggalSK,
           status: STATUS.APPROVE,
-          updatedAt: new Date(),
         },
       });
 

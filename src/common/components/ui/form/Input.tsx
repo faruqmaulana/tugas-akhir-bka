@@ -15,13 +15,20 @@ import CustomEditIcon from "../../svg/CustomEditIcon";
 import { useCurrentUser } from "~/common/hooks/module/profile";
 import InputFile from "./InputFile";
 import { type FileResponse } from "~/common/libs/upload-file.lib";
+import {
+  type FieldError,
+  type FieldErrorsImpl,
+  type Merge,
+  type UseFormTrigger,
+} from "react-hook-form";
 
-export type InputProps = {
+export type InputPropsType = {
+  key?: string | number;
   isEditForm?: boolean;
   disabled?: boolean;
   leftAddonComponent?: React.ReactNode | string;
   className?: string;
-  placeholder: string;
+  placeholder?: string;
   value?: string | Date | any;
   label?: string;
   type?: string;
@@ -29,7 +36,11 @@ export type InputProps = {
   selectData?: any;
   labelFontSize?: string;
   autocomplete?: string;
-  error?: string;
+  error?:
+    | string
+    | FieldError
+    | Merge<FieldError, FieldErrorsImpl<any>>
+    | undefined;
   control?: any;
   isLoading?: boolean;
   selectedData?: ReactSelectOptionType[];
@@ -45,10 +56,10 @@ export type InputProps = {
   handleSelectOptionChange?: (
     newValue: SingleValue<ReactSelectOptionType>
   ) => void;
-  trigger?: (fieldName?: string | string[]) => Promise<boolean>;
+  trigger?: UseFormTrigger<any>;
 };
 
-const Input = (props: InputProps) => {
+const Input = (props: InputPropsType) => {
   const { isAdmin } = useCurrentUser();
 
   const {
@@ -217,7 +228,13 @@ const Input = (props: InputProps) => {
       {additionalInfo && (
         <p className="text-sm text-red-500">*{additionalInfo}</p>
       )}
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && (
+        <p className="text-sm text-red-500">
+          {(error as string)
+            .replaceAll("Required", "Required!")
+            .replaceAll("!!", "!")}
+        </p>
+      )}
     </div>
   );
 };

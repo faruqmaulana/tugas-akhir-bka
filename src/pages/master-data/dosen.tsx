@@ -1,31 +1,31 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React, { useMemo } from "react";
 
 import { type MRT_ColumnDef } from "material-react-table";
 import BaseTable from "~/common/components/ui/table/BaseTable";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
 import TableAction from "~/common/components/ui/table/TableAction";
-import { useStatusPengajuan } from "~/common/hooks/master-data/useStatusPengajuan";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import Modal from "~/common/components/ui/modal/Modal";
-import { useDosen } from "~/common/hooks/master-data/dosen/useDosen";
-import BaseForm from "~/common/components/ui/form/BaseForm";
+import { useDosen } from "~/common/hooks/master-data/useDosen";
 import { type AllDosenType } from "~/server/api/module/master-data/lecturer/_router";
-import { Button } from "~/common/components/ui/button";
+import DefaultModalDelete from "~/common/components/ui/modal/DefaultModalDelete";
+import ModalForm from "~/common/components/ui/modal/ModalForm";
 
 const Example = () => {
   const {
     dosenData,
-    handleEdit,
     modalState,
     DOSEN_FORM,
     handleClose,
+    handleEdit,
     handleUpdateSubmit,
     onUpdateSubmit,
+    handleDelete,
+    onDeleteData,
+    handleAdd,
+    onAddSubmit,
   } = useDosen();
-
-  const { handleAdd, handleDelete } = useStatusPengajuan();
 
   const columns = useMemo<MRT_ColumnDef<AllDosenType[0]>[]>(
     () => [
@@ -53,6 +53,7 @@ const Example = () => {
           <TableAction
             onEdit={() => handleEdit(row.original)}
             onDelete={() => handleDelete(row.original)}
+            disableDelete={row.original.prestasiDataTable.length > 0}
           />
         ),
       },
@@ -64,22 +65,41 @@ const Example = () => {
     <>
       <PageHeading showCreateButton onOpen={handleAdd} />
       <Modal
-        isOpen={modalState.isEditModalOpen}
+        isOpen={modalState.isAddModalOpen}
         content={
-          <form onSubmit={handleUpdateSubmit(onUpdateSubmit)}>
-            <BaseForm data={DOSEN_FORM} />
-            <Button
-              isSubmit
-              isSuccess
-              isMedium
-              isLoading={modalState.isEditLoading}
-              className="flex w-fit items-center gap-2"
-            >
-              Submit
-            </Button>
-          </form>
+          <ModalForm
+            formTitle="Tambah Data Dosen"
+            onSubmit={handleUpdateSubmit(onAddSubmit)}
+            FORMS={DOSEN_FORM}
+            loadingSubmit={modalState.isAddLoading}
+            onClose={handleClose}
+          />
         }
         onCloseButton={handleClose}
+      />
+      <Modal
+        isOpen={modalState.isEditModalOpen}
+        content={
+          <ModalForm
+            formTitle="ubah data dosen"
+            onSubmit={handleUpdateSubmit(onUpdateSubmit)}
+            FORMS={DOSEN_FORM}
+            loadingSubmit={modalState.isEditLoading}
+            onClose={handleClose}
+          />
+        }
+        onCloseButton={handleClose}
+      />
+      <Modal
+        confirm
+        content={<DefaultModalDelete detailInfo={modalState.detailInfo} />}
+        buttonCenter
+        showButtonDanger
+        showButtonClose
+        onCloseButton={handleClose}
+        onDangerButton={onDeleteData}
+        isOpen={modalState.isDeleteModalOpen}
+        isLoading={modalState.isDeleteLoading}
       />
       <BaseTable data={dosenData} columns={columns} />
     </>

@@ -6,9 +6,11 @@ import EditIcon from "../../svg/EditIcon";
 const TableAction = ({
   onEdit,
   onDelete,
+  disableDelete = false,
 }: {
   onEdit: () => void;
   onDelete: () => void;
+  disableDelete?: boolean;
 }) => {
   return (
     <div className="flex flex-row gap-1">
@@ -24,6 +26,7 @@ const TableAction = ({
         <span>Edit</span>
       </Button>
       <Button
+        isDisabled={disableDelete}
         isDanger
         isSmall
         className="flex items-center gap-2 text-center"

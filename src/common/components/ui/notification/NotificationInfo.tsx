@@ -13,6 +13,8 @@ import {
   PopoverTrigger,
 } from "~/common/components/ui/popover/popover";
 import timeAgo from "~/common/helpers/timeAgo";
+import { type getActionUserType } from "~/common/hooks/core/useNotification";
+import { type NotificationType } from "~/server/api/module/notification/notification";
 
 const NotificationInfo = () => {
   const {
@@ -21,8 +23,31 @@ const NotificationInfo = () => {
 
   const { isAdmin } = useCurrentUser();
 
+  const getActionUser = ({ data, id }: getActionUserType) => {
+    return data.filter((val) => val.User.id === id)[0];
+  };
+
+  const handleAdminMessage = ({
+    message,
+    data,
+    id,
+  }: {
+    message: string;
+    data: NotificationType;
+    id: string;
+  }) => {
+    return message.replace(
+      "{{user}}",
+      getActionUser({
+        data,
+        id,
+      })?.User.name || ""
+    );
+  };
+
   const haveNotification = notification && notification.length !== 0;
-  const unreadNotif = notification && notification?.filter((item) => !item.readed)?.length;
+  const unreadNotif =
+    notification && notification?.filter((item) => !item.readed)?.length;
   const activeNotification = (unreadNotif as number) > 0;
   return (
     <Popover>
@@ -66,7 +91,11 @@ const NotificationInfo = () => {
                   className="text-sm"
                   dangerouslySetInnerHTML={{
                     __html: isAdmin
-                      ? (val.notificationMessage.forAdminMessage as string)
+                      ? handleAdminMessage({
+                          message: val.notificationMessage.forAdminMessage as string,
+                          data: val.notificationMessage.Notification,
+                          id: val.notificationMessage.actionByMahasiswaId,
+                        })
                       : (val.notificationMessage.forUserMessage as string),
                   }}
                 />
