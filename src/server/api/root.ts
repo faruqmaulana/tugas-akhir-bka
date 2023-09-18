@@ -10,6 +10,7 @@ import { notificationQuery } from "./module/notification/notification";
 import { activityLogQuery } from "./module/activity-log/activityLog";
 import { lecturerQuery } from "./module/master-data/lecturer/_router";
 import { facultyQuery } from "./module/master-data/faculty/_router";
+import { studyProgramQuery } from "./module/master-data/study-program/_router";
 
 /**
  * This is the primary router for your server.
@@ -19,10 +20,11 @@ import { facultyQuery } from "./module/master-data/faculty/_router";
 export const appRouter = createTRPCRouter({
   example: exampleRouter,
   user: userData,
-  
+
   // ** MASTER DATA QUERY
   lecturer: lecturerQuery,
   faculty: facultyQuery,
+  studyProgram: studyProgramQuery,
   prodi: prodiQuery,
   orkem: orkemQuery,
   kejuaraan: tingkatKejuaraanQuery,
