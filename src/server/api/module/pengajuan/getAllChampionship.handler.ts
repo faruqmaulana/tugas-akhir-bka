@@ -1,7 +1,7 @@
 import { changeDateFormat } from "~/common/helpers/changeDateFormat";
 import { protectedProcedure } from "../../trpc";
 import { type Prisma } from "@prisma/client";
-import { STATUS } from "~/common/enums/STATUS";
+import { Role } from "@prisma/client";
 import { z } from "zod";
 
 export type allChampionshipType = Prisma.PengajuanOnUsersGetPayload<{
@@ -42,21 +42,32 @@ export type allChampionshipType = Prisma.PengajuanOnUsersGetPayload<{
 const getAllChampionshipHandler = protectedProcedure
   .input(z.string().optional())
   .query(async ({ ctx, input }) => {
-    const queryFilter = input
-      ? {
+    const isMahasiswa = ctx.session.user.role === Role.MAHASISWA;
+
+    const handleQuery = () => {
+      if (input) {
+        return {
           NOT: { prestasiDataTableId: null },
           PrestasiDataTable: {
             status: { equals: input },
           },
-        }
-      : {
-          NOT: { prestasiDataTableId: null },
         };
+      }
+
+      if (isMahasiswa && !input) {
+        return {
+          NOT: { prestasiDataTableId: null },
+          userId: { equals: ctx.session.user.userId },
+        };
+      }
+
+      return { NOT: { prestasiDataTableId: null } };
+    };
 
     try {
       const prestasiData = (await ctx.prisma.pengajuanOnUsers.findMany({
         where: {
-          AND: queryFilter,
+          AND: handleQuery(),
         },
         orderBy: {
           PrestasiDataTable: { updatedAt: "desc" },

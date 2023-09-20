@@ -23,7 +23,6 @@ const UserManagement = () => {
   const router = useRouter();
   const { isAdmin } = useCurrentUser();
   const { allKejuaraan } = useKejuaraan();
-  const transformedData = allKejuaraan as KejuaraanData[];
   const columns = useMemo<MRT_ColumnDef<KejuaraanData>[]>(
     () => [
       {
@@ -155,7 +154,7 @@ const UserManagement = () => {
         header={"DATA Prestasi Lomba & Kejuaraan".toUpperCase()}
         className="mt-[30px]"
       >
-        <BaseTable data={transformedData} columns={columns} />
+        <BaseTable data={allKejuaraan} columns={columns} />
       </Card>
     </>
   );

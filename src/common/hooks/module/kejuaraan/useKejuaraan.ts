@@ -16,6 +16,7 @@ import { useMainLayout } from "../../layout/useMainLayout";
 import { useCurrentUser } from "../profile";
 import { handleUploadCloudinary } from "~/common/libs/handle-upload-cloudinary";
 import { handleDocumentMetaToString } from "~/common/libs/handle-document-data";
+import { type KejuaraanData } from "~/common/constants/DUMMY_KEJUARAAN";
 
 const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
   const {
@@ -33,8 +34,10 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
   const { data: orkem } = api.orkem.getAllOrkem.useQuery();
   const { data: kejuaraan } = api.kejuaraan.getAllTingkatKejuaraan.useQuery();
   const { data: prestasi } = api.prestasi.getAllTingkatPrestasi.useQuery();
-  const { data: allKejuaraan } = api.prestasiLomba.getAllKejuaraan.useQuery();
-  const { mutate: createPrestasiLomba } = api.prestasiLomba.createPrestasiLomba.useMutation();
+  const { data: allKejuaraan } =
+    api.prestasiLomba.getAllKejuaraan.useQuery<KejuaraanData[]>();
+  const { mutate: createPrestasiLomba } =
+    api.prestasiLomba.createPrestasiLomba.useMutation();
 
   const [loading, setLoading] = useState<boolean>(false);
   const {
