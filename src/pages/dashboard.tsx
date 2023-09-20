@@ -11,7 +11,6 @@ import BaseTable from "~/common/components/ui/table/BaseTable";
 import { type KejuaraanData } from "~/common/constants/DUMMY_KEJUARAAN";
 import { STATUS } from "~/common/enums/STATUS";
 import { useDashboard } from "~/common/hooks/module/dashboard/useDashboard";
-import { type BarResultType } from "~/server/api/module/statistic/getAchievementByFaculty.handler";
 import { api } from "~/utils/api";
 
 const MyResponsiveBar = dynamic(
@@ -70,8 +69,8 @@ export default function Home() {
           legendLeftTitle="Jumlah Prestasi"
           legendBottomTitle="Fakultas"
           indexBy="name"
-          keys={(data as BarResultType)?.keys}
-          data={(data as BarResultType)?.barData}
+          keys={data?.keys}
+          data={data?.barData}
         />
       </Card>
       <Card header="DATA PRESTASI MAHASISWA TAHUN 2023" className="mt-[30px]">

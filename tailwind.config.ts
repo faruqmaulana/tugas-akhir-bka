@@ -19,6 +19,7 @@ export default {
     },
     extend: {
       screens: {
+        xs: "469px",
         "3xl": "1600px",
       },
       backgroundImage: {

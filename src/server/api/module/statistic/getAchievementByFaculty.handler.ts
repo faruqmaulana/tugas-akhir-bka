@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import { type Prisma } from "@prisma/client";
 import { STATUS } from "~/common/enums/STATUS";
 import { protectedProcedure } from "~/server/api/trpc";
@@ -68,7 +66,7 @@ const getAchievementByFacultyHandler = protectedProcedure.query(
         barData,
       };
 
-      return result as BarResultType;
+      return result;
     } catch (error) {
       return error;
     }

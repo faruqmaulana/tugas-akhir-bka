@@ -8,6 +8,8 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { createElement, useEffect, useState } from "react";
+import { useCurrentUser } from "~/common/hooks/module/profile";
+import { type Role } from "@prisma/client";
 
 import styles from "~/styles/partials/Aside.module.scss";
 
@@ -22,8 +24,10 @@ const MenuWithSub = (props: any) => {
     isAllAccess,
     handleCollapse,
     module,
+    authorization,
   } = props;
   const router = useRouter();
+  const { role } = useCurrentUser();
 
   const [subModule, setSubModule] = useState<any[]>([]);
 
@@ -52,6 +56,8 @@ const MenuWithSub = (props: any) => {
 
     return "";
   };
+
+  if (authorization && !authorization?.includes(role as Role)) return null;
 
   return (
     <li key={id}>

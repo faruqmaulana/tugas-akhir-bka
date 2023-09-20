@@ -19,7 +19,7 @@ const useAchievementLevel = () => {
   const { mutate: upsertAchievementLevel } =
     api.achievementLevel.upsertAchievementLevel.useMutation();
   const { data: achievementLevelData, refetch: refetchAchievementLevel } =
-    api.achievementLevel.getAllAchievementLevel.useQuery();
+    api.achievementLevel.getAllAchievementLevel.useQuery<AllAchievementLevelType>();
   const { mutate: deleteAchievementLevelData } =
     api.achievementLevel.deleteAchievementLevel.useMutation();
 
@@ -73,9 +73,9 @@ const useAchievementLevel = () => {
       isDeleteModalOpen: true,
     });
 
-    const getFilteredAchievementLevel = (
-      achievementLevelData as AllAchievementLevelType
-    )?.filter((val) => val.id === data.id)[0];
+    const getFilteredAchievementLevel = achievementLevelData?.filter(
+      (val) => val.id === data.id
+    )[0];
 
     setFilteredAchievementLevel(getFilteredAchievementLevel);
   };
@@ -116,9 +116,9 @@ const useAchievementLevel = () => {
 
   const handleEdit = (currentData: AllAchievementLevelType[0]) => {
     // GET FILTERED LECTURER
-    const getFilteredAchievementLevel = (
-      achievementLevelData as AllAchievementLevelType
-    )?.filter((val) => val.id === currentData.id)[0];
+    const getFilteredAchievementLevel = achievementLevelData?.filter(
+      (val) => val.id === currentData.id
+    )[0];
 
     if (getFilteredAchievementLevel) {
       setFilteredAchievementLevel(getFilteredAchievementLevel);

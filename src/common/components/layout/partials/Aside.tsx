@@ -52,7 +52,7 @@ const Aside = ({ showAside }: any) => {
 
       <div className={styles.menu}>
         <ul>
-          {listMenu.map((item: any, index: number) => {
+          {listMenu.map((item: any) => {
             return !item.submenu ? (
               <LinkBuilder
                 {...item}

@@ -13,6 +13,7 @@ import BaseTable from "~/common/components/ui/table/BaseTable";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
 import { type KejuaraanData } from "~/common/constants/DUMMY_KEJUARAAN";
 import { useKejuaraan } from "~/common/hooks/module/kejuaraan/useKejuaraan";
+import { useCurrentUser } from "~/common/hooks/module/profile";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -20,6 +21,7 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 
 const UserManagement = () => {
   const router = useRouter();
+  const { isAdmin } = useCurrentUser();
   const { allKejuaraan } = useKejuaraan();
   const transformedData = allKejuaraan as KejuaraanData[];
   const columns = useMemo<MRT_ColumnDef<KejuaraanData>[]>(
@@ -146,7 +148,7 @@ const UserManagement = () => {
     <>
       <PageHeading
         title="Module Prestasi Lomba & Kejuaraan"
-        showCreateButton
+        showCreateButton={!isAdmin}
         link="/module/kejuaraan/tambah"
       />
       <Card

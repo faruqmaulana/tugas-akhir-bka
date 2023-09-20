@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { Role } from "@prisma/client";
+
 import {
   BookIcon,
   DashboardIcon,
@@ -23,6 +25,7 @@ export type MenuItemType = {
   type?: string;
   submenu?: SubMenuItem[];
   counter?: number;
+  authorization?: Role[];
 };
 
 const LIST_MENU: MenuItemType[] = [
@@ -32,6 +35,7 @@ const LIST_MENU: MenuItemType[] = [
     url: "/dashboard",
     module: "dashboard",
     icon: DashboardIcon,
+    authorization: [Role.ADMIN, Role.MAHASISWA],
   },
   {
     id: 2,
@@ -39,6 +43,7 @@ const LIST_MENU: MenuItemType[] = [
     url: "/user-management",
     module: "user-management",
     icon: UserManagementIcon,
+    authorization: [Role.ADMIN],
   },
   {
     id: 3,
@@ -48,6 +53,7 @@ const LIST_MENU: MenuItemType[] = [
     url: "",
     icon: MasterDataIcon,
     isOpen: false,
+    authorization: [Role.ADMIN],
     submenu: [
       {
         id: 40,
