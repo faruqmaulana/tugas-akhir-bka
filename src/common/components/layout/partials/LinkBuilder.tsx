@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import Link from "next/link";
 import { createElement } from "react";
+import { useCurrentUser } from "~/common/hooks/module/profile";
+import { type Role } from "@prisma/client";
 
 import styles from "~/styles/partials/Aside.module.scss";
 
@@ -17,8 +20,10 @@ const LinkBuilder = (props: any) => {
     module,
     counter,
     handleCloseCollapse,
+    authorization,
   } = props;
 
+  const { role } = useCurrentUser();
   const exceptModule = ["dashboard", "user-management", "sk-rektor"];
 
   const handleActiveMenu = (
@@ -29,6 +34,8 @@ const LinkBuilder = (props: any) => {
 
     return isActive ? styles.active : "";
   };
+
+  if (authorization && !authorization?.includes(role as Role)) return null;
 
   return (
     <li key={id}>

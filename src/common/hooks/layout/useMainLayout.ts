@@ -11,18 +11,13 @@ import { api } from "~/utils/api";
 const useMainLayout = () => {
   const { state, dispatch } = useGlobalContext();
   const [showAside, setShowAside] = useState<boolean>(true);
-  const { data: user, isLoading } = api.user.getUserProfile.useQuery(
-    undefined,
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
+  const { data: user, isLoading } = api.user.getUserProfile.useQuery();
 
   const {
     data: userNotification,
     isLoading: loadingNotification,
     refetch: refetchNotification,
-  } = api.notification.getUserNotif.useQuery();
+  } = api.notification.getUserNotif.useQuery<AllNotificationType>();
 
   useEffect(() => {
     if (!isLoading && user && !loadingNotification && userNotification) {
@@ -35,7 +30,7 @@ const useMainLayout = () => {
       // UPDATE GLOBAL USER NOTIF COUNT
       dispatch({
         type: ActionReducer.UPDATE_NOTIFICATION_COUNT,
-        payload: userNotification as AllNotificationType,
+        payload: userNotification,
       });
     }
   }, [isLoading, user, loadingNotification, userNotification, dispatch]);

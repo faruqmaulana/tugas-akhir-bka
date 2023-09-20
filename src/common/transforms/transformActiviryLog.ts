@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { type KejuaraanByIdType } from "~/server/api/module/pengajuan/prestasi";
+import { type KejuaraanByIdType } from "~/server/api/module/pengajuan/_router";
 import { changeDateFormatToNumeric } from "../helpers/changeDateFormat";
 import capitalizeFirstLetter from "../helpers/capitalizeFirstLetter";
 

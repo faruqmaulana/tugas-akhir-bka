@@ -22,4 +22,5 @@ export const userQuery = {
       Fakultas: true,
     },
   },
+  
 };

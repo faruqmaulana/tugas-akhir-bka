@@ -1,8 +1,14 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { v2 as cloudinary } from "cloudinary";
+import sessionMiddleware from "~/common/libs/sessionMiddleware";
 
-export default function signature(req: NextApiRequest, res: NextApiResponse) {
+export default async function signature(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  await sessionMiddleware(req, res);
+
   // Get the timestamp in seconds
   const timestamp = Math.round(new Date().getTime() / 1000);
 

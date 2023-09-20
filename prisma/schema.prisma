@@ -8,10 +8,10 @@ generator client {
 
 generator json {
   provider     = "prisma-json-types-generator"
-  useType      = "PrismaJson.GlobalType"
-  clientOutput = "finds automatically"
   namespace    = "PrismaJson"
   allowAny     = "false"
+  clientOutput = "finds automatically"
+  useType      = "PrismaJson.GlobalType"
 }
 
 datasource db {
@@ -22,7 +22,7 @@ datasource db {
 model User {
   id                 String              @id @default(cuid())
   name               String
-  npm                String
+  npm                String              @unique
   alamat             String?
   semester           String?
   phone              String
@@ -31,6 +31,8 @@ model User {
   password           String
   role               Role                @default(MAHASISWA)
   prodiId            String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @default(now()) @updatedAt
   ActivityLog        ActivityLog[]
   Buku               Buku[]
   notification       Notification[]
@@ -50,6 +52,8 @@ model Dosen {
   name              String
   nidn              String
   prodiId           String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @default(now()) @updatedAt
   prodi             MasterDataProdi?    @relation(fields: [prodiId], references: [id])
   PengajuanOnUsers  PengajuanOnUsers[]
   PengajuanPKM      PengajuanPKM[]
@@ -57,15 +61,19 @@ model Dosen {
 }
 
 model MasterDataFakultas {
-  id    String            @id @default(cuid())
-  name  String
-  prodi MasterDataProdi[]
+  id        String            @id @default(cuid())
+  name      String
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @default(now()) @updatedAt
+  prodi     MasterDataProdi[]
 }
 
 model MasterDataProdi {
   id         String             @id @default(cuid())
   name       String
   fakultasId String
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @default(now()) @updatedAt
   Dosen      Dosen[]
   Fakultas   MasterDataFakultas @relation(fields: [fakultasId], references: [id])
   user       User[]
@@ -74,27 +82,37 @@ model MasterDataProdi {
 model MasterDataOrkem {
   id                String              @id @default(cuid())
   name              String
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @default(now()) @updatedAt
   PrestasiDataTable PrestasiDataTable[]
 }
 
 model MasterDataTingkatKejuaraan {
   id                String              @id @default(cuid())
   name              String
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @default(now()) @updatedAt
   PrestasiDataTable PrestasiDataTable[]
 }
 
 model MasterDataTingkatPrestasi {
   id                String              @id @default(cuid())
   name              String
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @default(now()) @updatedAt
   PrestasiDataTable PrestasiDataTable[]
 }
 
 model LampiranData {
   id                  String              @id @default(cuid())
-  piagamPenghargaan   String?
-  fotoPenyerahanPiala String?
-  undanganKejuaraan   String?
-  dokumenPendukung    String?
+  /// [FileResponse]
+  piagamPenghargaan   Json?
+  /// [FileResponse]
+  fotoPenyerahanPiala Json?
+  /// [FileResponse]
+  undanganKejuaraan   Json?
+  /// [FileResponse]
+  dokumenPendukung    Json?
   PrestasiDataTable   PrestasiDataTable[]
 }
 
@@ -113,7 +131,7 @@ model PrestasiDataTable {
   tingkatPrestasiId  String
   dosenId            String
   lampiranId         String
-  updatedAt          DateTime?                  @default(now())
+  updatedAt          DateTime                   @default(now()) @updatedAt
   status             String                     @default("Sedang Diproses")
   activityLog        ActivityLog[]
   users              PengajuanOnUsers[]
@@ -132,6 +150,7 @@ model PengajuanOnUsers {
   PengajuanPatenAndHakiTableId String?
   keterangan                   String             @default("Ketua Tim")
   id                           String             @id @default(cuid())
+  createdAt                    DateTime           @default(now())
   PengajuanPKM                 PengajuanPKM?      @relation(fields: [PengajuanPKMId], references: [id])
   PengajuanPatenAndHakiTable   PatenAndHakiTable? @relation(fields: [PengajuanPatenAndHakiTableId], references: [id])
   dosen                        Dosen              @relation(fields: [dosenId], references: [id])
@@ -147,6 +166,7 @@ model PengajuanPKM {
   isValidated     Boolean            @default(false)
   validatedAt     DateTime
   createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @default(now()) @updatedAt
   lampiran        String?
   totalAnggaran   Int
   anggaranDosen   Int
@@ -162,6 +182,7 @@ model PengajuanBeasiswa {
   isValidated      Boolean  @default(false)
   validatedAt      DateTime
   createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now()) @updatedAt
   dokumenFormulir  String
   deskripsiDokumen String
   dokumenPendukung String
@@ -177,6 +198,8 @@ model SKRektor {
   tanggal    DateTime
   keterangan String
   lampiran   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
 }
 
 /// === PENGAJUAN LUARAN TABLE === ///
@@ -190,6 +213,7 @@ model PatenAndHakiTable {
   validatedAt      DateTime
   isValidated      Boolean            @default(false)
   jenis            PatenAndHaki
+  updatedAt        DateTime           @default(now()) @updatedAt
   PengajuanOnUsers PengajuanOnUsers[]
 }
 
@@ -203,6 +227,7 @@ model Buku {
   jumlahEksemplar Int
   validatedAt     DateTime
   createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
   userId          String
   status          String?
   user            User     @relation(fields: [userId], references: [id])

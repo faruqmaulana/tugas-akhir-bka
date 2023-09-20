@@ -35,7 +35,6 @@ const Example = ({ slug }: { slug: string }) => {
     renderActionButton,
     isDrawerOpen,
     setIsDrawerOpen,
-    KEJUARAAN_FORM,
     EDIT_PRESTASI_FORM,
     onSubmit,
     handleSubmit,
@@ -43,6 +42,7 @@ const Example = ({ slug }: { slug: string }) => {
     prestasi,
     isAdmin,
     isLoadingPrestasiData,
+    TRANSFORM_KEJUARAAN,
   } = useApproveKejuaraan({ slug });
 
   return (
@@ -51,7 +51,7 @@ const Example = ({ slug }: { slug: string }) => {
         title="Detail Prestasi lomba dan kejuaraan"
         ownButton={
           <Button
-            isMedium
+            isLarge
             isGray
             className="flex w-fit items-center gap-2"
             onClick={() => {
@@ -72,11 +72,11 @@ const Example = ({ slug }: { slug: string }) => {
           <InfoIcon />
           <p className="font-bold text-primary-600">Log Activity</p>
         </button>
-        <BaseForm isEditForm data={KEJUARAAN_FORM} />
+        <BaseForm isEditForm data={TRANSFORM_KEJUARAAN} />
         {renderActionButton() && (
-          <div className="mr-auto flex flex-row gap-4">
+          <div className="flex flex-row justify-end gap-4">
             <Button
-              isMedium
+              isLarge
               isDanger
               className="w-fit"
               onClick={() => handleButtonAction("reject")}
@@ -84,7 +84,7 @@ const Example = ({ slug }: { slug: string }) => {
               <span>Tolak</span>
             </Button>
             <Button
-              isMedium
+              isLarge
               isSuccess
               className="w-fit"
               onClick={() => handleButtonAction("approve")}
@@ -95,21 +95,22 @@ const Example = ({ slug }: { slug: string }) => {
         )}
         {!isAdmin && !isLoadingPrestasiData && (
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="mr-auto flex flex-row gap-4">
+            <div className="flex flex-row justify-end gap-4">
               <Button
                 disabled={!prestasi}
                 isSecondary
-                isMedium
+                isLarge
                 onClick={() => setDefaultValue()}
               >
                 Reset
               </Button>
               <Button
                 isSuccess
-                isMedium
+                isLarge
                 onClick={() => handleButtonAction("edit")}
               >
-                {prestasi?.status === STATUS.PROCESSED
+                {prestasi?.status === STATUS.PROCESSED ||
+                prestasi?.status === STATUS.REPROCESS
                   ? "Submit Perubahan"
                   : "Ajukan Ulang"}
               </Button>
@@ -129,23 +130,20 @@ const Example = ({ slug }: { slug: string }) => {
         isOpen={state.isReject}
         className="!mb-0"
         captionButtonDanger="Tolak"
+        onClose={() => handleButtonAction("close")}
         content={
           <form onSubmit={submitRejectKejuaraan(onRejectKejuaraan)}>
             <BaseForm data={REJECT_PRESTASI_FORM} />
-            <div className="flex flex-row justify-end gap-4">
+            <div className="mt-5 flex flex-row justify-end gap-4">
               <Button
                 isGray
-                isMedium
+                isLarge
+                isDisabled={state.loadingReject}
                 onClick={() => handleButtonAction("close")}
               >
                 Cancel
               </Button>
-              <Button
-                isSubmit
-                isDanger
-                isMedium
-                isLoading={state.loadingReject}
-              >
+              <Button isSubmit isDanger isLarge isLoading={state.loadingReject}>
                 Tolak
               </Button>
             </div>
@@ -159,13 +157,15 @@ const Example = ({ slug }: { slug: string }) => {
         isOpen={state.isApprove}
         className="!mb-0"
         captionTitleConfirm="Approve Pengajuan Prestasi dan Kejuaraan"
+        onClose={() => handleButtonAction("close")}
         content={
           <form onSubmit={submitApproveKejuaraan(onApproveKejuaraan)}>
             <BaseForm data={APPROVE_PRESTASI_FORM} />
-            <div className="flex flex-row justify-end gap-4">
+            <div className="mt-5 flex flex-row justify-end gap-4">
               <Button
                 isGray
-                isMedium
+                isLarge
+                isDisabled={state.loadingApprove}
                 onClick={() => handleButtonAction("close")}
               >
                 Cancel
@@ -173,7 +173,7 @@ const Example = ({ slug }: { slug: string }) => {
               <Button
                 isSubmit
                 isSuccess
-                isMedium
+                isLarge
                 isLoading={state.loadingApprove}
               >
                 Submit
@@ -187,16 +187,18 @@ const Example = ({ slug }: { slug: string }) => {
         showClose
         isOpen={state.isEdited}
         className="!mb-0"
+        onClose={() => handleButtonAction("close")}
         content={
           <form onSubmit={handleSubmit(onSubmit)}>
             <p className="text-center">
               Anda melakukan perubahan pada dokumen yang sudah diajukan.
             </p>
             <BaseForm data={EDIT_PRESTASI_FORM} />
-            <div className="flex flex-row justify-end gap-4">
+            <div className="mt-5 flex flex-row justify-end gap-4">
               <Button
                 isGray
-                isMedium
+                isLarge
+                isDisabled={state.loadingEdited}
                 onClick={() => handleButtonAction("close")}
               >
                 Cancel
@@ -204,7 +206,7 @@ const Example = ({ slug }: { slug: string }) => {
               <Button
                 isSubmit
                 isSuccess
-                isMedium
+                isLarge
                 isLoading={state.loadingEdited}
               >
                 Submit

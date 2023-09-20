@@ -11,13 +11,14 @@ import { useGlobalContext } from "~/common/context/GlobalContext";
 import { getUserLeadBoolean } from "~/common/helpers/getUserLead";
 import { api } from "~/utils/api";
 import { Role } from "@prisma/client";
+import { type SingleValue } from "react-select";
 
 const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
   const {
     state: { user: userData },
   } = useGlobalContext();
 
-  const { data: user } = api.user.getAllMahasiswa.useQuery();
+  const { data: user } = api.user.getAllMahasiswaSelect.useQuery();
   const router = useRouter();
 
   const [mahasiswa, setMahasiswa] = useState<
@@ -27,7 +28,9 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
     ReactSelectOptionType[]
   >([]);
 
-  const handleSelectMultipleUser = (ctx: ReactSelectOptionType) => {
+  const handleSelectMultipleUser = (
+    ctx: SingleValue<ReactSelectOptionType>
+  ) => {
     if (!ctx) return;
     setMahasiswaPayload([
       ...mahasiswaPayload,

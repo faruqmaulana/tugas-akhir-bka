@@ -14,14 +14,21 @@ import { DatePicker } from "../calendar/DatePicker";
 import CustomEditIcon from "../../svg/CustomEditIcon";
 import { useCurrentUser } from "~/common/hooks/module/profile";
 import InputFile from "./InputFile";
-import { type RegisterOptions } from "react-hook-form";
+import { type FileResponse } from "~/common/libs/upload-file.lib";
+import {
+  type FieldError,
+  type FieldErrorsImpl,
+  type Merge,
+  type UseFormTrigger,
+} from "react-hook-form";
 
-export type InputProps = {
+export type InputPropsType = {
+  key?: string | number;
   isEditForm?: boolean;
   disabled?: boolean;
   leftAddonComponent?: React.ReactNode | string;
   className?: string;
-  placeholder: string;
+  placeholder?: string;
   value?: string | Date | any;
   label?: string;
   type?: string;
@@ -29,12 +36,17 @@ export type InputProps = {
   selectData?: any;
   labelFontSize?: string;
   autocomplete?: string;
-  error?: string;
+  error?:
+    | string
+    | FieldError
+    | Merge<FieldError, FieldErrorsImpl<any>>
+    | undefined;
   control?: any;
   isLoading?: boolean;
   selectedData?: ReactSelectOptionType[];
   formFlag?: string;
   register?: any;
+  fileData?: FileResponse;
   onChange?: (value: string) => void;
   handleSwitch?: (value: string) => void;
   handleDeleteSelectedData?: (params: handleDeleteSelectedDataType) => void;
@@ -44,14 +56,15 @@ export type InputProps = {
   handleSelectOptionChange?: (
     newValue: SingleValue<ReactSelectOptionType>
   ) => void;
-  trigger?: (fieldName?: string | string[]) => Promise<boolean>;
+  trigger?: UseFormTrigger<any>;
 };
 
-const Input = (props: InputProps) => {
+const Input = (props: InputPropsType) => {
   const { isAdmin } = useCurrentUser();
 
   const {
     formFlag,
+    fileData,
     isEditForm = false,
     trigger,
     disabled = false,
@@ -91,7 +104,7 @@ const Input = (props: InputProps) => {
   return (
     <div className={`relative flex flex-col gap-1 ${className}`}>
       {label && <p className={`font-medium ${labelFontSize}`}>{label}</p>}
-      <div className="relative flex flex-wrap items-stretch">
+      <div className="relative flex w-full flex-row items-stretch">
         {type === "select" && (
           <ReactSelect
             disabled={isDisabled}
@@ -169,6 +182,7 @@ const Input = (props: InputProps) => {
             className={`relative m-0 block w-[1px] min-w-0 flex-auto rounded-r border border-solid border-neutral-400 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:text-neutral-900 dark:focus:border-primary ${
               !leftAddonComponent ? "rounded-l" : ""
             }
+            ${type === "password" ? "!pr-8" : ""}
             ${
               error
                 ? "!border-red-500 focus:!border-red-500"
@@ -184,8 +198,14 @@ const Input = (props: InputProps) => {
             aria-describedby="basic-addon1"
           />
         )}
-        {type === "file" && <InputFile register={register} />}
-
+        {type === "file" && (
+          <InputFile
+            disabled={isDisabled}
+            isEditForm={editForm}
+            register={register}
+            fileData={fileData}
+          />
+        )}
         {type === "password" && (
           <button
             type="button"
@@ -208,7 +228,13 @@ const Input = (props: InputProps) => {
       {additionalInfo && (
         <p className="text-sm text-red-500">*{additionalInfo}</p>
       )}
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && (
+        <p className="text-sm text-red-500">
+          {(error as string)
+            .replaceAll("Required", "Required!")
+            .replaceAll("!!", "!")}
+        </p>
+      )}
     </div>
   );
 };

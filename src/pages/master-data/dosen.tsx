@@ -1,45 +1,33 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import React, { useMemo } from "react";
 
 import { type MRT_ColumnDef } from "material-react-table";
 import BaseTable from "~/common/components/ui/table/BaseTable";
-import { DOSEN, DOSEN_FORM, type DosenType } from "~/common/constants/MASTER-DATA/DOSEN";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
 import TableAction from "~/common/components/ui/table/TableAction";
-import { useStatusPengajuan } from "~/common/hooks/master-data/useStatusPengajuan";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import Modal from "~/common/components/ui/modal/Modal";
-import FormModalContent from "~/common/components/ui/modal/FormModalContent";
+import { useDosen } from "~/common/hooks/master-data/useDosen";
+import { type AllDosenType } from "~/server/api/module/master-data/lecturer/_router";
+import DefaultModalDelete from "~/common/components/ui/modal/DefaultModalDelete";
+import ModalForm from "~/common/components/ui/modal/ModalForm";
 
 const Example = () => {
   const {
-    isOpen,
-    formData,
-    title,
-    confirm,
-    success,
-    content,
-    createAction,
-    handleAdd,
+    dosenData,
+    modalState,
+    DOSEN_FORM,
+    handleClose,
     handleEdit,
+    handleUpdateSubmit,
+    onUpdateSubmit,
     handleDelete,
-    onClose,
-    onSubmit,
-    showButtonSuccess,
-    showButtonConfirm,
-    showButtonClose,
-    showButtonDanger,
-  } = useStatusPengajuan();
-  
-  const contentData = {
-    success,
-    createAction,
-    content,
-    initialData: DOSEN_FORM,
-    updateFormData: formData,
-  };
+    onDeleteData,
+    handleAdd,
+    onAddSubmit,
+  } = useDosen();
 
-  const columns = useMemo<MRT_ColumnDef<DosenType>[]>(
+  const columns = useMemo<MRT_ColumnDef<AllDosenType[0]>[]>(
     () => [
       {
         header: "Name",
@@ -52,47 +40,68 @@ const Example = () => {
       },
       {
         header: "Prodi",
-        accessorKey: "prodi",
+        accessorKey: "prodi.name",
       },
       {
         header: "Fakultas",
-        accessorKey: "fakultas",
+        accessorKey: "prodi.Fakultas.name",
       },
       {
         header: "Action",
         ...tableActionConfig,
         Cell: ({ row }) => (
           <TableAction
-            onEdit={() => handleEdit(row.original, DOSEN_FORM)}
+            onEdit={() => handleEdit(row.original)}
             onDelete={() => handleDelete(row.original)}
+            disableDelete={row.original.prestasiDataTable.length > 0}
           />
         ),
       },
     ],
-    []
+    [dosenData]
   );
 
   return (
     <>
       <PageHeading showCreateButton onOpen={handleAdd} />
       <Modal
-        isOpen={isOpen}
-        content={<FormModalContent {...contentData} />}
-        onClose={onClose}
-        title={success ? "" : title}
-        success={success}
-        confirm={!success && confirm}
-        showButtonConfirm={showButtonConfirm}
-        showButtonSuccess={showButtonSuccess}
-        showButtonClose={showButtonClose}
-        showButtonDanger={showButtonDanger}
-        buttonCenter={confirm || success}
-        onConfirmButton={onClose}
-        onCloseButton={onClose}
-        onSuccessButton={onSubmit}
-        onDangerButton={onSubmit}
+        isOpen={modalState.isAddModalOpen}
+        content={
+          <ModalForm
+            formTitle="Tambah Data Dosen"
+            onSubmit={handleUpdateSubmit(onAddSubmit)}
+            FORMS={DOSEN_FORM}
+            loadingSubmit={modalState.isAddLoading}
+            onClose={handleClose}
+          />
+        }
+        onCloseButton={handleClose}
       />
-      <BaseTable data={DOSEN} columns={columns} />
+      <Modal
+        isOpen={modalState.isEditModalOpen}
+        content={
+          <ModalForm
+            formTitle="ubah data dosen"
+            onSubmit={handleUpdateSubmit(onUpdateSubmit)}
+            FORMS={DOSEN_FORM}
+            loadingSubmit={modalState.isEditLoading}
+            onClose={handleClose}
+          />
+        }
+        onCloseButton={handleClose}
+      />
+      <Modal
+        confirm
+        content={<DefaultModalDelete detailInfo={modalState.detailInfo} />}
+        buttonCenter
+        showButtonDanger
+        showButtonClose
+        onCloseButton={handleClose}
+        onDangerButton={onDeleteData}
+        isOpen={modalState.isDeleteModalOpen}
+        isLoading={modalState.isDeleteLoading}
+      />
+      <BaseTable data={dosenData} columns={columns} />
     </>
   );
 };

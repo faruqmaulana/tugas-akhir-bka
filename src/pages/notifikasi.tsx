@@ -145,7 +145,7 @@ const notifikasi = () => {
   );
 };
 
-const ModalContent = ({
+export const ModalContent = ({
   content,
   detailInfo,
 }: {

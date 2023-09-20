@@ -7,7 +7,6 @@ import TrashIcon from "../../svg/TrashIcon";
 import InfoIcon from "../../svg/InfoIcon";
 
 import { type AllNotificationType } from "~/server/api/module/notification/notification";
-import { changeDateFormat } from "~/common/helpers/changeDateFormat";
 import Spinner from "../../svg/Spinner";
 import { Anchor } from "~/common/components/ui/anchor/.";
 import { StatusBagde } from "~/common/components/ui/badge/.";
@@ -15,6 +14,7 @@ import {
   type getActionUserType,
   type onOpenNotificationType,
 } from "~/common/hooks/core/useNotification";
+import timeAgo from "~/common/helpers/timeAgo";
 
 const NotificationCard = ({
   loadingState,
@@ -170,8 +170,8 @@ const NotificationCard = ({
           }
         </p>
         <div className="mt-2 flex flex-wrap justify-between gap-1">
-          <p className="text-sm">
-            {changeDateFormat(val.notificationMessage.createdAt)}
+          <p className="text-base">
+            {timeAgo(val.notificationMessage.createdAt)}
           </p>
           <div className="flex justify-between gap-2">
             <Anchor

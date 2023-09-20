@@ -127,10 +127,21 @@ body {
   position: absolute !important;
   right: 0 !important;
 }
-.rpv-toolbar__right > *:not(:nth-child(4)) {
+.rpv-toolbar__right > *:not(:nth-child(4)):not(:nth-child(6)) {
   display: none;
 }
 
 .rpv-default-layout__sidebar-headers {
   display: none !important;
+}
+
+.MuiBox-root.css-4sd9dj {
+  font-size: 14px;
+  padding: 2px 18px;
+}
+
+/* TABLE HEADER */
+.MuiBox-root.css-sq9qdz {
+  display: flex !important;
+  flex-wrap: wrap-reverse !important;
 }
