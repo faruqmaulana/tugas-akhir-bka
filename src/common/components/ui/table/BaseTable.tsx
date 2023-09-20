@@ -43,6 +43,7 @@ const BaseTable = ({ columns, data, showColumnFilters = true }: any) => {
 
   return (
     <MaterialReactTable
+      enableRowSelection
       columns={columns}
       data={data}
       initialState={{
@@ -75,6 +76,18 @@ const BaseTable = ({ columns, data, showColumnFilters = true }: any) => {
           >
             <DownloadIcon isWhite />
             <span>Filtered Data</span>
+          </Button>
+          <Button
+            className="flex items-center gap-2 px-6 py-3 text-base"
+            isSmall
+            isPrimary
+            isDisabled={
+              !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+            }
+            onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
+          >
+            <DownloadIcon isWhite />
+            <span>Selected Data</span>
           </Button>
         </div>
       )}

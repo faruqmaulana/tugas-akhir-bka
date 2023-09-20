@@ -74,7 +74,7 @@ const Example = ({ slug }: { slug: string }) => {
         </button>
         <BaseForm isEditForm data={TRANSFORM_KEJUARAAN} />
         {renderActionButton() && (
-          <div className="mr-auto flex flex-row gap-4">
+          <div className="flex flex-row justify-end gap-4">
             <Button
               isLarge
               isDanger
@@ -95,7 +95,7 @@ const Example = ({ slug }: { slug: string }) => {
         )}
         {!isAdmin && !isLoadingPrestasiData && (
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="mr-auto flex flex-row gap-4">
+            <div className="flex flex-row justify-end gap-4">
               <Button
                 disabled={!prestasi}
                 isSecondary
@@ -134,10 +134,11 @@ const Example = ({ slug }: { slug: string }) => {
         content={
           <form onSubmit={submitRejectKejuaraan(onRejectKejuaraan)}>
             <BaseForm data={REJECT_PRESTASI_FORM} />
-            <div className="flex flex-row justify-end gap-4">
+            <div className="mt-5 flex flex-row justify-end gap-4">
               <Button
                 isGray
                 isLarge
+                isDisabled={state.loadingReject}
                 onClick={() => handleButtonAction("close")}
               >
                 Cancel
@@ -164,6 +165,7 @@ const Example = ({ slug }: { slug: string }) => {
               <Button
                 isGray
                 isLarge
+                isDisabled={state.loadingApprove}
                 onClick={() => handleButtonAction("close")}
               >
                 Cancel
@@ -196,6 +198,7 @@ const Example = ({ slug }: { slug: string }) => {
               <Button
                 isGray
                 isLarge
+                isDisabled={state.loadingEdited}
                 onClick={() => handleButtonAction("close")}
               >
                 Cancel

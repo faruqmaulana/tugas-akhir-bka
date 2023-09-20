@@ -131,7 +131,11 @@ body {
   display: none;
 }
 
-
 .rpv-default-layout__sidebar-headers {
   display: none !important;
+}
+
+.MuiBox-root.css-4sd9dj {
+  font-size: 14px;
+  padding: 2px 18px;
 }

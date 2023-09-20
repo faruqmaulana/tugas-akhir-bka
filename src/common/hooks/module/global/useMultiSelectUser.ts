@@ -18,7 +18,7 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
     state: { user: userData },
   } = useGlobalContext();
 
-  const { data: user } = api.user.getAllMahasiswa.useQuery();
+  const { data: user } = api.user.getAllMahasiswaSelect.useQuery();
   const router = useRouter();
 
   const [mahasiswa, setMahasiswa] = useState<

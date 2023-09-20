@@ -34,8 +34,7 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
   const { data: kejuaraan } = api.kejuaraan.getAllTingkatKejuaraan.useQuery();
   const { data: prestasi } = api.prestasi.getAllTingkatPrestasi.useQuery();
   const { data: allKejuaraan } = api.prestasiLomba.getAllKejuaraan.useQuery();
-  const { mutate: createPrestasiLomba } =
-    api.prestasiLomba.createPrestasiLomba.useMutation();
+  const { mutate: createPrestasiLomba } = api.prestasiLomba.createPrestasiLomba.useMutation();
 
   const [loading, setLoading] = useState<boolean>(false);
   const {

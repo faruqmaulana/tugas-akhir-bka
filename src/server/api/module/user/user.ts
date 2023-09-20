@@ -5,16 +5,87 @@ import { PASSWORD_NOT_MATCH, UPDATE_PROFILE_SUCCESS } from "~/common/message";
 import { TRPCError } from "@trpc/server";
 import { removeEmptyStringProperties } from "~/common/helpers/removeEmptyStringProperties";
 import { loginInformation, userProfileForm } from "~/common/schemas/user";
-import { Role } from "@prisma/client";
+import { type Prisma, Role } from "@prisma/client";
+import { STATUS } from "~/common/enums/STATUS";
+
+export type allStudentsType = Prisma.UserGetPayload<{
+  select: typeof userQuery & {
+    _count: {
+      select: {
+        prestasiDataTables: {
+          where: {
+            PrestasiDataTable: {
+              status: {
+                equals: STATUS.APPROVE;
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+}>[];
+
+export type allStudentTableType = {
+  name: string;
+  email: string;
+  phone: string;
+  npm: string;
+  fakultas: string;
+  prodi: string;
+  semester: string;
+  total_prestasi: number;
+};
 
 export const userData = createTRPCRouter({
   //** GET ALL MAHASISWA
-  getAllMahasiswa: protectedProcedure.query(async ({ ctx }) => {
+  getAllMahasiswaSelect: protectedProcedure.query(async ({ ctx }) => {
     try {
       return await ctx.prisma.user.findMany({
         where: { role: Role.MAHASISWA },
-        select: userQuery,
+        select: { id: true, name: true },
       });
+    } catch (error) {
+      return error;
+    }
+  }),
+
+  getAllMahasiswa: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const reqAllStudents = (await ctx.prisma.user.findMany({
+        where: { role: Role.MAHASISWA },
+        select: {
+          ...userQuery,
+          _count: {
+            select: {
+              prestasiDataTables: {
+                where: {
+                  PrestasiDataTable: {
+                    status: {
+                      equals: STATUS.APPROVE,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      })) as allStudentsType;
+
+      const allTransformedStudents = reqAllStudents.map((val) => {
+        return {
+          name: val.name,
+          email: val.email,
+          phone: val.phone,
+          npm: val.npm,
+          fakultas: val.prodi?.Fakultas.name,
+          prodi: val.prodi?.name,
+          semester: val.semester,
+          total_prestasi: val._count.prestasiDataTables,
+        };
+      }) as allStudentTableType[];
+
+      return allTransformedStudents;
     } catch (error) {
       return error;
     }

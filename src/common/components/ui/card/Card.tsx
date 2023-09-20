@@ -6,6 +6,7 @@ import { type CardProps } from "~/common/models/CardProps";
 
 const Card = (props: CardProps) => {
   const {
+    childClass,
     children,
     className,
     headerClassName,
@@ -48,7 +49,7 @@ const Card = (props: CardProps) => {
           {subHeader}
         </p>
       )}
-      <div className="">{children}</div>
+      <div className={childClass}>{children}</div>
     </div>
   );
 };

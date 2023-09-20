@@ -1,29 +1,65 @@
 /* eslint-disable @typescript-eslint/require-await */
-import dynamic from "next/dynamic";
-import React from "react";
+import { type MRT_ColumnDef } from "material-react-table";
+import React, { useMemo } from "react";
 import { requireAuth } from "~/common/authentication/requireAuth";
 import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
-import Loader from "~/common/components/ui/loader/Loader";
-
-const MahasiswaTable = dynamic(
-  () => import("~/common/components/ui/table/MahasiswaTable"),
-  {
-    ssr: false,
-    loading: () => <Loader />,
-  }
-);
+import BaseTable from "~/common/components/ui/table/BaseTable";
+import { useUserManagement } from "~/common/hooks/module/user-management/useUserManagement";
+import { type allStudentTableType } from "~/server/api/module/user/user";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
 });
 
 const UserManagement = () => {
+  const { allStudents } = useUserManagement();
+
+  const columns = useMemo<MRT_ColumnDef<allStudentTableType>[]>(
+    () => [
+      {
+        header: "Name",
+        accessorKey: "name",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Email",
+        accessorKey: "email",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Phone",
+        accessorKey: "phone",
+        enableClickToCopy: true,
+      },
+      {
+        accessorKey: "npm",
+        header: "NBI",
+      },
+      {
+        header: "Fakultas",
+        accessorKey: "fakultas",
+      },
+      {
+        accessorKey: "prodi",
+        header: "prodi",
+      },
+      {
+        accessorKey: "semester",
+        header: "Semester",
+      },
+      {
+        accessorKey: "total_prestasi",
+        header: "Total Prestasi",
+      },
+    ],
+    []
+  );
   return (
     <>
       <PageHeading />
       <Card header="DATA MAHASISWA" className="mt-[30px]">
-        <MahasiswaTable />
+        <BaseTable columns={columns} data={allStudents} />
       </Card>
     </>
   );

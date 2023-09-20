@@ -28,14 +28,15 @@ const TambahKejuaraan = () => {
         }
       />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Card className="mt-[20px]">
+        <Card className="mt-[20px]" childClass="flex flex-col">
           <BaseForm data={KEJUARAAN_FORM} />
           <Button
+            isLarge
             isSubmit
             isSuccess
             isMedium
             isLoading={loading}
-            className="flex w-fit items-center gap-2"
+            className="ml-auto"
           >
             Submit
           </Button>

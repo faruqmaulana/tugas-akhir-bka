@@ -5,6 +5,7 @@ export type KejuaraanData = {
   noSK: string;
   tanggalSK: string;
   kegiatan: string;
+  fakultas: string;
   tanggalKegiatan: string;
   penyelenggara: string;
   isValidated: boolean;
