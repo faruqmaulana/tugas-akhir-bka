@@ -53,12 +53,10 @@ export const authOptions: NextAuthOptions = {
       authorize: async (credentials, req) => {
         try {
           const { npm, password } = await loginSchema.parseAsync(credentials);
-          console.log("npm, password ", npm, password);
           const result = await prisma.user.findFirst({
             where: { npm },
           });
 
-          console.log("result", result);
           if (!result) return null;
           const isValidPassword = await verify(result.password, password);
           if (!isValidPassword) return null;

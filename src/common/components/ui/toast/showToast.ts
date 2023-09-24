@@ -21,7 +21,10 @@ export const showToast = (
   });
 };
 
-export const customToast = (data: string, message: string | undefined) => {
+export const customToast = (
+  data: "error" | "success",
+  message: string | undefined
+) => {
   const isError = data?.toLowerCase() === "error";
   if (message)
     return toast(message, {

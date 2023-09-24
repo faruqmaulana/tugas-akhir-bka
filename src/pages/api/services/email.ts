@@ -1,7 +1,8 @@
 import nodemailer from "nodemailer";
 import { type NextApiResponse, type NextApiRequest } from "next";
-import sessionMiddleware from "~/common/libs/sessionMiddleware";
 import methodNotAllowed from "~/common/handler/methodNotAllowed";
+import { generateToken } from "~/common/libs/generateToken";
+import { getBaseUrl } from "~/utils/api";
 
 interface MyCustomRequestBody extends NextApiRequest {
   body: {
@@ -15,9 +16,10 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    // await sessionMiddleware(req, res);
     if (req.method !== "POST") return methodNotAllowed(res);
     const { targetName, targetUserEmail } = req.body;
+
+    const token = generateToken({ email: targetUserEmail });
 
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -35,7 +37,7 @@ export default async function handler(
       to: targetUserEmail,
       subject: "Verify Account",
       html: `
-        <p>Hello ${targetName} click link bellow to active your account: <a href="https://fm-space.vercel.app/"><b>Link</b></a></p>
+        <p>Hello ${targetName} click link bellow to active your account: <a href="${getBaseUrl()}/verify-email?email=${targetUserEmail}&token=${token}"><b>Link</b></a></p>
         `,
     };
 
@@ -50,7 +52,11 @@ export default async function handler(
       });
     });
 
-    return res.json({ status: 200, message: "Email Sent Successfully" });
+    return res.json({
+      status: 200,
+      message: "Email Sent Successfully",
+      token,
+    });
   } catch (error) {
     console.log({ error });
     return res.json({ status: 500, message: "Failed to Send Email" });
