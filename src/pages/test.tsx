@@ -16,7 +16,7 @@ const UploadForm = () => {
         "/api/services/email",
         {
           targetName: "Faruq Maulana",
-          targetUserEmail: "antrimaslaman@gmail.com",
+          targetUserEmail: process.env.NEXT_PUBLIC_EMAIL_TARGET_TEST,
         },
         {
           headers: {
