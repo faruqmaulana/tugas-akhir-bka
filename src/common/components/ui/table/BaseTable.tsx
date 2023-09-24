@@ -8,7 +8,6 @@ import React from "react";
 import { Button } from "../button/Button";
 import { ExportToCsv } from "export-to-csv";
 import DownloadIcon from "../../svg/DownloadIcon";
-import { ExportAsPdf } from "react-export-table";
 
 const BaseTable = ({ columns, data, showColumnFilters = true }: any) => {
   const csvOptions = {
@@ -90,7 +89,7 @@ const BaseTable = ({ columns, data, showColumnFilters = true }: any) => {
         density: "compact",
       }}
       renderTopToolbarCustomActions={({ table }) => (
-        <div className="xs:w-auto flex w-[245px] space-x-3 overflow-auto py-1">
+        <div className="flex w-[245px] space-x-3 overflow-auto py-1 xs:w-auto">
           <div className="flex flex-shrink-0">
             <Button
               className="flex items-center gap-2 px-6 py-3 text-base"
@@ -170,39 +169,6 @@ const BaseTable = ({ columns, data, showColumnFilters = true }: any) => {
               <DownloadIcon isWhite />
               <span>Selected Data</span>
             </Button>
-          </div>
-          <div className="flex flex-shrink-0">
-            <ExportAsPdf
-              theme="striped"
-              data={transformedData(
-                table
-                  .getVisibleFlatColumns()
-                  .slice(1)
-                  .map((val) => {
-                    return {
-                      id: val.columnDef.id as string,
-                      headerName: val.columnDef.header as string,
-                    };
-                  }),
-                data
-              )}
-              headers={
-                table
-                  .getVisibleFlatColumns()
-                  .slice(1)
-                  .map((val) => val.columnDef.header) as string[]
-              }
-              headerStyles={{ fillColor: "#2E81BB", overflow: "visible" }}
-            >
-              <Button
-                className="flex items-center gap-2 px-6 py-3 text-base"
-                isSmall
-                isPrimary
-              >
-                <DownloadIcon isWhite />
-                <span>Export as PDF</span>
-              </Button>
-            </ExportAsPdf>
           </div>
         </div>
       )}

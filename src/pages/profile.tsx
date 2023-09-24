@@ -25,7 +25,7 @@ const ProfilePage = () => {
             isSuccess
             isMedium
             isLoading={loading}
-            className="col-span-1 ml-auto"
+            className="ml-auto mt-4"
           >
             Simpan
           </Button>
