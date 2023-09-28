@@ -35,3 +35,31 @@ TUGAS AKHIR BKA PROGRESS
     -> edit ✅ -> notif belum benar ✅
     -> reprocess ✅
 - add preview page ?
+
+
+
+
+
+DEVELOP USER REGISTRATION 280923
+
+- register -> confirm email
+- verify email -> resend email 
+
+
+step 1
+- Pendaftaran berhasil, silahkan cek email anda
+
+step 2
+- Email telah dikirim
+
+
+
+DETAIL REQUIRMENT
+- Register page ( common flow behaviour )
+  -> cek nbi (duplo)
+  -> cek phone (duplo)
+  -> cek email (duplo)
+  -> redirect confirm email 
+      -> send email verification
+  -> verify email
+      -> redirect login

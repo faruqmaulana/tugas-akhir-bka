@@ -8,7 +8,7 @@ Table User {
   npm String [unique, not null]
   alamat String
   semester String
-  phone String [not null]
+  phone String [unique, not null]
   email String [unique, not null]
   emailVerified DateTime
   password String [not null]

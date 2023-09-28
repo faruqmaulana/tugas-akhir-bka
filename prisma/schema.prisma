@@ -25,7 +25,7 @@ model User {
   npm                String              @unique
   alamat             String?
   semester           String?
-  phone              String
+  phone              String              @unique
   email              String              @unique
   emailVerified      DateTime?
   password           String
