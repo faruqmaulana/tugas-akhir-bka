@@ -62,7 +62,8 @@ export const authOptions: NextAuthOptions = {
           if (!isValidPassword) return null;
 
           return { id: result.id, role: result.role };
-        } catch {
+        } catch (error) {
+          console.log(error);
           return null;
         }
       },

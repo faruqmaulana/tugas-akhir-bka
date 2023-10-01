@@ -8,7 +8,7 @@ Table User {
   npm String [unique, not null]
   alamat String
   semester String
-  phone String [unique, not null]
+  phone String [unique]
   email String [unique, not null]
   emailVerified DateTime
   password String [not null]
@@ -16,6 +16,8 @@ Table User {
   prodiId String
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [default: `now()`, not null]
+  token String [unique]
+  isActive Boolean [not null, default: true]
   ActivityLog ActivityLog [not null]
   Buku Buku [not null]
   notification Notification [not null]

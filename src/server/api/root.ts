@@ -15,6 +15,7 @@ import { studentOrganizationQuery } from "./module/master-data/student-organizat
 import { championshipLevelQuery } from "./module/master-data/championship-level/_router";
 import { achievementLevelQuery } from "./module/master-data/achievement-level/_router";
 import { statisticQuery } from "./module/statistic/_router";
+import { registerQuery } from "./module/register/_router";
 
 /**
  * This is the primary router for your server.
@@ -49,6 +50,9 @@ export const appRouter = createTRPCRouter({
 
   // ** ACTIVITY LOG
   activityLog: activityLogQuery,
+
+  // ** REGISTER
+  register: registerQuery,
 });
 
 // export type definition of API

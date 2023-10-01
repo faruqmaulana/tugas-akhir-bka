@@ -8,9 +8,9 @@ generator client {
 
 generator json {
   provider     = "prisma-json-types-generator"
-  namespace    = "PrismaJson"
   allowAny     = "false"
   clientOutput = "finds automatically"
+  namespace    = "PrismaJson"
   useType      = "PrismaJson.GlobalType"
 }
 
@@ -25,7 +25,7 @@ model User {
   npm                String              @unique
   alamat             String?
   semester           String?
-  phone              String              @unique
+  phone              String?             @unique
   email              String              @unique
   emailVerified      DateTime?
   password           String
@@ -33,6 +33,8 @@ model User {
   prodiId            String?
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @default(now()) @updatedAt
+  token              String?             @unique
+  isActive           Boolean             @default(true)
   ActivityLog        ActivityLog[]
   Buku               Buku[]
   notification       Notification[]

@@ -5,7 +5,7 @@ import {
   redirectIfNotAuthenticated,
 } from "./authLogic";
 
-import { authOptions, getServerAuthSession } from "~/server/auth";
+import { authOptions } from "~/server/auth";
 import { findString } from "../helpers/findString";
 import { PUBLIC_ROUTE } from "../constants/routers";
 
@@ -13,7 +13,11 @@ export const requireAuth =
   (func: GetServerSideProps) => async (ctx: GetServerSidePropsContext) => {
     const session = await getServerSession(ctx.req, ctx.res, authOptions);
     // check if route is public
-    const isPublicRoutes = findString(PUBLIC_ROUTE, ctx.resolvedUrl);
+
+    const isPublicRoutes = findString(
+      PUBLIC_ROUTE,
+      ctx.resolvedUrl.split("?")[0] as string
+    );
 
     // redirect if route is public and user is authenticated
     const redirectIfPublicAndAuthenticated = redirectIfAuthenticated(session);

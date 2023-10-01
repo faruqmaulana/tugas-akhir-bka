@@ -1,14 +1,19 @@
 import nodemailer from "nodemailer";
 import { type NextApiResponse, type NextApiRequest } from "next";
 import methodNotAllowed from "~/common/handler/methodNotAllowed";
+import { emailHandler } from "~/common/handler/emailHandler";
 import { generateToken } from "~/common/libs/generateToken";
-import { getBaseUrl } from "~/utils/api";
+
+export type BodyType = {
+  targetName: string;
+  email: string;
+  type: "CONFIRM" | "VERIFY" | "RESEND_EMAIL_VERIFICATION";
+  token: string;
+  res: NextApiResponse;
+};
 
 interface MyCustomRequestBody extends NextApiRequest {
-  body: {
-    targetName: string;
-    targetUserEmail: string;
-  };
+  body: BodyType;
 }
 
 export default async function handler(
@@ -16,10 +21,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    if (req.method !== "POST") return methodNotAllowed(res);
-    const { targetName, targetUserEmail } = req.body;
+    const { email, type, token = generateToken({ email }) } = req.body;
 
-    const token = generateToken({ email: targetUserEmail });
+    if (req.method !== "POST") return methodNotAllowed(res);
 
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -32,33 +36,41 @@ export default async function handler(
       },
     });
 
-    const mailOption = {
+    const mailPayload = {
       from: process.env.NODEMAILER_EMAIL,
-      to: targetUserEmail,
-      subject: "Verify Account",
-      html: `
-        <p>Hello ${targetName} click link bellow to active your account: <a href="${getBaseUrl()}/verify-email?email=${targetUserEmail}&token=${token}"><b>Link</b></a></p>
-        `,
+      to: email,
     };
 
+    const mailOption = await emailHandler({ ...req.body, token, res });
     await new Promise((resolve, reject) => {
       // send mail
-      transporter.sendMail(mailOption, (err, response) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(response);
+      transporter.sendMail(
+        { ...mailPayload, ...mailOption },
+        (err, response) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(response);
+          }
         }
-      });
+      );
     });
 
     return res.json({
-      status: 200,
-      message: "Email Sent Successfully",
-      token,
+      status: "ok",
+      code: 200,
+      message: handleEmailTypeMessage(type),
+      data: {
+        token,
+        email,
+      },
     });
   } catch (error) {
-    console.log({ error });
     return res.json({ status: 500, message: "Failed to Send Email" });
   }
 }
+
+const handleEmailTypeMessage = (type: BodyType['type']) => {
+  if (type === "CONFIRM") return "Email berhasil dikirim";
+  if (type === "RESEND_EMAIL_VERIFICATION") return "Email aktivasi berhasil dikirim ulang";
+};

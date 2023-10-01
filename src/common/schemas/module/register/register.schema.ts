@@ -9,15 +9,18 @@ function validateIndonesianPhoneNumber(value: string) {
   return true;
 }
 
-export const registerSchema = z.object({
-  name: z.string().min(1, "Required!"),
-  npm: z.string().min(1, "Required!"),
-  email: z.string().email("Required!"),
+export const phoneSchema = z.object({
   phone: z
     .string()
     .refine((value) => validateIndonesianPhoneNumber(value) === true, {
       message: "Harap masukkan nomor telepon Indonesia yang valid",
     }),
+});
+
+export const registerSchema = z.object({
+  name: z.string().min(1, "Required!"),
+  npm: z.string().min(1, "Required!"),
+  email: z.string().email(),
   password: z.string().min(1, "Required!"),
 });
 

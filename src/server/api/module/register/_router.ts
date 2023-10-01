@@ -15,7 +15,7 @@ export type AllAchievementLevelType =
     };
   }>[];
 
-export const achievementLevelQuery = createTRPCRouter({
+export const registerQuery = createTRPCRouter({
   //** REGISTER API HANDLER */
   registerNewUser: registerNewUserHandler
 });

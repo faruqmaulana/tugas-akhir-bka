@@ -52,6 +52,9 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        black: {
+          DEFAULT: "#17244B",
+        },
         primary: {
           DEFAULT: "#2564AD",
           100: "#C2DAF8",

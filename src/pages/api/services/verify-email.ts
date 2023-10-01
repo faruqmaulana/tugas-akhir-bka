@@ -3,6 +3,7 @@ import methodNotAllowed from "~/common/handler/methodNotAllowed";
 import { isTokenExpired } from "~/common/libs/isTokenExpired";
 import jwt from "jsonwebtoken";
 import { env } from "~/env.mjs";
+import { asiaJakartaTimezone } from "~/common/helpers/asiaJakartaTimezone";
 interface MyCustomRequestBody extends NextApiRequest {
   body: {
     email: string;
@@ -10,7 +11,7 @@ interface MyCustomRequestBody extends NextApiRequest {
   };
 }
 
-export default function handler(
+export default async function handler(
   req: MyCustomRequestBody,
   res: NextApiResponse
 ) {
@@ -21,22 +22,50 @@ export default function handler(
     const isExpired = isTokenExpired(token);
     if (isExpired)
       return res.json({
-        status: 500,
-        message:
-          "Account activation failed because the token has expired. Please request a new activation token to proceed",
+        status: "error",
+        code: 401,
+        message: "Token kadaluarsa",
       });
 
-    jwt.verify(token, env.NEXTAUTH_SECRET as string);
+    const user = await prisma?.user.findFirst({
+      where: { email },
+    });
+
+    if (!user)
+      return res.json({
+        status: "error",
+        code: 404,
+        message: "Email belum terdaftar",
+      });
+
+    // ** HANDLE IF THE ACCOUNT IS ALREADY ACTIVE */
+    if (user.isActive)
+      return res.json({
+        status: "error",
+        code: 200,
+        message: "Email Anda Sudah Diverifikasi",
+      });
+
+    jwt.verify(user?.token as string, env.NEXTAUTH_SECRET as string);
+
+    await prisma?.user.update({
+      where: { email },
+      data: {
+        emailVerified: asiaJakartaTimezone(),
+        isActive: true,
+      },
+    });
 
     return res.json({
-      status: 200,
-      message: "Your account is now active and ready to use!",
+      status: "ok",
+      code: 200,
+      message: "Aktivasi akun berhasil",
     });
   } catch (error) {
     return res.json({
-      status: 500,
-      message:
-        "Account activation failed because the token has expired. Please request a new activation token to proceed",
+      status: "error",
+      code: 500,
+      message: "Token tidak valid",
     });
   }
 }
