@@ -42,8 +42,12 @@ TUGAS AKHIR BKA PROGRESS
 
 DEVELOP USER REGISTRATION 280923
 
-- register -> confirm email
-- verify email -> resend email 
+- register ✅ 
+  confirm email ✅
+- verify email ✅
+  resend email ✅
+  forgot password ⚠️
+  reset password ⚠️
 
 
 step 1

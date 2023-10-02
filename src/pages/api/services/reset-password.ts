@@ -3,11 +3,13 @@ import methodNotAllowed from "~/common/handler/methodNotAllowed";
 import { isTokenExpired } from "~/common/libs/isTokenExpired";
 import jwt from "jsonwebtoken";
 import { env } from "~/env.mjs";
-import { asiaJakartaTimezone } from "~/common/helpers/asiaJakartaTimezone";
+import { hash } from "argon2";
+
 interface MyCustomRequestBody extends NextApiRequest {
   body: {
     email: string;
     token: string;
+    password: string;
   };
 }
 
@@ -17,7 +19,7 @@ export default async function handler(
 ) {
   try {
     if (req.method !== "POST") return methodNotAllowed(res);
-    const { email, token } = req.body;
+    const { email, token, password } = req.body;
 
     const isExpired = isTokenExpired(token);
     if (isExpired)
@@ -38,21 +40,19 @@ export default async function handler(
         message: "Email belum terdaftar",
       });
 
-    // ** HANDLE IF THE ACCOUNT IS ALREADY ACTIVE */
-    if (user.isActive)
+    if (!user.token)
       return res.json({
         status: "error",
-        code: 200,
-        message: "Email Anda Sudah Diverifikasi",
+        code: 500,
+        message: "Token tidak valid",
       });
 
-    jwt.verify(user?.token as string, env.NEXTAUTH_SECRET as string);
+    jwt.verify(user.token, env.NEXTAUTH_SECRET as string);
 
     await prisma?.user.update({
       where: { email },
       data: {
-        emailVerified: asiaJakartaTimezone(),
-        isActive: true,
+        password: await hash(password),
         token: null,
       },
     });
@@ -60,7 +60,7 @@ export default async function handler(
     return res.json({
       status: "ok",
       code: 200,
-      message: "Aktivasi akun berhasil",
+      message: "Reset password berhasil",
     });
   } catch (error) {
     return res.json({

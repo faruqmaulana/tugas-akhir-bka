@@ -18,3 +18,4 @@ export const ADMIN_ROUTE = ["/statistik"];
 // MODULE REGISTER
 export const VERIFY_EMAIL_PAGE = "/verify-email";
 export const CONFIRM_EMAIL_PAGE = "/confirm-email";
+export const RESET_PASSWORD_PAGE = '/reset-password'

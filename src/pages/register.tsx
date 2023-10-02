@@ -17,34 +17,40 @@ export default function RegisterForm() {
   const { handleSubmit, loading, onSubmit, register, errors } = useRegister();
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-      <div className="relative flex">
+      <div className="relative flex flex-col gap-1">
         <input
           className={`${styles.formControl}`}
           type="text"
           placeholder="Nama"
           {...register("name")}
         />
+        {errors.name?.message && (
+          <p className="text-red-500">{errors.name?.message}</p>
+        )}
       </div>
-      {errors.name?.message && <p>{errors.name?.message}</p>}
-      <div className="relative flex">
+      <div className="relative flex flex-col gap-1">
         <input
           className={`${styles.formControl}`}
           type="text"
           placeholder="NBI"
           {...register("npm")}
         />
+        {errors.npm?.message && (
+          <p className="text-red-500">{errors.npm?.message}</p>
+        )}
       </div>
-      {errors.npm?.message && <p>{errors.npm?.message}</p>}
-      <div className="relative flex">
+      <div className="relative flex flex-col gap-1">
         <input
           className={`${styles.formControl}`}
           type="text"
           placeholder="Email"
           {...register("email")}
         />
+        {errors.email?.message && (
+          <p className="text-red-500">{errors.email?.message}</p>
+        )}
       </div>
-      {errors.email?.message && <p>{errors.email?.message}</p>}
-      <div className={`relative flex`}>
+      <div className={`relative flex flex-col gap-1`}>
         <input
           className={`${styles.formControl} `}
           type={"password"}
@@ -54,8 +60,10 @@ export default function RegisterForm() {
         <button type="button" className="absolute right-2 top-3">
           <EyeSlashIcon />
         </button>
+        {errors.password?.message && (
+          <p className="text-red-500">{errors.password?.message}</p>
+        )}
       </div>
-      {errors.password?.message && <p>{errors.password?.message}</p>}
       <div className="flex flex-col">
         <div className={styles.formButton}>
           <Button

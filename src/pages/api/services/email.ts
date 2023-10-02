@@ -7,7 +7,11 @@ import { generateToken } from "~/common/libs/generateToken";
 export type BodyType = {
   targetName: string;
   email: string;
-  type: "CONFIRM" | "VERIFY" | "RESEND_EMAIL_VERIFICATION";
+  type:
+    | "CONFIRM"
+    | "VERIFY"
+    | "RESEND_EMAIL_VERIFICATION"
+    | "SEND_RESET_PASSWORD";
   token: string;
   res: NextApiResponse;
 };
@@ -70,7 +74,10 @@ export default async function handler(
   }
 }
 
-const handleEmailTypeMessage = (type: BodyType['type']) => {
+const handleEmailTypeMessage = (type: BodyType["type"]) => {
   if (type === "CONFIRM") return "Email berhasil dikirim";
-  if (type === "RESEND_EMAIL_VERIFICATION") return "Email aktivasi berhasil dikirim ulang";
+  if (type === "RESEND_EMAIL_VERIFICATION")
+    return "Email aktivasi berhasil dikirim ulang";
+  if (type === "SEND_RESET_PASSWORD")
+    return "Permintaan reset password berhasil dikirim, sialhkan cek email anda";
 };

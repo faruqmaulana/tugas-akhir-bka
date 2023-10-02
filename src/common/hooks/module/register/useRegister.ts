@@ -8,10 +8,7 @@ import {
   registerSchema,
 } from "~/common/schemas/module/register/register.schema";
 import { api } from "~/utils/api";
-import {
-  CONFIRM_EMAIL_PAGE,
-  VERIFY_EMAIL_PAGE,
-} from "~/common/constants/routers";
+import { CONFIRM_EMAIL_PAGE } from "~/common/constants/routers";
 
 const useRegister = () => {
   const router = useRouter();

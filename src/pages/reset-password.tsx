@@ -1,61 +1,66 @@
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
-import EyeSlashIcon from "~/common/EyeSlashIcon";
 import { Button } from "~/common/components/ui/button/Button";
-import { loginSchema, type ILogin } from "~/common/schemas/login";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import styles from "~/styles/ui/Login.module.scss";
 import { requireAuth } from "~/common/authentication/requireAuth";
-import { showToast } from "~/common/components/ui/toast/showToast";
-import { LOGIN_TOAST } from "~/common/constants/MESSAGE";
+import { customToast } from "~/common/components/ui/toast/showToast";
+
+import styles from "~/styles/ui/Login.module.scss";
+import { postRequest } from "~/common/services/base";
+import { type GlobalApiResType } from "~/common/types/GlobalApiResType";
+import { RESET_PASSWORD } from "~/common/constants/API";
+import { z } from "zod";
 import EyeIcon from "~/common/components/svg/EyeIcon";
+import EyeSlashIcon from "~/common/EyeSlashIcon";
+import { type ResponseEmailVerificationData } from "./confirm-email";
+import Text from "~/common/components/ui/text/Text";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
-  return { props: {} };
+  const { email, token } = ctx.query;
+  return { props: { email, token } };
 });
 
-export default function LoginForm() {
+export default function ForgotPassword(props: ResponseEmailVerificationData) {
+  const { email, token } = props;
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const passwordSchema = z.object({
+    password: z.string().min(1, "Required!"),
+  });
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ILogin>({
-    defaultValues: {
-      npm: "",
-      password: "",
-    },
-    resolver: zodResolver(loginSchema),
+  } = useForm<z.infer<typeof passwordSchema>>({
+    resolver: zodResolver(passwordSchema),
   });
 
   const onSubmit = useCallback(
-    async (data: ILogin) => {
+    async (data: z.infer<typeof passwordSchema>) => {
+      const { password } = data;
       setLoading(true);
-      const request = await signIn("credentials", {
-        ...data,
-        redirect: false,
+      const request = await postRequest<GlobalApiResType>(RESET_PASSWORD, {
+        email,
+        token,
+        password,
       });
-
-      showToast(request, LOGIN_TOAST);
-
-      // check error login
-      const error = !request?.ok;
-      if (error) {
-        setLoading(false);
-        return;
+      customToast(
+        request.status !== "ok" ? "error" : "success",
+        request.message
+      );
+      setLoading(false);
+      if (request.status === "ok") {
+        void router.push("/");
       }
-
-      void router.push("/dashboard");
     },
     [loading]
   );
@@ -63,18 +68,10 @@ export default function LoginForm() {
   return (
     <>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <div className="relative flex flex-col gap-1">
-          <input
-            className={`${styles.formControl}`}
-            type="text"
-            placeholder="npm"
-            {...register("npm")}
-          />
-          {errors.npm?.message && (
-            <p className="text-red-500">{errors.npm?.message}</p>
-          )}
-        </div>
-        <div className={`relative flex flex-col gap-1`}>
+        <Text className="text-center !text-xl">
+          Masukkan password baru anda
+        </Text>
+        <div className={`relative flex flex-col`}>
           <input
             className={`${styles.formControl}`}
             type={showPassword ? "text" : "password"}
@@ -94,12 +91,7 @@ export default function LoginForm() {
             <p className="text-red-500">{errors.password?.message}</p>
           )}
         </div>
-        <div className="flex flex-col">
-          <div className={styles.forgotPassword}>
-            <Link href="/forgot-password" className={styles.forgot}>
-              Lupa Password?
-            </Link>
-          </div>
+        <div className="flex flex-col gap-2">
           <div className={styles.formButton}>
             <Button
               isPrimary
@@ -109,13 +101,12 @@ export default function LoginForm() {
               className="w-full"
               isLoading={loading}
             >
-              Login
+              Submit
             </Button>
           </div>
-          <div className={`${styles.forgotPassword} mt-1`}>
-            Belum punya akun? &nbsp;
-            <Link href="/register" className={styles.forgot}>
-              Daftar di sini
+          <div className={styles.forgotPassword}>
+            <Link href="/" className={styles.forgot}>
+              Kembali ke Login
             </Link>
           </div>
         </div>
