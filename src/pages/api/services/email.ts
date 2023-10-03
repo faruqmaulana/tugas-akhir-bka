@@ -70,6 +70,7 @@ export default async function handler(
       },
     });
   } catch (error) {
+    console.log(error);
     return res.json({ status: 500, message: "Failed to Send Email" });
   }
 }

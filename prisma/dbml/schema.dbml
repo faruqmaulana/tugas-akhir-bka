@@ -17,7 +17,7 @@ Table User {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [default: `now()`, not null]
   token String [unique]
-  isActive Boolean [not null, default: true]
+  isActive Boolean [not null, default: false]
   ActivityLog ActivityLog [not null]
   Buku Buku [not null]
   notification Notification [not null]

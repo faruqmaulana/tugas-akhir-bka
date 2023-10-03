@@ -8,10 +8,10 @@ generator client {
 
 generator json {
   provider     = "prisma-json-types-generator"
-  allowAny     = "false"
   clientOutput = "finds automatically"
   namespace    = "PrismaJson"
   useType      = "PrismaJson.GlobalType"
+  allowAny     = "false"
 }
 
 datasource db {
@@ -34,7 +34,7 @@ model User {
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @default(now()) @updatedAt
   token              String?             @unique
-  isActive           Boolean             @default(true)
+  isActive           Boolean             @default(false)
   ActivityLog        ActivityLog[]
   Buku               Buku[]
   notification       Notification[]
