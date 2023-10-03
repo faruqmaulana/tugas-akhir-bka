@@ -6,6 +6,7 @@ import {
   VERIFY_EMAIL_PAGE,
 } from "../constants/routers";
 import { EMAIL_TYPE } from "../enums/EMAIL_TYPE";
+import prisma from "~/common/config/prisma";
 
 export type RegisterUserEmailContent = {
   targetName: string;

@@ -3,7 +3,9 @@ import methodNotAllowed from "~/common/handler/methodNotAllowed";
 import { isTokenExpired } from "~/common/libs/isTokenExpired";
 import jwt from "jsonwebtoken";
 import { env } from "~/env.mjs";
+import prisma from "~/common/config/prisma";
 import { asiaJakartaTimezone } from "~/common/helpers/asiaJakartaTimezone";
+
 interface MyCustomRequestBody extends NextApiRequest {
   body: {
     email: string;

@@ -4,6 +4,7 @@ import { isTokenExpired } from "~/common/libs/isTokenExpired";
 import jwt from "jsonwebtoken";
 import { env } from "~/env.mjs";
 import { hash } from "argon2";
+import prisma from "~/common/config/prisma";
 
 interface MyCustomRequestBody extends NextApiRequest {
   body: {
