@@ -59,6 +59,7 @@ export const authOptions: NextAuthOptions = {
 
           if (!result) return null;
           const isValidPassword = await verify(result.password, password);
+          console.log({ isValidPassword });
           if (!isValidPassword) return null;
 
           return { id: result.id, role: result.role };

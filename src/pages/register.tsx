@@ -4,6 +4,7 @@
 import Link from "next/link";
 import EyeSlashIcon from "~/common/EyeSlashIcon";
 import { requireAuth } from "~/common/authentication/requireAuth";
+import EyeIcon from "~/common/components/svg/EyeIcon";
 import { Button } from "~/common/components/ui/button/Button";
 import { useRegister } from "~/common/hooks/module/register/useRegister";
 
@@ -14,7 +15,15 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 });
 
 export default function RegisterForm() {
-  const { handleSubmit, loading, onSubmit, register, errors } = useRegister();
+  const {
+    onSubmit,
+    register,
+    handleSubmit,
+    loading,
+    errors,
+    showPassword,
+    setShowPassword,
+  } = useRegister();
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <div className="relative flex flex-col gap-1">
@@ -53,12 +62,16 @@ export default function RegisterForm() {
       <div className={`relative flex flex-col gap-1`}>
         <input
           className={`${styles.formControl} `}
-          type={"password"}
+          type={showPassword ? "text" : "password"}
           placeholder="Password"
           {...register("password")}
         />
-        <button type="button" className="absolute right-2 top-3">
-          <EyeSlashIcon />
+        <button
+          type="button"
+          className="absolute right-2 top-3"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
         </button>
         {errors.password?.message && (
           <p className="text-red-500">{errors.password?.message}</p>

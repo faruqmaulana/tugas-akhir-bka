@@ -50,7 +50,7 @@ const registerNewUserHandler = publicProcedure
         body: JSON.stringify({
           email,
           targetName: name,
-          type: EMAIL_TYPE.CONFIRM,
+          type: EMAIL_TYPE.VERIFY,
           token,
         }),
       });

@@ -15,6 +15,8 @@ const useRegister = () => {
   const { mutate: registerNewUser } =
     api.register.registerNewUser.useMutation();
   const [loading, setLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
   const {
     register,
     handleSubmit,
@@ -39,7 +41,7 @@ const useRegister = () => {
     });
   }, []);
 
-  return { onSubmit, register, handleSubmit, loading, errors };
+  return { onSubmit, register, handleSubmit, loading, errors, showPassword, setShowPassword };
 };
 
 export { useRegister };

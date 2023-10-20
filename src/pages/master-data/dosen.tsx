@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import React, { useMemo } from "react";
 
@@ -11,6 +12,11 @@ import { useDosen } from "~/common/hooks/master-data/useDosen";
 import { type AllDosenType } from "~/server/api/module/master-data/lecturer/_router";
 import DefaultModalDelete from "~/common/components/ui/modal/DefaultModalDelete";
 import ModalForm from "~/common/components/ui/modal/ModalForm";
+import { requireAuth } from "~/common/authentication/requireAuth";
+
+export const getServerSideProps = requireAuth(async (ctx) => {
+  return { props: {} };
+});
 
 const Example = () => {
   const {

@@ -82,10 +82,10 @@ export const emailHandler = async (context: BodyType) => {
     });
   }
 
-  // ** CONFIRM EMAIL */
-  if (type === EMAIL_TYPE.CONFIRM) {
+  // ** VERIFY EMAIL */
+  if (type === EMAIL_TYPE.VERIFY) {
     return {
-      subject: "Confirm Email",
+      subject: "Verify Email",
       html: `
       <p>Halo <b>${targetName}</b>,</p>
       <br/>
@@ -93,7 +93,7 @@ export const emailHandler = async (context: BodyType) => {
       </p>
 
       ${handleLink({
-        redirectTo: CONFIRM_EMAIL_PAGE,
+        redirectTo: VERIFY_EMAIL_PAGE,
         email,
         token,
       })}

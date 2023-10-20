@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -9,21 +10,30 @@ import PageHeading from "~/common/components/ui/header/PageHeading";
 import Modal from "~/common/components/ui/modal/Modal";
 import { useState } from "react";
 import { EditorState, ContentState } from "draft-js";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import dynamic from "next/dynamic";
 import Input from "~/common/components/ui/form/Input";
 import { UPDATE_SUCCESS } from "~/common/constants/MESSAGE";
+import { requireAuth } from "~/common/authentication/requireAuth";
+
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
 const DynamicEditor = dynamic(
   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
   {
     ssr: false, // Ensure the component is not rendered on the server
   }
 );
+
+export const getServerSideProps = requireAuth(async (ctx) => {
+  return { props: {} };
+});
+
 const Example = () => {
   const router = useRouter();
-  const defaultValue = `hello world`;
+  const defaultValue = ``;
   const [isOpen, setIsOpen] = useState(false);
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [plainText, setPlainText] = useState("");
 
   const contentState = ContentState.createFromText(defaultValue);
   const [editorState, setEditorState] = useState(
@@ -32,6 +42,8 @@ const Example = () => {
 
   const onEditorStateChange = (editorState: EditorState) => {
     setEditorState(editorState);
+    setPlainText(editorState.getCurrentContent().getPlainText());
+    console.log(editorState.getCurrentContent());
   };
 
   const handleOpenSuccess = () => {
