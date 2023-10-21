@@ -105,7 +105,7 @@ Table PrestasiDataTable {
   tanggalKegiatan DateTime [not null]
   penyelenggara String
   createdAt DateTime [default: `now()`]
-  orkemId String [not null]
+  orkemId String
   createdById String [not null]
   tingkatKejuaraanId String [not null]
   tingkatPrestasiId String [not null]
@@ -117,7 +117,7 @@ Table PrestasiDataTable {
   users PengajuanOnUsers [not null]
   dosen Dosen [not null]
   lampiran LampiranData [not null]
-  orkem MasterDataOrkem [not null]
+  orkem MasterDataOrkem
   tingkatKejuaraan MasterDataTingkatKejuaraan [not null]
   tingkatPrestasi MasterDataTingkatPrestasi [not null]
 

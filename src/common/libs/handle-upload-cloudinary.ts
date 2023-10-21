@@ -24,12 +24,8 @@ export const handleUploadCloudinary = async (data: UploadAndReplaceType) => {
   });
 
   if (requestUpload) {
-    const aa = await deleteAssets(previusFileId);
-    console.log("previusFileId", previusFileId);
-    console.log("aa", aa);
+    await deleteAssets(previusFileId);
   }
-
-  console.log("requestUpload", requestUpload);
 
   return requestUpload;
 };

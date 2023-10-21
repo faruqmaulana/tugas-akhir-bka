@@ -9,8 +9,8 @@ generator client {
 generator json {
   provider     = "prisma-json-types-generator"
   namespace    = "PrismaJson"
-  clientOutput = "finds automatically"
   useType      = "PrismaJson.GlobalType"
+  clientOutput = "finds automatically"
   allowAny     = "false"
 }
 
@@ -128,7 +128,7 @@ model PrestasiDataTable {
   tanggalKegiatan    DateTime
   penyelenggara      String?
   createdAt          DateTime?                  @default(now())
-  orkemId            String
+  orkemId            String?
   createdById        String
   tingkatKejuaraanId String
   tingkatPrestasiId  String
@@ -140,7 +140,7 @@ model PrestasiDataTable {
   users              PengajuanOnUsers[]
   dosen              Dosen                      @relation(fields: [dosenId], references: [id])
   lampiran           LampiranData               @relation(fields: [lampiranId], references: [id])
-  orkem              MasterDataOrkem            @relation(fields: [orkemId], references: [id])
+  orkem              MasterDataOrkem?           @relation(fields: [orkemId], references: [id])
   tingkatKejuaraan   MasterDataTingkatKejuaraan @relation(fields: [tingkatKejuaraanId], references: [id])
   tingkatPrestasi    MasterDataTingkatPrestasi  @relation(fields: [tingkatPrestasiId], references: [id])
 }

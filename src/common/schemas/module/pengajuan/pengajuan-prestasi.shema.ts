@@ -47,7 +47,7 @@ export const pengajuanPrestasiForm = z
     penyelenggara: z
       .string()
       .min(1, { message: "Penyelenggara tidak boleh kosong!" }),
-    orkemId: z.string().min(1, { message: "Pilih organisasi kemahasiswaan!" }),
+    orkemId: z.string().optional(),
     tingkatKejuaraanId: z
       .string()
       .min(1, { message: "Pilih tingkat kejuaraan!" }),
