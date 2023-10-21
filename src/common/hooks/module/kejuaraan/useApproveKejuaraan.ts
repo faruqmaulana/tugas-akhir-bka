@@ -84,7 +84,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
       setDefaultKejuaraanValue("penyelenggara", prestasi.penyelenggara || "");
       setDefaultKejuaraanValue("tanggalKegiatan", prestasi.tanggalKegiatan);
       setDefaultKejuaraanValue("dosenId", prestasi.dosenId);
-      setDefaultKejuaraanValue("orkemId", prestasi.orkemId);
+      setDefaultKejuaraanValue("orkemId", prestasi?.orkemId || undefined);
       setDefaultKejuaraanValue("tingkatPrestasiId", prestasi.tingkatPrestasiId);
       setDefaultKejuaraanValue("status", prestasi.status);
       setDefaultKejuaraanValue(

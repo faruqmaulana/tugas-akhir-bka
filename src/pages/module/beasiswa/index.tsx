@@ -90,6 +90,7 @@ const UserManagement = () => {
         title="Module Pengajuan Beasiswa"
         showCreateButton
         createButtonTitle="Pengajuan Beasiswa"
+        link="/module/beasiswa/tambah"
       />
       <Card header="DATA PENGAJUAN BEASISWA" className="mt-[30px]">
         <BaseTable data={PENGAJUAN_BEASISWA} columns={columns} />

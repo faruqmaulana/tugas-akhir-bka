@@ -26,7 +26,7 @@ Table User {
   prodi MasterDataProdi
 }
 
-Table Beasiswa {
+Table MasterDataBeasiswa {
   id String [pk]
   syarat String [not null]
   templateFormulir Json [note: '[FileResponse]']
@@ -162,15 +162,13 @@ Table PengajuanPKM {
 
 Table PengajuanBeasiswa {
   id String [pk]
-  isValidated Boolean [not null, default: false]
-  validatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [default: `now()`, not null]
-  dokumenFormulir String [not null]
-  deskripsiDokumen String [not null]
-  dokumenPendukung String [not null]
+  status String [not null, default: 'Sedang Diproses']
+  dokumen Json [note: '[FileResponse]']
   userId String [not null]
-  status String [not null]
+  description String [not null]
+  ActivityLog ActivityLog [not null]
   user User [not null]
 }
 
@@ -252,6 +250,8 @@ Table ActivityLog {
   status String [not null, default: 'Diajukan']
   catatan String
   prestasiDataTableId String
+  pengajuanBeasiswaId String
+  PengajuanBeasiswa PengajuanBeasiswa
   PrestasiDataTable PrestasiDataTable
   User User [not null]
 }
@@ -301,6 +301,8 @@ Ref: Buku.userId > User.id
 Ref: Notification.notificationMessageId > NotifMessage.id
 
 Ref: Notification.userId > User.id
+
+Ref: ActivityLog.pengajuanBeasiswaId > PengajuanBeasiswa.id
 
 Ref: ActivityLog.prestasiDataTableId > PrestasiDataTable.id
 

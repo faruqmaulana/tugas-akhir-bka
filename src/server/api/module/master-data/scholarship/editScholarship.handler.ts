@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { stringToJSON } from "~/common/helpers/parseJSON";
 import { UPDATE_SUCCESS } from "~/common/message";
@@ -8,11 +10,10 @@ const editScholarshipHandler = protectedProcedure
   .input(scholarshipSchema)
   .mutation(async ({ ctx, input }) => {
     const { id, syarat, templateFormulir } = input;
-    console.log("server", input);
     const templateFormulirJsonMeta =
       stringToJSON(templateFormulir as string) || undefined;
 
-    const data = await ctx.prisma.beasiswa.update({
+    const data = await ctx.prisma.masterDataBeasiswa.update({
       where: { id },
       data: { syarat, templateFormulir: templateFormulirJsonMeta },
     });

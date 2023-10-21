@@ -8,8 +8,8 @@ generator client {
 
 generator json {
   provider     = "prisma-json-types-generator"
-  namespace    = "PrismaJson"
   useType      = "PrismaJson.GlobalType"
+  namespace    = "PrismaJson"
   clientOutput = "finds automatically"
   allowAny     = "false"
 }
@@ -43,7 +43,7 @@ model User {
   prodi              MasterDataProdi?    @relation(fields: [prodiId], references: [id])
 }
 
-model Beasiswa {
+model MasterDataBeasiswa {
   id               String @id @default(cuid())
   syarat           String
   /// [FileResponse]
@@ -181,17 +181,16 @@ model PengajuanPKM {
 }
 
 model PengajuanBeasiswa {
-  id               String   @id @default(cuid())
-  isValidated      Boolean  @default(false)
-  validatedAt      DateTime
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @default(now()) @updatedAt
-  dokumenFormulir  String
-  deskripsiDokumen String
-  dokumenPendukung String
-  userId           String
-  status           String
-  user             User     @relation(fields: [userId], references: [id])
+  id          String        @id @default(cuid())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @default(now()) @updatedAt
+  status      String        @default("Sedang Diproses")
+  /// [FileResponse]
+  dokumen     Json?
+  userId      String
+  description String
+  ActivityLog ActivityLog[]
+  user        User          @relation(fields: [userId], references: [id])
 }
 
 model SKRektor {
@@ -272,6 +271,8 @@ model ActivityLog {
   status              String             @default("Diajukan")
   catatan             String?
   prestasiDataTableId String?
+  pengajuanBeasiswaId String?
+  PengajuanBeasiswa   PengajuanBeasiswa? @relation(fields: [pengajuanBeasiswaId], references: [id])
   PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
   User                User               @relation(fields: [userId], references: [id])
 }

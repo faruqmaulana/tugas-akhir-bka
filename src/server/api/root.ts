@@ -17,6 +17,7 @@ import { achievementLevelQuery } from "./module/master-data/achievement-level/_r
 import { statisticQuery } from "./module/statistic/_router";
 import { registerQuery } from "./module/register/_router";
 import { scholarshipQuery } from "./module/master-data/scholarship/_router";
+import { scholarshipModule } from "./module/pengajuan/beasiswa/_router";
 
 /**
  * This is the primary router for your server.
@@ -36,6 +37,7 @@ export const appRouter = createTRPCRouter({
   achievementLevel: achievementLevelQuery,
   scholarship: scholarshipQuery,
 
+
   // ** STATISTIC
   statistic: statisticQuery,
 
@@ -46,6 +48,8 @@ export const appRouter = createTRPCRouter({
 
   // ** PENGAJUAN DATA
   prestasiLomba: championshipQueryHandler,
+  scholarshipModule: scholarshipModule,
+
 
   // ** NOTIFICATION
   notification: notificationQuery,
