@@ -29,7 +29,7 @@ Table User {
 Table Beasiswa {
   id String [pk]
   syarat String [not null]
-  templateFormulir String [not null]
+  templateFormulir Json [note: '[FileResponse]']
 }
 
 Table Dosen {

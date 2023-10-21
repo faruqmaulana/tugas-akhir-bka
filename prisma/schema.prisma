@@ -8,8 +8,8 @@ generator client {
 
 generator json {
   provider     = "prisma-json-types-generator"
-  clientOutput = "finds automatically"
   namespace    = "PrismaJson"
+  clientOutput = "finds automatically"
   useType      = "PrismaJson.GlobalType"
   allowAny     = "false"
 }
@@ -46,7 +46,8 @@ model User {
 model Beasiswa {
   id               String @id @default(cuid())
   syarat           String
-  templateFormulir String
+  /// [FileResponse]
+  templateFormulir Json?
 }
 
 model Dosen {

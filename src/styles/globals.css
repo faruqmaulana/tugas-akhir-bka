@@ -145,3 +145,16 @@ body {
   display: flex !important;
   flex-wrap: wrap-reverse !important;
 }
+
+
+.wrapper-class {
+  padding: 1rem;
+  border: 1px solid #ccc;
+}
+.editor-class {
+  padding: 1rem;
+  border: 1px solid #ccc;
+}
+.toolbar-class {
+  border: 1px solid #ccc;
+}
