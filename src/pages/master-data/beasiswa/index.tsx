@@ -4,12 +4,16 @@ import { Button } from "~/common/components/ui/button/Button";
 import Card from "~/common/components/ui/card/Card";
 import PdfViewer from "~/common/components/ui/file-viewer/PdfViewer";
 import PageHeading from "~/common/components/ui/header/PageHeading";
+import FullPageLoader from "~/common/components/ui/loader/FullPageLoader";
 import Modal from "~/common/components/ui/modal/Modal";
 import { useEditBeasiswa } from "~/common/hooks/master-data/useEditBeasiswa";
 
 const Example = () => {
   const router = useRouter();
   const { scholarship } = useEditBeasiswa();
+
+  if (!scholarship) return <FullPageLoader />;
+
   return (
     <>
       <PageHeading />
@@ -25,7 +29,7 @@ const Example = () => {
             className="mt-2"
             url={
               (scholarship?.templateFormulir as PrismaJson.FileResponse)
-                .secure_url
+                ?.secure_url
             }
           />
           <p className="mt-5 text-red-500">

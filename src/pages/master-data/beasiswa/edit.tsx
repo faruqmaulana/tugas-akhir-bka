@@ -5,7 +5,6 @@ import { Button } from "~/common/components/ui/button/Button";
 import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import dynamic from "next/dynamic";
-import Input from "~/common/components/ui/form/Input";
 import { requireAuth } from "~/common/authentication/requireAuth";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -93,7 +92,7 @@ const Example = () => {
               className="w-fit"
               isLoading={loading}
             >
-              <span>Save</span>
+              <span>Submit</span>
             </Button>
           </div>
         </form>
