@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -178,49 +178,47 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
   const onSuccesAction = async () => {
     resetApproveForm();
     resetRejectForm();
+    setValue("prestasiDataTableId", prestasiDataTableId);
+    setDefautlRejectValue("prestasiDataTableId", prestasiDataTableId);
+    setDefaultKejuaraanValue("prestasiDataTableId", prestasiDataTableId);
+    setDefaultKejuaraanValue("catatan", "");
     setState(INITIAL_STATE);
     await Promise.all([refetchNotification(), refetchPrestasi()]);
   };
 
-  const onApproveKejuaraan = useCallback(
-    (approvePayload: IApprovePrestasiForm) => {
-      setState((prev) => ({ ...prev, loadingApprove: true }));
-      approvePengajuanPrestasi(approvePayload, {
-        onSuccess: async (data) => {
-          customToast("success", data?.message);
-          setState({ ...state, loadingApprove: false });
-          if (data?.message) {
-            await onSuccesAction();
-          }
-        },
-        onError: (error) => {
-          customToast("error", error?.message);
-          setState({ ...state, loadingApprove: false });
-        },
-      });
-    },
-    []
-  );
+  const onApproveKejuaraan = (approvePayload: IApprovePrestasiForm) => {
+    setState((prev) => ({ ...prev, loadingApprove: true }));
+    approvePengajuanPrestasi(approvePayload, {
+      onSuccess: async (data) => {
+        customToast("success", data?.message);
+        setState({ ...state, loadingApprove: false });
+        if (data?.message) {
+          await onSuccesAction();
+        }
+      },
+      onError: (error) => {
+        customToast("error", error?.message);
+        setState({ ...state, loadingApprove: false });
+      },
+    });
+  };
 
-  const onRejectKejuaraan = useCallback(
-    (rejectPayload: IRejectPrestasiForm) => {
-      setState((prev) => ({ ...prev, loadingReject: true }));
-      rejectPengajuanPrestasi(rejectPayload, {
-        onSuccess: async (data) => {
-          customToast("success", data?.message);
-          setState({ ...state, loadingReject: false });
-          if (data?.message) {
-            await onSuccesAction();
-          }
-        },
-        onError: (error) => {
-          customToast("error", error?.message);
-          setState({ ...state, loadingReject: false });
-        },
-      });
-    },
-    []
-  );
+  const onRejectKejuaraan = (rejectPayload: IRejectPrestasiForm) => {
+    setState((prev) => ({ ...prev, loadingReject: true }));
+    rejectPengajuanPrestasi(rejectPayload, {
+      onSuccess: async (data) => {
+        customToast("success", data?.message);
+        setState({ ...state, loadingReject: false });
+        if (data?.message) {
+          await onSuccesAction();
+        }
+      },
+      onError: (error) => {
+        customToast("error", error?.message);
+        setState({ ...state, loadingReject: false });
+      },
+    });
+  };
 
   const onSubmit = async (userPayload: IPengajuanPrestasiForm) => {
     setState((prev) => ({ ...prev, loadingEdited: true }));

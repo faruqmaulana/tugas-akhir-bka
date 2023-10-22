@@ -254,7 +254,6 @@ const useNotification = () => {
   };
 
   const handleNotificationDrawer = (data: AllNotificationType[0]) => {
-    console.log(data)
     const { activityLogId, notificationMessage } = data;
     const { moduleId } = notificationMessage;
     setIsDrawerOpen(true);

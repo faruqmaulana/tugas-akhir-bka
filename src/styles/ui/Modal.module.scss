@@ -32,7 +32,7 @@
   @apply fixed inset-0 z-50 flex h-full w-full items-center justify-center overflow-hidden;
 
   .modalContainer {
-    @apply z-[9999] mx-auto w-[600px] rounded-md bg-white shadow-lg;
+    @apply z-[9999] w-[600px] rounded-md bg-white shadow-lg  mx-5;
 
     &.modalLarge {
       @apply w-[800px];

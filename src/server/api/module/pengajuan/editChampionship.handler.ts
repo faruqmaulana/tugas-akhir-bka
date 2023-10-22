@@ -35,14 +35,24 @@ const editChampionshipHanlder = protectedProcedure
         orkemId,
         tingkatKejuaraanId,
         tingkatPrestasiId,
-        status,
 
         // PENGAJUAN ON USER PAYLOAD
         users: selectedUsers,
       } = input;
 
-      const isReprocessMsg =
-        status === STATUS.REJECT || status === STATUS.APPROVE;
+      // ** GET CURRENT STATUS DATA FROM DATABASE TO PREVENT STATUS DATA VALUE NOT UPDATED IN CLIENT
+      const getCurrentModuleStatus =
+        await ctx.prisma.prestasiDataTable.findUnique({
+          where: {
+            id: prestasiDataTableId,
+          },
+          select: {
+            status: true,
+          },
+        });
+
+      const status = getCurrentModuleStatus?.status;
+      const isReprocessMsg = status === STATUS.REJECT || status === STATUS.APPROVE;
 
       // ** UPDATE NEW PRESTASI DATA TABLE
       const updatedPrestasiDataTable =
