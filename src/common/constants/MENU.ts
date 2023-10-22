@@ -119,7 +119,7 @@ const LIST_MENU: MenuItemType[] = [
   },
   {
     id: 6,
-    title: "Pengajuan Beasiswa",
+    title: "Beasiswa",
     type: "Petugas Cabang",
     module: "cabang-sample-data",
     url: "/module/beasiswa",

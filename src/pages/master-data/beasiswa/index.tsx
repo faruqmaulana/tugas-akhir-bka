@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { useRouter } from "next/router";
+import { requireAuth } from "~/common/authentication/requireAuth";
 import EditIcon from "~/common/components/svg/EditIcon";
 import { Button } from "~/common/components/ui/button/Button";
 import Card from "~/common/components/ui/card/Card";
@@ -7,6 +9,10 @@ import PageHeading from "~/common/components/ui/header/PageHeading";
 import FullPageLoader from "~/common/components/ui/loader/FullPageLoader";
 import Modal from "~/common/components/ui/modal/Modal";
 import { useEditBeasiswa } from "~/common/hooks/master-data/useEditBeasiswa";
+
+export const getServerSideProps = requireAuth(async (ctx) => {
+  return { props: {} };
+});
 
 const Example = () => {
   const router = useRouter();

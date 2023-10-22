@@ -1,13 +1,11 @@
-import {
-  MOUDLE_BEASISWA,
-  PENGAJUAN_MESSAGE_BY_ADMIN_SIDE,
-  PENGAJUAN_MESSAGE_BY_USER_SIDE,
-} from "~/common/constants/MESSAGE";
+import { MOUDLE_BEASISWA } from "~/common/constants/MESSAGE";
 import { STATUS } from "~/common/enums/STATUS";
 import { stringToJSON } from "~/common/helpers/parseJSON";
 import { scholarshipApplicationSchema } from "~/common/schemas/module/pengajuan/beasiswa/scholarship-application.schema";
 import { protectedProcedure } from "~/server/api/trpc";
 import { ADD_SUCCESS, SCOLARSHIP_NOTIF } from "~/common/message";
+import handleAddInitialNotification from "../../notification/handleAddInitialNotification";
+import { MODULE_TYPE_CODE } from "~/common/enums/MODULE_TYPE_CODE";
 
 const addScholarshipApplicationHandler = protectedProcedure
   .input(scholarshipApplicationSchema)
@@ -26,46 +24,17 @@ const addScholarshipApplicationHandler = protectedProcedure
           },
         });
 
-      //** ADD NOTIFICATION MESSAGE */
-      const notificationMessage = await ctx.prisma.notifMessage.create({
-        data: {
-          module: "kejuaraan",
-          status: STATUS.PROCESSED,
-          description: "Pengajuan Beasiswa",
+      //** HANDLE ADD INITIAL NOTIFICATION */
+      await handleAddInitialNotification({
+        ctx,
+        payload: {
           moduleId: createScholarshipApplication.id,
-          actionByMahasiswaId: ctx.session.user.userId,
-          forUserMessage: PENGAJUAN_MESSAGE_BY_USER_SIDE(MOUDLE_BEASISWA),
-          forAdminMessage: PENGAJUAN_MESSAGE_BY_ADMIN_SIDE(MOUDLE_BEASISWA),
+          MODULE_TYPE: MOUDLE_BEASISWA,
+          MODULE_TYPE_CODE: MODULE_TYPE_CODE.BEASISWA,
+          notifDescription: "Pengajuan Beasiswa",
+          STATUS_TYPE: STATUS.PROCESSED,
+          relatedUserData: [{ userId: ctx.session.user.userId }],
         },
-      });
-
-      //** ADD NOTIFICATION IN ADMIN */
-      const admin = await ctx.prisma.user.findMany({
-        where: {
-          role: "ADMIN",
-        },
-      });
-
-      const mergeusers = [...admin];
-
-      //** ADD ACTIVITY LOG */
-      const createActivityLog = await ctx.prisma.activityLog.create({
-        data: {
-          pengajuanBeasiswaId: createScholarshipApplication.id,
-          userId: ctx.session.user.userId,
-          status: STATUS.PROCESSED,
-        },
-      });
-
-      //** ADD NOTIFICATION IN RELATED USERS AND ADMINS */
-      await ctx.prisma.notification.createMany({
-        data: mergeusers.map((val: { value?: string; id?: string }) => {
-          return {
-            notificationMessageId: notificationMessage.id,
-            userId: (val.value || val.id) as string,
-            activityLogId: createActivityLog.id,
-          };
-        }),
       });
 
       return {

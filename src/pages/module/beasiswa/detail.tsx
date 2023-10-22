@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -15,12 +16,17 @@ import {
   type PengajuanBeasiswa,
 } from "~/common/constants/module/PENGAJUAN_BEASISWA";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
+import { requireAuth } from "~/common/authentication/requireAuth";
 
 const INITIAL_STATE = {
   isReject: false,
   isApprove: false,
   isSuccess: false,
 };
+
+export const getServerSideProps = requireAuth(async (ctx) => {
+  return { props: {} };
+});
 
 const Example = () => {
   const router = useRouter();

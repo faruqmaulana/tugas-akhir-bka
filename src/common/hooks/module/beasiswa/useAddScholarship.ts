@@ -10,8 +10,10 @@ import {
   scholarshipApplicationSchema,
 } from "~/common/schemas/module/pengajuan/beasiswa/scholarship-application.schema";
 import { api } from "~/utils/api";
+import { useRouter } from "next/router";
 
 const useAddScholarship = () => {
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const { mutate: addScholarship } =
     api.scholarshipModule.addScholarshipApplication.useMutation();
@@ -44,6 +46,7 @@ const useAddScholarship = () => {
           onSuccess: (data) => {
             customToast("success", data?.message);
             setLoading(false);
+            void router.push("/module/beasiswa");
           },
           onError: (error) => {
             customToast("error", error?.message);
@@ -61,7 +64,7 @@ const useAddScholarship = () => {
       className: "col-span-2",
       placeholder: "Dokumen Pendukung",
       type: "file",
-      label: "Upload Dokumen",
+      label: "Upload Dokumen Pengajuan Beasiswa",
       register: { ...register("dokumen") },
       error: errors.dokumen?.message,
     },

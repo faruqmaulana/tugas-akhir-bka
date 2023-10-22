@@ -15,10 +15,11 @@ export const activityLogQuery = createTRPCRouter({
     .input(z.object({ id: z.string().optional(), type: z.string().optional() }))
     .query(async ({ ctx, input }) => {
       const { id } = input;
-
       try {
         return (await ctx.prisma.activityLog.findMany({
-          where: { prestasiDataTableId: id },
+          where: {
+            OR: [{ pengajuanBeasiswaId: id }, { prestasiDataTableId: id }],
+          },
           include: {
             User: { select: userQuery },
           },

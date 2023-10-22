@@ -2,14 +2,12 @@
 import { pengajuanPrestasiForm } from "~/common/schemas/module/pengajuan/pengajuan-prestasi.shema";
 import { protectedProcedure } from "../../trpc";
 import { handleDocumentMetaToJSON } from "~/common/libs/handle-document-data";
-import {
-  MOUDLE_KEJUARAAN,
-  PENGAJUAN_MESSAGE_BY_ADMIN_SIDE,
-  PENGAJUAN_MESSAGE_BY_USER_SIDE,
-} from "~/common/constants/MESSAGE";
+import { MOUDLE_KEJUARAAN } from "~/common/constants/MESSAGE";
 import { STATUS } from "~/common/enums/STATUS";
 import { ADD_PRESTASI_LOMBA_SUCCESS } from "~/common/message";
 import { type SuccessPengajuanOnUsersType } from "./_router";
+import handleAddInitialNotification from "../notification/handleAddInitialNotification";
+import { MODULE_TYPE_CODE } from "~/common/enums/MODULE_TYPE_CODE";
 
 const createChampionshipHandler = protectedProcedure
   .input(pengajuanPrestasiForm)
@@ -76,47 +74,17 @@ const createChampionshipHandler = protectedProcedure
           }),
         });
 
-      //** ADD NOTIFICATION MESSAGE */
-      const notificationMessage = await ctx.prisma.notifMessage.create({
-        data: {
-          module: "kejuaraan",
-          status: STATUS.PROCESSED,
-          description: `Pengajuan Prestasi - ${createPrestasiDataTable.kegiatan}`,
+      //** HANDLE ADD INITIAL NOTIFICATION */
+      await handleAddInitialNotification({
+        ctx,
+        payload: {
           moduleId: createPrestasiDataTable.id,
-          actionByMahasiswaId: ctx.session.user.userId,
-          forUserMessage: PENGAJUAN_MESSAGE_BY_USER_SIDE(MOUDLE_KEJUARAAN),
-          forAdminMessage: PENGAJUAN_MESSAGE_BY_ADMIN_SIDE(MOUDLE_KEJUARAAN),
-          userInfo: users,
+          MODULE_TYPE_CODE: MODULE_TYPE_CODE.KEJUARAAN,
+          MODULE_TYPE: MOUDLE_KEJUARAAN,
+          STATUS_TYPE: STATUS.PROCESSED,
+          notifDescription: `Pengajuan Prestasi - ${createPrestasiDataTable.kegiatan}`,
+          relatedUserData: users,
         },
-      });
-
-      //** ADD NOTIFICATION IN ADMIN */
-      const admin = await ctx.prisma.user.findMany({
-        where: {
-          role: "ADMIN",
-        },
-      });
-
-      const mergeusers = [...admin, ...users];
-
-      //** ADD ACTIVITY LOG */
-      const createActivityLog = await ctx.prisma.activityLog.create({
-        data: {
-          prestasiDataTableId: createPrestasiDataTable.id,
-          userId: ctx.session.user.userId,
-          status: STATUS.PROCESSED,
-        },
-      });
-
-      //** ADD NOTIFICATION IN RELATED USERS AND ADMINS */
-      await ctx.prisma.notification.createMany({
-        data: mergeusers.map((val: { value?: string; id?: string }) => {
-          return {
-            notificationMessageId: notificationMessage.id,
-            userId: (val.value || val.id) as string,
-            activityLogId: createActivityLog.id,
-          };
-        }),
       });
 
       return {
