@@ -4,6 +4,7 @@ import {
   PENGAJUAN_MESSAGE_BY_USER_SIDE,
 } from "~/common/constants/MESSAGE";
 import { type trpcContextType } from "../../trpc";
+import handleActivityLogTableRelation from "./handleActivityLogTableRelation";
 
 const handleAddInitialNotification = async ({
   ctx,
@@ -52,10 +53,12 @@ const handleAddInitialNotification = async ({
     //** ADD ACTIVITY LOG AND SET WHO CREATE THE DATA */
     const createActivityLog = await ctx.prisma.activityLog.create({
       data: {
-        prestasiDataTableId: moduleId,
-        pengajuanBeasiswaId: moduleId,
         userId: ctx?.session?.user.userId as string,
         status: STATUS_TYPE,
+        ...handleActivityLogTableRelation({ // HANDLE TABLE RELATION
+          MODULE_CODE: MODULE_TYPE_CODE,
+          moduleId,
+        }),
       },
     });
 

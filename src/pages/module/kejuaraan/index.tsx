@@ -23,6 +23,7 @@ const UserManagement = () => {
   const router = useRouter();
   const { isAdmin } = useCurrentUser();
   const { allKejuaraan } = useKejuaraan();
+
   const columns = useMemo<MRT_ColumnDef<KejuaraanData>[]>(
     () => [
       {

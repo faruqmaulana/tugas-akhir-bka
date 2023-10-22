@@ -31,7 +31,6 @@ const createChampionshipHandler = protectedProcedure
 
         // PENGAJUAN ON USER PAYLOAD
         users,
-        currentUserName,
       } = input;
 
       // ** CREATE A LAMPIRAN DATA FIRST TO GET A LAMPIRAN ID
