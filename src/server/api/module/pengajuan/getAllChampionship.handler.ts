@@ -110,7 +110,7 @@ const getAllChampionshipHandler = protectedProcedure
           data.PrestasiDataTable?.tanggalKegiatan
         ),
         penyelenggara: data.PrestasiDataTable?.penyelenggara || "-",
-        orkem: data.PrestasiDataTable?.orkem.name || "-",
+        orkem: data.PrestasiDataTable?.orkem?.name || "-",
         tingkatKejuaraan: data.PrestasiDataTable?.tingkatKejuaraan.name || "-",
         tingkatPrestasi: data.PrestasiDataTable?.tingkatPrestasi.name || "-",
         fakultas: data.user.prodi?.Fakultas.name,
