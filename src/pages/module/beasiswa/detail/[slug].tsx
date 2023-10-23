@@ -1,35 +1,55 @@
-/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/require-await */
 import React from "react";
 import { requireAuth } from "~/common/authentication/requireAuth";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
 import { Button } from "~/common/components/ui/button/Button";
-import SubmitButton from "~/common/components/ui/button/SubmitButton";
 import Card from "~/common/components/ui/card/Card";
-import PdfViewer from "~/common/components/ui/file-viewer/PdfViewer";
+import ModuleCardInfo from "~/common/components/ui/card/ModuleCardInfo";
+import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
 import BaseForm from "~/common/components/ui/form/BaseForm";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import FullPageLoader from "~/common/components/ui/loader/FullPageLoader";
+import EditModalDescription from "~/common/components/ui/modal/EditModalDescription";
 import Modal from "~/common/components/ui/modal/Modal";
-import { useEditBeasiswa } from "~/common/hooks/master-data/useEditBeasiswa";
-import { useAddScholarship } from "~/common/hooks/module/beasiswa/useAddScholarship";
-import { useScholarshipAction } from "~/common/hooks/module/beasiswa/useScrolarshipAction";
+import StepperVertical from "~/common/components/ui/stepper/StepperVertical";
+import { STATUS } from "~/common/enums/STATUS";
+import renderActionButton from "~/common/helpers/renderActionButton";
+import { useScholarshipAction } from "~/common/hooks/module/beasiswa/useScholarshipAction";
+import { useCurrentUser } from "~/common/hooks/module/profile";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: { slug: ctx.query.slug } };
 });
 
 const ScholarshipDetail = ({ slug }: { slug: string }) => {
-  const { ADD_SCHOLARSHIP_FORM, handleSubmit, onSubmit, loading } =
-    useAddScholarship();
-  const {} = useScholarshipAction({slug})
-  const { scholarship } = useEditBeasiswa();
+  const {
+    scholarship,
+    SCHOLARSHIP_FORM,
+    EDIT_SCHOLARSHIP_FORM,
+    REJECT_SCHOLARSHIP_FORM,
+    APPROVE_SCHOLARSHIP_FORM,
+    activityLog,
+    isLoadingScholarship,
+    isDrawerOpen,
+    state,
+    setDefaultValue,
+    setIsDrawerOpen,
+    handleButtonAction,
+    submitRejectScholarship,
+    onRejectScholarship,
+    onApproveScholarship,
+    submitApproveScholarship,
+    onEditScholarship,
+    submitEditScholarship,
+  } = useScholarshipAction({ slug });
+  const { role, isAdmin } = useCurrentUser();
   if (!scholarship) return <FullPageLoader />;
 
   return (
     <>
       <PageHeading
-        title="Form Pengajuan Beasiswa"
+        title="Detail Pengajuan Beasiswa"
         ownButton={
           <Button isMedium isGray className="flex w-fit items-center gap-2">
             <ArrorLeft />
@@ -37,28 +57,61 @@ const ScholarshipDetail = ({ slug }: { slug: string }) => {
           </Button>
         }
       />
-      <Card>
-        <div
-          className="prose min-w-full"
-          dangerouslySetInnerHTML={{ __html: scholarship?.syarat || "" }}
+      <Card className="mt-[20px]">
+        <ModuleCardInfo
+          status={scholarship?.status}
+          setIsDrawerOpen={setIsDrawerOpen}
         />
+        <BaseForm isEditForm data={SCHOLARSHIP_FORM} className="mb-5" />
+        {renderActionButton({ status: scholarship?.status, role }) && (
+          <div className="flex flex-row justify-end gap-4">
+            <Button
+              isLarge
+              isDanger
+              onClick={() => handleButtonAction("reject")}
+            >
+              <span>Tolak</span>
+            </Button>
+            <Button
+              isLarge
+              isSuccess
+              onClick={() => handleButtonAction("approve")}
+            >
+              <span>Setuju</span>
+            </Button>
+          </div>
+        )}
+        {!isAdmin && !isLoadingScholarship && (
+          <form onSubmit={submitEditScholarship(onEditScholarship)}>
+            <div className="flex flex-row justify-end gap-4">
+              <Button
+                disabled={!scholarship}
+                isSecondary
+                isLarge
+                onClick={() => setDefaultValue()}
+              >
+                Reset
+              </Button>
+              <Button
+                isSuccess
+                isLarge
+                onClick={() => handleButtonAction("edit")}
+              >
+                {scholarship?.status === STATUS.PROCESSED ||
+                scholarship?.status === STATUS.REPROCESS
+                  ? "Submit Perubahan"
+                  : "Ajukan Ulang"}
+              </Button>
+            </div>
+          </form>
+        )}
       </Card>
-      <Card header="Template Formulir Pengajuan Beasiswa" className="-mt-8">
-        <PdfViewer
-          className="mt-2"
-          url={
-            (scholarship?.templateFormulir as PrismaJson.FileResponse)
-              ?.secure_url
-          }
-        />
-      </Card>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Card className="mt-[20px]">
-          <BaseForm data={ADD_SCHOLARSHIP_FORM} />
-          <SubmitButton loading={loading} />
-        </Card>
-      </form>
-
+      <BaseDrawer
+        header="Pengajuan Info"
+        isDrawerOpen={isDrawerOpen}
+        setDrawerOpen={setIsDrawerOpen}
+        content={<StepperVertical data={activityLog} />}
+      />
       <Modal
         confirm
         showClose
@@ -66,11 +119,9 @@ const ScholarshipDetail = ({ slug }: { slug: string }) => {
         className="!mb-0"
         onClose={() => handleButtonAction("close")}
         content={
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <p className="text-center">
-              Anda melakukan perubahan pada dokumen yang sudah diajukan.
-            </p>
-            <BaseForm data={EDIT_PRESTASI_FORM} />
+          <form onSubmit={submitEditScholarship(onEditScholarship)}>
+            <EditModalDescription status={scholarship?.status} />
+            <BaseForm data={EDIT_SCHOLARSHIP_FORM} />
             <div className="mt-5 flex flex-row justify-end gap-4">
               <Button
                 isGray
@@ -85,6 +136,64 @@ const ScholarshipDetail = ({ slug }: { slug: string }) => {
                 isSuccess
                 isLarge
                 isLoading={state.loadingEdited}
+              >
+                Submit
+              </Button>
+            </div>
+          </form>
+        }
+      ></Modal>
+      <Modal
+        confirm
+        showClose
+        isOpen={state.isReject}
+        className="!mb-0"
+        captionButtonDanger="Tolak"
+        onClose={() => handleButtonAction("close")}
+        content={
+          <form onSubmit={submitRejectScholarship(onRejectScholarship)}>
+            <BaseForm data={REJECT_SCHOLARSHIP_FORM} />
+            <div className="mt-5 flex flex-row justify-end gap-4">
+              <Button
+                isGray
+                isLarge
+                isDisabled={state.loadingReject}
+                onClick={() => handleButtonAction("close")}
+              >
+                Cancel
+              </Button>
+              <Button isSubmit isDanger isLarge isLoading={state.loadingReject}>
+                Tolak
+              </Button>
+            </div>
+          </form>
+        }
+      ></Modal>
+      <Modal
+        confirm
+        showClose
+        showIconModal={false}
+        isOpen={state.isApprove}
+        className="!mb-0"
+        captionTitleConfirm="Approve Pengajuan Beasiswa"
+        onClose={() => handleButtonAction("close")}
+        content={
+          <form onSubmit={submitApproveScholarship(onApproveScholarship)}>
+            <BaseForm data={APPROVE_SCHOLARSHIP_FORM} />
+            <div className="mt-5 flex flex-row justify-end gap-4">
+              <Button
+                isGray
+                isLarge
+                isDisabled={state.loadingApprove}
+                onClick={() => handleButtonAction("close")}
+              >
+                Cancel
+              </Button>
+              <Button
+                isSubmit
+                isSuccess
+                isLarge
+                isLoading={state.loadingApprove}
               >
                 Submit
               </Button>

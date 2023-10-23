@@ -7,12 +7,16 @@ import Input, { type InputPropsType } from "./Input";
 const BaseForm = ({
   data,
   isEditForm,
+  className = "",
 }: {
   data: InputPropsType[];
   isEditForm?: boolean;
+  className?: string;
 }) => {
   return (
-    <div className="mx-auto grid h-fit w-full grid-cols-2 gap-3 md:gap-5">
+    <div
+      className={`mx-auto grid h-fit w-full grid-cols-2 gap-3 md:gap-5 ${className}`}
+    >
       {data?.map((val: any, index: number) => (
         <Input {...val} key={index} isEditForm={isEditForm} />
       ))}

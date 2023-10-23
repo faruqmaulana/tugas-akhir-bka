@@ -1,7 +1,7 @@
 import { createTRPCRouter } from "../../../trpc";
 import { type Prisma } from "@prisma/client";
 import getScholarshipHandler from "./getScholarship.handler";
-import editScholarshipHandler from "./editScholarship.handler";
+import editScholarshipMasterDataHandler from "./editScholarship.handler";
 
 export type MasterDataBeasiswaType = Prisma.MasterDataBeasiswaGetPayload<{
   select: {
@@ -14,5 +14,5 @@ export type MasterDataBeasiswaType = Prisma.MasterDataBeasiswaGetPayload<{
 export const scholarshipQuery = createTRPCRouter({
   //** GET ALL PRODI */
   getScholarship: getScholarshipHandler,
-  editScholarship: editScholarshipHandler,
+  editScholarshipMasterData: editScholarshipMasterDataHandler,
 });

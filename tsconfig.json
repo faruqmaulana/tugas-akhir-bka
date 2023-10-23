@@ -27,7 +27,9 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.cjs",
-    "**/*.mjs"
-, "prisma/seeder.ts"  ],
+    "**/*.mjs",
+    "prisma/seeder.ts",
+    "src/server/api/module/master-data/scholarship/editScholarship.handler.ts"
+  ],
   "exclude": ["node_modules"]
 }

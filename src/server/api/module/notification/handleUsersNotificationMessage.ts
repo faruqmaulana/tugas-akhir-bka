@@ -1,4 +1,5 @@
 import {
+  PENGAJUAN_ACCEPTED_BY_ADMIN_SIDE,
   PENGAJUAN_ACCEPTED_BY_USER_SIDE,
   PENGAJUAN_EDITED_BY_ADMIN_SIDE,
   PENGAJUAN_EDITED_BY_USER_SIDE,
@@ -38,7 +39,7 @@ const handleUsersNotificationMessage = ({
   if (status === STATUS.APPROVE) {
     return {
       forUserMessage: PENGAJUAN_ACCEPTED_BY_USER_SIDE(MODULE),
-      forAdminMessage: PENGAJUAN_REJECTED_BY_ADMIN_SIDE(MODULE),
+      forAdminMessage: PENGAJUAN_ACCEPTED_BY_ADMIN_SIDE(MODULE),
     };
   }
 

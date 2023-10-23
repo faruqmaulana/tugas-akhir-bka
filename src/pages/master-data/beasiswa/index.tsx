@@ -10,7 +10,7 @@ import FullPageLoader from "~/common/components/ui/loader/FullPageLoader";
 import Modal from "~/common/components/ui/modal/Modal";
 import { useEditBeasiswa } from "~/common/hooks/master-data/useEditBeasiswa";
 
-export const getServerSideProps = requireAuth(async (ctx) => {
+export const getServerSideProps = requireAuth(async (_ctx) => {
   return { props: {} };
 });
 

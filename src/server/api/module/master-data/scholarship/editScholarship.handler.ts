@@ -6,7 +6,7 @@ import { UPDATE_SUCCESS } from "~/common/message";
 import { scholarshipSchema } from "~/common/schemas/module/master-data/scholarship.schema";
 import { protectedProcedure } from "~/server/api/trpc";
 
-const editScholarshipHandler = protectedProcedure
+const editScholarshipMasterDataHandler = protectedProcedure
   .input(scholarshipSchema)
   .mutation(async ({ ctx, input }) => {
     const { id, syarat, templateFormulir } = input;
@@ -21,4 +21,4 @@ const editScholarshipHandler = protectedProcedure
     return { message: `Data ${UPDATE_SUCCESS}`, data };
   });
 
-export default editScholarshipHandler;
+export default editScholarshipMasterDataHandler;

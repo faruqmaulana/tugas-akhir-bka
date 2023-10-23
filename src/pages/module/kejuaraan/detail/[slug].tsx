@@ -11,11 +11,10 @@ import { useApproveKejuaraan } from "~/common/hooks/module/kejuaraan/useApproveK
 import BaseForm from "~/common/components/ui/form/BaseForm";
 import { requireAuth } from "~/common/authentication/requireAuth";
 import StepperVertical from "~/common/components/ui/stepper/StepperVertical";
-import InfoIcon from "~/common/components/svg/InfoIcon";
 import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
 import { STATUS } from "~/common/enums/STATUS";
-import { handleBgColor } from "~/common/helpers/handleBgColor";
-import CheckIcon from "~/common/components/svg/CheckIcon";
+import ModuleCardInfo from "~/common/components/ui/card/ModuleCardInfo";
+import EditModalDescription from "~/common/components/ui/modal/EditModalDescription";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: { slug: ctx.query.slug } };
@@ -65,27 +64,10 @@ const Example = ({ slug }: { slug: string }) => {
         }
       />
       <Card className="mt-[20px]">
-        <div className="mb-2 flex flex-wrap justify-between">
-          {prestasi?.status === STATUS.APPROVE && (
-            <div
-              className={`flex flex-wrap items-center gap-2 rounded-full px-2 py-1 text-sm font-semibold opacity-95 
-                ${handleBgColor(prestasi?.status)}
-                `}
-            >
-              <p className="font-semibold text-green-600">
-                Dokumen Ini Telah Disetujui
-              </p>
-            </div>
-          )}
-          <button
-            type="button"
-            className="ml-auto flex flex-row items-center gap-2"
-            onClick={() => setIsDrawerOpen(true)}
-          >
-            <InfoIcon />
-            <p className="font-bold text-primary-600">Log Activity</p>
-          </button>
-        </div>
+        <ModuleCardInfo
+          status={prestasi?.status}
+          setIsDrawerOpen={setIsDrawerOpen}
+        />
         <BaseForm isEditForm data={TRANSFORM_KEJUARAAN} />
         {renderActionButton() && (
           <div className="flex flex-row justify-end gap-4">
@@ -202,24 +184,7 @@ const Example = ({ slug }: { slug: string }) => {
         onClose={() => handleButtonAction("close")}
         content={
           <form onSubmit={handleSubmit(onSubmit)}>
-            {prestasi?.status !== STATUS.REJECT &&
-              prestasi?.status !== STATUS.APPROVE && (
-                <p className="text-center">
-                  Anda melakukan perubahan pada dokumen yang sudah diajukan.
-                </p>
-              )}
-            {prestasi?.status === STATUS.APPROVE && (
-              <div className="flex flex-col gap-1">
-                <p className="text-center">
-                  Anda melakukan perubahan pada dokumen yang sudah{" "}
-                  <b>disetujui</b>.
-                </p>
-                <p className="text-center">
-                  Apabila anda melanjutkan proses maka status dokumen anda akan
-                  diperbarui menjadi <b>Diajukan Ulang</b>.
-                </p>
-              </div>
-            )}
+            <EditModalDescription status={prestasi?.status}/>
             <BaseForm data={EDIT_PRESTASI_FORM} />
             <div className="mt-5 flex flex-row justify-end gap-4">
               <Button

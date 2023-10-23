@@ -2,14 +2,11 @@
 import { approvePrestasiForm } from "~/common/schemas/module/pengajuan/approve-prestasi.schema";
 import { protectedProcedure } from "../../trpc";
 import { STATUS } from "~/common/enums/STATUS";
-import {
-  MOUDLE_KEJUARAAN,
-  PENGAJUAN_ACCEPTED_BY_ADMIN_SIDE,
-  PENGAJUAN_ACCEPTED_BY_USER_SIDE,
-} from "~/common/constants/MESSAGE";
+import { MOUDLE_BEASISWA } from "~/common/constants/MESSAGE";
 import { APPROVE_PRESTASI_AND_LOMBA } from "~/common/message";
 import { type SuccessPengajuanOnUsersType } from "./_router";
-import { userQuery } from "~/server/queries/module/user/user.query";
+import handleUpdateNotification from "../notification/handleUpdateNotification";
+import { MODULE_TYPE_CODE } from "~/common/enums/MODULE_TYPE_CODE";
 
 const approveChampionshipHandler = protectedProcedure
   .input(approvePrestasiForm)
@@ -29,54 +26,15 @@ const approveChampionshipHandler = protectedProcedure
         },
       });
 
-      //** ADD NOTIFICATION MESSAGE */
-      const notificationMessage = await ctx.prisma.notifMessage.findFirst({
-        where: { moduleId: prestasiDataTableId },
-        orderBy: {
-          createdAt: "desc",
+      await handleUpdateNotification({
+        ctx,
+        payload: {
+          MODULE: MOUDLE_BEASISWA,
+          moduleId: prestasiDataTableId,
+          MODULE_TYPE_CODE: MODULE_TYPE_CODE.BEASISWA,
+          STATUS_TYPE: STATUS.APPROVE,
+          note: catatan,
         },
-        include: {
-          Notification: { include: { User: { select: userQuery } } },
-        },
-      });
-
-      //** ADD NOTIFICATION MESSAGE */
-      const createNotificationMessage = await ctx.prisma.notifMessage.create({
-        data: {
-          catatan,
-          status: STATUS.APPROVE,
-          module: notificationMessage!.module,
-          moduleId: notificationMessage!.moduleId,
-          description: notificationMessage!.description,
-          forUserMessage: PENGAJUAN_ACCEPTED_BY_USER_SIDE(MOUDLE_KEJUARAAN),
-          forAdminMessage: PENGAJUAN_ACCEPTED_BY_ADMIN_SIDE(MOUDLE_KEJUARAAN),
-          actionByMahasiswaId: notificationMessage!.actionByMahasiswaId,
-          actionByAdminId: ctx.session.user.userId,
-          userInfo: notificationMessage?.userInfo,
-        },
-      });
-
-      //** ADD ACTIVITY LOG */
-      const createActivityLog = await ctx.prisma.activityLog.create({
-        data: {
-          catatan,
-          prestasiDataTableId,
-          userId: ctx.session.user.userId,
-          status: STATUS.APPROVE,
-        },
-      });
-
-      //** ADD NOTIFICATION IN RELATED USERS AND ADMINS */
-      await ctx.prisma.notification.createMany({
-        data: notificationMessage!.Notification.map(
-          (val: { userId?: string }) => {
-            return {
-              notificationMessageId: createNotificationMessage.id,
-              userId: val.userId as string,
-              activityLogId: createActivityLog.id,
-            };
-          }
-        ),
       });
 
       return {

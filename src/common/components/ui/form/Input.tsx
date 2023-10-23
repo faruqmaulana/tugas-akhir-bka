@@ -128,8 +128,10 @@ const Input = (props: InputPropsType) => {
         )}
         {type === "textarea" && (
           <textarea
+            disabled={isDisabled}
             {...(register || {})}
             className={`peer block min-h-[auto] w-full rounded border border-neutral-400 bg-transparent px-3 py-[0.32rem] leading-[1.6] ease-linear focus:border-primary focus:text-neutral-700 focus:outline-none data-[te-input-state-active]:placeholder:opacity-100 
+            ${isDisabled ? "cursor-not-allowed opacity-60" : ""} 
             ${
               error
                 ? "!border-red-500 focus:!border-red-500"

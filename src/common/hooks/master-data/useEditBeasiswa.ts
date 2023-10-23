@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { customToast } from "~/common/components/ui/toast/showToast";
 import { JSONtoString } from "~/common/helpers/parseJSON";
 import { handleUploadCloudinary } from "~/common/libs/handle-upload-cloudinary";
+import { type FileResponse } from "~/common/libs/upload-file.lib";
 import {
   scholarshipSchema,
   type IScholarshipSchema,
@@ -28,8 +29,8 @@ const useEditBeasiswa = () => {
 
   const { data: scholarship } =
     api.scholarship.getScholarship.useQuery<MasterDataBeasiswaType>();
-  const { mutate: editScholarship } =
-    api.scholarship.editScholarship.useMutation();
+  const { mutate: editScholarshipMasterDataHandler } =
+    api.scholarship.editScholarshipMasterData.useMutation();
   const [plainText, setPlainText] = useState(scholarship?.syarat || "");
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [loading, setLoading] = useState(false);
@@ -70,7 +71,7 @@ const useEditBeasiswa = () => {
     ]);
 
     const transformDocument = JSONtoString(uploadTemplateFormulir);
-    editScholarship(
+    editScholarshipMasterDataHandler(
       { ...userPayload, templateFormulir: transformDocument },
       {
         onSuccess: (data) => {
@@ -120,6 +121,7 @@ const useEditBeasiswa = () => {
       type: "file",
       register: { ...register("templateFormulir") },
       error: errors.templateFormulir?.message,
+      fileData: scholarship?.templateFormulir as FileResponse,
     },
   ];
 
@@ -132,7 +134,7 @@ const useEditBeasiswa = () => {
     onSubmit,
     SCHOLARSHIP_FORM,
     loading,
-    scholarship
+    scholarship,
   };
 };
 

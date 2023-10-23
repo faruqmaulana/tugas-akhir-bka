@@ -51,7 +51,11 @@ const AddScolarship = () => {
         />
       </Card>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Card className="mt-[20px]">
+        <Card
+          className="mt-[20px]"
+          header="Form Pengajuan Beasiswa"
+          headerClassName="m-auto"
+        >
           <BaseForm data={ADD_SCHOLARSHIP_FORM} />
           <SubmitButton loading={loading} />
         </Card>

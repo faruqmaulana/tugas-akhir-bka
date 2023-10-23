@@ -17,7 +17,7 @@ export type InputFileType = {
 };
 
 const InputFile = (props: InputFileType) => {
-  const { disabled, isEditForm, fileData, register } = props;
+  const { disabled, fileData, register } = props;
 
   // PREVIEW FILE STATE
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(undefined);
@@ -61,7 +61,7 @@ const InputFile = (props: InputFileType) => {
   };
 
   const handleFileName = () => {
-    if(!fileData?.original_filename) return
+    if (!fileData?.original_filename) return;
     const fileName = fileData?.original_filename || "";
     const fileType = fileData?.secure_url?.split(".")?.pop() || "";
     return `${fileName}.${fileType}`;

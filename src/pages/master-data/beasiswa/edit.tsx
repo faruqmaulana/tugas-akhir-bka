@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/require-await */
-
 import { Button } from "~/common/components/ui/button/Button";
 import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
@@ -20,11 +19,11 @@ const DynamicEditor = dynamic(
   }
 );
 
-export const getServerSideProps = requireAuth(async (ctx) => {
+export const getServerSideProps = requireAuth(async (_ctx) => {
   return { props: {} };
 });
 
-const Example = () => {
+const EditScholarshipMasterData = () => {
   const {
     router,
     loading,
@@ -101,4 +100,4 @@ const Example = () => {
   );
 };
 
-export default Example;
+export default EditScholarshipMasterData;
