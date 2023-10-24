@@ -26,3 +26,4 @@ export const REPROCESS_PRESTASI_AND_LOMBA = `${REPROCESS} ${PRESTASI_AND_LOMBA}!
 
 // ** MODULE PENGAJUAN BEASISWA
 export const SCOLARSHIP_NOTIF = "Beasiswa!";
+export const HAKI_NOTIF = "Haki!";

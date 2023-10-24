@@ -18,6 +18,7 @@ import { statisticQuery } from "./module/statistic/_router";
 import { registerQuery } from "./module/register/_router";
 import { scholarshipQuery } from "./module/master-data/scholarship/_router";
 import { scholarshipModule } from "./module/pengajuan/beasiswa/_router";
+import { hakiModule } from "./module/pengajuan/haki/_router";
 
 /**
  * This is the primary router for your server.
@@ -49,6 +50,7 @@ export const appRouter = createTRPCRouter({
   // ** PENGAJUAN DATA
   prestasiLomba: championshipQueryHandler,
   scholarshipModule: scholarshipModule,
+  hakiModule: hakiModule,
 
 
   // ** NOTIFICATION

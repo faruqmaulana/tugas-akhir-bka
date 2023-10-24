@@ -1,6 +1,6 @@
 import { type Prisma } from "@prisma/client";
 export const stringToJSON = (data: string | undefined) => {
-  if (!data) undefined;
+  if (!data || typeof data === "object") undefined;
 
   return JSON.parse(data!) as Prisma.JsonObject;
 };

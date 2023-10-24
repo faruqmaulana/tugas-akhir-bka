@@ -8,10 +8,10 @@ generator client {
 
 generator json {
   provider     = "prisma-json-types-generator"
-  useType      = "PrismaJson.GlobalType"
-  namespace    = "PrismaJson"
-  clientOutput = "finds automatically"
   allowAny     = "false"
+  useType      = "PrismaJson.GlobalType"
+  clientOutput = "finds automatically"
+  namespace    = "PrismaJson"
 }
 
 datasource db {
@@ -38,6 +38,7 @@ model User {
   ActivityLog        ActivityLog[]
   Buku               Buku[]
   notification       Notification[]
+  PatenAndHakiTable  PatenAndHakiTable[]
   PengajuanBeasiswa  PengajuanBeasiswa[]
   prestasiDataTables PengajuanOnUsers[]
   prodi              MasterDataProdi?    @relation(fields: [prodiId], references: [id])
@@ -147,7 +148,7 @@ model PrestasiDataTable {
 
 model PengajuanOnUsers {
   userId                       String
-  dosenId                      String
+  dosenId                      String?
   prestasiDataTableId          String?
   PengajuanPKMId               String?
   PengajuanPatenAndHakiTableId String?
@@ -156,7 +157,7 @@ model PengajuanOnUsers {
   createdAt                    DateTime           @default(now())
   PengajuanPKM                 PengajuanPKM?      @relation(fields: [PengajuanPKMId], references: [id])
   PengajuanPatenAndHakiTable   PatenAndHakiTable? @relation(fields: [PengajuanPatenAndHakiTableId], references: [id])
-  dosen                        Dosen              @relation(fields: [dosenId], references: [id])
+  dosen                        Dosen?             @relation(fields: [dosenId], references: [id])
   PrestasiDataTable            PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
   user                         User               @relation(fields: [userId], references: [id])
 }
@@ -208,14 +209,19 @@ model SKRektor {
 model PatenAndHakiTable {
   id               String             @id @default(cuid())
   judul            String
-  nomorPaten       String
-  expiredDate      DateTime
+  nomorPaten       String?
+  expiredDate      DateTime?
   createdAt        DateTime           @default(now())
   keterangan       String
-  validatedAt      DateTime
-  isValidated      Boolean            @default(false)
-  jenis            PatenAndHaki
+  jenis            PatenAndHaki       @default(HAKI)
   updatedAt        DateTime           @default(now()) @updatedAt
+  createdById      String
+  /// [FileResponse]
+  dokumenPendukung Json?
+  status           String             @default("Sedang Diproses")
+  dokumenTambahan  Json?
+  ActivityLog      ActivityLog[]
+  user             User               @relation(fields: [createdById], references: [id])
   PengajuanOnUsers PengajuanOnUsers[]
 }
 
@@ -272,6 +278,8 @@ model ActivityLog {
   catatan             String?
   prestasiDataTableId String?
   pengajuanBeasiswaId String?
+  patenAndHakiTableId String?
+  PatenAndHakiTable   PatenAndHakiTable? @relation(fields: [patenAndHakiTableId], references: [id])
   PengajuanBeasiswa   PengajuanBeasiswa? @relation(fields: [pengajuanBeasiswaId], references: [id])
   PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
   User                User               @relation(fields: [userId], references: [id])

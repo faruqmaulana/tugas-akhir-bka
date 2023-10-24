@@ -21,6 +21,7 @@ Table User {
   ActivityLog ActivityLog [not null]
   Buku Buku [not null]
   notification Notification [not null]
+  PatenAndHakiTable PatenAndHakiTable [not null]
   PengajuanBeasiswa PengajuanBeasiswa [not null]
   prestasiDataTables PengajuanOnUsers [not null]
   prodi MasterDataProdi
@@ -126,7 +127,7 @@ Table PrestasiDataTable {
 
 Table PengajuanOnUsers {
   userId String [not null]
-  dosenId String [not null]
+  dosenId String
   prestasiDataTableId String
   PengajuanPKMId String
   PengajuanPatenAndHakiTableId String
@@ -135,7 +136,7 @@ Table PengajuanOnUsers {
   createdAt DateTime [default: `now()`, not null]
   PengajuanPKM PengajuanPKM
   PengajuanPatenAndHakiTable PatenAndHakiTable
-  dosen Dosen [not null]
+  dosen Dosen
   PrestasiDataTable PrestasiDataTable
   user User [not null]
 }
@@ -186,14 +187,18 @@ Table SKRektor {
 Table PatenAndHakiTable {
   id String [pk]
   judul String [not null]
-  nomorPaten String [not null]
-  expiredDate DateTime [not null]
+  nomorPaten String
+  expiredDate DateTime
   createdAt DateTime [default: `now()`, not null]
   keterangan String [not null]
-  validatedAt DateTime [not null]
-  isValidated Boolean [not null, default: false]
-  jenis PatenAndHaki [not null]
+  jenis PatenAndHaki [not null, default: 'HAKI']
   updatedAt DateTime [default: `now()`, not null]
+  createdById String [not null]
+  dokumenPendukung Json [note: '[FileResponse]']
+  status String [not null, default: 'Sedang Diproses']
+  dokumenTambahan Json
+  ActivityLog ActivityLog [not null]
+  user User [not null]
   PengajuanOnUsers PengajuanOnUsers [not null]
 
   Note: '=== PENGAJUAN LUARAN TABLE === ///'
@@ -251,6 +256,8 @@ Table ActivityLog {
   catatan String
   prestasiDataTableId String
   pengajuanBeasiswaId String
+  patenAndHakiTableId String
+  PatenAndHakiTable PatenAndHakiTable
   PengajuanBeasiswa PengajuanBeasiswa
   PrestasiDataTable PrestasiDataTable
   User User [not null]
@@ -296,11 +303,15 @@ Ref: PengajuanPKM.dosenId > Dosen.id
 
 Ref: PengajuanBeasiswa.userId > User.id
 
+Ref: PatenAndHakiTable.createdById > User.id
+
 Ref: Buku.userId > User.id
 
 Ref: Notification.notificationMessageId > NotifMessage.id
 
 Ref: Notification.userId > User.id
+
+Ref: ActivityLog.patenAndHakiTableId > PatenAndHakiTable.id
 
 Ref: ActivityLog.pengajuanBeasiswaId > PengajuanBeasiswa.id
 

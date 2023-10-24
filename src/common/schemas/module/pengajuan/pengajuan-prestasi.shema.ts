@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { z, ZodError, type ZodIssue } from "zod";
-
 // Define a union type for string and object
 // const StringOrObject = z.union([z.string(), z.object()]);
 

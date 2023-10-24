@@ -1,31 +1,51 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import React from "react";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
 import { Button } from "~/common/components/ui/button/Button";
 import Card from "~/common/components/ui/card/Card";
+import BaseForm from "~/common/components/ui/form/BaseForm";
 import PageHeading from "~/common/components/ui/header/PageHeading";
-import PengajuanForm from "~/common/components/ui/page/status-pengajuan/PengajuanForm";
-import { HAKI_FORM } from "~/common/constants/DUMMY_PATEN_HAKI";
+import { useAddHaki } from "~/common/hooks/module/haki/useAddHaki";
 
-const tambah = () => {
+const Tambah = () => {
+  const { ADD_HAKI_FORM, handleSubmit, loading, onSubmit, router } =
+    useAddHaki();
+
   return (
     <>
       <PageHeading
         title="Form Pengajuan Haki"
         ownButton={
-          <Button isMedium isGray className="flex w-fit items-center gap-2">
+          <Button
+            isMedium
+            isGray
+            className="flex w-fit items-center gap-2"
+            onClick={() => {
+              void router.push("/module/haki");
+            }}
+          >
             <ArrorLeft />
             <span>Batal</span>
           </Button>
         }
       />
-      <Card className="mt-[20px]">
-        <PengajuanForm data={HAKI_FORM} />
-        <Button isMedium isSuccess className="flex w-fit items-center gap-2">
-          <span>Submit</span>
-        </Button>
-      </Card>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Card className="mt-[20px]" childClass="flex flex-col">
+          <BaseForm data={ADD_HAKI_FORM} />
+          <Button
+            isLarge
+            isSubmit
+            isSuccess
+            isMedium
+            isLoading={loading}
+            className="ml-auto"
+          >
+            Submit
+          </Button>
+        </Card>
+      </form>
     </>
   );
 };
 
-export default tambah;
+export default Tambah;

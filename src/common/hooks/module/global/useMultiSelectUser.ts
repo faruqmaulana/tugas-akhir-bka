@@ -19,7 +19,8 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
   } = useGlobalContext();
 
   const { data: user } = api.user.getAllMahasiswaSelect.useQuery();
-  const router = useRouter();
+  
+    const router = useRouter();
 
   const [mahasiswa, setMahasiswa] = useState<
     CustomReactSelectOptionsType[] | [] | undefined

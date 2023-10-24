@@ -9,8 +9,15 @@ const handleActivityLogTableRelation = ({
 }) => {
   if (MODULE_CODE === MODULE_TYPE_CODE.KEJUARAAN)
     return { prestasiDataTableId: moduleId };
+
   if (MODULE_CODE === MODULE_TYPE_CODE.BEASISWA)
     return { pengajuanBeasiswaId: moduleId };
+
+  if (
+    MODULE_CODE === MODULE_TYPE_CODE.HAKI ||
+    MODULE_CODE === MODULE_TYPE_CODE.PATEN
+  )
+    return { patenAndHakiTableId: moduleId };
 
   return;
 };
