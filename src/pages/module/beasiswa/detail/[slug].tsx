@@ -24,6 +24,7 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 
 const ScholarshipDetail = ({ slug }: { slug: string }) => {
   const {
+    router,
     scholarship,
     SCHOLARSHIP_FORM,
     EDIT_SCHOLARSHIP_FORM,
@@ -43,6 +44,7 @@ const ScholarshipDetail = ({ slug }: { slug: string }) => {
     onEditScholarship,
     submitEditScholarship,
   } = useScholarshipAction({ slug });
+
   const { role, isAdmin } = useCurrentUser();
   if (!scholarship) return <FullPageLoader />;
 
@@ -51,7 +53,14 @@ const ScholarshipDetail = ({ slug }: { slug: string }) => {
       <PageHeading
         title="Detail Pengajuan Beasiswa"
         ownButton={
-          <Button isMedium isGray className="flex w-fit items-center gap-2">
+          <Button
+            isMedium
+            isGray
+            className="flex w-fit items-center gap-2"
+            onClick={() => {
+              void router.push("/module/beasiswa");
+            }}
+          >
             <ArrorLeft />
             <span>Batal</span>
           </Button>

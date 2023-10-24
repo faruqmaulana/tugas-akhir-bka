@@ -293,6 +293,7 @@ const useScholarshipAction = ({ slug }: { slug: string }) => {
   ];
 
   return {
+    router,
     scholarship,
     SCHOLARSHIP_FORM,
     EDIT_SCHOLARSHIP_FORM,

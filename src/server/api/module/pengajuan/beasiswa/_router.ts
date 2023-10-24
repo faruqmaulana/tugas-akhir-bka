@@ -6,6 +6,7 @@ import { type userQuery } from "~/server/queries/module/user/user.query";
 import approveScholarshipHandler from "./approveScholarship.handler";
 import rejectScholarshipHandler from "./rejectScholarship.handler";
 import editScholarshipHandlder from "./editScholarship.handler";
+import getAllScholarshipHandler from "./getAllScholarship.handler";
 
 export type ScholarshipByIdType = Prisma.PengajuanBeasiswaGetPayload<{
   include: {
@@ -23,4 +24,5 @@ export const scholarshipModule = createTRPCRouter({
   approveScholarship: approveScholarshipHandler,
   rejectScholarship: rejectScholarshipHandler,
   editScholarship: editScholarshipHandlder,
+  getAllScholarship: getAllScholarshipHandler,
 });

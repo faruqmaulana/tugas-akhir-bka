@@ -45,6 +45,7 @@ const Example = ({ slug }: { slug: string }) => {
     isLoadingPrestasiData,
     TRANSFORM_KEJUARAAN,
   } = useApproveKejuaraan({ slug });
+  
   return (
     <>
       <PageHeading
