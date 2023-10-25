@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import React from "react";
 import {
   type ReactSelectOptionType,
   type handleDeleteSelectedDataType,
 } from "./ReactSelect";
-
+import { useRouter } from "next/router";
 import { Switch } from "../switch/switch";
 import { X } from "lucide-react";
 import {
@@ -13,6 +14,7 @@ import {
 } from "~/common/components/ui/popover/popover";
 import { type RegisterOptions } from "react-hook-form";
 import { getUserLead } from "~/common/helpers";
+import capitalizeFirstLetter from "~/common/helpers/capitalizeFirstLetter";
 
 export type ReactSelectedList = {
   register?: (
@@ -27,6 +29,9 @@ export type ReactSelectedList = {
 };
 
 const ReactSelectedList = (props: ReactSelectedList) => {
+  const router = useRouter();
+  const isChampionshipPage = router.pathname.includes("/module/kejuaraan");
+
   const {
     register,
     selectedData,
@@ -87,8 +92,15 @@ const ReactSelectedList = (props: ReactSelectedList) => {
                   </PopoverContent>
                 )}
               </Popover>
-              <p className="text-sm sm:text-base">{value.label}</p>
+              <p className="text-sm sm:text-base">{value.label} &nbsp;</p>
             </td>
+            {!isChampionshipPage && (
+              <td className="items-baseline">
+                <p className="font-semibold mb-1 text-sm sm:text-base">
+                  ({capitalizeFirstLetter(value.role)})
+                </p>
+              </td>
+            )}
             {handleSwitch && (
               <td
                 className={selectedData.length - 1 === index ? "pb-0" : "pb-2"}

@@ -196,7 +196,8 @@ Table PatenAndHakiTable {
   createdById String [not null]
   dokumenPendukung Json [note: '[FileResponse]']
   status String [not null, default: 'Sedang Diproses']
-  dokumenTambahan Json
+  dokumenTambahan Json [note: '[FileResponse]']
+  dosen Json [note: '[UserInfoType]']
   ActivityLog ActivityLog [not null]
   user User [not null]
   PengajuanOnUsers PengajuanOnUsers [not null]

@@ -15,8 +15,9 @@ const addHakiHandler = protectedProcedure
   .mutation(async ({ ctx, input }) => {
     try {
       const { judul, keterangan, dokumenPendukung, users } = input;
-      const dokumenJsonMeta =
-        stringToJSON(dokumenPendukung || undefined) || undefined;
+      const dosenData = users.filter((item) => item.role === "DOSEN");
+      const mahasiswaData = users.filter((item) => item.role === "MAHASISWA");
+      const dokumenJsonMeta = stringToJSON(dokumenPendukung || undefined) || undefined;
 
       //** ADD SCHOLARSHIP APPLICATION */
       const createHakiApplication = await ctx.prisma.patenAndHakiTable.create({
@@ -26,12 +27,13 @@ const addHakiHandler = protectedProcedure
           jenis: PatenAndHaki.HAKI,
           createdById: ctx.session.user.userId,
           dokumenPendukung: dokumenJsonMeta,
+          dosen: dosenData,
         },
       });
 
       // ** CREATE NEW ENTITY PENGAJUAN ON USERS BASED ON PRETASI DATA TABLE AND USERS
       await ctx.prisma.pengajuanOnUsers.createMany({
-        data: users.map((val) => {
+        data: mahasiswaData.map((val) => {
           return {
             userId: val.value,
             keterangan: "",
@@ -49,7 +51,7 @@ const addHakiHandler = protectedProcedure
           MODULE_TYPE_CODE: MODULE_TYPE_CODE.HAKI,
           notifDescription: `Pengajuan Haki - ${judul}`,
           STATUS_TYPE: STATUS.PROCESSED,
-          relatedUserData: users,
+          relatedUserData: mahasiswaData,
         },
       });
 

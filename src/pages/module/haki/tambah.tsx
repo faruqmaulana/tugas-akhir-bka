@@ -38,7 +38,7 @@ const Tambah = () => {
             isSuccess
             isMedium
             isLoading={loading}
-            className="ml-auto"
+            className="ml-auto mt-5"
           >
             Submit
           </Button>

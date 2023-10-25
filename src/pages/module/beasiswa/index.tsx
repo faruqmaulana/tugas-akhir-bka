@@ -21,7 +21,7 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 const UserManagement = () => {
   const router = useRouter();
   const { data } = api.scholarshipModule.getAllScholarship.useQuery();
-  console.log(data);
+
   const columns = useMemo<MRT_ColumnDef<PengajuanBeasiswa>[]>(
     () => [
       {

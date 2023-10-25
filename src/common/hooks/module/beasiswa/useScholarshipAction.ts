@@ -237,8 +237,6 @@ const useScholarshipAction = ({ slug }: { slug: string }) => {
     },
   ];
 
-  console.log(errorsEditForms);
-
   const EDIT_SCHOLARSHIP_FORM = [
     {
       className: "col-span-2",

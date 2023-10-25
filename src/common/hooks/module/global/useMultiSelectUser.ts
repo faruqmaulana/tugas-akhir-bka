@@ -14,13 +14,31 @@ import { Role } from "@prisma/client";
 import { type SingleValue } from "react-select";
 
 const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
+  const router = useRouter();
+  const isChampionshipPage = router.pathname.includes("/module/kejuaraan");
+
   const {
     state: { user: userData },
   } = useGlobalContext();
 
   const { data: user } = api.user.getAllMahasiswaSelect.useQuery();
-  
-    const router = useRouter();
+  const { data: dosen } = api.lecturer.getAllDosen.useQuery();
+
+  const tempMahasiswaRole = user as CustomReactSelectOptionsType[];
+  const tempDosenRole = dosen as CustomReactSelectOptionsType[];
+
+  const mergedUser = [] as CustomReactSelectOptionsType[];
+  if (tempMahasiswaRole) {
+    tempMahasiswaRole.map((val) => {
+      mergedUser.push({ ...val, role: "MAHASISWA" });
+    });
+  }
+
+  if (!isChampionshipPage && tempDosenRole) {
+    tempDosenRole.map((val) => {
+      mergedUser.push({ ...val, role: "DOSEN" });
+    });
+  }
 
   const [mahasiswa, setMahasiswa] = useState<
     CustomReactSelectOptionsType[] | [] | undefined
@@ -37,13 +55,24 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
       ...mahasiswaPayload,
       { ...ctx, isKetua: mahasiswaPayload.length > 0 ? false : true },
     ]);
+
     const tempMahasiswa = mahasiswa?.filter((val) => val.id !== ctx?.value);
 
     setMahasiswa(tempMahasiswa);
   };
 
+  // FILTER DATA TO GROUPING MAHASISWA AND DOSEN ROLE DATA
   useEffect(() => {
-    if (user || mahasiswa || defaultSelected) {
+    const isMahasiswa = mahasiswaPayload.filter(
+      (item) => item.role === "MAHASISWA"
+    );
+    const isDosen = mahasiswaPayload.filter((item) => item.role === "DOSEN");
+
+    setMahasiswaPayload([...isMahasiswa, ...isDosen]);
+  }, [mahasiswa]);
+
+  useEffect(() => {
+    if ((!!mergedUser.length || defaultSelected) && !mahasiswa) {
       if (defaultSelected) {
         const userIdToKeteranganMap = new Map(
           (defaultSelected as { userId: string; keterangan: string }[])?.map(
@@ -51,9 +80,7 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
           )
         );
 
-        const userDataWithKeterangan = (
-          user as CustomReactSelectOptionsType[]
-        )?.map((item) => ({
+        const userDataWithKeterangan = mergedUser?.map((item) => ({
           ...item,
           keterangan: userIdToKeteranganMap.get(item.id as string),
         }));
@@ -71,6 +98,7 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
           value: item.id as string,
           isKetua: getUserLeadBoolean(item.keterangan as string),
           disableDelete: item.id === userData?.id,
+          role: item.role,
         }));
 
         setMahasiswa(filterUserWithNoKeterangan);
@@ -80,11 +108,10 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
         return;
       }
 
-      const tempUser = user as CustomReactSelectOptionsType[];
-      const filteredMahasiswa = tempUser?.filter(
+      const filteredMahasiswa = mergedUser?.filter(
         (val: CustomReactSelectOptionsType) => val.id !== userData?.id
       );
-      setMahasiswa(filteredMahasiswa);
+      setMahasiswa([...filteredMahasiswa]);
 
       if (mahasiswaPayload?.length > 0) return;
       if (userData?.role !== Role.ADMIN) {
@@ -94,11 +121,12 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
             value: userData?.id as string,
             isKetua: true,
             disableDelete: true,
+            role: "MAHASISWA",
           },
         ]);
       }
     }
-  }, [user, defaultSelected, router]);
+  }, [mergedUser, defaultSelected]);
 
   const handleDeleteSelectedMahasiswa = (
     params: handleDeleteSelectedDataType
@@ -106,7 +134,7 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
     const { context } = params;
     const tempMahasiswa = [...mahasiswaPayload];
 
-    if (Array.isArray(user)) {
+    if (Array.isArray(mergedUser)) {
       const updatedMahasiswa = tempMahasiswa.filter(
         (val) => val.value !== context.value
       );
@@ -116,9 +144,9 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
         updatedMahasiswa[0]!.isKetua = true;
       }
 
-      const deletedData = user.filter(
+      const deletedData = mergedUser.filter(
         (val: CustomReactSelectOptionsType) => val.id === context.value
-      ) as CustomReactSelectOptionsType[];
+      );
 
       setMahasiswaPayload(updatedMahasiswa);
       setMahasiswa([

@@ -121,7 +121,6 @@ const useStudyProgram = () => {
     const getFilteredStudyProgram = (
       studyProgramData as AllStudyProgramType
     )?.filter((val) => val.id === currentData.id)[0];
-    console.log("getFilteredStudyProgram", getFilteredStudyProgram);
     if (getFilteredStudyProgram) {
       setFilteredStudyProgram(getFilteredStudyProgram);
 

@@ -66,9 +66,10 @@ const useAddHaki = (defaultSelected: any | undefined = undefined) => {
     );
   }, []);
 
-  useEffect(() => {
-    setValue("users", mahasiswaPayload);
-  }, [mahasiswaPayload, setValue]);
+  useEffect(
+    () => setValue("users", mahasiswaPayload),
+    [mahasiswaPayload, setValue]
+  );
 
   const ADD_HAKI_FORM = [
     {

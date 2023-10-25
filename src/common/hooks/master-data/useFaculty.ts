@@ -138,7 +138,6 @@ const useFaculty = () => {
       (val) => val.id === currentData.id
     )[0];
 
-    console.log("getFilteredFaculty", getFilteredFaculty);
     if (getFilteredFaculty) {
       setFilteredFaculty(getFilteredFaculty);
 

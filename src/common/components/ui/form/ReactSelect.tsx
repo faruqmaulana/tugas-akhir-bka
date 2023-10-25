@@ -27,6 +27,7 @@ export type ReactSelectOptionType = {
   value: string;
   label: string;
   isKetua: boolean;
+  role: string;
   disabled?: boolean;
   disableDelete?: boolean;
 };
@@ -36,6 +37,7 @@ export type CustomReactSelectOptionsType = {
   name?: string;
   title?: string;
   keterangan?: string;
+  role: string;
 };
 
 export type handleDeleteSelectedDataType = {
@@ -115,6 +117,7 @@ export const ReactSelect = (props: ReactSelectType) => {
       return {
         label: option.title || option.name,
         value: option.id,
+        role: option.role,
       } as ReactSelectOptionType;
     });
 

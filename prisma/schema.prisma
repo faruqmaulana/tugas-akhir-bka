@@ -8,9 +8,9 @@ generator client {
 
 generator json {
   provider     = "prisma-json-types-generator"
+  clientOutput = "finds automatically"
   allowAny     = "false"
   useType      = "PrismaJson.GlobalType"
-  clientOutput = "finds automatically"
   namespace    = "PrismaJson"
 }
 
@@ -219,7 +219,10 @@ model PatenAndHakiTable {
   /// [FileResponse]
   dokumenPendukung Json?
   status           String             @default("Sedang Diproses")
+  /// [FileResponse]
   dokumenTambahan  Json?
+  /// [UserInfoType]
+  dosen            Json?
   ActivityLog      ActivityLog[]
   user             User               @relation(fields: [createdById], references: [id])
   PengajuanOnUsers PengajuanOnUsers[]
