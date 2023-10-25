@@ -13,7 +13,7 @@ import { api } from "~/utils/api";
 import { Role } from "@prisma/client";
 import { type SingleValue } from "react-select";
 
-const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
+const useMultiSelectUser = (defaultSelected: any[] | undefined = undefined) => {
   const router = useRouter();
   const isChampionshipPage = router.pathname.includes("/module/kejuaraan");
 
@@ -72,8 +72,9 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
   }, [mahasiswa]);
 
   useEffect(() => {
-    if ((!!mergedUser.length || defaultSelected) && !mahasiswa) {
-      if (defaultSelected) {
+    if ((!!mergedUser.length || !!defaultSelected?.length) && !mahasiswa) {
+      if (!!defaultSelected?.length) {
+        // alert(1);
         const userIdToKeteranganMap = new Map(
           (defaultSelected as { userId: string; keterangan: string }[])?.map(
             (item) => [item.userId, item.keterangan]
@@ -107,6 +108,7 @@ const useMultiSelectUser = (defaultSelected: any | undefined = undefined) => {
         // STOP PROCESS
         return;
       }
+      // alert(2);
 
       const filteredMahasiswa = mergedUser?.filter(
         (val: CustomReactSelectOptionsType) => val.id !== userData?.id

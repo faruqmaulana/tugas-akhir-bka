@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useState } from "react";
@@ -13,8 +15,11 @@ import {
 import { useMultiSelectUser } from "../global/useMultiSelectUser";
 import { handleUploadCloudinary } from "~/common/libs/handle-upload-cloudinary";
 import { JSONtoString } from "~/common/helpers/parseJSON";
+import { useMainLayout } from "../../layout/useMainLayout";
 
 const useAddHaki = (defaultSelected: any | undefined = undefined) => {
+  const { refetchNotification } = useMainLayout();
+
   const {
     mahasiswa,
     mahasiswaPayload,
@@ -53,10 +58,11 @@ const useAddHaki = (defaultSelected: any | undefined = undefined) => {
     addHakiApplication(
       { ...userPayload, dokumenPendukung },
       {
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
           customToast("success", data?.message);
           setLoading(false);
-          // void router.push("/module/beasiswa");
+          await refetchNotification();
+          void router.push("/module/beasiswa");
         },
         onError: (error) => {
           customToast("error", error?.message);
@@ -116,7 +122,18 @@ const useAddHaki = (defaultSelected: any | undefined = undefined) => {
     },
   ];
 
-  return { ADD_HAKI_FORM, handleSubmit, onSubmit, loading, router };
+  return {
+    ADD_HAKI_FORM,
+    onSubmit,
+    loading,
+    router,
+    register,
+    trigger,
+    handleSubmit,
+    control,
+    setValue,
+    errors,
+  };
 };
 
 export { useAddHaki };

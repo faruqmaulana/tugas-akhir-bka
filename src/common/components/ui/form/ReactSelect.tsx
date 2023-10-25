@@ -12,7 +12,7 @@ import {
   type FieldErrorsImpl,
   type Merge,
 } from "react-hook-form";
-
+import { useRouter } from "next/router";
 import ReactSelectedList from "./ReactSelectedList";
 import { useGlobalContext } from "~/common/context/GlobalContext";
 import CustomEditIcon from "../../svg/CustomEditIcon";
@@ -99,6 +99,9 @@ export const ReactSelect = (props: ReactSelectType) => {
   const {
     state: { user: userData },
   } = useGlobalContext();
+  const router = useRouter();
+  const isChampionshipPage = router.pathname.includes("/module/kejuaraan");
+
   const currentUserId = userData?.id;
   const isCurrentUserLead =
     selectedData.filter((val) => val.value === currentUserId && val.isKetua)
@@ -106,10 +109,18 @@ export const ReactSelect = (props: ReactSelectType) => {
 
   // EDITABLE WHEN CURRENT USER IS LEAD AND SELECT MULTIPLE USERS
   // EDITABLE WHEN SINGLE SELECT DATA
-  const isEditAble =
-    !formFlag ||
-    (isCurrentUserLead &&
-      formFlag === FORM_FLAG.IS_MUTIPLE_SELECT_MAHASISWA_FORM);
+  const isEditAble = (): boolean => {
+    if (!formFlag) return true;
+    // if (!isChampionshipPage) return true;
+
+    if (
+      isCurrentUserLead &&
+      formFlag === FORM_FLAG.IS_MUTIPLE_SELECT_MAHASISWA_FORM
+    )
+      return true;
+
+    return false;
+  };
 
   const options: ReactSelectOptionType[] =
     optionData &&
@@ -213,16 +224,19 @@ export const ReactSelect = (props: ReactSelectType) => {
                     <CustomEditIcon
                       disabled={disabled}
                       onClick={() => {
-                        if (isEditAble) {
+                        if (isEditAble()) {
                           setIsDisabled(!disabled);
                         }
                       }}
                     />
                   </PopoverTrigger>
-                  {!isEditAble && (
-                    <PopoverContent className="max-w-[250px] rounded-full border-red-400 bg-red-50 px-5 text-sm text-red-600 md:text-base">
+                  {!isEditAble() && (
+                    <PopoverContent className="max-w-[300px] rounded-full border-red-400 bg-red-50 px-5 text-sm text-red-600 md:text-base">
                       Perubahan anggota hanya bisa dilakukan oleh{" "}
-                      <b>Ketua Tim</b>.
+                      <b>
+                        {isChampionshipPage ? "Ketua Tim" : "Pengaju Dokumen"}
+                      </b>
+                      .
                     </PopoverContent>
                   )}
                 </Popover>

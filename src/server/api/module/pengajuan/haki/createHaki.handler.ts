@@ -17,7 +17,15 @@ const addHakiHandler = protectedProcedure
       const { judul, keterangan, dokumenPendukung, users } = input;
       const dosenData = users.filter((item) => item.role === "DOSEN");
       const mahasiswaData = users.filter((item) => item.role === "MAHASISWA");
-      const dokumenJsonMeta = stringToJSON(dokumenPendukung || undefined) || undefined;
+      const transformedDosenData = dosenData.map((val) => {
+        return {
+          userId: val.value,
+          keterangan: "temp",
+        };
+      });
+
+      const dokumenJsonMeta =
+        stringToJSON(dokumenPendukung || undefined) || undefined;
 
       //** ADD SCHOLARSHIP APPLICATION */
       const createHakiApplication = await ctx.prisma.patenAndHakiTable.create({
@@ -27,7 +35,7 @@ const addHakiHandler = protectedProcedure
           jenis: PatenAndHaki.HAKI,
           createdById: ctx.session.user.userId,
           dokumenPendukung: dokumenJsonMeta,
-          dosen: dosenData,
+          dosen: transformedDosenData,
         },
       });
 
@@ -36,7 +44,7 @@ const addHakiHandler = protectedProcedure
         data: mahasiswaData.map((val) => {
           return {
             userId: val.value,
-            keterangan: "",
+            keterangan: val.isKetua ? "Ketua Tim" : "Anggota",
             PengajuanPatenAndHakiTableId: createHakiApplication.id,
           };
         }),

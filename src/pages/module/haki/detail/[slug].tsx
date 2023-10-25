@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/require-await */
-import { useRouter } from "next/router";
 import { Button } from "~/common/components/ui/button/Button";
 import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import Modal from "~/common/components/ui/modal/Modal";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
-import { useApproveKejuaraan } from "~/common/hooks/module/kejuaraan/useApproveKejuaraan";
 import BaseForm from "~/common/components/ui/form/BaseForm";
 import { requireAuth } from "~/common/authentication/requireAuth";
 import StepperVertical from "~/common/components/ui/stepper/StepperVertical";
@@ -14,62 +12,68 @@ import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
 import { STATUS } from "~/common/enums/STATUS";
 import ModuleCardInfo from "~/common/components/ui/card/ModuleCardInfo";
 import EditModalDescription from "~/common/components/ui/modal/EditModalDescription";
+import { useHakiAction } from "~/common/hooks/module/haki/useHakiAction";
+import renderActionButton from "~/common/helpers/renderActionButton";
+import { useCurrentUser } from "~/common/hooks/module/profile";
+import FullPageLoader from "~/common/components/ui/loader/FullPageLoader";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: { slug: ctx.query.slug } };
 });
 
 const Example = ({ slug }: { slug: string }) => {
-  const router = useRouter();
-
   const {
-    state,
-    handleButtonAction,
-    APPROVE_PRESTASI_FORM,
-    submitApproveKejuaraan,
-    onApproveKejuaraan,
-    REJECT_PRESTASI_FORM,
-    onRejectKejuaraan,
-    submitRejectKejuaraan,
+    router,
+    haki,
+    DISPLAYED_FORM,
+    EDIT_FORM,
+    REJECT_FORM,
+    APPROVE_FORM,
     activityLog,
-    renderActionButton,
+    isLoadingData,
     isDrawerOpen,
-    setIsDrawerOpen,
-    EDIT_PRESTASI_FORM,
-    onSubmit,
-    handleSubmit,
+    state,
     setDefaultValue,
-    prestasi,
-    isAdmin,
-    isLoadingPrestasiData,
-    TRANSFORM_KEJUARAAN,
-  } = useApproveKejuaraan({ slug });
-  
+    setIsDrawerOpen,
+    handleButtonAction,
+    submitRejectHaki,
+    submitApprove,
+    submitEdit,
+    onReject,
+    onApprove,
+    onEdit,
+  } = useHakiAction({ slug });
+
+  const { role, isAdmin } = useCurrentUser();
+  if (!haki) return <FullPageLoader />;
+
+  console.log(haki?.status);
+
   return (
     <>
       <PageHeading
-        title="Detail Prestasi lomba dan kejuaraan"
+        title="Detail Pengajuan Beasiswa"
         ownButton={
           <Button
-            isLarge
+            isMedium
             isGray
             className="flex w-fit items-center gap-2"
             onClick={() => {
-              void router.push("/module/kejuaraan");
+              void router.push("/module/beasiswa");
             }}
           >
             <ArrorLeft />
-            <span>Kembali</span>
+            <span>Batal</span>
           </Button>
         }
       />
       <Card className="mt-[20px]">
         <ModuleCardInfo
-          status={prestasi?.status}
+          status={haki?.status}
           setIsDrawerOpen={setIsDrawerOpen}
         />
-        <BaseForm isEditForm data={TRANSFORM_KEJUARAAN} />
-        {renderActionButton() && (
+        <BaseForm isEditForm data={DISPLAYED_FORM} className="mb-5" />
+        {renderActionButton({ status: haki?.status, role }) && (
           <div className="flex flex-row justify-end gap-4">
             <Button
               isLarge
@@ -87,11 +91,11 @@ const Example = ({ slug }: { slug: string }) => {
             </Button>
           </div>
         )}
-        {!isAdmin && !isLoadingPrestasiData && (
-          <form onSubmit={handleSubmit(onSubmit)}>
+        {!isAdmin && !isLoadingData && (
+          <form onSubmit={submitEdit(onEdit)}>
             <div className="flex flex-row justify-end gap-4">
               <Button
-                disabled={!prestasi}
+                disabled={!haki}
                 isSecondary
                 isLarge
                 onClick={() => setDefaultValue()}
@@ -103,8 +107,8 @@ const Example = ({ slug }: { slug: string }) => {
                 isLarge
                 onClick={() => handleButtonAction("edit")}
               >
-                {prestasi?.status === STATUS.PROCESSED ||
-                prestasi?.status === STATUS.REPROCESS
+                {haki?.status === STATUS.PROCESSED ||
+                haki?.status === STATUS.REPROCESS
                   ? "Submit Perubahan"
                   : "Ajukan Ulang"}
               </Button>
@@ -121,13 +125,44 @@ const Example = ({ slug }: { slug: string }) => {
       <Modal
         confirm
         showClose
+        isOpen={state.isEdited}
+        className="!mb-0"
+        onClose={() => handleButtonAction("close")}
+        content={
+          <form onSubmit={submitEdit(onEdit)}>
+            <EditModalDescription status={haki?.status} />
+            <BaseForm data={EDIT_FORM} />
+            <div className="mt-5 flex flex-row justify-end gap-4">
+              <Button
+                isGray
+                isLarge
+                isDisabled={state.loadingEdited}
+                onClick={() => handleButtonAction("close")}
+              >
+                Cancel
+              </Button>
+              <Button
+                isSubmit
+                isSuccess
+                isLarge
+                isLoading={state.loadingEdited}
+              >
+                Submit
+              </Button>
+            </div>
+          </form>
+        }
+      ></Modal>
+      <Modal
+        confirm
+        showClose
         isOpen={state.isReject}
         className="!mb-0"
         captionButtonDanger="Tolak"
         onClose={() => handleButtonAction("close")}
         content={
-          <form onSubmit={submitRejectKejuaraan(onRejectKejuaraan)}>
-            <BaseForm data={REJECT_PRESTASI_FORM} />
+          <form onSubmit={submitRejectHaki(onReject)}>
+            <BaseForm data={REJECT_FORM} />
             <div className="mt-5 flex flex-row justify-end gap-4">
               <Button
                 isGray
@@ -150,11 +185,11 @@ const Example = ({ slug }: { slug: string }) => {
         showIconModal={false}
         isOpen={state.isApprove}
         className="!mb-0"
-        captionTitleConfirm="Approve Pengajuan Prestasi dan Kejuaraan"
+        captionTitleConfirm="Approve Pengajuan Beasiswa"
         onClose={() => handleButtonAction("close")}
         content={
-          <form onSubmit={submitApproveKejuaraan(onApproveKejuaraan)}>
-            <BaseForm data={APPROVE_PRESTASI_FORM} />
+          <form onSubmit={submitApprove(onApprove)}>
+            <BaseForm data={APPROVE_FORM} />
             <div className="mt-5 flex flex-row justify-end gap-4">
               <Button
                 isGray
@@ -169,37 +204,6 @@ const Example = ({ slug }: { slug: string }) => {
                 isSuccess
                 isLarge
                 isLoading={state.loadingApprove}
-              >
-                Submit
-              </Button>
-            </div>
-          </form>
-        }
-      ></Modal>
-      <Modal
-        confirm
-        showClose
-        isOpen={state.isEdited}
-        className="!mb-0"
-        onClose={() => handleButtonAction("close")}
-        content={
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <EditModalDescription status={prestasi?.status}/>
-            <BaseForm data={EDIT_PRESTASI_FORM} />
-            <div className="mt-5 flex flex-row justify-end gap-4">
-              <Button
-                isGray
-                isLarge
-                isDisabled={state.loadingEdited}
-                onClick={() => handleButtonAction("close")}
-              >
-                Cancel
-              </Button>
-              <Button
-                isSubmit
-                isSuccess
-                isLarge
-                isLoading={state.loadingEdited}
               >
                 Submit
               </Button>

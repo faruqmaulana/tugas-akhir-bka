@@ -96,8 +96,12 @@ const ReactSelectedList = (props: ReactSelectedList) => {
             </td>
             {!isChampionshipPage && (
               <td className="items-baseline">
-                <p className="font-semibold mb-1 text-sm sm:text-base">
-                  ({capitalizeFirstLetter(value.role)})
+                <p className="mb-1 text-sm font-semibold sm:text-base">
+                  (
+                  {value.isKetua
+                    ? "Pengaju Dokumen"
+                    : capitalizeFirstLetter(value.role)}
+                  )
                 </p>
               </td>
             )}

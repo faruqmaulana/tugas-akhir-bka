@@ -1,13 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { z } from "zod";
 import { validateFile } from "../pengajuan-prestasi.shema";
 
-export const hakiApplicationSchema = z.object({
+export const editHakiForm = z.object({
   judul: z.string().min(1, "Required"),
   keterangan: z.string().min(1, "Required"),
-  dokumenPendukung: validateFile.refine((fileList) => fileList.length > 0, {
-    message: "File is required!",
-  }),
+  dokumenPendukung: validateFile,
+  // users: z.any(),
   users: z
     .array(
       z.object({
@@ -18,6 +16,8 @@ export const hakiApplicationSchema = z.object({
       })
     )
     .min(1, "Required!"),
+  patenAndHakiTableId: z.string().min(1, { message: "Required!" }),
+  catatan: z.string().min(1, { message: "Required!" }),
 });
 
-export type IHakiApplicationSchema = z.infer<typeof hakiApplicationSchema>;
+export type IEditHakiForm = z.infer<typeof editHakiForm>;
