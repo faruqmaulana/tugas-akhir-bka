@@ -7,7 +7,7 @@ import PageHeading from "~/common/components/ui/header/PageHeading";
 import BaseTable from "~/common/components/ui/table/BaseTable";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
 import {
-  PENGAJUAN_BEASISWA,
+  // PENGAJUAN_BEASISWA,
   type PengajuanBeasiswa,
 } from "~/common/constants/module/PENGAJUAN_BEASISWA";
 
@@ -89,7 +89,7 @@ const UserManagement = () => {
         header="DATA PENGAJUAN BEASISWA YANG PERLU DIREVIEW"
         className="mt-[30px]"
       >
-        <BaseTable data={PENGAJUAN_BEASISWA} columns={columns} />
+        {/* <BaseTable data={PENGAJUAN_BEASISWA} columns={columns} /> */}
       </Card>
     </>
   );

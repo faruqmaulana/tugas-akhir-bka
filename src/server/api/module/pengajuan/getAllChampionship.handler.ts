@@ -114,7 +114,7 @@ const getAllChampionshipHandler = protectedProcedure
         tingkatKejuaraan: data.PrestasiDataTable?.tingkatKejuaraan.name || "-",
         tingkatPrestasi: data.PrestasiDataTable?.tingkatPrestasi.name || "-",
         fakultas: data.user.prodi?.Fakultas.name,
-        dosen: data.dosen.name || "-",
+        dosen: data?.dosen?.name || "-",
         piagamPenghargaan:
           (
             data.PrestasiDataTable?.lampiran

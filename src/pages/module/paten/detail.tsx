@@ -10,16 +10,11 @@ import Modal from "~/common/components/ui/modal/Modal";
 import { useState } from "react";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Input from "~/common/components/ui/form/Input";
-import {
-  PENGAJUAN_BEASISWA,
-  type PengajuanBeasiswa,
-} from "~/common/constants/module/PENGAJUAN_BEASISWA";
+
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
 import {
-  DATA_HAKI,
   DATA_PATEN,
   type PatenType,
-  type HAKI,
 } from "~/common/constants/DUMMY_PATEN_HAKI";
 
 const INITIAL_STATE = {
