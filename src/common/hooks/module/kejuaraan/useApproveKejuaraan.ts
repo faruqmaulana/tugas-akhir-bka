@@ -40,7 +40,6 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
   const router = useRouter();
   const { isAdmin } = useCurrentUser();
   const { refetchNotification } = useMainLayout();
-
   const [state, setState] = useState(INITIAL_STATE);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
@@ -60,6 +59,8 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
   } = api.prestasiLomba.getKejuaraanById.useQuery(prestasiDataTableId, {
     enabled: !!prestasiDataTableId,
   });
+
+  const isAdminAndApproved = prestasi?.status === STATUS.APPROVE && isAdmin;
 
   const {
     handleSubmit,
@@ -434,6 +435,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
     isLoadingPrestasiData,
     EDIT_PRESTASI_FORM,
     TRANSFORM_KEJUARAAN,
+    isAdminAndApproved
   };
 };
 

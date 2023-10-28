@@ -35,58 +35,76 @@ export type DatePickerProps = {
     name: string,
     options?: RegisterOptions
   ) => (ref: HTMLInputElement | null) => void;
+  isPreview?: boolean;
 };
 
 export function DatePicker(props: DatePickerProps) {
-  const { control, register, error, disabled, isEditForm, editIconAction } =
-    props;
+  const {
+    control,
+    register,
+    error,
+    disabled,
+    isEditForm,
+    editIconAction,
+    isPreview = false,
+  } = props;
   const [date, setDate] = React.useState<Date>();
+
   return (
     <Controller
       {...(register || {})}
       name={register?.name || "temp"}
       control={control}
-      render={({ field: { value, onChange } }) => (
-        <Popover>
-          <div className="flex w-full flex-row gap-[1px]">
-            <PopoverTrigger asChild>
-              <button
-                disabled={disabled}
-                className={cn(
-                  "flex w-full flex-wrap items-center justify-start rounded border bg-transparent px-3 py-[0.25rem] text-left font-normal text-neutral-700 shadow-sm disabled:opacity-60",
-                  !date && "text-muted-foreground",
-                  error ? "border-red-500" : "border-neutral-400",
-                  disabled
-                    ? "cursor-not-allowed"
-                    : "hover:bg-accent hover:text-accent-foreground"
-                )}
-              >
-                <CalendarIcon className="mr-2" />
-                {date || value ? (
-                  format(date || value, "PPP", { locale: id })
-                ) : (
-                  <span>Pilih Tanggal</span>
-                )}
-              </button>
-            </PopoverTrigger>
-            {isEditForm && editIconAction}
-          </div>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={value}
-              onSelect={(e) => {
-                setDate(e);
-                onChange(e);
-              }}
-              disabled={(date) =>
-                date > new Date() || date < new Date("1900-01-01")
-              }
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
-      )}
+      render={({ field: { value, onChange } }) => {
+        return (
+          <Popover>
+            <div className="flex w-full flex-row gap-[1px]">
+              {(isPreview && date) ||
+                (value && (
+                  <p className="text-base font-semibold">
+                    {format(date || value, "PPP", { locale: id })}
+                  </p>
+                ))}
+              <PopoverTrigger asChild>
+                <button
+                  disabled={disabled}
+                  className={cn(
+                    " w-full flex-wrap items-center justify-start rounded border bg-transparent px-3 py-[0.25rem] text-left font-normal text-neutral-700 shadow-sm disabled:opacity-60",
+                    isPreview ? "hidden" : "flex",
+                    !date && "text-muted-foreground",
+                    error ? "border-red-500" : "border-neutral-400",
+                    disabled
+                      ? "cursor-not-allowed"
+                      : "hover:bg-accent hover:text-accent-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2" />
+                  {date || value ? (
+                    format(date || value, "PPP", { locale: id })
+                  ) : (
+                    <span>Pilih Tanggal</span>
+                  )}
+                </button>
+              </PopoverTrigger>
+              {isEditForm && editIconAction}
+            </div>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={value}
+                onSelect={(e) => {
+                  setDate(e);
+                  onChange(e);
+                }}
+                disabled={(date) =>
+                  date > new Date() || date < new Date("1900-01-01")
+                }
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+        );
+      }}
     />
   );
 }

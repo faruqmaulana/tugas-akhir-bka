@@ -43,8 +43,9 @@ const Example = ({ slug }: { slug: string }) => {
     isAdmin,
     isLoadingPrestasiData,
     TRANSFORM_KEJUARAAN,
+    isAdminAndApproved,
   } = useApproveKejuaraan({ slug });
-  
+
   return (
     <>
       <PageHeading
@@ -68,7 +69,11 @@ const Example = ({ slug }: { slug: string }) => {
           status={prestasi?.status}
           setIsDrawerOpen={setIsDrawerOpen}
         />
-        <BaseForm isEditForm data={TRANSFORM_KEJUARAAN} />
+        <BaseForm
+          isEditForm
+          isPreview={isAdminAndApproved}
+          data={TRANSFORM_KEJUARAAN}
+        />
         {renderActionButton() && (
           <div className="flex flex-row justify-end gap-4">
             <Button
@@ -184,7 +189,7 @@ const Example = ({ slug }: { slug: string }) => {
         onClose={() => handleButtonAction("close")}
         content={
           <form onSubmit={handleSubmit(onSubmit)}>
-            <EditModalDescription status={prestasi?.status}/>
+            <EditModalDescription status={prestasi?.status} />
             <BaseForm data={EDIT_PRESTASI_FORM} />
             <div className="mt-5 flex flex-row justify-end gap-4">
               <Button

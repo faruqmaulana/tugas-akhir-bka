@@ -73,6 +73,7 @@ export type ReactSelectType = {
     | FieldError
     | Merge<FieldError, FieldErrorsImpl<any>>
     | undefined;
+  isPreview?: boolean;
 };
 
 export const ReactSelect = (props: ReactSelectType) => {
@@ -94,12 +95,14 @@ export const ReactSelect = (props: ReactSelectType) => {
     handleSelectOptionChange,
     isEditForm,
     setIsDisabled,
+    isPreview = false,
   } = props;
 
   const {
     state: { user: userData },
   } = useGlobalContext();
   const router = useRouter();
+  const [valueState, setValueState] = useState<string | undefined>(undefined);
   const isChampionshipPage = router.pathname.includes("/module/kejuaraan");
 
   const currentUserId = userData?.id;
@@ -167,7 +170,12 @@ export const ReactSelect = (props: ReactSelectType) => {
 
   const handleValue = (value: string | undefined) => {
     if (value) {
-      return options?.filter((opt: { value: string }) => opt.value === value);
+      const filteredValue = options?.filter(
+        (opt: { value: string }) => opt.value === value
+      );
+
+      handleCurrentValueToState(filteredValue?.[0]?.label);
+      return filteredValue;
     }
 
     if (handleSelectMultipleUser) return "";
@@ -188,6 +196,13 @@ export const ReactSelect = (props: ReactSelectType) => {
     }),
   };
 
+  const handleCurrentValueToState = (isSingleData: string | undefined) => {
+    if (isSingleData) {
+      setValueState(isSingleData);
+    } else {
+    }
+  };
+
   return (
     <>
       <Controller
@@ -197,10 +212,14 @@ export const ReactSelect = (props: ReactSelectType) => {
         render={({ field: { value, ref, onChange } }) => (
           <div
             className={`flex w-full flex-col gap-2 ${
-              disabled ? "cursor-not-allowed" : ""
+              !isPreview && disabled ? "cursor-not-allowed" : ""
             }`}
           >
-            <div className="flex flex-row gap-[1px]">
+            <div
+              className={`flex flex-row gap-[1px] 
+            ${isPreview ? "hidden" : ""}
+            `}
+            >
               <Select
                 ref={ref}
                 isClearable
@@ -242,8 +261,12 @@ export const ReactSelect = (props: ReactSelectType) => {
                 </Popover>
               )}
             </div>
+            {isPreview && (
+              <p className="text-base font-semibold">{valueState}</p>
+            )}
             {selectedData.length > 0 && (
               <ReactSelectedList
+                isPreview={isPreview}
                 disabled={disabled}
                 selectedData={selectedData}
                 handleSwitch={handleSwitch}

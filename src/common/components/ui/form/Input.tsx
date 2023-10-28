@@ -57,6 +57,7 @@ export type InputPropsType = {
     newValue: SingleValue<ReactSelectOptionType>
   ) => void;
   trigger?: UseFormTrigger<any>;
+  isPreview?: boolean;
 };
 
 const Input = (props: InputPropsType) => {
@@ -87,6 +88,7 @@ const Input = (props: InputPropsType) => {
     handleSelectMultipleUser,
     handleDeleteSelectedData,
     handleSelectOptionChange,
+    isPreview = false,
   } = props;
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(disabled || isEditForm);
@@ -101,12 +103,30 @@ const Input = (props: InputPropsType) => {
     />
   );
 
+  if (isPreview && type === "text")
+    return (
+      <div className="relative col-span-2 flex flex-col gap-1 ">
+        {label && <p className={`font-medium ${labelFontSize}`}>{label}</p>}
+        <input
+          {...(register || {})}
+          readOnly
+          className="font-semibold"
+          type={type}
+        />
+      </div>
+    );
+
   return (
-    <div className={`relative flex flex-col gap-1 ${className}`}>
+    <div
+      className={`relative flex flex-col gap-1 ${className} ${
+        isPreview ? "!col-span-2" : ""
+      }`}
+    >
       {label && <p className={`font-medium ${labelFontSize}`}>{label}</p>}
       <div className="relative flex w-full flex-row items-stretch">
         {type === "select" && (
           <ReactSelect
+            isPreview={isPreview}
             disabled={isDisabled}
             setIsDisabled={setIsDisabled}
             trigger={trigger}
@@ -162,6 +182,7 @@ const Input = (props: InputPropsType) => {
         )}
         {type === "date" && (
           <DatePicker
+            isPreview={isPreview}
             control={control}
             register={register}
             error={error}
