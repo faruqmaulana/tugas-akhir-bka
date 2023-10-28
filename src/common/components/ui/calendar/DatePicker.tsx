@@ -20,6 +20,7 @@ import {
   type FieldErrorsImpl,
   type Merge,
 } from "react-hook-form";
+import LoadingInput from "../form/LoadingInput";
 
 export type DatePickerProps = {
   disabled: boolean;
@@ -36,6 +37,7 @@ export type DatePickerProps = {
     options?: RegisterOptions
   ) => (ref: HTMLInputElement | null) => void;
   isPreview?: boolean;
+  isLoading?: boolean;
 };
 
 export function DatePicker(props: DatePickerProps) {
@@ -47,6 +49,7 @@ export function DatePicker(props: DatePickerProps) {
     isEditForm,
     editIconAction,
     isPreview = false,
+    isLoading,
   } = props;
   const [date, setDate] = React.useState<Date>();
 
@@ -59,12 +62,15 @@ export function DatePicker(props: DatePickerProps) {
         return (
           <Popover>
             <div className="flex w-full flex-row gap-[1px]">
-              {(isPreview && date) ||
-                (value && (
-                  <p className="text-base font-semibold">
-                    {format(date || value, "PPP", { locale: id })}
-                  </p>
-                ))}
+              {/* RENDER WHEN PREVIEW DATA */}
+              {isPreview && isLoading && <LoadingInput />}
+              {isPreview && (date || value) && (
+                <p className="text-base font-semibold">
+                  {format(date || value, "PPP", { locale: id })}
+                </p>
+              )}
+              {/* END OF RENDER WHEN PREVIEW DATA */}
+
               <PopoverTrigger asChild>
                 <button
                   disabled={disabled}

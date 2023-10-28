@@ -71,7 +71,12 @@ const ScholarshipDetail = ({ slug }: { slug: string }) => {
           status={scholarship?.status}
           setIsDrawerOpen={setIsDrawerOpen}
         />
-        <BaseForm isEditForm data={SCHOLARSHIP_FORM} className="mb-5" />
+        <BaseForm
+          isEditForm
+          isPreview={isAdmin}
+          data={SCHOLARSHIP_FORM}
+          className="mb-5"
+        />
         {renderActionButton({ status: scholarship?.status, role }) && (
           <div className="flex flex-row justify-end gap-4">
             <Button

@@ -15,6 +15,7 @@ import {
 import { type RegisterOptions } from "react-hook-form";
 import { getUserLead } from "~/common/helpers";
 import capitalizeFirstLetter from "~/common/helpers/capitalizeFirstLetter";
+import LoadingInput from "./LoadingInput";
 
 export type ReactSelectedList = {
   register?: (
@@ -27,6 +28,7 @@ export type ReactSelectedList = {
   handleDeleteSelectedData?: (params: handleDeleteSelectedDataType) => void;
   disabled: boolean;
   isPreview?: boolean;
+  isLoading?: boolean;
 };
 
 const ReactSelectedList = (props: ReactSelectedList) => {
@@ -41,7 +43,9 @@ const ReactSelectedList = (props: ReactSelectedList) => {
     handleDeleteSelectedData,
     disabled,
     isPreview,
+    isLoading,
   } = props;
+  
   const isDisable = !isPreview && disabled;
 
   const handleLabel = (index: number, value: ReactSelectOptionType) => {
@@ -141,6 +145,7 @@ const ReactSelectedList = (props: ReactSelectedList) => {
                       }}
                     />
                   )}
+                  {isPreview && isLoading && <LoadingInput />}
                   <p
                     className={`w-max text-sm sm:text-base ${
                       isPreview ? "font-semibold" : ""

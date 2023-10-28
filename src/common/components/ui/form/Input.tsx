@@ -21,6 +21,7 @@ import {
   type Merge,
   type UseFormTrigger,
 } from "react-hook-form";
+import LoadingInput from "./LoadingInput";
 
 export type InputPropsType = {
   key?: string | number;
@@ -90,6 +91,7 @@ const Input = (props: InputPropsType) => {
     handleSelectOptionChange,
     isPreview = false,
   } = props;
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(disabled || isEditForm);
   const editForm = isEditForm && !isAdmin;
@@ -103,16 +105,20 @@ const Input = (props: InputPropsType) => {
     />
   );
 
-  if (isPreview && type === "text")
+  if (isPreview && (type === "text" || type === "textarea"))
     return (
       <div className="relative col-span-2 flex flex-col gap-1 ">
         {label && <p className={`font-medium ${labelFontSize}`}>{label}</p>}
-        <input
-          {...(register || {})}
-          readOnly
-          className="font-semibold"
-          type={type}
-        />
+        {isLoading ? (
+          <LoadingInput />
+        ) : (
+          <input
+            {...(register || {})}
+            readOnly
+            className="font-semibold focus-visible:outline-none"
+            type={type}
+          />
+        )}
       </div>
     );
 
@@ -189,6 +195,7 @@ const Input = (props: InputPropsType) => {
             disabled={isDisabled}
             isEditForm={editForm}
             editIconAction={editIconAction}
+            isLoading={isLoading}
           />
         )}
         {(type === "text" ||
@@ -223,6 +230,8 @@ const Input = (props: InputPropsType) => {
         )}
         {type === "file" && (
           <InputFile
+            isLoading={isLoading}
+            isPreview={isPreview}
             disabled={isDisabled}
             isEditForm={editForm}
             register={register}

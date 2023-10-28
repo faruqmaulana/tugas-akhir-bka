@@ -5,6 +5,7 @@ import PdfViewer from "../file-viewer/PdfViewer";
 import Image from "next/image";
 import { type RegisterOptions } from "react-hook-form";
 import { type FileResponse } from "~/common/libs/upload-file.lib";
+import LoadingInput from "./LoadingInput";
 
 export type InputFileType = {
   isEditForm?: boolean;
@@ -14,10 +15,12 @@ export type InputFileType = {
     name: string,
     options?: RegisterOptions
   ) => (ref: HTMLInputElement | null) => void;
+  isPreview?: boolean;
+  isLoading?: boolean;
 };
 
 const InputFile = (props: InputFileType) => {
-  const { disabled, fileData, register } = props;
+  const { disabled, fileData, register, isPreview = false, isLoading } = props;
 
   // PREVIEW FILE STATE
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(undefined);
@@ -66,6 +69,12 @@ const InputFile = (props: InputFileType) => {
     const fileType = fileData?.secure_url?.split(".")?.pop() || "";
     return `${fileName}.${fileType}`;
   };
+
+  if (isPreview && isLoading) return <LoadingInput />;
+
+  if (isPreview) {
+    return <p className="text-base font-semibold">{handleFileName() || "-"}</p>;
+  }
 
   return (
     <div className="flex w-full flex-col gap-1">

@@ -43,8 +43,9 @@ const Example = ({ slug }: { slug: string }) => {
     isAdmin,
     isLoadingPrestasiData,
     TRANSFORM_KEJUARAAN,
-    isAdminAndApproved,
   } = useApproveKejuaraan({ slug });
+
+  // if (isAdmin && !prestasi) return <FullPageLoader />;
 
   return (
     <>
@@ -71,7 +72,8 @@ const Example = ({ slug }: { slug: string }) => {
         />
         <BaseForm
           isEditForm
-          isPreview={isAdminAndApproved}
+          isPreview={isAdmin}
+          isLoading={!prestasi}
           data={TRANSFORM_KEJUARAAN}
         />
         {renderActionButton() && (

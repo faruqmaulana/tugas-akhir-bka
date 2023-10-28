@@ -15,7 +15,6 @@ import EditModalDescription from "~/common/components/ui/modal/EditModalDescript
 import { useHakiAction } from "~/common/hooks/module/haki/useHakiAction";
 import renderActionButton from "~/common/helpers/renderActionButton";
 import { useCurrentUser } from "~/common/hooks/module/profile";
-import FullPageLoader from "~/common/components/ui/loader/FullPageLoader";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: { slug: ctx.query.slug } };
@@ -45,9 +44,7 @@ const Example = ({ slug }: { slug: string }) => {
   } = useHakiAction({ slug });
 
   const { role, isAdmin } = useCurrentUser();
-  if (!haki) return <FullPageLoader />;
-
-  console.log(haki?.status);
+  // if (!haki) return <FullPageLoader />;
 
   return (
     <>
@@ -72,7 +69,13 @@ const Example = ({ slug }: { slug: string }) => {
           status={haki?.status}
           setIsDrawerOpen={setIsDrawerOpen}
         />
-        <BaseForm isEditForm data={DISPLAYED_FORM} className="mb-5" />
+        <BaseForm
+          isEditForm
+          isLoading={!haki}
+          isPreview={isAdmin}
+          data={DISPLAYED_FORM}
+          className="mb-5"
+        />
         {renderActionButton({ status: haki?.status, role }) && (
           <div className="flex flex-row justify-end gap-4">
             <Button

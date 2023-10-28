@@ -222,7 +222,7 @@ const useScholarshipAction = ({ slug }: { slug: string }) => {
       className: "col-span-2",
       placeholder: "Dokumen Pendukung",
       type: "file",
-      label: "Upload Dokumen Pengajuan Beasiswa",
+      label: "Dokumen Pengajuan Beasiswa",
       register: { ...registerEditForm("dokumen") },
       error: errorsEditForms.dokumen?.message,
       fileData: scholarship?.dokumen as FileResponse,

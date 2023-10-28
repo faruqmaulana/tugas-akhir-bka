@@ -5,7 +5,7 @@ const renderActionButton = ({
   status,
   role,
 }: {
-  status: string;
+  status?: string;
   role?: string;
 }) => {
   switch (true) {

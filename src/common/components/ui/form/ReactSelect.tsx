@@ -22,6 +22,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/common/components/ui/popover/popover";
+import LoadingInput from "./LoadingInput";
 
 export type ReactSelectOptionType = {
   value: string;
@@ -217,7 +218,7 @@ export const ReactSelect = (props: ReactSelectType) => {
           >
             <div
               className={`flex flex-row gap-[1px] 
-            ${isPreview ? "hidden" : ""}
+              ${isPreview ? "hidden" : ""}
             `}
             >
               <Select
@@ -261,10 +262,12 @@ export const ReactSelect = (props: ReactSelectType) => {
                 </Popover>
               )}
             </div>
-            {isPreview && (
+            {isPreview && !isLoading ? (
               <p className="text-base font-semibold">{valueState}</p>
+            ) : (
+              <LoadingInput />
             )}
-            {selectedData.length > 0 && (
+            {(selectedData.length > 0 || isPreview) && (
               <ReactSelectedList
                 isPreview={isPreview}
                 disabled={disabled}
