@@ -107,8 +107,6 @@ const useHakiAction = ({ slug }: { slug: string }) => {
     resolver: zodResolver(rejectHakiForm),
   });
 
-  console.log("haki payload", mahasiswaPayload);
-
   useEffect(() => {
     if (haki && !isLoadingData && initialLoad && !!mahasiswaPayload.length) {
       setInitialLoad(false); // run this code only once even array dependencies is updated
@@ -297,8 +295,6 @@ const useHakiAction = ({ slug }: { slug: string }) => {
       formFlag: "IS_MUTIPLE_SELECT_MAHASISWA_FORM",
     },
   ];
-
-  console.log(errorsEditForms);
 
   // EDIT FORM
   const EDIT_FORM = [

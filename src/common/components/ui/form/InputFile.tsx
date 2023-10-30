@@ -1,11 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import React, { useState } from "react";
-import PdfViewer from "../file-viewer/PdfViewer";
-import Image from "next/image";
+import React, { useRef, useState } from "react";
 import { type RegisterOptions } from "react-hook-form";
 import { type FileResponse } from "~/common/libs/upload-file.lib";
 import LoadingInput from "./LoadingInput";
+import { useGlobalContext } from "~/common/context/GlobalContext";
+import {
+  ActionReducer,
+  type globalFileMetaType,
+} from "~/common/types/context/GlobalContextType";
+import RenderPreviewFile from "../file-viewer/RenderPreviewFile";
 
 export type InputFileType = {
   isEditForm?: boolean;
@@ -21,10 +25,25 @@ export type InputFileType = {
 
 const InputFile = (props: InputFileType) => {
   const { disabled, fileData, register, isPreview = false, isLoading } = props;
+  const { state, dispatch } = useGlobalContext();
+  const { globalFileMeta } = state;
 
+  const ref = useRef<HTMLInputElement>(null);
   // PREVIEW FILE STATE
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(undefined);
   const [fileType, setFileType] = useState<string | null>(null);
+
+  // handle remove duplicate previous state
+  const removeDuplicatePreviousState = (
+    data: globalFileMetaType[],
+    key: string
+  ) => {
+    if (!!data.length && data) {
+      return data.filter((val) => val.key !== key);
+    }
+
+    return [];
+  };
 
   // Function to handle file selection
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,6 +55,25 @@ const InputFile = (props: InputFileType) => {
         reader.onload = () => {
           setFileType(currentfile.type);
           setPreviewUrl(reader.result as string);
+
+          // filter duplicate data
+          const filteredData = removeDuplicatePreviousState(
+            globalFileMeta as globalFileMetaType[],
+            register?.name as string
+          );
+
+          dispatch({
+            type: ActionReducer.UPDATE_FILE_META,
+            payload: [
+              ...filteredData,
+              {
+                key: register?.name || "",
+                src: reader.result as string,
+                type: currentfile.type,
+                fileName: currentfile.name,
+              },
+            ],
+          });
         };
         reader.readAsDataURL(currentfile);
       }
@@ -45,24 +83,6 @@ const InputFile = (props: InputFileType) => {
     }
   };
 
-  const renderPreview = () => {
-    if (fileType && fileType.startsWith("image/")) {
-      return (
-        <Image
-          width={0}
-          height={0}
-          sizes="100vw"
-          src={previewUrl as string}
-          alt="File Preview"
-          className="mt-2 h-auto w-full"
-        />
-      );
-    } else if (fileType === "application/pdf") {
-      return <PdfViewer className="mt-2" url={previewUrl as string} />;
-    }
-    return null; // Handle other file types as needed
-  };
-
   const handleFileName = () => {
     if (!fileData?.original_filename) return;
     const fileName = fileData?.original_filename || "";
@@ -70,16 +90,32 @@ const InputFile = (props: InputFileType) => {
     return `${fileName}.${fileType}`;
   };
 
+  const currentFileState = globalFileMeta?.filter(
+    (val) => val.key === register?.name
+  )[0];
+
   if (isPreview && isLoading) return <LoadingInput />;
 
   if (isPreview) {
-    return <p className="text-base font-semibold">{handleFileName() || "-"}</p>;
+    if (!currentFileState) return "-";
+
+    return (
+      <div className="flex w-full flex-col">
+        <p className="text-base font-semibold">{currentFileState?.fileName}</p>
+        <RenderPreviewFile
+          isPreview
+          fileType={currentFileState?.type}
+          previewUrl={currentFileState?.src}
+        />
+      </div>
+    );
   }
 
   return (
     <div className="flex w-full flex-col gap-1">
       <input
         {...(register || {})}
+        ref={ref}
         id="img"
         disabled={disabled}
         type="file"
@@ -88,11 +124,10 @@ const InputFile = (props: InputFileType) => {
         className={`relative m-0 block w-full min-w-0 flex-auto rounded-r border border-solid border-neutral-400 bg-transparent bg-clip-padding px-3 py-[0.10rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:text-neutral-900 dark:focus:border-primary`}
       />
       {previewUrl && (
-        <div className="h-auto w-full overflow-y-auto md:max-h-[200px]">
-          {renderPreview()}
+        <div className="h-auto max-h-full w-full overflow-y-auto">
+          <RenderPreviewFile fileType={fileType} previewUrl={previewUrl} />
         </div>
       )}
-      {handleFileName()}
     </div>
   );
 };

@@ -17,6 +17,7 @@ import {
 const initialState: GlobalState = {
   user: undefined,
   notification: undefined,
+  globalFileMeta: [],
   // Initial global state values here
 };
 
@@ -27,6 +28,8 @@ const reducer = (state: GlobalState, action: ActionType): GlobalState => {
       return { ...state, user: action.payload };
     case ActionReducer.UPDATE_NOTIFICATION_COUNT:
       return { ...state, notification: action.payload };
+    case ActionReducer.UPDATE_FILE_META:
+      return { ...state, globalFileMeta: action.payload };
     // Add more cases for different actions
     default:
       return state;

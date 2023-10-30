@@ -204,9 +204,6 @@ export const ReactSelect = (props: ReactSelectType) => {
     }
   };
 
-  console.log("!isLoading", !isLoading);
-  console.log("isPreview", isPreview);
-
   return (
     <>
       <Controller

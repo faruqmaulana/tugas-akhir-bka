@@ -7,11 +7,14 @@ import Spinner from "../svg/Spinner";
 import { findString } from "~/common/helpers/findString";
 import { AuthLayout } from "./AuthLayout";
 import { PUBLIC_ROUTE } from "~/common/constants/routers";
+import { useGlobalContext } from "~/common/context/GlobalContext";
+import { ActionReducer } from "~/common/types/context/GlobalContextType";
 
 const AppLayout = ({ children }: any) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const isPublicPage = findString(PUBLIC_ROUTE, router.pathname);
+  const { dispatch } = useGlobalContext();
 
   Router.events.on("routeChangeStart", () => {
     setIsLoading(true);
@@ -19,6 +22,7 @@ const AppLayout = ({ children }: any) => {
 
   Router.events.on("routeChangeComplete", () => {
     setIsLoading(false);
+    dispatch({ type: ActionReducer.UPDATE_FILE_META, payload: [] });
   });
 
   if (!isPublicPage) {

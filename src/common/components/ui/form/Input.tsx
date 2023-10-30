@@ -65,6 +65,7 @@ const Input = (props: InputPropsType) => {
   const { isAdmin } = useCurrentUser();
 
   const {
+    key,
     formFlag,
     fileData,
     isEditForm = false,
@@ -105,7 +106,7 @@ const Input = (props: InputPropsType) => {
     />
   );
 
-  if (isPreview && (type === "text" || type === "textarea"))
+  if (isPreview && (type === "text" || type === "textarea")) {
     return (
       <div className="relative col-span-2 flex flex-col gap-1 ">
         {label && <p className={`font-medium ${labelFontSize}`}>{label}</p>}
@@ -121,9 +122,11 @@ const Input = (props: InputPropsType) => {
         )}
       </div>
     );
+  }
 
   return (
     <div
+      key={key}
       className={`relative flex flex-col gap-1 ${className} ${
         isPreview ? "!col-span-2" : ""
       }`}

@@ -24,7 +24,7 @@ const BaseForm = ({
       {data?.map((val: InputPropsType) => (
         <Input
           {...val}
-          key={val.placeholder}
+          key={val.label}
           isEditForm={isEditForm}
           isPreview={isPreview}
           isLoading={isLoading}

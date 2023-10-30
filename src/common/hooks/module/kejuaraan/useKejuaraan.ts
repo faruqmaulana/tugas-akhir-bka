@@ -18,8 +18,13 @@ import { useCurrentUser } from "../profile";
 import { handleUploadCloudinary } from "~/common/libs/handle-upload-cloudinary";
 import { handleDocumentMetaToString } from "~/common/libs/handle-document-data";
 import { type KejuaraanData } from "~/common/constants/DUMMY_KEJUARAAN";
+import { useGlobalContext } from "~/common/context/GlobalContext";
 
 const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
+  const router = useRouter();
+  const { state } = useGlobalContext();
+  const { globalFileMeta } = state;
+
   const {
     mahasiswa,
     mahasiswaPayload,
@@ -30,7 +35,6 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
 
   const { refetchNotification } = useMainLayout();
   const { currentUserName } = useCurrentUser();
-  const router = useRouter();
   const { data: dosen } = api.lecturer.getAllDosen.useQuery();
   const { data: orkem } = api.orkem.getAllOrkem.useQuery();
   const { data: kejuaraan } = api.kejuaraan.getAllTingkatKejuaraan.useQuery();
@@ -41,6 +45,8 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
     api.prestasiLomba.createPrestasiLomba.useMutation();
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
   const {
     register,
     setValue,
@@ -56,6 +62,9 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
     setValue("users", mahasiswaPayload);
     setValue("currentUserName", currentUserName as string);
   }, [mahasiswaPayload, currentUserName, setValue]);
+
+  const handleOpenPreview = () => setIsPreviewOpen(true);
+  const handleClosePreview = () => setIsPreviewOpen(false);
 
   const onSubmit = useCallback(async (userPayload: IPengajuanPrestasiForm) => {
     setLoading(true);
@@ -115,8 +124,6 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
     );
   }, []);
 
-  console.log("mahasiswa", mahasiswa);
-
   const KEJUARAAN_FORM = [
     {
       trigger: trigger,
@@ -152,6 +159,7 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
       label: "Kegiatan",
       register: { ...register("kegiatan") },
       error: errors.kegiatan?.message,
+      control: control,
     },
     {
       trigger: trigger,
@@ -257,6 +265,9 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
     allKejuaraan,
     register,
     errors,
+    handleOpenPreview,
+    handleClosePreview,
+    isPreviewOpen,
   };
 };
 
