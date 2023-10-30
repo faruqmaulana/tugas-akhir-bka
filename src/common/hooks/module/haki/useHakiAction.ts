@@ -62,7 +62,7 @@ const useHakiAction = ({ slug }: { slug: string }) => {
     mahasiswaPayload,
     handleDeleteSelectedMahasiswa,
     handleSelectMultipleUser,
-  } = useMultiSelectUser(mergedUser);
+  } = useMultiSelectUser(mergedUser || undefined);
 
   const activityLog = transformActivityLog(haki?.ActivityLog);
 
@@ -106,6 +106,8 @@ const useHakiAction = ({ slug }: { slug: string }) => {
   } = useForm<IRejectHakiForm>({
     resolver: zodResolver(rejectHakiForm),
   });
+
+  console.log("haki payload", mahasiswaPayload);
 
   useEffect(() => {
     if (haki && !isLoadingData && initialLoad && !!mahasiswaPayload.length) {

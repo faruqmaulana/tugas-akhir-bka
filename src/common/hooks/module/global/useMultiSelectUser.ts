@@ -16,6 +16,10 @@ import { type SingleValue } from "react-select";
 const useMultiSelectUser = (defaultSelected: any[] | undefined = undefined) => {
   const router = useRouter();
   const isChampionshipPage = router.pathname.includes("/module/kejuaraan");
+  const isUserActionType = router.pathname.includes("detail");
+
+  const [addDataWasMet, setAddDataWasMet] = useState(false);
+  const [actionTypeWasMet, setActionTypeWasMet] = useState(false);
 
   const {
     state: { user: userData },
@@ -72,9 +76,10 @@ const useMultiSelectUser = (defaultSelected: any[] | undefined = undefined) => {
   }, [mahasiswa]);
 
   useEffect(() => {
-    if ((!!mergedUser.length || !!defaultSelected?.length) && !mahasiswa) {
-      if (!!defaultSelected?.length) {
-        // alert(1);
+    if (!!mergedUser.length || !!defaultSelected?.length || !mahasiswa) {
+      // run when user access action type page
+      if (isUserActionType && !!defaultSelected?.length && !actionTypeWasMet) {
+        setActionTypeWasMet(true);
         const userIdToKeteranganMap = new Map(
           (defaultSelected as { userId: string; keterangan: string }[])?.map(
             (item) => [item.userId, item.keterangan]
@@ -104,28 +109,32 @@ const useMultiSelectUser = (defaultSelected: any[] | undefined = undefined) => {
 
         setMahasiswa(filterUserWithNoKeterangan);
         setMahasiswaPayload(transformedData);
-
         // STOP PROCESS
+        // alert(1);
         return;
       }
-      // alert(2);
 
-      const filteredMahasiswa = mergedUser?.filter(
-        (val: CustomReactSelectOptionsType) => val.id !== userData?.id
-      );
-      setMahasiswa([...filteredMahasiswa]);
+      // run when user access add data module page
+      if (!addDataWasMet && !!mergedUser.length) {
+        // alert(2);
+        setAddDataWasMet(true);
+        const filteredMahasiswa = mergedUser?.filter(
+          (val: CustomReactSelectOptionsType) => val.id !== userData?.id
+        );
+        setMahasiswa([...filteredMahasiswa]);
 
-      if (mahasiswaPayload?.length > 0) return;
-      if (userData?.role !== Role.ADMIN) {
-        setMahasiswaPayload([
-          {
-            label: userData?.name as string,
-            value: userData?.id as string,
-            isKetua: true,
-            disableDelete: true,
-            role: "MAHASISWA",
-          },
-        ]);
+        if (mahasiswaPayload?.length > 0) return;
+        if (userData?.role !== Role.ADMIN) {
+          setMahasiswaPayload([
+            {
+              label: userData?.name as string,
+              value: userData?.id as string,
+              isKetua: true,
+              disableDelete: true,
+              role: "MAHASISWA",
+            },
+          ]);
+        }
       }
     }
   }, [mergedUser, defaultSelected]);

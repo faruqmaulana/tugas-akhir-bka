@@ -204,6 +204,9 @@ export const ReactSelect = (props: ReactSelectType) => {
     }
   };
 
+  console.log("!isLoading", !isLoading);
+  console.log("isPreview", isPreview);
+
   return (
     <>
       <Controller
@@ -262,11 +265,10 @@ export const ReactSelect = (props: ReactSelectType) => {
                 </Popover>
               )}
             </div>
-            {isPreview && !isLoading ? (
+            {isPreview && !isLoading && (
               <p className="text-base font-semibold">{valueState}</p>
-            ) : (
-              <LoadingInput />
             )}
+            {isPreview && isLoading && <LoadingInput />}
             {(selectedData.length > 0 || isPreview) && (
               <ReactSelectedList
                 isPreview={isPreview}

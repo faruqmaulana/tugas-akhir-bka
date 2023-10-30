@@ -115,6 +115,8 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
     );
   }, []);
 
+  console.log("mahasiswa", mahasiswa);
+
   const KEJUARAAN_FORM = [
     {
       trigger: trigger,
