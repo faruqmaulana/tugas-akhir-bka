@@ -43,7 +43,17 @@ export const userData = createTRPCRouter({
     try {
       return await ctx.prisma.user.findMany({
         where: { role: Role.MAHASISWA },
-        select: { id: true, name: true },
+        select: {
+          id: true,
+          name: true,
+          npm: true,
+          semester: true,
+          prodi: {
+            select: {
+              name: true,
+            },
+          },
+        },
       });
     } catch (error) {
       return error;

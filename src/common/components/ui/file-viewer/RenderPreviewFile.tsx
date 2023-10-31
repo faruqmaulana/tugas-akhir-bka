@@ -29,7 +29,12 @@ const RenderPreviewFile = ({
   }
 
   if (fileType === "application/pdf") {
-    return <PdfViewer className="mt-2" url={previewUrl} />;
+    return (
+      <PdfViewer
+        className={!isPreview ? "mt-2 max-h-[400px] overflow-auto" : "mt-2"}
+        url={previewUrl}
+      />
+    );
   }
 
   return null; // Handle other file types as needed

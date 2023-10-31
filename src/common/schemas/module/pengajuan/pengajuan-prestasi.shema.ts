@@ -73,7 +73,7 @@ export const pengajuanPrestasiForm = z
 
     const atLeastOneFieldFilled =
       filledFields.some((field) => field && field?.length > 0) ||
-      filledFields.some((field) => field.bytes);
+      filledFields.some((field) => field?.bytes);
     const msg = [
       { path: ["custom"], message: "Minimal satu form harus terisi" },
     ] as ZodIssue[];

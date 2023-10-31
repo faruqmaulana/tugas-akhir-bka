@@ -8,17 +8,29 @@ export type globalFileMetaType = {
   fileName: string;
 };
 
+export type AllUsersType = {
+  id: string;
+  name: string;
+  npm: string;
+  prodiName?: string;
+  semester?: string;
+  // nidn: string;
+  // role: string;
+};
+
 // Define the type for your global state
 export interface GlobalState {
   user: UserProfileType | undefined;
   notification: AllNotificationType | undefined;
   globalFileMeta: globalFileMetaType[] | [];
+  allUsers: AllUsersType[] | [];
   // Your global state properties and types here
 }
 
 export enum ActionReducer {
   UPDATE_USER = "UPDATE_USER",
   UPDATE_NOTIFICATION_COUNT = "UPDATE_NOTIFICATION_COUNT",
+  UPDATE_ALL_USERS = "UPDATE_ALL_USERS",
 
   // HANDLE GLOBAL FILE
   UPDATE_FILE_META = "UPDATE_FILE_META",
@@ -33,6 +45,10 @@ export type ActionType =
   | {
       type: typeof ActionReducer.UPDATE_NOTIFICATION_COUNT;
       payload: GlobalState["notification"]; // Define payload type as needed
+    }
+  | {
+      type: typeof ActionReducer.UPDATE_ALL_USERS;
+      payload: GlobalState["allUsers"]; // Define payload type as needed
     }
   | {
       type: typeof ActionReducer.UPDATE_FILE_META;

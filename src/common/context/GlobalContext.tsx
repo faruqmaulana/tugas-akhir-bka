@@ -18,6 +18,7 @@ const initialState: GlobalState = {
   user: undefined,
   notification: undefined,
   globalFileMeta: [],
+  allUsers: [],
   // Initial global state values here
 };
 
@@ -30,6 +31,8 @@ const reducer = (state: GlobalState, action: ActionType): GlobalState => {
       return { ...state, notification: action.payload };
     case ActionReducer.UPDATE_FILE_META:
       return { ...state, globalFileMeta: action.payload };
+    case ActionReducer.UPDATE_ALL_USERS:
+      return { ...state, allUsers: action.payload };
     // Add more cases for different actions
     default:
       return state;

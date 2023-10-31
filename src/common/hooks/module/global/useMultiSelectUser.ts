@@ -12,6 +12,11 @@ import { getUserLeadBoolean } from "~/common/helpers/getUserLead";
 import { api } from "~/utils/api";
 import { Role } from "@prisma/client";
 import { type SingleValue } from "react-select";
+import {
+  ActionReducer,
+  type AllUsersType,
+} from "~/common/types/context/GlobalContextType";
+import { type allStudentsType } from "~/server/api/module/user/user";
 
 const useMultiSelectUser = (defaultSelected: any[] | undefined = undefined) => {
   const router = useRouter();
@@ -23,6 +28,7 @@ const useMultiSelectUser = (defaultSelected: any[] | undefined = undefined) => {
 
   const {
     state: { user: userData },
+    dispatch,
   } = useGlobalContext();
 
   const { data: user } = api.user.getAllMahasiswaSelect.useQuery();
@@ -32,6 +38,7 @@ const useMultiSelectUser = (defaultSelected: any[] | undefined = undefined) => {
   const tempDosenRole = dosen as CustomReactSelectOptionsType[];
 
   const mergedUser = [] as CustomReactSelectOptionsType[];
+
   if (tempMahasiswaRole) {
     tempMahasiswaRole.map((val) => {
       mergedUser.push({ ...val, role: "MAHASISWA" });
@@ -64,6 +71,29 @@ const useMultiSelectUser = (defaultSelected: any[] | undefined = undefined) => {
 
     setMahasiswa(tempMahasiswa);
   };
+
+  // action to set all users to global state
+  useEffect(() => {
+    if (!!tempMahasiswaRole?.length) {
+      const filteredUsersStucture = (tempMahasiswaRole as allStudentsType).map(
+        (val): AllUsersType => {
+          return {
+            id: val.id,
+            name: val.name,
+            npm: val.npm,
+            prodiName: val.prodi?.name,
+            semester: val.semester,
+          };
+        }
+      );
+
+      // Set filtered user to global state
+      dispatch({
+        type: ActionReducer.UPDATE_ALL_USERS,
+        payload: filteredUsersStucture,
+      });
+    }
+  }, [tempMahasiswaRole]);
 
   // FILTER DATA TO GROUPING MAHASISWA AND DOSEN ROLE DATA
   useEffect(() => {

@@ -3,9 +3,13 @@ import React from "react";
 const InfoIcon = ({
   className,
   title = "Detail Info",
+  width = "16",
+  height = "16",
 }: {
   className?: string;
   title?: string;
+  width?: string;
+  height?: string;
 }) => {
   return (
     <div
@@ -16,8 +20,8 @@ const InfoIcon = ({
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
+        width={width}
+        height={height}
         fill="#FFFFFF"
         className="bi bi-info-lg"
         viewBox="0 0 16 16"

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import React from "react";
+import React, { useState } from "react";
 import {
   type ReactSelectOptionType,
   type handleDeleteSelectedDataType,
@@ -16,6 +16,9 @@ import { type RegisterOptions } from "react-hook-form";
 import { getUserLead } from "~/common/helpers";
 import capitalizeFirstLetter from "~/common/helpers/capitalizeFirstLetter";
 import LoadingInput from "./LoadingInput";
+import InfoIcon from "../../svg/InfoIcon";
+import { useGlobalContext } from "~/common/context/GlobalContext";
+import { type AllUsersType } from "~/common/types/context/GlobalContextType";
 
 export type ReactSelectedList = {
   register?: (
@@ -33,6 +36,8 @@ export type ReactSelectedList = {
 
 const ReactSelectedList = (props: ReactSelectedList) => {
   const router = useRouter();
+  const { state } = useGlobalContext();
+  const { allUsers } = state;
   const isChampionshipPage = router.pathname.includes("/module/kejuaraan");
 
   const {
@@ -45,13 +50,19 @@ const ReactSelectedList = (props: ReactSelectedList) => {
     isPreview,
     isLoading,
   } = props;
-  
+
   const isDisable = !isPreview && disabled;
+  const [userInfo, setUserInfo] = useState<AllUsersType | undefined>(undefined);
 
   const handleLabel = (index: number, value: ReactSelectOptionType) => {
     if (isPreview) return `${index + 1}. ${value.label}`;
 
     return value.label;
+  };
+
+  const handleFilterData = (id: string) => {
+    const filterData = allUsers.filter((val) => val.id === id)[0];
+    setUserInfo(filterData);
   };
 
   return (
@@ -155,6 +166,36 @@ const ReactSelectedList = (props: ReactSelectedList) => {
                       ? `( ${getUserLead(value.isKetua)} )`
                       : getUserLead(value.isKetua)}
                   </p>
+                  {isPreview && value.role === "MAHASISWA" && (
+                    <Popover>
+                      <PopoverTrigger
+                        className="ml-auto"
+                        onClick={() => handleFilterData(value.value)}
+                      >
+                        <InfoIcon height="10" width="10" />
+                      </PopoverTrigger>
+                      <PopoverContent className="rounded-md border-red-300 text-xs md:text-sm">
+                        <table className="border-separate border-spacing-1">
+                          <tr>
+                            <td className="font-semibold">Nama&nbsp;</td>
+                            <td>:&nbsp; {userInfo?.name || "-"} &nbsp;</td>
+                          </tr>
+                          <tr>
+                            <td className="font-semibold">NBI&nbsp;</td>
+                            <td>:&nbsp; {userInfo?.npm || "-"} &nbsp;</td>
+                          </tr>
+                          <tr>
+                            <td className="font-semibold">Prodi&nbsp;</td>
+                            <td>:&nbsp; {userInfo?.prodiName || "-"} &nbsp;</td>
+                          </tr>
+                          <tr>
+                            <td className="font-semibold">Semester&nbsp;</td>
+                            <td>:&nbsp; {userInfo?.semester || "-"} &nbsp;</td>
+                          </tr>
+                        </table>
+                      </PopoverContent>
+                    </Popover>
+                  )}
                 </div>
               </td>
             )}
