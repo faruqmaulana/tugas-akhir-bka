@@ -82,7 +82,7 @@ const useMultiSelectUser = (defaultSelected: any[] | undefined = undefined) => {
             name: val.name,
             npm: val.npm,
             prodiName: val.prodi?.name,
-            semester: val.semester,
+            semester: val.semester || undefined,
           };
         }
       );
