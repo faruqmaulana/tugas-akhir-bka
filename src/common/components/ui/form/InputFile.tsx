@@ -28,7 +28,6 @@ const InputFile = (props: InputFileType) => {
   const { state, dispatch } = useGlobalContext();
   const { globalFileMeta } = state;
 
-  const ref = useRef<HTMLInputElement>(null);
   // PREVIEW FILE STATE
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(undefined);
   const [fileType, setFileType] = useState<string | null>(null);
@@ -115,7 +114,6 @@ const InputFile = (props: InputFileType) => {
     <div className="flex w-full flex-col gap-1">
       <input
         {...(register || {})}
-        ref={ref}
         id="img"
         disabled={disabled}
         type="file"
