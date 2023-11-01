@@ -97,6 +97,12 @@ const LIST_MENU: MenuItemType[] = [
         url: "/master-data/tingkat-prestasi",
         module: "check-point",
       },
+      {
+        id: 7,
+        title: "SK Rektor",
+        module: "cabang-sample-data",
+        url: "/module/sk-rektor",
+      },
     ],
   },
   {
