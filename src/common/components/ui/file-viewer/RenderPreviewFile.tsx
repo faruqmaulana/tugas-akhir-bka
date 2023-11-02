@@ -13,7 +13,11 @@ const RenderPreviewFile = ({
 }) => {
   if (!fileType || !previewUrl) return null;
 
-  if (fileType && fileType.startsWith("image/")) {
+  if (
+    (fileType && fileType.startsWith("image/")) ||
+    fileType === "jpg" ||
+    fileType === "png"
+  ) {
     return (
       <div className={!isPreview ? "max-h-[400px] overflow-auto" : ""}>
         <Image
@@ -28,7 +32,7 @@ const RenderPreviewFile = ({
     );
   }
 
-  if (fileType === "application/pdf") {
+  if (fileType.includes("pdf")) {
     return (
       <PdfViewer
         className={!isPreview ? "mt-2 max-h-[400px] overflow-auto" : "mt-2"}

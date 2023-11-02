@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/require-await */
 import { useRouter } from "next/router";
@@ -14,6 +15,7 @@ import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
 import { STATUS } from "~/common/enums/STATUS";
 import ModuleCardInfo from "~/common/components/ui/card/ModuleCardInfo";
 import EditModalDescription from "~/common/components/ui/modal/EditModalDescription";
+import ModalPreviewModule from "~/common/components/ui/modal/ModalPreviewModule";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: { slug: ctx.query.slug } };
@@ -43,6 +45,9 @@ const Example = ({ slug }: { slug: string }) => {
     isAdmin,
     isLoadingPrestasiData,
     TRANSFORM_KEJUARAAN,
+    handleOpenPreview,
+    handleClosePreview,
+    isPreviewOpen,
   } = useApproveKejuaraan({ slug });
 
   // if (isAdmin && !prestasi) return <FullPageLoader />;
@@ -94,6 +99,7 @@ const Example = ({ slug }: { slug: string }) => {
             </Button>
           </div>
         )}
+
         {!isAdmin && !isLoadingPrestasiData && (
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-row justify-end gap-4">
@@ -105,6 +111,13 @@ const Example = ({ slug }: { slug: string }) => {
               >
                 Reset
               </Button>
+              <ModalPreviewModule
+                title="Prestasi Lomba & Kejuaraan"
+                isOpen={isPreviewOpen}
+                handleOpen={handleOpenPreview}
+                handleClose={handleClosePreview}
+                data={TRANSFORM_KEJUARAAN}
+              />
               <Button
                 isSuccess
                 isLarge

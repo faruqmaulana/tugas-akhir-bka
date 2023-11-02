@@ -60,6 +60,11 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
     enabled: !!prestasiDataTableId,
   });
 
+  const [isPreviewOpen, setIsPreviewOpen] = useState<boolean>(false);
+  
+  const handleOpenPreview = () => setIsPreviewOpen(true);
+  const handleClosePreview = () => setIsPreviewOpen(false);
+
   const isAdminAndApproved = prestasi?.status === STATUS.APPROVE && isAdmin;
 
   const {
@@ -435,7 +440,10 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
     isLoadingPrestasiData,
     EDIT_PRESTASI_FORM,
     TRANSFORM_KEJUARAAN,
-    isAdminAndApproved
+    isAdminAndApproved,
+    handleOpenPreview,
+    handleClosePreview,
+    isPreviewOpen,
   };
 };
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { type RegisterOptions } from "react-hook-form";
 import { type FileResponse } from "~/common/libs/upload-file.lib";
 import LoadingInput from "./LoadingInput";
@@ -96,16 +96,22 @@ const InputFile = (props: InputFileType) => {
   if (isPreview && isLoading) return <LoadingInput />;
 
   if (isPreview) {
-    if (!currentFileState) return "-";
+    if (!currentFileState && !fileData) return "-";
+    const src =
+      !currentFileState && fileData
+        ? fileData?.secure_url
+        : fileData?.secure_url;
+    const type =
+      !currentFileState && fileData
+        ? fileData?.secure_url?.split(".")?.pop() || ""
+        : currentFileState?.type;
+    // alert(type)
+    console.log("sasdas", src);
 
     return (
       <div className="flex w-full flex-col">
         <p className="text-base font-semibold">{currentFileState?.fileName}</p>
-        <RenderPreviewFile
-          isPreview
-          fileType={currentFileState?.type}
-          previewUrl={currentFileState?.src}
-        />
+        <RenderPreviewFile isPreview fileType={type} previewUrl={src} />
       </div>
     );
   }
@@ -126,6 +132,7 @@ const InputFile = (props: InputFileType) => {
           <RenderPreviewFile fileType={fileType} previewUrl={previewUrl} />
         </div>
       )}
+      {handleFileName()}
     </div>
   );
 };
