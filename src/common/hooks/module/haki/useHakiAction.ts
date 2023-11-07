@@ -350,7 +350,7 @@ const useHakiAction = ({ slug }: { slug: string }) => {
 
     {
       trigger: trigger,
-      className: "col-span-2 lg:col-span-1",
+      className: "col-span-2",
       placeholder: "Tanggal Kadaluarsa Haki",
       label: "Tanggal Kadaluarsa Haki",
       value: new Date(), // Contoh dummy data untuk tanggal kegiatan.
@@ -361,9 +361,9 @@ const useHakiAction = ({ slug }: { slug: string }) => {
     },
     {
       trigger: trigger,
-      className: "col-span-2 lg:col-span-1",
-      placeholder: "Piagam Penghargaan",
-      label: "Piagam Penghargaan",
+      className: "col-span-2",
+      placeholder: "Dokumen Tambahan",
+      label: "Dokumen Tambahan",
       type: "file",
       register: { ...registerApproveForm("dokumenTambahan") },
       error: errorsHakiForm.dokumenTambahan?.message,

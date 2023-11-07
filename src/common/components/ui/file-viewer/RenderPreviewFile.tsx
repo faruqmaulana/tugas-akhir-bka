@@ -19,7 +19,7 @@ const RenderPreviewFile = ({
     fileType === "png"
   ) {
     return (
-      <div className={!isPreview ? "max-h-[400px] overflow-auto" : ""}>
+      <div className={!isPreview ? "max-h-[400px] overflow-auto" : "max-h-[400px] overflow-auto"}>
         <Image
           width={0}
           height={0}

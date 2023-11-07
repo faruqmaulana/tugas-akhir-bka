@@ -5,6 +5,7 @@ import { requireAuth } from "~/common/authentication/requireAuth";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
 import { Button } from "~/common/components/ui/button/Button";
 import Card from "~/common/components/ui/card/Card";
+import ExpandableCard from "~/common/components/ui/card/ExpandableCard";
 import ModuleCardInfo from "~/common/components/ui/card/ModuleCardInfo";
 import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
 import BaseForm from "~/common/components/ui/form/BaseForm";
@@ -66,11 +67,11 @@ const ScholarshipDetail = ({ slug }: { slug: string }) => {
           </Button>
         }
       />
-      <Card className="mt-[20px]">
-        <ModuleCardInfo
-          status={scholarship?.status}
-          setIsDrawerOpen={setIsDrawerOpen}
-        />
+      <ExpandableCard
+        dokumenTitle="Dokumen Pengajuan Beasiswa"
+        status={scholarship?.status}
+        setIsDrawerOpen={setIsDrawerOpen}
+      >
         <BaseForm
           isEditForm
           isPreview={isAdmin}
@@ -119,7 +120,7 @@ const ScholarshipDetail = ({ slug }: { slug: string }) => {
             </div>
           </form>
         )}
-      </Card>
+      </ExpandableCard>
       <BaseDrawer
         header="Pengajuan Info"
         isDrawerOpen={isDrawerOpen}

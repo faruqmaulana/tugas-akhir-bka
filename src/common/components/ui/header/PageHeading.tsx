@@ -39,7 +39,7 @@ const PageHeading = (props: PageTypeHeading) => {
     >
       <div className="flex items-center justify-between">
         <h1
-          className={`text-3xl font-bold text-charcoal-900
+          className={`text-xl lg:text-3xl font-bold text-charcoal-900
             ${subTitle && "mr-1"}`}
         >
           {title || pageHeading}

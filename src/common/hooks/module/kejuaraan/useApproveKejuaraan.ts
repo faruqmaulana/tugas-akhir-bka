@@ -40,7 +40,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
   const router = useRouter();
   const { isAdmin } = useCurrentUser();
   const { refetchNotification } = useMainLayout();
-  const [state, setState] = useState(INITIAL_STATE);
+  const [state, setState] = useState<typeof INITIAL_STATE>(INITIAL_STATE);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
   const prestasiDataTableId = slug;

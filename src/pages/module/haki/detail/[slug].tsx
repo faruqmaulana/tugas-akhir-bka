@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/require-await */
 import { Button } from "~/common/components/ui/button/Button";
-import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import Modal from "~/common/components/ui/modal/Modal";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
@@ -10,11 +9,11 @@ import { requireAuth } from "~/common/authentication/requireAuth";
 import StepperVertical from "~/common/components/ui/stepper/StepperVertical";
 import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
 import { STATUS } from "~/common/enums/STATUS";
-import ModuleCardInfo from "~/common/components/ui/card/ModuleCardInfo";
 import EditModalDescription from "~/common/components/ui/modal/EditModalDescription";
 import { useHakiAction } from "~/common/hooks/module/haki/useHakiAction";
 import renderActionButton from "~/common/helpers/renderActionButton";
 import { useCurrentUser } from "~/common/hooks/module/profile";
+import ExpandableCard from "~/common/components/ui/card/ExpandableCard";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: { slug: ctx.query.slug } };
@@ -49,14 +48,14 @@ const Example = ({ slug }: { slug: string }) => {
   return (
     <>
       <PageHeading
-        title="Detail Pengajuan Beasiswa"
+        title="Detail Pengajuan Haki"
         ownButton={
           <Button
             isMedium
             isGray
             className="flex w-fit items-center gap-2"
             onClick={() => {
-              void router.push("/module/beasiswa");
+              void router.push("/module/haki");
             }}
           >
             <ArrorLeft />
@@ -64,11 +63,11 @@ const Example = ({ slug }: { slug: string }) => {
           </Button>
         }
       />
-      <Card className="mt-[20px]">
-        <ModuleCardInfo
-          status={haki?.status}
-          setIsDrawerOpen={setIsDrawerOpen}
-        />
+      <ExpandableCard
+        dokumenTitle="Dokumen Pengajuan Haki"
+        status={haki?.status}
+        setIsDrawerOpen={setIsDrawerOpen}
+      >
         <BaseForm
           isEditForm
           isLoading={!haki}
@@ -118,7 +117,7 @@ const Example = ({ slug }: { slug: string }) => {
             </div>
           </form>
         )}
-      </Card>
+      </ExpandableCard>
       <BaseDrawer
         header="Pengajuan Info"
         isDrawerOpen={isDrawerOpen}
@@ -188,7 +187,7 @@ const Example = ({ slug }: { slug: string }) => {
         showIconModal={false}
         isOpen={state.isApprove}
         className="!mb-0"
-        captionTitleConfirm="Approve Pengajuan Beasiswa"
+        captionTitleConfirm="Approve Pengajuan Haki"
         onClose={() => handleButtonAction("close")}
         content={
           <form onSubmit={submitApprove(onApprove)}>

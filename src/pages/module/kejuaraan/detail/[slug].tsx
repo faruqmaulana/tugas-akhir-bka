@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/require-await */
 import { useRouter } from "next/router";
 import { Button } from "~/common/components/ui/button/Button";
-import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import Modal from "~/common/components/ui/modal/Modal";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
@@ -13,9 +12,9 @@ import { requireAuth } from "~/common/authentication/requireAuth";
 import StepperVertical from "~/common/components/ui/stepper/StepperVertical";
 import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
 import { STATUS } from "~/common/enums/STATUS";
-import ModuleCardInfo from "~/common/components/ui/card/ModuleCardInfo";
 import EditModalDescription from "~/common/components/ui/modal/EditModalDescription";
 import ModalPreviewModule from "~/common/components/ui/modal/ModalPreviewModule";
+import ExpandableCard from "~/common/components/ui/card/ExpandableCard";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: { slug: ctx.query.slug } };
@@ -70,11 +69,11 @@ const Example = ({ slug }: { slug: string }) => {
           </Button>
         }
       />
-      <Card className="mt-[20px]">
-        <ModuleCardInfo
-          status={prestasi?.status}
-          setIsDrawerOpen={setIsDrawerOpen}
-        />
+      <ExpandableCard
+        status={prestasi?.status}
+        setIsDrawerOpen={setIsDrawerOpen}
+        dokumenTitle="Dokumen Prestasi lomba dan kejuaraan"
+      >
         <BaseForm
           isEditForm
           isPreview={isAdmin}
@@ -131,7 +130,7 @@ const Example = ({ slug }: { slug: string }) => {
             </div>
           </form>
         )}
-      </Card>
+      </ExpandableCard>
       <BaseDrawer
         header="Pengajuan Info"
         isDrawerOpen={isDrawerOpen}

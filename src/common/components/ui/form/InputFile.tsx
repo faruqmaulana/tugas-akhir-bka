@@ -105,8 +105,6 @@ const InputFile = (props: InputFileType) => {
       !currentFileState && fileData
         ? fileData?.secure_url?.split(".")?.pop() || ""
         : currentFileState?.type;
-    // alert(type)
-    console.log("sasdas", src);
 
     return (
       <div className="flex w-full flex-col">
