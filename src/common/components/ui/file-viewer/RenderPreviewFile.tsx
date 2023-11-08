@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import PdfViewer from "./PdfViewer";
 
@@ -11,6 +11,7 @@ const RenderPreviewFile = ({
   previewUrl?: string;
   isPreview?: boolean;
 }) => {
+  const [errorImage, setErrorImage] = useState<boolean>(false);
   if (!fileType || !previewUrl) return null;
 
   if (
@@ -19,7 +20,13 @@ const RenderPreviewFile = ({
     fileType === "png"
   ) {
     return (
-      <div className={!isPreview ? "max-h-[400px] overflow-auto" : "max-h-[400px] overflow-auto"}>
+      <div
+        className={
+          !isPreview
+            ? "max-h-[400px] overflow-auto"
+            : "max-h-[400px] overflow-auto"
+        }
+      >
         <Image
           width={0}
           height={0}
@@ -27,7 +34,13 @@ const RenderPreviewFile = ({
           src={previewUrl}
           alt="File Preview"
           className="mt-2 h-auto w-full"
+          onError={() => setErrorImage(true)}
         />
+        {errorImage && (
+          <p className="mt-1 w-fit rounded-md border border-red-500 bg-red-50 px-2 text-sm text-red-600">
+            Terjadi kesalahan sistem, harap upload ulang file.
+          </p>
+        )}
       </div>
     );
   }

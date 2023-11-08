@@ -65,6 +65,37 @@ const ReactSelectedList = (props: ReactSelectedList) => {
     setUserInfo(filterData);
   };
 
+  const userInfoComponent = (value: string) => (
+    <Popover>
+      <PopoverTrigger
+        className="ml-auto mt-[4px]"
+        onClick={() => handleFilterData(value)}
+      >
+        <InfoIcon height="10" width="10" />
+      </PopoverTrigger>
+      <PopoverContent className="rounded-md border-red-300 text-xs md:text-sm">
+        <table className="border-separate border-spacing-1">
+          <tr>
+            <td className="font-semibold">Nama&nbsp;</td>
+            <td>:&nbsp; {userInfo?.name || "-"} &nbsp;</td>
+          </tr>
+          <tr>
+            <td className="font-semibold">NBI&nbsp;</td>
+            <td>:&nbsp; {userInfo?.npm || "-"} &nbsp;</td>
+          </tr>
+          <tr>
+            <td className="font-semibold">Prodi&nbsp;</td>
+            <td>:&nbsp; {userInfo?.prodiName || "-"} &nbsp;</td>
+          </tr>
+          <tr>
+            <td className="font-semibold">Semester&nbsp;</td>
+            <td>:&nbsp; {userInfo?.semester || "-"} &nbsp;</td>
+          </tr>
+        </table>
+      </PopoverContent>
+    </Popover>
+  );
+
   return (
     <table
       className={`w-fit border-spacing-10 overflow-auto 
@@ -129,15 +160,21 @@ const ReactSelectedList = (props: ReactSelectedList) => {
             </td>
             {!isChampionshipPage && (
               <td className="items-baseline">
-                <p className="mb-1 text-sm font-semibold sm:text-base">
-                  (
-                  {value.isKetua
-                    ? "Pengaju Dokumen"
-                    : capitalizeFirstLetter(value.role)}
-                  )
-                </p>
+                <div className="ml-5 flex flex-row items-center gap-2">
+                  <p className="mb-1 text-sm font-semibold sm:text-base">
+                    (
+                    {value.isKetua
+                      ? "Pengaju Dokumen"
+                      : capitalizeFirstLetter(value.role)}
+                    )
+                  </p>
+                  {isPreview &&
+                    value.role === "MAHASISWA" &&
+                    userInfoComponent(value.value)}
+                </div>
               </td>
             )}
+
             {handleSwitch && (
               <td
                 className={selectedData.length - 1 === index ? "pb-0" : "pb-2"}
@@ -166,36 +203,9 @@ const ReactSelectedList = (props: ReactSelectedList) => {
                       ? `( ${getUserLead(value.isKetua)} )`
                       : getUserLead(value.isKetua)}
                   </p>
-                  {isPreview && value.role === "MAHASISWA" && (
-                    <Popover>
-                      <PopoverTrigger
-                        className="ml-auto"
-                        onClick={() => handleFilterData(value.value)}
-                      >
-                        <InfoIcon height="10" width="10" />
-                      </PopoverTrigger>
-                      <PopoverContent className="rounded-md border-red-300 text-xs md:text-sm">
-                        <table className="border-separate border-spacing-1">
-                          <tr>
-                            <td className="font-semibold">Nama&nbsp;</td>
-                            <td>:&nbsp; {userInfo?.name || "-"} &nbsp;</td>
-                          </tr>
-                          <tr>
-                            <td className="font-semibold">NBI&nbsp;</td>
-                            <td>:&nbsp; {userInfo?.npm || "-"} &nbsp;</td>
-                          </tr>
-                          <tr>
-                            <td className="font-semibold">Prodi&nbsp;</td>
-                            <td>:&nbsp; {userInfo?.prodiName || "-"} &nbsp;</td>
-                          </tr>
-                          <tr>
-                            <td className="font-semibold">Semester&nbsp;</td>
-                            <td>:&nbsp; {userInfo?.semester || "-"} &nbsp;</td>
-                          </tr>
-                        </table>
-                      </PopoverContent>
-                    </Popover>
-                  )}
+                  {isPreview &&
+                    value.role === "MAHASISWA" &&
+                    userInfoComponent(value.value)}
                 </div>
               </td>
             )}

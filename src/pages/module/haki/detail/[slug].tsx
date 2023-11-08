@@ -8,12 +8,12 @@ import BaseForm from "~/common/components/ui/form/BaseForm";
 import { requireAuth } from "~/common/authentication/requireAuth";
 import StepperVertical from "~/common/components/ui/stepper/StepperVertical";
 import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
-import { STATUS } from "~/common/enums/STATUS";
 import EditModalDescription from "~/common/components/ui/modal/EditModalDescription";
 import { useHakiAction } from "~/common/hooks/module/haki/useHakiAction";
 import renderActionButton from "~/common/helpers/renderActionButton";
 import { useCurrentUser } from "~/common/hooks/module/profile";
 import ExpandableCard from "~/common/components/ui/card/ExpandableCard";
+import MahasiswaActionButton from "~/common/components/ui/button/MahasiswaActionButton";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: { slug: ctx.query.slug } };
@@ -94,28 +94,14 @@ const Example = ({ slug }: { slug: string }) => {
           </div>
         )}
         {!isAdmin && !isLoadingData && (
-          <form onSubmit={submitEdit(onEdit)}>
-            <div className="flex flex-row justify-end gap-4">
-              <Button
-                disabled={!haki}
-                isSecondary
-                isLarge
-                onClick={() => setDefaultValue()}
-              >
-                Reset
-              </Button>
-              <Button
-                isSuccess
-                isLarge
-                onClick={() => handleButtonAction("edit")}
-              >
-                {haki?.status === STATUS.PROCESSED ||
-                haki?.status === STATUS.REPROCESS
-                  ? "Submit Perubahan"
-                  : "Ajukan Ulang"}
-              </Button>
-            </div>
-          </form>
+          <MahasiswaActionButton
+            onSubmit={submitEdit(onEdit)}
+            disableReset={!haki}
+            handleButtonAction={() => handleButtonAction("edit")}
+            FORM_DATA={DISPLAYED_FORM}
+            setDefaultValue={() => setDefaultValue()}
+            status={haki?.status}
+          />
         )}
       </ExpandableCard>
       <BaseDrawer

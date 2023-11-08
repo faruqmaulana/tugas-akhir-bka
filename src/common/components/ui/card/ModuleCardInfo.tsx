@@ -21,7 +21,7 @@ const ModuleCardInfo = (props: ModuleCardInfoType) => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex flex-wrap justify-between">
+      <div className="flex mb-4 flex-wrap justify-between">
         {status === STATUS.APPROVE && (
           <div
             className={`flex flex-wrap items-center gap-2 rounded-full px-2 py-1 text-sm font-semibold opacity-95 ${handleBgColor(
@@ -50,7 +50,7 @@ const ModuleCardInfo = (props: ModuleCardInfoType) => {
         </div>
       </div>
       {isAdmin && (
-        <p className="my-4 text-center text-lg font-bold lg:text-xl">
+        <p className="mb-4 text-center text-lg font-bold lg:text-xl">
           {dokumenTitle}
         </p>
       )}

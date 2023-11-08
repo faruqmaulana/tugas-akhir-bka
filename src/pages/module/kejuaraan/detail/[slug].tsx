@@ -11,10 +11,9 @@ import BaseForm from "~/common/components/ui/form/BaseForm";
 import { requireAuth } from "~/common/authentication/requireAuth";
 import StepperVertical from "~/common/components/ui/stepper/StepperVertical";
 import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
-import { STATUS } from "~/common/enums/STATUS";
 import EditModalDescription from "~/common/components/ui/modal/EditModalDescription";
-import ModalPreviewModule from "~/common/components/ui/modal/ModalPreviewModule";
 import ExpandableCard from "~/common/components/ui/card/ExpandableCard";
+import MahasiswaActionButton from "~/common/components/ui/button/MahasiswaActionButton";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: { slug: ctx.query.slug } };
@@ -48,8 +47,6 @@ const Example = ({ slug }: { slug: string }) => {
     handleClosePreview,
     isPreviewOpen,
   } = useApproveKejuaraan({ slug });
-
-  // if (isAdmin && !prestasi) return <FullPageLoader />;
 
   return (
     <>
@@ -100,35 +97,14 @@ const Example = ({ slug }: { slug: string }) => {
         )}
 
         {!isAdmin && !isLoadingPrestasiData && (
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex flex-row justify-end gap-4">
-              <Button
-                disabled={!prestasi}
-                isSecondary
-                isLarge
-                onClick={() => setDefaultValue()}
-              >
-                Reset
-              </Button>
-              <ModalPreviewModule
-                title="Prestasi Lomba & Kejuaraan"
-                isOpen={isPreviewOpen}
-                handleOpen={handleOpenPreview}
-                handleClose={handleClosePreview}
-                data={TRANSFORM_KEJUARAAN}
-              />
-              <Button
-                isSuccess
-                isLarge
-                onClick={() => handleButtonAction("edit")}
-              >
-                {prestasi?.status === STATUS.PROCESSED ||
-                prestasi?.status === STATUS.REPROCESS
-                  ? "Submit Perubahan"
-                  : "Ajukan Ulang"}
-              </Button>
-            </div>
-          </form>
+          <MahasiswaActionButton
+            onSubmit={handleSubmit(onSubmit)}
+            disableReset={!prestasi}
+            handleButtonAction={() => handleButtonAction("edit")}
+            FORM_DATA={TRANSFORM_KEJUARAAN}
+            setDefaultValue={() => setDefaultValue()}
+            status={prestasi?.status}
+          />
         )}
       </ExpandableCard>
       <BaseDrawer

@@ -239,6 +239,7 @@ const Input = (props: InputPropsType) => {
             isEditForm={editForm}
             register={register}
             fileData={fileData}
+            editIconAction={editIconAction}
           />
         )}
         {type === "password" && (
@@ -258,6 +259,7 @@ const Input = (props: InputPropsType) => {
           type !== "hidden" &&
           type !== "date" &&
           type !== "select" &&
+          type !== "file" &&
           editIconAction}
       </div>
       {additionalInfo && (
