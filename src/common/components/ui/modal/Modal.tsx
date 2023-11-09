@@ -32,7 +32,7 @@ const Modal = (props: ModalProps) => {
     isLoading = false,
     modalFit = false,
     modalLarge = false,
-    modalScroll = false,
+    modalScroll = true,
     onClose,
     onCloseButton,
     onConfirmButton,

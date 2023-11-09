@@ -4,7 +4,7 @@
 
 import * as React from "react";
 import { format } from "date-fns";
-
+import { useRouter } from "next/router";
 import { Calendar } from "~/common/components/ui/calendar/calendar";
 import {
   Popover,
@@ -51,8 +51,9 @@ export function DatePicker(props: DatePickerProps) {
     isPreview = false,
     isLoading,
   } = props;
+  const router = useRouter();
   const [date, setDate] = React.useState<Date>();
-
+  const future = router.pathname === "/module/haki/detail/[slug]";
   return (
     <Controller
       {...(register || {})}
@@ -103,7 +104,9 @@ export function DatePicker(props: DatePickerProps) {
                   onChange(e);
                 }}
                 disabled={(date) =>
-                  date > new Date() || date < new Date("1900-01-01")
+                  future
+                    ? date < new Date()
+                    : date > new Date() || date < new Date("1900-01-01")
                 }
                 initialFocus
               />

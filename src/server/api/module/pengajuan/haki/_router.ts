@@ -6,6 +6,7 @@ import getHakiByIdHandler from "./getHakiById.handler";
 import rejectHakiHandler from "./rejectHaki.handler";
 import approveHakiHandler from "./approveHaki.handler";
 import editHakiHandler from "./editHaki.handler";
+import getAllPatenAndHakiHandler from "./getAllHaki.handler";
 
 export type HakiByIdType = Prisma.PatenAndHakiTableGetPayload<{
   include: {
@@ -20,6 +21,7 @@ export type HakiByIdType = Prisma.PatenAndHakiTableGetPayload<{
 
 export const hakiModule = createTRPCRouter({
   addHakiApplication: addHakiHandler,
+  getAllPatenAndHaki: getAllPatenAndHakiHandler,
   getHakiById: getHakiByIdHandler,
   rejectHaki: rejectHakiHandler,
   approveHaki: approveHakiHandler,

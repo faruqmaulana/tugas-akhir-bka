@@ -62,7 +62,7 @@ const useAddHaki = (defaultSelected: any | undefined = undefined) => {
           customToast("success", data?.message);
           setLoading(false);
           await refetchNotification();
-          void router.push("/module/beasiswa");
+          void router.push("/module/haki");
         },
         onError: (error) => {
           customToast("error", error?.message);

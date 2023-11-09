@@ -1,20 +1,18 @@
 // Tipe untuk data HAKI
 export type HAKI = {
-  Jenis: string;
-  Judul: string;
-  NomorPendaftaran: string;
-  PemegangHAKI: string;
-  Pencipta: string;
-  Deskripsi: string;
-  TanggalPendaftaran: string;
-  MasaBerlaku: string;
-  DaerahPerlindungan: string;
-  Status: string;
-  NBI: string;
-  Semester: number;
-  Prodi: string;
-  Fakultas: string;
-  Dosen: string;
+  id: string;
+  jenis: string;
+  judul: string;
+  keterangan: string;
+  dokumenPendukung: string;
+  dokumenTambahan: string;
+  status: string;
+  nomorPaten: string;
+  pengajuHaki: string;
+  tanggalPendaftaran: string;
+  validPeriod: string;
+  statusDokumen: string;
+  tanggalKadaluarsa: string;
 };
 
 // Tipe untuk data Paten
@@ -40,7 +38,7 @@ export type PatenType = {
   Dosen: string;
 };
 
-export const DATA_HAKI: HAKI[] = [
+export const DATA_HAKI = [
   {
     Jenis: "Hak Cipta",
     Judul: "Kerajaan Rindu Angin",

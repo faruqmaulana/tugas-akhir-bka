@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { type MRT_ColumnDef } from "material-react-table";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
@@ -7,98 +8,100 @@ import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import BaseTable from "~/common/components/ui/table/BaseTable";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
-import { type HAKI, DATA_HAKI } from "~/common/constants/DUMMY_PATEN_HAKI";
+import { type HAKI } from "~/common/constants/DUMMY_PATEN_HAKI";
+import { api } from "~/utils/api";
+import { PatenAndHaki } from "@prisma/client";
+import { Anchor } from "~/common/components/ui/anchor";
+import ButtonLink from "~/common/components/ui/button/ButtonLink";
 
 const UserManagement = () => {
   const router = useRouter();
+  const { data } = api.hakiModule.getAllPatenAndHaki.useQuery({
+    type: PatenAndHaki.HAKI,
+  });
 
   const columns = useMemo<MRT_ColumnDef<HAKI>[]>(
     () => [
       {
-        header: "Nama Mahasiswa",
-        accessorKey: "Pencipta",
+        header: "Judul",
+        accessorKey: "judul",
+        enableClickToCopy: true,
+        Cell: ({ cell }) => (
+          <div className="max-w-[450px] overflow-x-auto small-scrollbar">
+            <p>{cell.getValue() as string}</p>
+          </div>
+        ),
+      },
+      {
+        header: "Diajukan oleh",
+        accessorKey: "pengajuHaki",
         enableClickToCopy: true,
       },
       {
-        header: "NBI",
-        accessorKey: "NBI",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Semester",
-        accessorKey: "Semester",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Prodi",
-        accessorKey: "Prodi",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Fakultas",
-        accessorKey: "Fakultas",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Dosen",
-        accessorKey: "Dosen",
+        header: "Nomor Haki",
+        accessorKey: "nomorPaten",
         enableClickToCopy: true,
       },
       {
         header: "Jenis",
-        accessorKey: "Jenis",
+        accessorKey: "jenis",
         enableClickToCopy: true,
       },
-      {
-        header: "Judul",
-        accessorKey: "Judul",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Nomor Pendaftaran",
-        accessorKey: "NomorPendaftaran",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Pemegang HAKI",
-        accessorKey: "PemegangHAKI",
-        enableClickToCopy: true,
-      },
-
       {
         header: "Deskripsi",
-        accessorKey: "Deskripsi",
+        accessorKey: "keterangan",
         enableClickToCopy: true,
       },
       {
         header: "Tanggal Pendaftaran",
-        accessorKey: "TanggalPendaftaran",
+        accessorKey: "tanggalPendaftaran",
         enableClickToCopy: true,
       },
       {
         header: "Masa Berlaku",
-        accessorKey: "MasaBerlaku",
+        accessorKey: "validPeriod",
         enableClickToCopy: true,
       },
       {
-        header: "Daerah Perlindungan",
-        accessorKey: "DaerahPerlindungan",
+        header: "Tanggal Kadaluarsa",
+        accessorKey: "tanggalKadaluarsa",
         enableClickToCopy: true,
+      },
+      {
+        header: "Dokumen Pendukung",
+        accessorKey: "dokumenPendukung",
+        enableClickToCopy: false,
+        Cell: ({ cell }) => (
+          <Anchor href={cell.getValue() as string}>
+            <ButtonLink />
+          </Anchor>
+        ),
+      },
+      {
+        header: "Dokumen Haki",
+        accessorKey: "dokumenTambahan",
+        enableClickToCopy: false,
+        Cell: ({ cell }) => (
+          <Anchor href={cell.getValue() as string}>
+            <ButtonLink />
+          </Anchor>
+        ),
       },
       {
         header: "Status",
-        accessorKey: "Status",
+        accessorKey: "status",
         enableClickToCopy: true,
         Cell: ({ cell }) => <StatusBadge status={cell.getValue() as string} />,
       },
       {
         header: "Action",
         ...tableActionConfig,
-        Cell: () => (
+        Cell: (props) => (
           <ViewDetailButton
             onClick={() => {
+              const id = props.row.original.id;
               const transformUrl = router.pathname.split("/").join("/");
-              void router.push(transformUrl + "/detail");
+              void router.push(transformUrl + "/detail/" + id);
             }}
           />
         ),
@@ -116,7 +119,7 @@ const UserManagement = () => {
         link="haki/tambah"
       />
       <Card header="SEMUA DATA PENGAJUAN HAKI" className="mt-[30px]">
-        <BaseTable data={DATA_HAKI} columns={columns} />
+        <BaseTable data={data} columns={columns} />
       </Card>
     </>
   );
