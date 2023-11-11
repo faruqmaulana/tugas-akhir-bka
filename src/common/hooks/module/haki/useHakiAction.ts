@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -29,8 +30,16 @@ import {
 import { useMultiSelectUser } from "../global/useMultiSelectUser";
 import { useGlobalContext } from "~/common/context/GlobalContext";
 import { ActionReducer } from "~/common/types/context/GlobalContextType";
+import { type PatenAndHaki } from "@prisma/client";
+import capitalizeFirstLetter from "~/common/helpers/capitalizeFirstLetter";
 
-const useHakiAction = ({ slug }: { slug: string }) => {
+const useHakiAction = ({
+  slug,
+  jenis,
+}: {
+  slug: string;
+  jenis: PatenAndHaki;
+}) => {
   const hakiId = slug;
   const router = useRouter();
   const { dispatch } = useGlobalContext();
@@ -130,6 +139,11 @@ const useHakiAction = ({ slug }: { slug: string }) => {
       setDefautlApproveValue("patenAndHakiTableId", haki?.id);
       setDefaultEditValue("patenAndHakiTableId", haki?.id);
 
+      // set dokumen type
+      setDefautlRejectValue("jenis", jenis);
+      setDefautlApproveValue("jenis", jenis);
+      setDefaultEditValue("jenis", jenis);
+
       // set data
       setDefaultEditValue("dokumenPendukung", haki?.dokumenPendukung);
       setDefaultEditValue("keterangan", haki?.keterangan);
@@ -149,9 +163,6 @@ const useHakiAction = ({ slug }: { slug: string }) => {
 
     setState(INITIAL_DRAWER_STATE);
     await Promise.all([refetchNotification(), refetchHaki()]);
-    setTimeout(() => {
-      setDefaultFormValue();
-    }, 2000);
   };
 
   const handleButtonAction = (type: string) => {
@@ -292,7 +303,7 @@ const useHakiAction = ({ slug }: { slug: string }) => {
       trigger: trigger,
       className: "col-span-2",
       placeholder: "Pemegang Paten",
-      label: "Pemegang Paten",
+      label: `Pemegang ${capitalizeFirstLetter(jenis)}`,
       type: "select",
       control: editController,
       selectData: mahasiswa,

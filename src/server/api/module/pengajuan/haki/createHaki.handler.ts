@@ -1,20 +1,19 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { MOUDLE_HAKI } from "~/common/constants/MESSAGE";
 import { STATUS } from "~/common/enums/STATUS";
 import { stringToJSON } from "~/common/helpers/parseJSON";
 import { protectedProcedure } from "~/server/api/trpc";
-import { ADD_SUCCESS, HAKI_NOTIF } from "~/common/message";
+import { ADD_SUCCESS } from "~/common/message";
 import handleAddInitialNotification from "../../notification/handleAddInitialNotification";
-import { MODULE_TYPE_CODE } from "~/common/enums/MODULE_TYPE_CODE";
 import { hakiApplicationSchema } from "~/common/schemas/module/pengajuan/haki/haki-application.schema";
-import { PatenAndHaki } from "@prisma/client";
+import capitalizeFirstLetter from "~/common/helpers/capitalizeFirstLetter";
 
 const addHakiHandler = protectedProcedure
   .input(hakiApplicationSchema)
   .mutation(async ({ ctx, input }) => {
     try {
-      const { judul, keterangan, dokumenPendukung, users } = input;
+      const { judul, keterangan, dokumenPendukung, users, jenis } = input;
       const dosenData = users.filter((item) => item.role === "DOSEN");
       const mahasiswaData = users.filter((item) => item.role === "MAHASISWA");
       const transformedDosenData = dosenData.map((val) => {
@@ -32,7 +31,7 @@ const addHakiHandler = protectedProcedure
         data: {
           judul,
           keterangan,
-          jenis: PatenAndHaki.HAKI,
+          jenis,
           createdById: ctx.session.user.userId,
           dokumenPendukung: dokumenJsonMeta,
           dosen: transformedDosenData,
@@ -55,16 +54,18 @@ const addHakiHandler = protectedProcedure
         ctx,
         payload: {
           moduleId: createHakiApplication.id,
-          MODULE_TYPE: MOUDLE_HAKI,
-          MODULE_TYPE_CODE: MODULE_TYPE_CODE.HAKI,
-          notifDescription: `Pengajuan Haki - ${judul}`,
+          MODULE_TYPE: jenis,
+          MODULE_TYPE_CODE: jenis.toLowerCase(),
+          notifDescription: `Pengajuan ${capitalizeFirstLetter(
+            jenis
+          )} - ${judul}`,
           STATUS_TYPE: STATUS.PROCESSED,
           relatedUserData: mahasiswaData,
         },
       });
 
       return {
-        message: `${ADD_SUCCESS} ${HAKI_NOTIF}`,
+        message: `${ADD_SUCCESS} ${capitalizeFirstLetter(jenis)}!`,
       };
     } catch (error) {}
   });

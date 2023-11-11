@@ -10,7 +10,7 @@ import PageHeading from "~/common/components/ui/header/PageHeading";
 import ModalPreviewModule from "~/common/components/ui/modal/ModalPreviewModule";
 import { useKejuaraan } from "~/common/hooks/module/kejuaraan/useKejuaraan";
 
-export const getServerSideProps = requireAuth(async (ctx) => {
+export const getServerSideProps = requireAuth(async (_ctx) => {
   return { props: {} };
 });
 

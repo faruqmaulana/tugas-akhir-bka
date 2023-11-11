@@ -17,7 +17,8 @@ import { handleUploadCloudinary } from "~/common/libs/handle-upload-cloudinary";
 import { JSONtoString } from "~/common/helpers/parseJSON";
 import { useMainLayout } from "../../layout/useMainLayout";
 
-const useAddHaki = (defaultSelected: any | undefined = undefined) => {
+import { type PatenAndHaki } from "@prisma/client";
+const useAddHaki = ({ jenis }: { jenis: PatenAndHaki }) => {
   const { refetchNotification } = useMainLayout();
 
   const {
@@ -25,10 +26,12 @@ const useAddHaki = (defaultSelected: any | undefined = undefined) => {
     mahasiswaPayload,
     handleDeleteSelectedMahasiswa,
     handleSelectMultipleUser,
-  } = useMultiSelectUser(defaultSelected);
+  } = useMultiSelectUser();
 
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
   const { mutate: addHakiApplication } =
     api.hakiModule.addHakiApplication.useMutation();
 
@@ -42,6 +45,10 @@ const useAddHaki = (defaultSelected: any | undefined = undefined) => {
   } = useForm<IHakiApplicationSchema>({
     resolver: zodResolver(hakiApplicationSchema),
   });
+
+  useEffect(() => {
+    setValue("jenis", jenis);
+  }, [setValue]);
 
   const onSubmit = useCallback(async (userPayload: IHakiApplicationSchema) => {
     setLoading(true);
@@ -62,7 +69,7 @@ const useAddHaki = (defaultSelected: any | undefined = undefined) => {
           customToast("success", data?.message);
           setLoading(false);
           await refetchNotification();
-          void router.push("/module/haki");
+          void router.push(`/module/${jenis.toLowerCase()}`);
         },
         onError: (error) => {
           customToast("error", error?.message);
@@ -71,6 +78,9 @@ const useAddHaki = (defaultSelected: any | undefined = undefined) => {
       }
     );
   }, []);
+
+  const handleOpenPreview = () => setIsPreviewOpen(true);
+  const handleClosePreview = () => setIsPreviewOpen(false);
 
   useEffect(
     () => setValue("users", mahasiswaPayload),
@@ -133,6 +143,9 @@ const useAddHaki = (defaultSelected: any | undefined = undefined) => {
     control,
     setValue,
     errors,
+    handleOpenPreview,
+    handleClosePreview,
+    isPreviewOpen,
   };
 };
 

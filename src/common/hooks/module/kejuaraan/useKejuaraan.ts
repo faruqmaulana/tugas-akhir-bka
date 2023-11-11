@@ -18,12 +18,9 @@ import { useCurrentUser } from "../profile";
 import { handleUploadCloudinary } from "~/common/libs/handle-upload-cloudinary";
 import { handleDocumentMetaToString } from "~/common/libs/handle-document-data";
 import { type KejuaraanData } from "~/common/constants/DUMMY_KEJUARAAN";
-import { useGlobalContext } from "~/common/context/GlobalContext";
 
 const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
   const router = useRouter();
-  const { state } = useGlobalContext();
-  const { globalFileMeta } = state;
 
   const {
     mahasiswa,

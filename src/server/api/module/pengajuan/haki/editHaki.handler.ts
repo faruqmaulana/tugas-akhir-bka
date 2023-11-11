@@ -1,17 +1,17 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { MOUDLE_HAKI } from "~/common/constants/MESSAGE";
 import { STATUS } from "~/common/enums/STATUS";
 import { stringToJSON } from "~/common/helpers/parseJSON";
 import { protectedProcedure } from "~/server/api/trpc";
-import { EDIT, HAKI_NOTIF, REPROCESS } from "~/common/message";
-import { MODULE_TYPE_CODE } from "~/common/enums/MODULE_TYPE_CODE";
+import { EDIT, REPROCESS } from "~/common/message";
 import { editHakiForm } from "~/common/schemas/module/pengajuan/haki/edit-haki-application.schema";
 import handleUpdateNotification from "../../notification/handleUpdateNotification";
 import handleUpdateModuleStatus from "../../notification/handleStatus";
+import capitalizeFirstLetter from "~/common/helpers/capitalizeFirstLetter";
 
 const editHakiHandler = protectedProcedure
   .input(editHakiForm)
@@ -24,7 +24,9 @@ const editHakiHandler = protectedProcedure
         users,
         patenAndHakiTableId,
         catatan,
+        jenis,
       } = input;
+
       const dosenData = users.filter((item) => item.role === "DOSEN");
       const mahasiswaData = users.filter((item) => item.role === "MAHASISWA");
       const transformedDosenData = dosenData.map((val) => {
@@ -94,10 +96,10 @@ const editHakiHandler = protectedProcedure
       await handleUpdateNotification({
         ctx,
         payload: {
-          MODULE_TYPE_CODE: MODULE_TYPE_CODE.HAKI,
+          MODULE_TYPE_CODE: jenis.toLowerCase(),
           moduleId: patenAndHakiTableId,
           note: catatan,
-          MODULE: MOUDLE_HAKI,
+          MODULE: jenis,
           ACTION_TYPE: "EDIT",
           selectedUsers: mahasiswaData,
           STATUS_TYPE: status as string,
@@ -105,7 +107,9 @@ const editHakiHandler = protectedProcedure
       });
 
       return {
-        message: `${isReprocessMsg ? REPROCESS : EDIT} ${HAKI_NOTIF}`,
+        message: `${isReprocessMsg ? REPROCESS : EDIT} ${capitalizeFirstLetter(
+          jenis
+        )}!`,
       };
     } catch (error) {}
   });

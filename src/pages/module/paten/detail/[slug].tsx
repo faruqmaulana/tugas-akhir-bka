@@ -41,21 +41,21 @@ const Example = ({ slug }: { slug: string }) => {
     onReject,
     onApprove,
     onEdit,
-  } = useHakiAction({ slug, jenis: PatenAndHaki.HAKI });
+  } = useHakiAction({ slug, jenis: PatenAndHaki.PATEN });
 
   const { role, isAdmin } = useCurrentUser();
 
   return (
     <>
       <PageHeading
-        title="Detail Pengajuan Haki"
+        title="Detail Pengajuan Paten"
         ownButton={
           <Button
             isMedium
             isGray
             className="flex w-fit items-center gap-2"
             onClick={() => {
-              void router.push("/module/haki");
+              void router.push("/module/paten");
             }}
           >
             <ArrorLeft />
@@ -64,7 +64,7 @@ const Example = ({ slug }: { slug: string }) => {
         }
       />
       <ExpandableCard
-        dokumenTitle="Dokumen Pengajuan Haki"
+        dokumenTitle="Dokumen Pengajuan Paten"
         status={haki?.status}
         setIsDrawerOpen={setIsDrawerOpen}
       >
@@ -173,7 +173,7 @@ const Example = ({ slug }: { slug: string }) => {
         showIconModal={false}
         isOpen={state.isApprove}
         className="!mb-0"
-        captionTitleConfirm="Approve Pengajuan Haki"
+        captionTitleConfirm="Approve Pengajuan Paten"
         onClose={() => handleButtonAction("close")}
         content={
           <form onSubmit={submitApprove(onApprove)}>

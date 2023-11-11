@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { type MRT_ColumnDef } from "material-react-table";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
@@ -7,120 +9,105 @@ import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import BaseTable from "~/common/components/ui/table/BaseTable";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
-import {
-  DATA_PATEN,
-  type PatenType,
-} from "~/common/constants/DUMMY_PATEN_HAKI";
+import { type HAKI } from "~/common/constants/DUMMY_PATEN_HAKI";
+import { api } from "~/utils/api";
+import { PatenAndHaki } from "@prisma/client";
+import { Anchor } from "~/common/components/ui/anchor";
+import ButtonLink from "~/common/components/ui/button/ButtonLink";
+import { requireAuth } from "~/common/authentication/requireAuth";
+
+export const getServerSideProps = requireAuth(async (_ctx) => {
+  return { props: {} };
+});
 
 const UserManagement = () => {
   const router = useRouter();
+  const { data } = api.hakiModule.getAllPatenAndHaki.useQuery({
+    type: PatenAndHaki.PATEN,
+  });
 
-  const columns = useMemo<MRT_ColumnDef<PatenType>[]>(
+  const columns = useMemo<MRT_ColumnDef<HAKI>[]>(
     () => [
       {
-        header: "NBI",
-        accessorKey: "NBI",
+        header: "Judul",
+        accessorKey: "judul",
         enableClickToCopy: true,
+        Cell: ({ cell }) => (
+          <div className="small-scrollbar max-w-[450px] overflow-x-auto">
+            <p>{cell.getValue() as string}</p>
+          </div>
+        ),
       },
       {
-        header: "Semester",
-        accessorKey: "Semester",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Prodi",
-        accessorKey: "Prodi",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Fakultas",
-        accessorKey: "Fakultas",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Dosen",
-        accessorKey: "Dosen",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Jenis",
-        accessorKey: "Jenis",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Judul Paten",
-        accessorKey: "JudulPaten",
+        header: "Diajukan oleh",
+        accessorKey: "pengajuHaki",
         enableClickToCopy: true,
       },
       {
         header: "Nomor Paten",
-        accessorKey: "NomorPaten",
+        accessorKey: "nomorPaten",
         enableClickToCopy: true,
       },
       {
-        header: "Pemegang Paten",
-        accessorKey: "PemegangPaten",
+        header: "Jenis",
+        accessorKey: "jenis",
         enableClickToCopy: true,
       },
       {
-        header: "Penulis Penemu",
-        accessorKey: "PenulisPenemu",
+        header: "Deskripsi",
+        accessorKey: "keterangan",
         enableClickToCopy: true,
       },
       {
-        header: "Abstrak",
-        accessorKey: "Abstrak",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Klaim",
-        accessorKey: "Klaim",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Gambar",
-        accessorKey: "Gambar",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Klasifikasi",
-        accessorKey: "Klasifikasi",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Tanggal Pengajuan",
-        accessorKey: "TanggalPengajuan",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Tanggal Diberikan",
-        accessorKey: "TanggalDiberikan",
+        header: "Tanggal Pendaftaran",
+        accessorKey: "tanggalPendaftaran",
         enableClickToCopy: true,
       },
       {
         header: "Masa Berlaku",
-        accessorKey: "MasaBerlaku",
+        accessorKey: "validPeriod",
         enableClickToCopy: true,
       },
       {
-        header: "Daerah Perlindungan",
-        accessorKey: "DaerahPerlindungan",
+        header: "Tanggal Kadaluarsa",
+        accessorKey: "tanggalKadaluarsa",
         enableClickToCopy: true,
+      },
+      {
+        header: "Dokumen Pendukung",
+        accessorKey: "dokumenPendukung",
+        enableClickToCopy: false,
+        Cell: ({ cell }) => (
+          <Anchor href={cell.getValue() as string}>
+            <ButtonLink />
+          </Anchor>
+        ),
+      },
+      {
+        header: "Dokumen Paten",
+        accessorKey: "dokumenTambahan",
+        enableClickToCopy: false,
+        Cell: ({ cell }) => (
+          <Anchor href={cell.getValue() as string}>
+            <ButtonLink />
+          </Anchor>
+        ),
       },
       {
         header: "Status",
-        accessorKey: "Status",
+        accessorKey: "status",
         enableClickToCopy: true,
         Cell: ({ cell }) => <StatusBadge status={cell.getValue() as string} />,
       },
       {
         header: "Action",
         ...tableActionConfig,
-        Cell: () => (
+        Cell: (props) => (
           <ViewDetailButton
             onClick={() => {
+              const id = props.row.original.id;
               const transformUrl = router.pathname.split("/").join("/");
-              void router.push(transformUrl + "/detail");
+              void router.push(transformUrl + "/detail/" + id);
             }}
           />
         ),
@@ -135,10 +122,10 @@ const UserManagement = () => {
         title="Module Data Paten"
         showCreateButton
         createButtonTitle="Data Paten"
-        link="haki/tambah"
+        link="paten/tambah"
       />
       <Card header="SEMUA DATA PENGAJUAN PATEN" className="mt-[30px]">
-        <BaseTable data={DATA_PATEN} columns={columns} />
+        <BaseTable data={data} columns={columns} />
       </Card>
     </>
   );

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { z } from "zod";
+import { PatenAndHaki } from "@prisma/client";
 import { validateFile } from "../pengajuan-prestasi.shema";
 
 export const hakiApplicationSchema = z.object({
@@ -18,6 +19,7 @@ export const hakiApplicationSchema = z.object({
       })
     )
     .min(1, "Required!"),
+  jenis: z.nativeEnum(PatenAndHaki),
 });
 
 export type IHakiApplicationSchema = z.infer<typeof hakiApplicationSchema>;
