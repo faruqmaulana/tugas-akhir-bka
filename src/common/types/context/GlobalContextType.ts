@@ -24,6 +24,7 @@ export interface GlobalState {
   notification: AllNotificationType | undefined;
   globalFileMeta: globalFileMetaType[] | [];
   allUsers: AllUsersType[] | [];
+  pengajuDokumen: string | undefined;
   // Your global state properties and types here
 }
 
@@ -31,7 +32,7 @@ export enum ActionReducer {
   UPDATE_USER = "UPDATE_USER",
   UPDATE_NOTIFICATION_COUNT = "UPDATE_NOTIFICATION_COUNT",
   UPDATE_ALL_USERS = "UPDATE_ALL_USERS",
-
+  UPDATE_PENGAJU_DOKUMEN = "UPDATE_PENGAJU_DOKUMEN",
   // HANDLE GLOBAL FILE
   UPDATE_FILE_META = "UPDATE_FILE_META",
 }
@@ -53,4 +54,8 @@ export type ActionType =
   | {
       type: typeof ActionReducer.UPDATE_FILE_META;
       payload: GlobalState["globalFileMeta"]; // Define payload type as needed
+    }
+  | {
+      type: typeof ActionReducer.UPDATE_PENGAJU_DOKUMEN;
+      payload: GlobalState["pengajuDokumen"]; // Define payload type as needed
     };

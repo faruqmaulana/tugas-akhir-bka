@@ -23,6 +23,10 @@ const AppLayout = ({ children }: any) => {
   Router.events.on("routeChangeComplete", () => {
     setIsLoading(false);
     dispatch({ type: ActionReducer.UPDATE_FILE_META, payload: [] });
+    dispatch({
+      type: ActionReducer.UPDATE_PENGAJU_DOKUMEN,
+      payload: undefined,
+    });
   });
 
   if (!isPublicPage) {

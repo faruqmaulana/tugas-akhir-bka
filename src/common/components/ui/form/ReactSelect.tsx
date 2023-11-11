@@ -100,7 +100,7 @@ export const ReactSelect = (props: ReactSelectType) => {
   } = props;
 
   const {
-    state: { user: userData },
+    state: { user: userData, pengajuDokumen },
   } = useGlobalContext();
   const router = useRouter();
   const [valueState, setValueState] = useState<string | undefined>(undefined);
@@ -115,7 +115,9 @@ export const ReactSelect = (props: ReactSelectType) => {
   // EDITABLE WHEN SINGLE SELECT DATA
   const isEditAble = (): boolean => {
     if (!formFlag) return true;
-    // if (!isChampionshipPage) return true;
+
+    // handle haki module
+    if (pengajuDokumen === userData?.id) return true;
 
     if (
       isCurrentUserLead &&

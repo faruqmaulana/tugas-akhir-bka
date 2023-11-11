@@ -27,10 +27,13 @@ import {
   editHakiForm,
 } from "~/common/schemas/module/pengajuan/haki/edit-haki-application.schema";
 import { useMultiSelectUser } from "../global/useMultiSelectUser";
+import { useGlobalContext } from "~/common/context/GlobalContext";
+import { ActionReducer } from "~/common/types/context/GlobalContextType";
 
 const useHakiAction = ({ slug }: { slug: string }) => {
   const hakiId = slug;
   const router = useRouter();
+  const { dispatch } = useGlobalContext();
   const [initialLoad, setInitialLoad] = useState(true);
   const { refetchNotification } = useMainLayout();
 
@@ -111,6 +114,12 @@ const useHakiAction = ({ slug }: { slug: string }) => {
     if (haki && !isLoadingData && initialLoad && !!mahasiswaPayload.length) {
       setInitialLoad(false); // run this code only once even array dependencies is updated
       setDefaultFormValue();
+
+      // SET PENGAJU DOKUMEN
+      dispatch({
+        type: ActionReducer.UPDATE_PENGAJU_DOKUMEN,
+        payload: haki.createdById,
+      });
     }
   }, [haki, isLoadingData, mahasiswaPayload]);
 

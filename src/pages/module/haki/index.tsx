@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { type MRT_ColumnDef } from "material-react-table";
 import { useRouter } from "next/router";
@@ -13,6 +14,11 @@ import { api } from "~/utils/api";
 import { PatenAndHaki } from "@prisma/client";
 import { Anchor } from "~/common/components/ui/anchor";
 import ButtonLink from "~/common/components/ui/button/ButtonLink";
+import { requireAuth } from "~/common/authentication/requireAuth";
+
+export const getServerSideProps = requireAuth(async (ctx) => {
+  return { props: {} };
+});
 
 const UserManagement = () => {
   const router = useRouter();
@@ -27,7 +33,7 @@ const UserManagement = () => {
         accessorKey: "judul",
         enableClickToCopy: true,
         Cell: ({ cell }) => (
-          <div className="max-w-[450px] overflow-x-auto small-scrollbar">
+          <div className="small-scrollbar max-w-[450px] overflow-x-auto">
             <p>{cell.getValue() as string}</p>
           </div>
         ),

@@ -19,6 +19,7 @@ const initialState: GlobalState = {
   notification: undefined,
   globalFileMeta: [],
   allUsers: [],
+  pengajuDokumen: undefined,
   // Initial global state values here
 };
 
@@ -33,6 +34,9 @@ const reducer = (state: GlobalState, action: ActionType): GlobalState => {
       return { ...state, globalFileMeta: action.payload };
     case ActionReducer.UPDATE_ALL_USERS:
       return { ...state, allUsers: action.payload };
+    case ActionReducer.UPDATE_PENGAJU_DOKUMEN:
+      return { ...state, pengajuDokumen: action.payload };
+
     // Add more cases for different actions
     default:
       return state;

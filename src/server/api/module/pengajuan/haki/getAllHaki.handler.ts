@@ -3,6 +3,7 @@ import { Role } from "@prisma/client";
 import capitalizeFirstLetter from "~/common/helpers/capitalizeFirstLetter";
 import { changeDateFormat } from "~/common/helpers/changeDateFormat";
 import { getDateRange } from "~/common/helpers/getDateRange";
+import removeDuplicates from "~/common/helpers/removeDuplicates";
 import { hakiPatenFilterSchema } from "~/common/schemas/module/pengajuan/haki/hakipatenfilter-application.schema";
 import { protectedProcedure } from "~/server/api/trpc";
 
@@ -105,7 +106,10 @@ const getAllPatenAndHakiHandler = protectedProcedure
         };
       });
 
-      return transformedHakiData;
+      // remove duplicate
+      const filteredData = removeDuplicates(transformedHakiData, "id");
+
+      return filteredData as typeof transformedHakiData;
     } catch (error) {
       return error;
     }

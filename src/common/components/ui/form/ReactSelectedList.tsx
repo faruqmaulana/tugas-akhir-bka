@@ -65,6 +65,12 @@ const ReactSelectedList = (props: ReactSelectedList) => {
     setUserInfo(filterData);
   };
 
+  const handlePengajuDokumen = (value: ReactSelectOptionType) => {
+    if (value.value === state.pengajuDokumen) return true;
+
+    return value.isKetua;
+  };
+
   const userInfoComponent = (value: string) => (
     <Popover>
       <PopoverTrigger
@@ -163,7 +169,7 @@ const ReactSelectedList = (props: ReactSelectedList) => {
                 <div className="ml-5 flex flex-row items-center gap-2">
                   <p className="mb-1 text-sm font-semibold sm:text-base">
                     (
-                    {value.isKetua
+                    {handlePengajuDokumen(value)
                       ? "Pengaju Dokumen"
                       : capitalizeFirstLetter(value.role)}
                     )
