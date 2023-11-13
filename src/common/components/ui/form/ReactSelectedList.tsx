@@ -38,7 +38,9 @@ const ReactSelectedList = (props: ReactSelectedList) => {
   const router = useRouter();
   const { state } = useGlobalContext();
   const { allUsers } = state;
-  const isChampionshipPage = router.pathname.includes("/module/kejuaraan");
+  const isChampionshipPage =
+    router.pathname.includes("/module/kejuaraan") ||
+    router.pathname.includes("/module/pkm");
 
   const {
     register,

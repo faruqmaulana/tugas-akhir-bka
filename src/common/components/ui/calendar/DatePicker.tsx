@@ -53,13 +53,22 @@ export function DatePicker(props: DatePickerProps) {
   } = props;
   const router = useRouter();
   const [date, setDate] = React.useState<Date>();
-  const future = router.pathname === "/module/haki/detail/[slug]";
+
+  const future =
+    router.pathname === "/module/haki/detail/[slug]" ||
+    router.pathname.includes("/module/pkm");
+
   return (
     <Controller
       {...(register || {})}
       name={register?.name || "temp"}
       control={control}
       render={({ field: { value, onChange } }) => {
+        const handleDate = (date: Date) => {
+          if (future) return date < new Date();
+          return date > new Date() || date < new Date("1900-01-01");
+        };
+
         return (
           <Popover>
             <div className="flex w-full flex-row gap-[1px]">
@@ -103,11 +112,7 @@ export function DatePicker(props: DatePickerProps) {
                   setDate(e);
                   onChange(e);
                 }}
-                disabled={(date) =>
-                  future
-                    ? date < new Date()
-                    : date > new Date() || date < new Date("1900-01-01")
-                }
+                disabled={(date) => handleDate(date)}
                 initialFocus
               />
             </PopoverContent>

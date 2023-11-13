@@ -16,9 +16,9 @@ import { Anchor } from "~/common/components/ui/anchor";
 import ButtonLink from "~/common/components/ui/button/ButtonLink";
 import { requireAuth } from "~/common/authentication/requireAuth";
 
-export const getServerSideProps = requireAuth(async (_ctx) => {
-  return { props: {} };
-});
+// export const getServerSideProps = requireAuth(async (_ctx) => {
+//   return { props: {} };
+// });
 
 const UserManagement = () => {
   const router = useRouter();

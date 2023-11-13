@@ -19,6 +19,7 @@ import { registerQuery } from "./module/register/_router";
 import { scholarshipQuery } from "./module/master-data/scholarship/_router";
 import { scholarshipModule } from "./module/pengajuan/beasiswa/_router";
 import { hakiModule } from "./module/pengajuan/haki/_router";
+import { pkmModule } from "./module/pengajuan/pkm/_router";
 
 /**
  * This is the primary router for your server.
@@ -38,7 +39,6 @@ export const appRouter = createTRPCRouter({
   achievementLevel: achievementLevelQuery,
   scholarship: scholarshipQuery,
 
-
   // ** STATISTIC
   statistic: statisticQuery,
 
@@ -51,7 +51,7 @@ export const appRouter = createTRPCRouter({
   prestasiLomba: championshipQueryHandler,
   scholarshipModule: scholarshipModule,
   hakiModule: hakiModule,
-
+  pkmModule: pkmModule,
 
   // ** NOTIFICATION
   notification: notificationQuery,
@@ -61,7 +61,6 @@ export const appRouter = createTRPCRouter({
 
   // ** REGISTER
   register: registerQuery,
-  
 });
 
 // export type definition of API

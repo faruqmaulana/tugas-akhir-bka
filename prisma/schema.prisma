@@ -8,10 +8,10 @@ generator client {
 
 generator json {
   provider     = "prisma-json-types-generator"
-  allowAny     = "false"
-  useType      = "PrismaJson.GlobalType"
-  namespace    = "PrismaJson"
   clientOutput = "finds automatically"
+  allowAny     = "false"
+  namespace    = "PrismaJson"
+  useType      = "PrismaJson.GlobalType"
 }
 
 datasource db {
@@ -162,21 +162,21 @@ model PengajuanOnUsers {
   user                         User               @relation(fields: [userId], references: [id])
 }
 
-/// === PENGAJUAN NEW FEATURE TABLE === /// (KEGIATAN BELUM TERLAKSANA)
+/// === PENGAJUAN NEW FEATURE TABLE === ///
 model PengajuanPKM {
   id              String             @id @default(cuid())
   judul           String
   deskripsi       String
-  isValidated     Boolean            @default(false)
-  validatedAt     DateTime
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @default(now()) @updatedAt
-  lampiran        String?
-  totalAnggaran   Int
-  anggaranDosen   Int
+  totalAnggaran   Int?
   dosenId         String
   status          String             @default("Sedang Diproses")
   tanggalKegiatan DateTime
+  /// [FileResponse]
+  dokumenProposal Json?
+  /// [FileResponse]
+  dokumenSK       Json?
   users           PengajuanOnUsers[]
   dosen           Dosen              @relation(fields: [dosenId], references: [id])
 }

@@ -20,7 +20,10 @@ import { type allStudentsType } from "~/server/api/module/user/user";
 
 const useMultiSelectUser = (defaultSelected: any[] | undefined = undefined) => {
   const router = useRouter();
-  const isChampionshipPage = router.pathname.includes("/module/kejuaraan");
+  const isChampionshipPage =
+    router.pathname.includes("/module/kejuaraan") ||
+    router.pathname.includes("/module/pkm");
+
   const isUserActionType = router.pathname.includes("detail");
 
   const [addDataWasMet, setAddDataWasMet] = useState(false);
@@ -46,7 +49,7 @@ const useMultiSelectUser = (defaultSelected: any[] | undefined = undefined) => {
   }
 
   if (!isChampionshipPage && tempDosenRole) {
-    tempDosenRole.map((val) => {
+    tempDosenRole?.map((val) => {
       mergedUser.push({ ...val, role: "DOSEN" });
     });
   }

@@ -104,7 +104,9 @@ export const ReactSelect = (props: ReactSelectType) => {
   } = useGlobalContext();
   const router = useRouter();
   const [valueState, setValueState] = useState<string | undefined>(undefined);
-  const isChampionshipPage = router.pathname.includes("/module/kejuaraan");
+  const isChampionshipPage =
+    router.pathname.includes("/module/kejuaraan") ||
+    router.pathname.includes("/module/pkm");
 
   const currentUserId = userData?.id;
   const isCurrentUserLead =

@@ -145,20 +145,18 @@ Table PengajuanPKM {
   id String [pk]
   judul String [not null]
   deskripsi String [not null]
-  isValidated Boolean [not null, default: false]
-  validatedAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [default: `now()`, not null]
-  lampiran String
-  totalAnggaran Int [not null]
-  anggaranDosen Int [not null]
+  totalAnggaran Int
   dosenId String [not null]
   status String [not null, default: 'Sedang Diproses']
   tanggalKegiatan DateTime [not null]
+  dokumenProposal Json [note: '[FileResponse]']
+  dokumenSK Json [note: '[FileResponse]']
   users PengajuanOnUsers [not null]
   dosen Dosen [not null]
 
-  Note: '=== PENGAJUAN NEW FEATURE TABLE === /// (KEGIATAN BELUM TERLAKSANA)'
+  Note: '=== PENGAJUAN NEW FEATURE TABLE === ///'
 }
 
 Table PengajuanBeasiswa {

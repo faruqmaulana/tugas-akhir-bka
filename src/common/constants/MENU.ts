@@ -106,6 +106,15 @@ const LIST_MENU: MenuItemType[] = [
     ],
   },
   {
+    id: 7,
+    title: "SK Rektor",
+    type: "Petugas Cabang",
+    module: "cabang-sample-data",
+    url: "/module/sk-rektor",
+    icon: BookIcon,
+    counter: 10,
+  },
+  {
     id: 4,
     title: "Prestasi Lomba & Kejuaraan",
     type: "Petugas Cabang",
@@ -131,15 +140,6 @@ const LIST_MENU: MenuItemType[] = [
     url: "/module/beasiswa",
     icon: BookIcon,
     counter: 20,
-  },
-  {
-    id: 7,
-    title: "SK Rektor",
-    type: "Petugas Cabang",
-    module: "cabang-sample-data",
-    url: "/module/sk-rektor",
-    icon: BookIcon,
-    counter: 10,
   },
   {
     id: 8,
