@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import React from "react";
-import { requireAuth } from "~/common/authentication/requireAuth";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
 import { Button } from "~/common/components/ui/button/Button";
 import SubmitButton from "~/common/components/ui/button/SubmitButton";
@@ -13,9 +12,9 @@ import FullPageLoader from "~/common/components/ui/loader/FullPageLoader";
 import { useEditBeasiswa } from "~/common/hooks/master-data/useEditBeasiswa";
 import { useAddScholarship } from "~/common/hooks/module/beasiswa/useAddScholarship";
 
-export const getServerSideProps = requireAuth(async (ctx) => {
-  return { props: {} };
-});
+// export const getServerSideProps = requireAuth(async (ctx) => {
+//   return { props: {} };
+// });
 
 const AddScolarship = () => {
   const { ADD_SCHOLARSHIP_FORM, handleSubmit, onSubmit, loading } =

@@ -14,9 +14,9 @@ import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
 import { type PengajuanBeasiswa } from "~/common/constants/module/PENGAJUAN_BEASISWA";
 import { api } from "~/utils/api";
 
-export const getServerSideProps = requireAuth(async (ctx) => {
-  return { props: {} };
-});
+// export const getServerSideProps = requireAuth(async (ctx) => {
+//   return { props: {} };
+// });
 
 const UserManagement = () => {
   const router = useRouter();

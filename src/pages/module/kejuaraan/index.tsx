@@ -2,7 +2,6 @@
 import { type MRT_ColumnDef } from "material-react-table";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
-import { requireAuth } from "~/common/authentication/requireAuth";
 import { Anchor } from "~/common/components/ui/anchor";
 import StatusBadge from "~/common/components/ui/badge/StatusBagde";
 import ButtonLink from "~/common/components/ui/button/ButtonLink";
@@ -15,9 +14,9 @@ import { type KejuaraanData } from "~/common/constants/DUMMY_KEJUARAAN";
 import { useKejuaraan } from "~/common/hooks/module/kejuaraan/useKejuaraan";
 import { useCurrentUser } from "~/common/hooks/module/profile";
 
-export const getServerSideProps = requireAuth(async (ctx) => {
-  return { props: {} };
-});
+// export const getServerSideProps = requireAuth(async (ctx) => {
+//   return { props: {} };
+// });
 
 const UserManagement = () => {
   const router = useRouter();

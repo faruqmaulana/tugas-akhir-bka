@@ -1,82 +1,77 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/require-await */
-import { useRouter } from "next/router";
 import { Button } from "~/common/components/ui/button/Button";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import Modal from "~/common/components/ui/modal/Modal";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
-import { useApproveKejuaraan } from "~/common/hooks/module/kejuaraan/useApproveKejuaraan";
 import BaseForm from "~/common/components/ui/form/BaseForm";
+import { requireAuth } from "~/common/authentication/requireAuth";
 import StepperVertical from "~/common/components/ui/stepper/StepperVertical";
 import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
 import EditModalDescription from "~/common/components/ui/modal/EditModalDescription";
+import { useHakiAction } from "~/common/hooks/module/haki/useHakiAction";
+import renderActionButton from "~/common/helpers/renderActionButton";
+import { useCurrentUser } from "~/common/hooks/module/profile";
 import ExpandableCard from "~/common/components/ui/card/ExpandableCard";
 import MahasiswaActionButton from "~/common/components/ui/button/MahasiswaActionButton";
-
-// export const getServerSideProps = requireAuth(async (ctx) => {
-//   return { props: { slug: ctx.query.slug } };
-// });
+import { PatenAndHaki } from "@prisma/client";
 
 const Example = ({ slug }: { slug: string }) => {
-  const router = useRouter();
-
   const {
-    state,
-    handleButtonAction,
-    APPROVE_PRESTASI_FORM,
-    submitApproveKejuaraan,
-    onApproveKejuaraan,
-    REJECT_PRESTASI_FORM,
-    onRejectKejuaraan,
-    submitRejectKejuaraan,
+    router,
+    haki,
+    DISPLAYED_FORM,
+    EDIT_FORM,
+    REJECT_FORM,
+    APPROVE_FORM,
     activityLog,
-    renderActionButton,
+    isLoadingData,
     isDrawerOpen,
-    setIsDrawerOpen,
-    EDIT_PRESTASI_FORM,
-    onSubmit,
-    handleSubmit,
+    state,
     setDefaultValue,
-    prestasi,
-    isAdmin,
-    isLoadingPrestasiData,
-    TRANSFORM_KEJUARAAN,
-    handleOpenPreview,
-    handleClosePreview,
-    isPreviewOpen,
-  } = useApproveKejuaraan({ slug });
+    setIsDrawerOpen,
+    handleButtonAction,
+    submitRejectHaki,
+    submitApprove,
+    submitEdit,
+    onReject,
+    onApprove,
+    onEdit,
+  } = useHakiAction({ slug, jenis: PatenAndHaki.HAKI });
+
+  const { role, isAdmin } = useCurrentUser();
 
   return (
     <>
       <PageHeading
-        title="Detail Prestasi lomba dan kejuaraan"
+        title="Detail Pengajuan Haki"
         ownButton={
           <Button
-            isLarge
+            isMedium
             isGray
             className="flex w-fit items-center gap-2"
             onClick={() => {
-              void router.push("/module/kejuaraan");
+              void router.push("/module/haki");
             }}
           >
             <ArrorLeft />
-            <span>Kembali</span>
+            <span>Batal</span>
           </Button>
         }
       />
       <ExpandableCard
-        status={prestasi?.status}
+        dokumenTitle="Dokumen Pengajuan Haki"
+        status={haki?.status}
         setIsDrawerOpen={setIsDrawerOpen}
-        dokumenTitle="Dokumen Prestasi lomba dan kejuaraan"
       >
         <BaseForm
           isEditForm
+          isLoading={!haki}
           isPreview={isAdmin}
-          isLoading={!prestasi}
-          data={TRANSFORM_KEJUARAAN}
+          data={DISPLAYED_FORM}
+          className="mb-5"
         />
-        {renderActionButton() && (
+        {renderActionButton({ status: haki?.status, role }) && (
           <div className="flex flex-row justify-end gap-4">
             <Button
               isLarge
@@ -94,15 +89,14 @@ const Example = ({ slug }: { slug: string }) => {
             </Button>
           </div>
         )}
-
-        {!isAdmin && !isLoadingPrestasiData && (
+        {!isAdmin && !isLoadingData && (
           <MahasiswaActionButton
-            onSubmit={handleSubmit(onSubmit)}
-            disableReset={!prestasi}
+            onSubmit={submitEdit(onEdit)}
+            disableReset={!haki}
             handleButtonAction={() => handleButtonAction("edit")}
-            FORM_DATA={TRANSFORM_KEJUARAAN}
+            FORM_DATA={DISPLAYED_FORM}
             setDefaultValue={() => setDefaultValue()}
-            status={prestasi?.status}
+            status={haki?.status}
           />
         )}
       </ExpandableCard>
@@ -115,13 +109,44 @@ const Example = ({ slug }: { slug: string }) => {
       <Modal
         confirm
         showClose
+        isOpen={state.isEdited}
+        className="!mb-0"
+        onClose={() => handleButtonAction("close")}
+        content={
+          <form onSubmit={submitEdit(onEdit)}>
+            <EditModalDescription status={haki?.status} />
+            <BaseForm data={EDIT_FORM} />
+            <div className="mt-5 flex flex-row justify-end gap-4">
+              <Button
+                isGray
+                isLarge
+                isDisabled={state.loadingEdited}
+                onClick={() => handleButtonAction("close")}
+              >
+                Cancel
+              </Button>
+              <Button
+                isSubmit
+                isSuccess
+                isLarge
+                isLoading={state.loadingEdited}
+              >
+                Submit
+              </Button>
+            </div>
+          </form>
+        }
+      ></Modal>
+      <Modal
+        confirm
+        showClose
         isOpen={state.isReject}
         className="!mb-0"
         captionButtonDanger="Tolak"
         onClose={() => handleButtonAction("close")}
         content={
-          <form onSubmit={submitRejectKejuaraan(onRejectKejuaraan)}>
-            <BaseForm data={REJECT_PRESTASI_FORM} />
+          <form onSubmit={submitRejectHaki(onReject)}>
+            <BaseForm data={REJECT_FORM} />
             <div className="mt-5 flex flex-row justify-end gap-4">
               <Button
                 isGray
@@ -144,11 +169,11 @@ const Example = ({ slug }: { slug: string }) => {
         showIconModal={false}
         isOpen={state.isApprove}
         className="!mb-0"
-        captionTitleConfirm="Approve Pengajuan Prestasi dan Kejuaraan"
+        captionTitleConfirm="Approve Pengajuan Haki"
         onClose={() => handleButtonAction("close")}
         content={
-          <form onSubmit={submitApproveKejuaraan(onApproveKejuaraan)}>
-            <BaseForm data={APPROVE_PRESTASI_FORM} />
+          <form onSubmit={submitApprove(onApprove)}>
+            <BaseForm data={APPROVE_FORM} />
             <div className="mt-5 flex flex-row justify-end gap-4">
               <Button
                 isGray
@@ -163,37 +188,6 @@ const Example = ({ slug }: { slug: string }) => {
                 isSuccess
                 isLarge
                 isLoading={state.loadingApprove}
-              >
-                Submit
-              </Button>
-            </div>
-          </form>
-        }
-      ></Modal>
-      <Modal
-        confirm
-        showClose
-        isOpen={state.isEdited}
-        className="!mb-0"
-        onClose={() => handleButtonAction("close")}
-        content={
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <EditModalDescription status={prestasi?.status} />
-            <BaseForm data={EDIT_PRESTASI_FORM} />
-            <div className="mt-5 flex flex-row justify-end gap-4">
-              <Button
-                isGray
-                isLarge
-                isDisabled={state.loadingEdited}
-                onClick={() => handleButtonAction("close")}
-              >
-                Cancel
-              </Button>
-              <Button
-                isSubmit
-                isSuccess
-                isLarge
-                isLoading={state.loadingEdited}
               >
                 Submit
               </Button>

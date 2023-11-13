@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/require-await */
 import React from "react";
-import { requireAuth } from "~/common/authentication/requireAuth";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
 import { Button } from "~/common/components/ui/button/Button";
-import Card from "~/common/components/ui/card/Card";
 import ExpandableCard from "~/common/components/ui/card/ExpandableCard";
-import ModuleCardInfo from "~/common/components/ui/card/ModuleCardInfo";
 import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
 import BaseForm from "~/common/components/ui/form/BaseForm";
 import PageHeading from "~/common/components/ui/header/PageHeading";
@@ -19,9 +16,9 @@ import renderActionButton from "~/common/helpers/renderActionButton";
 import { useScholarshipAction } from "~/common/hooks/module/beasiswa/useScholarshipAction";
 import { useCurrentUser } from "~/common/hooks/module/profile";
 
-export const getServerSideProps = requireAuth(async (ctx) => {
-  return { props: { slug: ctx.query.slug } };
-});
+// export const getServerSideProps = requireAuth(async (ctx) => {
+//   return { props: { slug: ctx.query.slug } };
+// });
 
 const ScholarshipDetail = ({ slug }: { slug: string }) => {
   const {
