@@ -169,7 +169,7 @@ model PengajuanPKM {
   deskripsi       String
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @default(now()) @updatedAt
-  totalAnggaran   Int?
+  totalAnggaran   BigInt?
   dosenId         String
   status          String             @default("Sedang Diproses")
   tanggalKegiatan DateTime
@@ -177,6 +177,7 @@ model PengajuanPKM {
   dokumenProposal Json?
   /// [FileResponse]
   dokumenSK       Json?
+  activityLog     ActivityLog[]
   users           PengajuanOnUsers[]
   dosen           Dosen              @relation(fields: [dosenId], references: [id])
 }
@@ -282,8 +283,10 @@ model ActivityLog {
   prestasiDataTableId String?
   pengajuanBeasiswaId String?
   patenAndHakiTableId String?
+  pengajuanPKMId      String?
   PatenAndHakiTable   PatenAndHakiTable? @relation(fields: [patenAndHakiTableId], references: [id])
   PengajuanBeasiswa   PengajuanBeasiswa? @relation(fields: [pengajuanBeasiswaId], references: [id])
+  PengajuanPKM        PengajuanPKM?      @relation(fields: [pengajuanPKMId], references: [id])
   PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
   User                User               @relation(fields: [userId], references: [id])
 }

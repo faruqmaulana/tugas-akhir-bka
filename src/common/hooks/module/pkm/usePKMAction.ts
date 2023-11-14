@@ -12,74 +12,57 @@ import { transformActivityLog } from "~/common/transforms/transformActiviryLog";
 import { useMainLayout } from "../../layout/useMainLayout";
 import { INITIAL_DRAWER_STATE } from "~/common/constants/module/GLOBAL_MODULE_DRAWER_STATE";
 import { useEffect, useState } from "react";
-import { type FileResponse } from "~/common/libs/upload-file.lib";
 import { customToast } from "~/common/components/ui/toast/showToast";
 import { JSONtoString } from "~/common/helpers/parseJSON";
 import { handleUploadCloudinary } from "~/common/libs/handle-upload-cloudinary";
-import {
-  type IApproveHakiApplicationSchema,
-  type IRejectHakiForm,
-  approveHakiApplicationSchema,
-  rejectHakiForm,
-} from "~/common/schemas/module/pengajuan/haki/approve-haki-application.schema";
-import { type HakiByIdType } from "~/server/api/module/pengajuan/haki/_router";
-import {
-  type IEditHakiForm,
-  editHakiForm,
-} from "~/common/schemas/module/pengajuan/haki/edit-haki-application.schema";
+
 import { useMultiSelectUser } from "../global/useMultiSelectUser";
-import { useGlobalContext } from "~/common/context/GlobalContext";
-import { ActionReducer } from "~/common/types/context/GlobalContextType";
-import { type PatenAndHaki } from "@prisma/client";
-import capitalizeFirstLetter from "~/common/helpers/capitalizeFirstLetter";
+import {
+  editPKMSchema,
+  type IEditPKMSchema,
+} from "~/common/schemas/module/pengajuan/pkm/create-pkm.shema";
+import { type PKMByIdType } from "~/server/api/module/pengajuan/pkm/_router";
+import {
+  type IApprovePKMApplicationSchema,
+  type IRejectPKMForm,
+  approvePKMApplicationSchema,
+  rejectPKMForm,
+} from "~/common/schemas/module/pengajuan/pkm/approve-pkm-application.schema";
+import { type FileResponse } from "~/common/libs/upload-file.lib";
 
-const useHakiAction = ({
-  slug,
-  jenis,
-}: {
-  slug: string;
-  jenis: PatenAndHaki;
-}) => {
-  const hakiId = slug;
+const usePKMAction = ({ slug }: { slug: string }) => {
+  const moduleId = slug;
   const router = useRouter();
-  const { dispatch } = useGlobalContext();
-  const [initialLoad, setInitialLoad] = useState(true);
   const { refetchNotification } = useMainLayout();
-
   const [state, setState] = useState(INITIAL_DRAWER_STATE);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [initialLoad, setInitialLoad] = useState(true);
 
-  const { mutate: approveHaki } = api.hakiModule.approveHaki.useMutation();
-  const { mutate: rejectHaki } = api.hakiModule.rejectHaki.useMutation();
-  const { mutate: editHaki } = api.hakiModule.editHaki.useMutation();
+  const { mutate: approve } = api.pkmModule.approvePKM.useMutation();
+  const { mutate: reject } = api.pkmModule.rejectPKM.useMutation();
+  const { mutate: editHaki } = api.pkmModule.editPKM.useMutation();
+  const { data: dosen } = api.lecturer.getAllDosen.useQuery();
 
   const {
-    data: haki,
+    data,
     refetch: refetchHaki,
     isLoading: isLoadingData,
-  } = api.hakiModule.getHakiById.useQuery<HakiByIdType>(hakiId, {
-    enabled: !!hakiId,
+  } = api.pkmModule.getPKMById.useQuery<PKMByIdType>(moduleId, {
+    enabled: !!moduleId,
   });
-
-  const mergedUser: any = [];
-  if (haki?.PengajuanOnUsers) {
-    mergedUser.push(...(haki?.PengajuanOnUsers || {}));
-  }
-  if (haki?.dosen) {
-    mergedUser.push(...((haki?.dosen as any[]) || {}));
-  }
 
   const {
     mahasiswa,
     mahasiswaPayload,
-    handleDeleteSelectedMahasiswa,
+    handleMahasiswaLead,
     handleSelectMultipleUser,
-  } = useMultiSelectUser(mergedUser || undefined);
+    handleDeleteSelectedMahasiswa,
+  } = useMultiSelectUser(data?.users || undefined);
 
-  const activityLog = transformActivityLog(haki?.ActivityLog);
+  const activityLog = transformActivityLog(data?.activityLog);
 
   const setDefaultValue = async () => {
-    if (haki) {
+    if (data) {
       await router.push(router.asPath);
     }
   };
@@ -92,8 +75,8 @@ const useHakiAction = ({
     handleSubmit: submitEdit,
     control: editController,
     formState: { errors: errorsEditForms },
-  } = useForm<IEditHakiForm>({
-    resolver: zodResolver(editHakiForm),
+  } = useForm<IEditPKMSchema>({
+    resolver: zodResolver(editPKMSchema),
   });
 
   // APPROVE FORM
@@ -103,9 +86,9 @@ const useHakiAction = ({
     handleSubmit: submitApprove,
     reset: resetApproveForm,
     control: approveController,
-    formState: { errors: errorsHakiForm },
-  } = useForm<IApproveHakiApplicationSchema>({
-    resolver: zodResolver(approveHakiApplicationSchema),
+    formState: { errors: errorsApproveForms },
+  } = useForm<IApprovePKMApplicationSchema>({
+    resolver: zodResolver(approvePKMApplicationSchema),
   });
 
   // REJECT FORM
@@ -115,40 +98,36 @@ const useHakiAction = ({
     handleSubmit: submitRejectHaki,
     reset: resetRejectForm,
     formState: { errors: errorsRejectForm },
-  } = useForm<IRejectHakiForm>({
-    resolver: zodResolver(rejectHakiForm),
+  } = useForm<IRejectPKMForm>({
+    resolver: zodResolver(rejectPKMForm),
   });
 
   useEffect(() => {
-    if (haki && !isLoadingData && initialLoad && !!mahasiswaPayload.length) {
+    if (data && !isLoadingData && initialLoad && !!mahasiswaPayload.length) {
       setInitialLoad(false); // run this code only once even array dependencies is updated
       setDefaultFormValue();
-
-      // SET PENGAJU DOKUMEN
-      dispatch({
-        type: ActionReducer.UPDATE_PENGAJU_DOKUMEN,
-        payload: haki.createdById,
-      });
     }
-  }, [haki, isLoadingData, mahasiswaPayload]);
+  }, [data, isLoadingData, mahasiswaPayload]);
 
   // SET DEFAULT FORM VALUE
   const setDefaultFormValue = () => {
-    if (haki && !!mahasiswaPayload.length) {
-      setDefautlRejectValue("patenAndHakiTableId", haki?.id);
-      setDefautlApproveValue("patenAndHakiTableId", haki?.id);
-      setDefaultEditValue("patenAndHakiTableId", haki?.id);
+    if (data && !!mahasiswaPayload.length) {
+      setDefautlRejectValue("PengajuanPKMId", data?.id);
+      setDefautlApproveValue("PengajuanPKMId", data?.id);
+      setDefaultEditValue("PengajuanPKMId", data?.id);
 
-      // set dokumen type
-      setDefautlRejectValue("jenis", jenis);
-      setDefautlApproveValue("jenis", jenis);
-      setDefaultEditValue("jenis", jenis);
+      // // set dokumen type
+      // setDefautlRejectValue("jenis", jenis);
+      // setDefautlApproveValue("jenis", jenis);
+      // setDefaultEditValue("jenis", jenis);
 
       // set data
-      setDefaultEditValue("dokumenPendukung", haki?.dokumenPendukung);
-      setDefaultEditValue("keterangan", haki?.keterangan);
-      setDefaultEditValue("judul", haki?.judul);
+      setDefaultEditValue("judul", data?.judul);
       setDefaultEditValue("users", mahasiswaPayload);
+      setDefaultEditValue("dosenId", data?.dosenId);
+      setDefaultEditValue("deskripsi", data?.deskripsi);
+      setDefaultEditValue("tanggalKegiatan", data?.tanggalKegiatan);
+      setDefaultEditValue("dokumenProposal", data?.dokumenProposal);
     }
   };
 
@@ -158,8 +137,8 @@ const useHakiAction = ({
     resetApproveForm();
 
     // set id
-    setDefautlRejectValue("patenAndHakiTableId", hakiId);
-    setDefautlApproveValue("patenAndHakiTableId", hakiId);
+    setDefautlRejectValue("PengajuanPKMId", moduleId);
+    setDefautlApproveValue("PengajuanPKMId", moduleId);
 
     setState(INITIAL_DRAWER_STATE);
     await Promise.all([refetchNotification(), refetchHaki()]);
@@ -186,22 +165,22 @@ const useHakiAction = ({
   };
 
   // SUBMIT EDIT
-  const onEdit = async (editPayload: IEditHakiForm) => {
-    if (!haki) return;
+  const onEdit = async (editPayload: IEditPKMSchema) => {
+    if (!data) return;
     setState((prev) => ({ ...prev, loadingEdited: true }));
 
-    const uploadDokumenPendukungPromise = handleUploadCloudinary({
-      file: editPayload?.dokumenPendukung?.[0] as unknown as File,
-      previusFileId: (haki?.dokumenPendukung as PrismaJson.FileResponse)
+    const uploadProposalPromise = handleUploadCloudinary({
+      file: editPayload?.dokumenProposal?.[0] as File,
+      previusFileId: (data?.dokumenProposal as PrismaJson.FileResponse)
         ?.public_id,
     });
 
-    const [uploadDokumen] = await Promise.all([uploadDokumenPendukungPromise]);
-    const parseDokumenPendukung = JSONtoString(uploadDokumen);
+    const [uploadProposal] = await Promise.all([uploadProposalPromise]);
+    const dokumenProposal = JSONtoString(uploadProposal);
 
     const payload = {
       ...editPayload,
-      dokumenPendukung: parseDokumenPendukung,
+      dokumenProposal,
       users: mahasiswaPayload,
     };
 
@@ -221,9 +200,9 @@ const useHakiAction = ({
   };
 
   // SUBMIT REJECT
-  const onReject = (rejectPayload: IRejectHakiForm) => {
+  const onReject = (rejectPayload: IRejectPKMForm) => {
     setState((prev) => ({ ...prev, loadingReject: true }));
-    rejectHaki(rejectPayload, {
+    reject(rejectPayload, {
       onSuccess: async (data) => {
         customToast("success", data?.message);
         setState({ ...state, loadingReject: false });
@@ -239,22 +218,19 @@ const useHakiAction = ({
   };
 
   // SUBMIT APPROVE
-  const onApprove = async (rejectPayload: IApproveHakiApplicationSchema) => {
+  const onApprove = async (rejectPayload: IApprovePKMApplicationSchema) => {
     setState((prev) => ({ ...prev, loadingApprove: true }));
 
-    const uploadDokumenTambahanPromise = handleUploadCloudinary({
-      file: rejectPayload?.dokumenTambahan?.[0] as unknown as File,
-      previusFileId: (haki?.dokumenPendukung as PrismaJson.FileResponse)
-        ?.public_id,
+    const uploadDokumenSKPromise = handleUploadCloudinary({
+      file: rejectPayload?.dokumenSK?.[0] as unknown as File,
+      previusFileId: (data?.dokumenSK as PrismaJson.FileResponse)?.public_id,
     });
 
-    const [uploadDokumenTambahan] = await Promise.all([
-      uploadDokumenTambahanPromise,
-    ]);
-    const parseDokumenTambahan = JSONtoString(uploadDokumenTambahan);
+    const [uploadDokumenSK] = await Promise.all([uploadDokumenSKPromise]);
+    const parseDokumenTambahan = JSONtoString(uploadDokumenSK);
 
-    approveHaki(
-      { ...rejectPayload, dokumenTambahan: parseDokumenTambahan },
+    approve(
+      { ...rejectPayload, dokumenSK: parseDokumenTambahan },
       {
         onSuccess: async (data) => {
           customToast("success", data?.message);
@@ -274,7 +250,34 @@ const useHakiAction = ({
   const DISPLAYED_FORM = [
     {
       trigger: trigger,
-      className: "col-span-2",
+      className: "col-span-2 lg:col-span-1",
+      placeholder: "Mahasiswa",
+      label: "Nama",
+      type: "select",
+      control: editController,
+      selectData: mahasiswa,
+      register: { ...registerEditForm("users") },
+      error: errorsEditForms.users?.message,
+      selectedData: mahasiswaPayload,
+      handleSwitch: handleMahasiswaLead,
+      handleDeleteSelectedData: handleDeleteSelectedMahasiswa,
+      handleSelectMultipleUser: handleSelectMultipleUser,
+      formFlag: "IS_MUTIPLE_SELECT_MAHASISWA_FORM",
+    },
+    {
+      trigger: trigger,
+      className: "col-span-2 lg:col-span-1",
+      placeholder: "Dosen",
+      label: "Dosen",
+      type: "select",
+      control: editController,
+      selectData: dosen,
+      register: { ...registerEditForm("dosenId") },
+      error: errorsEditForms.dosenId?.message,
+    },
+    {
+      trigger: trigger,
+      className: "col-span-2 lg:col-span-1",
       placeholder: "Judul",
       label: "Judul",
       register: { ...registerEditForm("judul") },
@@ -282,37 +285,33 @@ const useHakiAction = ({
     },
     {
       trigger: trigger,
+      className: "col-span-2 lg:col-span-1",
+      placeholder: "Tanggal Kegiatan",
+      label: "Tanggal Kegiatan",
+      value: new Date(), // Contoh dummy data untuk tanggal kegiatan.
+      type: "date",
+      control: editController,
+      register: { ...registerEditForm("tanggalKegiatan") },
+      error: errorsEditForms.tanggalKegiatan?.message,
+    },
+    {
+      trigger: trigger,
       type: "textarea",
       label: "Deskripsi",
-      placeholder: "Contoh: karya musik, buku, atau karya seni visual",
+      placeholder: "Deskripsi singkat dari kegiatan PKM yang diajuakan",
       className: "col-span-2",
-      register: { ...registerEditForm("keterangan") },
-      error: errorsEditForms.keterangan?.message,
+      register: { ...registerEditForm("deskripsi") },
+      error: errorsEditForms.deskripsi?.message,
     },
     {
       trigger: trigger,
       className: "col-span-2",
-      placeholder: "Dokumen Pendukung",
+      placeholder: "Dokumen Proposal",
       type: "file",
-      label: "Upload Dokumen Pendukung",
-      register: { ...registerEditForm("dokumenPendukung") },
-      error: errorsEditForms.dokumenPendukung?.message,
-      fileData: haki?.dokumenPendukung as FileResponse,
-    },
-    {
-      trigger: trigger,
-      className: "col-span-2",
-      placeholder: "Pemegang Paten",
-      label: `Pemegang ${capitalizeFirstLetter(jenis)}`,
-      type: "select",
-      control: editController,
-      selectData: mahasiswa,
-      register: { ...registerEditForm("users") },
-      error: errorsEditForms.users?.message,
-      selectedData: mahasiswaPayload,
-      handleDeleteSelectedData: handleDeleteSelectedMahasiswa,
-      handleSelectMultipleUser: handleSelectMultipleUser,
-      formFlag: "IS_MUTIPLE_SELECT_MAHASISWA_FORM",
+      label: "Upload Proposal PKM",
+      register: { ...registerEditForm("dokumenProposal") },
+      error: errorsEditForms.dokumenProposal?.message,
+      fileData: data?.dokumenProposal as FileResponse,
     },
   ];
 
@@ -321,7 +320,7 @@ const useHakiAction = ({
     {
       className: "col-span-2",
       type: "hidden",
-      register: { ...registerEditForm("patenAndHakiTableId") },
+      register: { ...registerEditForm("PengajuanPKMId") },
     },
     {
       labelFontSize: "text-[16px]",
@@ -339,7 +338,7 @@ const useHakiAction = ({
     {
       className: "col-span-2",
       type: "hidden",
-      register: { ...registerRejectForm("patenAndHakiTableId") },
+      register: { ...registerRejectForm("PengajuanPKMId") },
     },
     {
       labelFontSize: "text-[16px]",
@@ -357,51 +356,43 @@ const useHakiAction = ({
     {
       className: "col-span-2",
       type: "hidden",
-      register: { ...registerApproveForm("patenAndHakiTableId") },
+      register: { ...registerApproveForm("PengajuanPKMId") },
     },
     {
       trigger: trigger,
       className: "col-span-2",
-      placeholder: "Nomor Paten",
-      label: "Nomor Paten",
-      register: { ...registerApproveForm("nomorPaten") },
-      error: errorsHakiForm.nomorPaten?.message,
-    },
-
-    {
-      trigger: trigger,
-      className: "col-span-2",
-      placeholder: "Tanggal Kadaluarsa Haki",
-      label: "Tanggal Kadaluarsa Haki",
-      value: new Date(), // Contoh dummy data untuk tanggal kegiatan.
-      type: "date",
+      placeholder: "Anggaran",
+      label: "Anggaran",
+      type: "number",
+      variant: "currency",
+      register: { ...registerApproveForm("totalAnggaran") },
+      error: errorsApproveForms.totalAnggaran?.message,
       control: approveController,
-      register: { ...registerApproveForm("expiredDate") },
-      error: errorsHakiForm.expiredDate?.message,
     },
     {
       trigger: trigger,
       className: "col-span-2",
-      placeholder: "Dokumen Tambahan",
-      label: "Dokumen Tambahan",
+      placeholder: "Dokumen Surat Keputusan",
+      label: "Dokumen Surat Keputusan",
       type: "file",
-      register: { ...registerApproveForm("dokumenTambahan") },
-      error: errorsHakiForm.dokumenTambahan?.message,
+      register: { ...registerApproveForm("dokumenSK") },
+      error: errorsApproveForms.dokumenSK?.message,
     },
     {
       labelFontSize: "text-[16px]",
-      label: "*Berikan Alasan Anda :",
-      placeholder: "Contoh: Dokumen tidak valid",
+      placeholder:
+        "Contoh: Diharapkan datang ke kantor BKA pada tanggal 16 september 2023 untuk informasi lebih lanjut.",
+      label: "*Tambahkan Catatan :",
       type: "textarea",
       className: "col-span-2",
       register: { ...registerApproveForm("catatan") },
-      error: errorsHakiForm.catatan?.message,
+      error: errorsApproveForms.catatan?.message,
     },
   ];
 
   return {
     router,
-    haki,
+    data,
     DISPLAYED_FORM,
     EDIT_FORM,
     REJECT_FORM,
@@ -422,4 +413,4 @@ const useHakiAction = ({
   };
 };
 
-export { useHakiAction };
+export { usePKMAction };

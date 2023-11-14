@@ -2,19 +2,19 @@ import { z } from "zod";
 import { protectedProcedure } from "~/server/api/trpc";
 import { userQuery } from "~/server/queries/module/user/user.query";
 
-const getHakiByIdHandler = protectedProcedure
+const getPKMByIdHandler = protectedProcedure
   .input(z.string())
   .query(async ({ ctx, input }) => {
     try {
-      return await ctx.prisma.patenAndHakiTable.findUnique({
+      return await ctx.prisma.pengajuanPKM.findUnique({
         where: { id: input },
         include: {
-          PengajuanOnUsers: { select: { userId: true, keterangan: true } },
-          ActivityLog: {
+          activityLog: {
             include: {
               User: { select: userQuery },
             },
           },
+          users: true,
         },
       });
     } catch (error) {
@@ -22,4 +22,4 @@ const getHakiByIdHandler = protectedProcedure
     }
   });
 
-export default getHakiByIdHandler;
+export default getPKMByIdHandler;

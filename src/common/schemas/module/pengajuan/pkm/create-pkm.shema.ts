@@ -2,12 +2,9 @@
 import { z } from "zod";
 import { validateFile } from "../pengajuan-prestasi.shema";
 
-export const createPKMSchema = z.object({
+export const globalPKMSchema = z.object({
   judul: z.string().min(1, "Required"),
   deskripsi: z.string().min(1, "Required"),
-  dokumenProposal: validateFile.refine((fileList) => fileList.length > 0, {
-    message: "File is required!",
-  }),
   dosenId: z.string().min(1, { message: "Required!" }),
   users: z
     .array(
@@ -27,4 +24,17 @@ export const createPKMSchema = z.object({
   }),
 });
 
+export const createPKMSchema = globalPKMSchema.extend({
+  dokumenProposal: validateFile.refine((fileList) => fileList.length > 0, {
+    message: "File is required!",
+  }),
+});
+
+export const editPKMSchema = globalPKMSchema.extend({
+  PengajuanPKMId: z.string(),
+  catatan: z.string(),
+  dokumenProposal: validateFile,
+});
+
+export type IEditPKMSchema = z.infer<typeof editPKMSchema>;
 export type IcreatePKMSchema = z.infer<typeof createPKMSchema>;

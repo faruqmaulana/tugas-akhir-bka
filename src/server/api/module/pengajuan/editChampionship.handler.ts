@@ -110,13 +110,13 @@ const editChampionshipHanlder = protectedProcedure
       await handleUpdateNotification({
         ctx,
         payload: {
-          MODULE_TYPE_CODE: MODULE_TYPE_CODE.KEJUARAAN,
-          moduleId: prestasiDataTableId as string,
-          note: catatan,
-          MODULE: MOUDLE_KEJUARAAN,
-          ACTION_TYPE: "EDIT",
-          selectedUsers,
-          STATUS_TYPE: status as string,
+            MODULE_TYPE_CODE: MODULE_TYPE_CODE.KEJUARAAN,
+            moduleId: prestasiDataTableId as string,
+            note: catatan,
+            MODULE: MOUDLE_KEJUARAAN,
+            ACTION_TYPE: "EDIT",
+            selectedUsers,
+            STATUS_TYPE: status as string,
         },
       });
 

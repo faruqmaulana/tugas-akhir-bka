@@ -147,12 +147,13 @@ Table PengajuanPKM {
   deskripsi String [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [default: `now()`, not null]
-  totalAnggaran Int
+  totalAnggaran BigInt
   dosenId String [not null]
   status String [not null, default: 'Sedang Diproses']
   tanggalKegiatan DateTime [not null]
   dokumenProposal Json [note: '[FileResponse]']
   dokumenSK Json [note: '[FileResponse]']
+  activityLog ActivityLog [not null]
   users PengajuanOnUsers [not null]
   dosen Dosen [not null]
 
@@ -256,8 +257,10 @@ Table ActivityLog {
   prestasiDataTableId String
   pengajuanBeasiswaId String
   patenAndHakiTableId String
+  pengajuanPKMId String
   PatenAndHakiTable PatenAndHakiTable
   PengajuanBeasiswa PengajuanBeasiswa
+  PengajuanPKM PengajuanPKM
   PrestasiDataTable PrestasiDataTable
   User User [not null]
 }
@@ -313,6 +316,8 @@ Ref: Notification.userId > User.id
 Ref: ActivityLog.patenAndHakiTableId > PatenAndHakiTable.id
 
 Ref: ActivityLog.pengajuanBeasiswaId > PengajuanBeasiswa.id
+
+Ref: ActivityLog.pengajuanPKMId > PengajuanPKM.id
 
 Ref: ActivityLog.prestasiDataTableId > PrestasiDataTable.id
 

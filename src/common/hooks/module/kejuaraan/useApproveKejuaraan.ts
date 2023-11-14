@@ -61,7 +61,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
   });
 
   const [isPreviewOpen, setIsPreviewOpen] = useState<boolean>(false);
-  
+
   const handleOpenPreview = () => setIsPreviewOpen(true);
   const handleClosePreview = () => setIsPreviewOpen(false);
 
@@ -365,7 +365,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
       trigger: trigger,
       className: "col-span-2",
       placeholder:
-        "Contoh: Dana Beasiswa Akan Cair Tanggal 12 Mei 2023. Diharapkan datang ke kantor BKA setelah dana beasiswa cair.",
+        "Contoh: Dana Beasiswa Akan Cair Tanggal 12 Mei 2023. Diharapkan datang ke kantor BKA setelah dana cair.",
       label: "*Tambahkan Catatan :",
       register: { ...register("catatan") },
       type: "textarea",

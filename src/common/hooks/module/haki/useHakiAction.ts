@@ -390,8 +390,9 @@ const useHakiAction = ({
     },
     {
       labelFontSize: "text-[16px]",
-      label: "*Berikan Alasan Anda :",
-      placeholder: "Contoh: Dokumen tidak valid",
+      placeholder:
+        "Contoh: Diharapkan datang ke kantor BKA pada tanggal 16 september 2023 untuk informasi lebih lanjut.",
+      label: "*Tambahkan Catatan :",
       type: "textarea",
       className: "col-span-2",
       register: { ...registerApproveForm("catatan") },

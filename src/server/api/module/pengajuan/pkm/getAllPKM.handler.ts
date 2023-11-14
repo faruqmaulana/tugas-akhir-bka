@@ -23,7 +23,7 @@ export type hakiAndPatenType = Prisma.PengajuanOnUsersGetPayload<{
   };
 }>;
 
-const getAllPatenAndHakiHandler = protectedProcedure
+const getAllPKMHandler = protectedProcedure
   .input(hakiPatenFilterSchema)
   .query(async ({ ctx, input }) => {
     const { status, type } = input;
@@ -115,4 +115,4 @@ const getAllPatenAndHakiHandler = protectedProcedure
     }
   });
 
-export default getAllPatenAndHakiHandler;
+export default getAllPKMHandler;

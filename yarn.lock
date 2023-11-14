@@ -3798,6 +3798,11 @@ ini@2.0.0:
   resolved "https://registry.yarnpkg.com/ini/-/ini-2.0.0.tgz#e5fd556ecdd5726be978fa1001862eacb0a94bc5"
   integrity sha512-7PnF4oN3CvZF23ADhA5wRaYEQpJ8qygSkbtTXWBeXWXmEVRXK+1ITciHWwHhsjv1TmW0MgacIv6hEi5pX5NQdA==
 
+input-currency-react@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/input-currency-react/-/input-currency-react-1.0.1.tgz#bd1530e74aca0613dfa1a494b8b0fcc3599f7618"
+  integrity sha512-UUJaWbQCG7dEIv6XsQIhc4zLzesa8GMDiKh2XccnmWr0QChgNwOoN0mvIYitBIdY4awO93qoNby2cIkQTgjmxA==
+
 internal-slot@^1.0.3, internal-slot@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/internal-slot/-/internal-slot-1.0.5.tgz#f2a2ee21f668f8627a4667f309dc0f4fb6674986"

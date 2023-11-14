@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import React, { useState } from "react";
+import React, { type ChangeEvent, useState } from "react";
 import EyeSlashIcon from "~/common/EyeSlashIcon";
 import EyeIcon from "../../svg/EyeIcon";
 import {
@@ -22,6 +22,16 @@ import {
   type UseFormTrigger,
 } from "react-hook-form";
 import LoadingInput from "./LoadingInput";
+import dynamic from "next/dynamic";
+import Loader from "../loader/Loader";
+
+const InputCurrency = dynamic(
+  () => import("~/common/components/ui/form/InputCurrency"),
+  {
+    ssr: false,
+    loading: () => <Loader />,
+  }
+);
 
 export type InputPropsType = {
   key?: string | number;
@@ -48,7 +58,7 @@ export type InputPropsType = {
   formFlag?: string;
   register?: any;
   fileData?: FileResponse;
-  onChange?: (value: string) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSwitch?: (value: string) => void;
   handleDeleteSelectedData?: (params: handleDeleteSelectedDataType) => void;
   handleSelectMultipleUser?: (
@@ -59,6 +69,7 @@ export type InputPropsType = {
   ) => void;
   trigger?: UseFormTrigger<any>;
   isPreview?: boolean;
+  variant?: "normal" | "currency";
 };
 
 const Input = (props: InputPropsType) => {
@@ -91,6 +102,7 @@ const Input = (props: InputPropsType) => {
     handleDeleteSelectedData,
     handleSelectOptionChange,
     isPreview = false,
+    variant = "normal",
   } = props;
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -201,11 +213,14 @@ const Input = (props: InputPropsType) => {
             isLoading={isLoading}
           />
         )}
+        {type === "number" && variant === "currency" && (
+          <InputCurrency control={control} register={register} />
+        )}
         {(type === "text" ||
           type === "hidden" ||
-          type === "number" ||
           type === "password" ||
-          type === "color") && (
+          type === "color" ||
+          (type === "number" && variant === "normal")) && (
           <input
             {...(register || {})}
             autoComplete={autocomplete || "off"}
@@ -229,6 +244,9 @@ const Input = (props: InputPropsType) => {
             placeholder={placeholder}
             aria-label={placeholder}
             aria-describedby="basic-addon1"
+            // onChange={(e) => {
+            //   if (onChange) return onChange(e);
+            // }}
           />
         )}
         {type === "file" && (

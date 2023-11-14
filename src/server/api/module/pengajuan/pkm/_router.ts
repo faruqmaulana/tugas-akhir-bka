@@ -1,29 +1,30 @@
 import { createTRPCRouter } from "../../../trpc";
 import { type Prisma } from "@prisma/client";
 import { type userQuery } from "~/server/queries/module/user/user.query";
-import getHakiByIdHandler from "./getHakiById.handler";
-import rejectHakiHandler from "./rejectHaki.handler";
-import approveHakiHandler from "./approveHaki.handler";
-import editHakiHandler from "./editHaki.handler";
-import getAllPatenAndHakiHandler from "./getAllHaki.handler";
+import editHakiHandler from "./editPKM.handler";
+import getAllPatenAndHakiHandler from "./getAllPKM.handler";
 import addPKMHandler from "./createPKM.handler";
+import getPKMByIdHandler from "./getPKMById.handler";
+import rejectPKMHandler from "./rejectPKM.handler";
+import approvePKMHandler from "./approvePKM.handler";
+import editPKMHandler from "./editPKM.handler";
 
-export type HakiByIdType = Prisma.PatenAndHakiTableGetPayload<{
+export type PKMByIdType = Prisma.PengajuanPKMGetPayload<{
   include: {
-    PengajuanOnUsers: { select: { userId: true; keterangan: true } };
-    ActivityLog: {
+    activityLog: {
       include: {
         User: { select: typeof userQuery };
       };
     };
+    users: true;
   };
 }>;
 
 export const pkmModule = createTRPCRouter({
   addPKMApplication: addPKMHandler,
   getAllPatenAndHaki: getAllPatenAndHakiHandler,
-  getHakiById: getHakiByIdHandler,
-  rejectHaki: rejectHakiHandler,
-  approveHaki: approveHakiHandler,
-  editHaki: editHakiHandler,
+  getPKMById: getPKMByIdHandler,
+  rejectPKM: rejectPKMHandler,
+  approvePKM: approvePKMHandler,
+  editPKM: editPKMHandler,
 });

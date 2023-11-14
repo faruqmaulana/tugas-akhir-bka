@@ -13,10 +13,11 @@ import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
 import EditModalDescription from "~/common/components/ui/modal/EditModalDescription";
 import ExpandableCard from "~/common/components/ui/card/ExpandableCard";
 import MahasiswaActionButton from "~/common/components/ui/button/MahasiswaActionButton";
+import { requireAuth } from "~/common/authentication/requireAuth";
 
-// export const getServerSideProps = requireAuth(async (ctx) => {
-//   return { props: { slug: ctx.query.slug } };
-// });
+export const getServerSideProps = requireAuth(async (ctx) => {
+  return { props: { slug: ctx.query.slug } };
+});
 
 const Example = ({ slug }: { slug: string }) => {
   const router = useRouter();

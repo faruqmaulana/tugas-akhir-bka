@@ -9,17 +9,20 @@ import { requireAuth } from "~/common/authentication/requireAuth";
 import StepperVertical from "~/common/components/ui/stepper/StepperVertical";
 import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
 import EditModalDescription from "~/common/components/ui/modal/EditModalDescription";
-import { useHakiAction } from "~/common/hooks/module/haki/useHakiAction";
 import renderActionButton from "~/common/helpers/renderActionButton";
 import { useCurrentUser } from "~/common/hooks/module/profile";
 import ExpandableCard from "~/common/components/ui/card/ExpandableCard";
 import MahasiswaActionButton from "~/common/components/ui/button/MahasiswaActionButton";
-import { PatenAndHaki } from "@prisma/client";
+import { usePKMAction } from "~/common/hooks/module/pkm/usePKMAction";
+
+export const getServerSideProps = requireAuth(async (ctx) => {
+  return { props: { slug: ctx.query.slug } };
+});
 
 const Example = ({ slug }: { slug: string }) => {
   const {
     router,
-    haki,
+    data,
     DISPLAYED_FORM,
     EDIT_FORM,
     REJECT_FORM,
@@ -37,7 +40,7 @@ const Example = ({ slug }: { slug: string }) => {
     onReject,
     onApprove,
     onEdit,
-  } = useHakiAction({ slug, jenis: PatenAndHaki.HAKI });
+  } = usePKMAction({ slug });
 
   const { role, isAdmin } = useCurrentUser();
 
@@ -61,17 +64,17 @@ const Example = ({ slug }: { slug: string }) => {
       />
       <ExpandableCard
         dokumenTitle="Dokumen Pengajuan Haki"
-        status={haki?.status}
+        status={data?.status}
         setIsDrawerOpen={setIsDrawerOpen}
       >
         <BaseForm
           isEditForm
-          isLoading={!haki}
+          isLoading={!data}
           isPreview={isAdmin}
           data={DISPLAYED_FORM}
           className="mb-5"
         />
-        {renderActionButton({ status: haki?.status, role }) && (
+        {renderActionButton({ status: data?.status, role }) && (
           <div className="flex flex-row justify-end gap-4">
             <Button
               isLarge
@@ -92,11 +95,11 @@ const Example = ({ slug }: { slug: string }) => {
         {!isAdmin && !isLoadingData && (
           <MahasiswaActionButton
             onSubmit={submitEdit(onEdit)}
-            disableReset={!haki}
+            disableReset={!data}
             handleButtonAction={() => handleButtonAction("edit")}
             FORM_DATA={DISPLAYED_FORM}
             setDefaultValue={() => setDefaultValue()}
-            status={haki?.status}
+            status={data?.status}
           />
         )}
       </ExpandableCard>
@@ -114,7 +117,7 @@ const Example = ({ slug }: { slug: string }) => {
         onClose={() => handleButtonAction("close")}
         content={
           <form onSubmit={submitEdit(onEdit)}>
-            <EditModalDescription status={haki?.status} />
+            <EditModalDescription status={data?.status} />
             <BaseForm data={EDIT_FORM} />
             <div className="mt-5 flex flex-row justify-end gap-4">
               <Button

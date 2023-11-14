@@ -62,7 +62,6 @@ const useAddPKM = () => {
       { ...userPayload, dokumenProposal },
       {
         onSuccess: async (data) => {
-          console.log("data", data?.message);
           customToast("success", data?.message);
           setLoading(false);
           await refetchNotification();
