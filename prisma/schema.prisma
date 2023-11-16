@@ -230,7 +230,7 @@ model PatenAndHakiTable {
 }
 
 model Buku {
-  id              String   @id @default(cuid())
+  id              String        @id @default(cuid())
   NomorISBN       String
   Penulis         String
   Pengarang       String
@@ -238,11 +238,12 @@ model Buku {
   tahunTerbit     DateTime
   jumlahEksemplar Int
   validatedAt     DateTime
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @default(now()) @updatedAt
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @default(now()) @updatedAt
   userId          String
   status          String?
-  user            User     @relation(fields: [userId], references: [id])
+  user            User          @relation(fields: [userId], references: [id])
+  ActivityLog     ActivityLog[]
 }
 
 model NotifMessage {
@@ -289,6 +290,8 @@ model ActivityLog {
   PengajuanPKM        PengajuanPKM?      @relation(fields: [pengajuanPKMId], references: [id])
   PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
   User                User               @relation(fields: [userId], references: [id])
+  Buku                Buku?              @relation(fields: [bukuId], references: [id])
+  bukuId              String?
 }
 
 enum Role {
