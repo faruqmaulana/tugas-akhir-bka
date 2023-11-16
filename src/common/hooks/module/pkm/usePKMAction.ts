@@ -29,6 +29,7 @@ import {
   rejectPKMForm,
 } from "~/common/schemas/module/pengajuan/pkm/approve-pkm-application.schema";
 import { type FileResponse } from "~/common/libs/upload-file.lib";
+import { InputPropsType } from "~/common/components/ui/form/Input";
 
 const usePKMAction = ({ slug }: { slug: string }) => {
   const moduleId = slug;
@@ -352,7 +353,7 @@ const usePKMAction = ({ slug }: { slug: string }) => {
   ];
 
   // APPROVE FORM
-  const APPROVE_FORM = [
+  const APPROVE_FORM: InputPropsType[] = [
     {
       className: "col-span-2",
       type: "hidden",
