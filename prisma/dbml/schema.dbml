@@ -206,17 +206,21 @@ Table PatenAndHakiTable {
 
 Table Buku {
   id String [pk]
-  NomorISBN String [not null]
-  Penulis String [not null]
-  Pengarang String [not null]
-  Penerbit String [not null]
-  tahunTerbit DateTime [not null]
-  jumlahEksemplar Int [not null]
-  validatedAt DateTime [not null]
+  tahunTerbit DateTime
+  jumlahEksemplar String [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [default: `now()`, not null]
   userId String [not null]
-  status String
+  status String [not null, default: 'Sedang Diproses']
+  dokumenPendukung Json [note: '[FileResponse]']
+  dokumenSK Json [note: '[FileResponse]']
+  judulBuku String [not null]
+  nomorISBN String
+  penerbit String [not null]
+  pengarang String [not null]
+  penulis String [not null]
+  temp String
+  ActivityLog ActivityLog [not null]
   user User [not null]
 }
 
@@ -258,6 +262,8 @@ Table ActivityLog {
   pengajuanBeasiswaId String
   patenAndHakiTableId String
   pengajuanPKMId String
+  bukuId String
+  Buku Buku
   PatenAndHakiTable PatenAndHakiTable
   PengajuanBeasiswa PengajuanBeasiswa
   PengajuanPKM PengajuanPKM
@@ -312,6 +318,8 @@ Ref: Buku.userId > User.id
 Ref: Notification.notificationMessageId > NotifMessage.id
 
 Ref: Notification.userId > User.id
+
+Ref: ActivityLog.bukuId > Buku.id
 
 Ref: ActivityLog.patenAndHakiTableId > PatenAndHakiTable.id
 

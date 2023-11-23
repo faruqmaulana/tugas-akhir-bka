@@ -118,7 +118,10 @@ const Input = (props: InputPropsType) => {
     />
   );
 
-  if (isPreview && (type === "text" || type === "textarea")) {
+  if (
+    isPreview &&
+    (type === "text" || type === "number" || type === "textarea")
+  ) {
     return (
       <div className="relative col-span-2 flex flex-col gap-1 ">
         {label && <p className={`font-medium ${labelFontSize}`}>{label}</p>}

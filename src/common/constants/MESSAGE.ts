@@ -4,7 +4,7 @@ export const MOUDLE_PKM = "PKM";
 export const MOUDLE_BEASISWA = "Beasiswa";
 export const MOUDLE_HAKI = "HAKI";
 export const MOUDLE_PATEN = "Paten";
-export const MOUDLE_BUKU = "Buku";
+export const MODULE_BUKU = "Buku";
 export const MODULE_NOTIFIKASI = "Notifikasi";
 
 export const ALL_DATA = "Semua Data";

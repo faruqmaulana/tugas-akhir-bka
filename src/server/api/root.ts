@@ -20,6 +20,7 @@ import { scholarshipQuery } from "./module/master-data/scholarship/_router";
 import { scholarshipModule } from "./module/pengajuan/beasiswa/_router";
 import { hakiModule } from "./module/pengajuan/haki/_router";
 import { pkmModule } from "./module/pengajuan/pkm/_router";
+import { bookModule } from "./module/pengajuan/book/_router";
 
 /**
  * This is the primary router for your server.
@@ -52,6 +53,7 @@ export const appRouter = createTRPCRouter({
   scholarshipModule: scholarshipModule,
   hakiModule: hakiModule,
   pkmModule: pkmModule,
+  bookModule: bookModule,
 
   // ** NOTIFICATION
   notification: notificationQuery,

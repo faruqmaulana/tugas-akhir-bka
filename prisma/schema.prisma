@@ -8,10 +8,10 @@ generator client {
 
 generator json {
   provider     = "prisma-json-types-generator"
-  clientOutput = "finds automatically"
-  allowAny     = "false"
   namespace    = "PrismaJson"
+  allowAny     = "false"
   useType      = "PrismaJson.GlobalType"
+  clientOutput = "finds automatically"
 }
 
 datasource db {
@@ -230,20 +230,25 @@ model PatenAndHakiTable {
 }
 
 model Buku {
-  id              String        @id @default(cuid())
-  NomorISBN       String
-  Penulis         String
-  Pengarang       String
-  Penerbit        String
-  tahunTerbit     DateTime
-  jumlahEksemplar Int
-  validatedAt     DateTime
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @default(now()) @updatedAt
-  userId          String
-  status          String?
-  user            User          @relation(fields: [userId], references: [id])
-  ActivityLog     ActivityLog[]
+  id               String        @id @default(cuid())
+  tahunTerbit      DateTime?
+  jumlahEksemplar  String
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @default(now()) @updatedAt
+  userId           String
+  status           String        @default("Sedang Diproses")
+  /// [FileResponse]
+  dokumenPendukung Json?
+  /// [FileResponse]
+  dokumenSK        Json?
+  judulBuku        String
+  nomorISBN        String?
+  penerbit         String
+  pengarang        String
+  penulis          String
+  temp             String?
+  ActivityLog      ActivityLog[]
+  user             User          @relation(fields: [userId], references: [id])
 }
 
 model NotifMessage {
@@ -285,13 +290,13 @@ model ActivityLog {
   pengajuanBeasiswaId String?
   patenAndHakiTableId String?
   pengajuanPKMId      String?
+  bukuId              String?
+  Buku                Buku?              @relation(fields: [bukuId], references: [id])
   PatenAndHakiTable   PatenAndHakiTable? @relation(fields: [patenAndHakiTableId], references: [id])
   PengajuanBeasiswa   PengajuanBeasiswa? @relation(fields: [pengajuanBeasiswaId], references: [id])
   PengajuanPKM        PengajuanPKM?      @relation(fields: [pengajuanPKMId], references: [id])
   PrestasiDataTable   PrestasiDataTable? @relation(fields: [prestasiDataTableId], references: [id])
   User                User               @relation(fields: [userId], references: [id])
-  Buku                Buku?              @relation(fields: [bukuId], references: [id])
-  bukuId              String?
 }
 
 enum Role {
