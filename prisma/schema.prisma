@@ -107,6 +107,20 @@ model MasterDataTingkatPrestasi {
   PrestasiDataTable PrestasiDataTable[]
 }
 
+model DokumenSKMeta {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  nomorSK   String
+  tanggalSK DateTime
+
+  /// [FileResponse]
+  dokumenSK         Json?
+  PrestasiDataTable PrestasiDataTable[]
+  PengajuanPKM      PengajuanPKM[]
+  Buku              Buku[]
+}
+
 model LampiranData {
   id                  String              @id @default(cuid())
   /// [FileResponse]
@@ -123,8 +137,6 @@ model LampiranData {
 /// ==== PENGAJUAN PRESTASI TABLE === ///
 model PrestasiDataTable {
   id                 String                     @id @default(cuid())
-  noSK               String?
-  tanggalSK          DateTime?
   kegiatan           String
   tanggalKegiatan    DateTime
   penyelenggara      String?
@@ -137,9 +149,11 @@ model PrestasiDataTable {
   lampiranId         String
   updatedAt          DateTime                   @default(now()) @updatedAt
   status             String                     @default("Sedang Diproses")
+  suratKeputusanId   String
   activityLog        ActivityLog[]
   users              PengajuanOnUsers[]
   dosen              Dosen                      @relation(fields: [dosenId], references: [id])
+  suratKeputusan     DokumenSKMeta              @relation(fields: [suratKeputusanId], references: [id])
   lampiran           LampiranData               @relation(fields: [lampiranId], references: [id])
   orkem              MasterDataOrkem?           @relation(fields: [orkemId], references: [id])
   tingkatKejuaraan   MasterDataTingkatKejuaraan @relation(fields: [tingkatKejuaraanId], references: [id])
@@ -164,22 +178,22 @@ model PengajuanOnUsers {
 
 /// === PENGAJUAN NEW FEATURE TABLE === ///
 model PengajuanPKM {
-  id              String             @id @default(cuid())
-  judul           String
-  deskripsi       String
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @default(now()) @updatedAt
-  totalAnggaran   BigInt?
-  dosenId         String
-  status          String             @default("Sedang Diproses")
-  tanggalKegiatan DateTime
+  id               String             @id @default(cuid())
+  judul            String
+  deskripsi        String
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now()) @updatedAt
+  totalAnggaran    BigInt?
+  dosenId          String
+  status           String             @default("Sedang Diproses")
+  tanggalKegiatan  DateTime
   /// [FileResponse]
-  dokumenProposal Json?
-  /// [FileResponse]
-  dokumenSK       Json?
-  activityLog     ActivityLog[]
-  users           PengajuanOnUsers[]
-  dosen           Dosen              @relation(fields: [dosenId], references: [id])
+  dokumenProposal  Json?
+  suratKeputusanId String
+  suratKeputusan   DokumenSKMeta      @relation(fields: [suratKeputusanId], references: [id])
+  activityLog      ActivityLog[]
+  users            PengajuanOnUsers[]
+  dosen            Dosen              @relation(fields: [dosenId], references: [id])
 }
 
 model PengajuanBeasiswa {
@@ -239,8 +253,8 @@ model Buku {
   status           String        @default("Sedang Diproses")
   /// [FileResponse]
   dokumenPendukung Json?
-  /// [FileResponse]
-  dokumenSK        Json?
+  suratKeputusanId String
+  suratKeputusan   DokumenSKMeta @relation(fields: [suratKeputusanId], references: [id])
   judulBuku        String
   nomorISBN        String?
   penerbit         String
