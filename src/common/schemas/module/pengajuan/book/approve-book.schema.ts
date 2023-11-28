@@ -11,6 +11,13 @@ export const approveBookSchema = z.object({
     }
     return true;
   }),
+  nomorSK: z.string().min(1, { message: "Required!" }),
+  tanggalSK: z.date().refine((date) => {
+    if (!date) {
+      throw new Error("Tanggal is required.");
+    }
+    return true;
+  }),
   dokumenSK: validateFile.refine((fileList) => fileList.length > 0, {
     message: "File is required!",
   }),

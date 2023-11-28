@@ -8,10 +8,10 @@ generator client {
 
 generator json {
   provider     = "prisma-json-types-generator"
-  namespace    = "PrismaJson"
-  allowAny     = "false"
   useType      = "PrismaJson.GlobalType"
   clientOutput = "finds automatically"
+  allowAny     = "false"
+  namespace    = "PrismaJson"
 }
 
 datasource db {
@@ -108,17 +108,16 @@ model MasterDataTingkatPrestasi {
 }
 
 model DokumenSKMeta {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-  nomorSK   String
-  tanggalSK DateTime
-
+  id                String              @id @default(cuid())
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @default(now()) @updatedAt
+  nomorSK           String
+  tanggalSK         DateTime
   /// [FileResponse]
   dokumenSK         Json?
-  PrestasiDataTable PrestasiDataTable[]
-  PengajuanPKM      PengajuanPKM[]
   Buku              Buku[]
+  PengajuanPKM      PengajuanPKM[]
+  PrestasiDataTable PrestasiDataTable[]
 }
 
 model LampiranData {
@@ -149,13 +148,13 @@ model PrestasiDataTable {
   lampiranId         String
   updatedAt          DateTime                   @default(now()) @updatedAt
   status             String                     @default("Sedang Diproses")
-  suratKeputusanId   String
+  suratKeputusanId   String?
   activityLog        ActivityLog[]
   users              PengajuanOnUsers[]
   dosen              Dosen                      @relation(fields: [dosenId], references: [id])
-  suratKeputusan     DokumenSKMeta              @relation(fields: [suratKeputusanId], references: [id])
   lampiran           LampiranData               @relation(fields: [lampiranId], references: [id])
   orkem              MasterDataOrkem?           @relation(fields: [orkemId], references: [id])
+  suratKeputusan     DokumenSKMeta?             @relation(fields: [suratKeputusanId], references: [id])
   tingkatKejuaraan   MasterDataTingkatKejuaraan @relation(fields: [tingkatKejuaraanId], references: [id])
   tingkatPrestasi    MasterDataTingkatPrestasi  @relation(fields: [tingkatPrestasiId], references: [id])
 }
@@ -189,11 +188,11 @@ model PengajuanPKM {
   tanggalKegiatan  DateTime
   /// [FileResponse]
   dokumenProposal  Json?
-  suratKeputusanId String
-  suratKeputusan   DokumenSKMeta      @relation(fields: [suratKeputusanId], references: [id])
+  suratKeputusanId String?
   activityLog      ActivityLog[]
   users            PengajuanOnUsers[]
   dosen            Dosen              @relation(fields: [dosenId], references: [id])
+  suratKeputusan   DokumenSKMeta?     @relation(fields: [suratKeputusanId], references: [id])
 }
 
 model PengajuanBeasiswa {
@@ -244,17 +243,16 @@ model PatenAndHakiTable {
 }
 
 model Buku {
-  id               String        @id @default(cuid())
+  id               String         @id @default(cuid())
   tahunTerbit      DateTime?
   jumlahEksemplar  String
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @default(now()) @updatedAt
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @default(now()) @updatedAt
   userId           String
-  status           String        @default("Sedang Diproses")
+  status           String         @default("Sedang Diproses")
   /// [FileResponse]
   dokumenPendukung Json?
-  suratKeputusanId String
-  suratKeputusan   DokumenSKMeta @relation(fields: [suratKeputusanId], references: [id])
+  suratKeputusanId String?
   judulBuku        String
   nomorISBN        String?
   penerbit         String
@@ -262,7 +260,8 @@ model Buku {
   penulis          String
   temp             String?
   ActivityLog      ActivityLog[]
-  user             User          @relation(fields: [userId], references: [id])
+  suratKeputusan   DokumenSKMeta? @relation(fields: [suratKeputusanId], references: [id])
+  user             User           @relation(fields: [userId], references: [id])
 }
 
 model NotifMessage {

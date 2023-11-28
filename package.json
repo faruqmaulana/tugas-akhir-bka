@@ -10,7 +10,8 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "prisma-update": "npx prisma db push && npx prisma db pull && npx prisma generate"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",

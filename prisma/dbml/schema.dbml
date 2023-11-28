@@ -89,6 +89,18 @@ Table MasterDataTingkatPrestasi {
   PrestasiDataTable PrestasiDataTable [not null]
 }
 
+Table DokumenSKMeta {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  nomorSK String [not null]
+  tanggalSK DateTime [not null]
+  dokumenSK Json [note: '[FileResponse]']
+  Buku Buku [not null]
+  PengajuanPKM PengajuanPKM [not null]
+  PrestasiDataTable PrestasiDataTable [not null]
+}
+
 Table LampiranData {
   id String [pk]
   piagamPenghargaan Json [note: '[FileResponse]']
@@ -100,8 +112,6 @@ Table LampiranData {
 
 Table PrestasiDataTable {
   id String [pk]
-  noSK String
-  tanggalSK DateTime
   kegiatan String [not null]
   tanggalKegiatan DateTime [not null]
   penyelenggara String
@@ -114,11 +124,13 @@ Table PrestasiDataTable {
   lampiranId String [not null]
   updatedAt DateTime [default: `now()`, not null]
   status String [not null, default: 'Sedang Diproses']
+  suratKeputusanId String
   activityLog ActivityLog [not null]
   users PengajuanOnUsers [not null]
   dosen Dosen [not null]
   lampiran LampiranData [not null]
   orkem MasterDataOrkem
+  suratKeputusan DokumenSKMeta
   tingkatKejuaraan MasterDataTingkatKejuaraan [not null]
   tingkatPrestasi MasterDataTingkatPrestasi [not null]
 
@@ -152,10 +164,11 @@ Table PengajuanPKM {
   status String [not null, default: 'Sedang Diproses']
   tanggalKegiatan DateTime [not null]
   dokumenProposal Json [note: '[FileResponse]']
-  dokumenSK Json [note: '[FileResponse]']
+  suratKeputusanId String
   activityLog ActivityLog [not null]
   users PengajuanOnUsers [not null]
   dosen Dosen [not null]
+  suratKeputusan DokumenSKMeta
 
   Note: '=== PENGAJUAN NEW FEATURE TABLE === ///'
 }
@@ -213,7 +226,7 @@ Table Buku {
   userId String [not null]
   status String [not null, default: 'Sedang Diproses']
   dokumenPendukung Json [note: '[FileResponse]']
-  dokumenSK Json [note: '[FileResponse]']
+  suratKeputusanId String
   judulBuku String [not null]
   nomorISBN String
   penerbit String [not null]
@@ -221,6 +234,7 @@ Table Buku {
   penulis String [not null]
   temp String
   ActivityLog ActivityLog [not null]
+  suratKeputusan DokumenSKMeta
   user User [not null]
 }
 
@@ -293,6 +307,8 @@ Ref: PrestasiDataTable.lampiranId > LampiranData.id
 
 Ref: PrestasiDataTable.orkemId > MasterDataOrkem.id
 
+Ref: PrestasiDataTable.suratKeputusanId > DokumenSKMeta.id
+
 Ref: PrestasiDataTable.tingkatKejuaraanId > MasterDataTingkatKejuaraan.id
 
 Ref: PrestasiDataTable.tingkatPrestasiId > MasterDataTingkatPrestasi.id
@@ -309,9 +325,13 @@ Ref: PengajuanOnUsers.userId > User.id
 
 Ref: PengajuanPKM.dosenId > Dosen.id
 
+Ref: PengajuanPKM.suratKeputusanId > DokumenSKMeta.id
+
 Ref: PengajuanBeasiswa.userId > User.id
 
 Ref: PatenAndHakiTable.createdById > User.id
+
+Ref: Buku.suratKeputusanId > DokumenSKMeta.id
 
 Ref: Buku.userId > User.id
 

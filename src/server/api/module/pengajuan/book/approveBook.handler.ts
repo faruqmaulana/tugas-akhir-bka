@@ -15,9 +15,26 @@ const approveBookHandler = protectedProcedure
   .input(approveBookSchema)
   .mutation(async ({ ctx, input }) => {
     try {
-      const { id, dokumenSK, nomorISBN, tahunTerbit, catatan } = input;
+      const {
+        id,
+        dokumenSK,
+        nomorSK,
+        tanggalSK,
+        nomorISBN,
+        tahunTerbit,
+        catatan,
+      } = input;
 
       const dokumenJsonMeta = stringToJSON(dokumenSK) || undefined;
+
+      // ** ADD DOKUMEN SK
+      const dokumenSKCreate = await ctx.prisma.dokumenSKMeta.create({
+        data: {
+          nomorSK,
+          tanggalSK,
+          dokumenSK: dokumenJsonMeta,
+        },
+      });
 
       // ** UPDATE PRESTASI DATA TABLE
       await ctx.prisma.buku.update({
@@ -27,7 +44,7 @@ const approveBookHandler = protectedProcedure
         data: {
           nomorISBN,
           tahunTerbit,
-          dokumenSK: dokumenJsonMeta,
+          suratKeputusanId: dokumenSKCreate.id,
         },
       });
 

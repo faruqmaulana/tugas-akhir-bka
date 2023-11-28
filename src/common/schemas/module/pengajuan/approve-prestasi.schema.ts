@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { z } from "zod";
+import { validateFile } from "./pengajuan-prestasi.shema";
 
 export const rejectPrestasiForm = z.object({
   prestasiDataTableId: z.string().min(1, { message: "Required!" }),
@@ -6,12 +8,15 @@ export const rejectPrestasiForm = z.object({
 });
 
 export const approvePrestasiForm = rejectPrestasiForm.extend({
-  noSK: z.string().min(1, { message: "Required!" }),
+  nomorSK: z.string().min(1, { message: "Required!" }),
   tanggalSK: z.date().refine((date) => {
     if (!date) {
       throw new Error("Tanggal kegiatan is required.");
     }
     return true;
+  }),
+  dokumenSK: validateFile.refine((fileList) => fileList.length > 0, {
+    message: "File is required!",
   }),
 });
 

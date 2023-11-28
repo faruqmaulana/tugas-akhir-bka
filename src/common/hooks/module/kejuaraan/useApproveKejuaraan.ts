@@ -347,8 +347,8 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
       className: "col-span-2",
       placeholder: "No. Surat Keputusan",
       label: "No. Surat Keputusan",
-      register: { ...register("noSK") },
-      error: errors.noSK?.message,
+      register: { ...register("nomorSK") },
+      error: errors.nomorSK?.message,
     },
     {
       trigger: trigger,
@@ -360,6 +360,15 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
       control: control,
       register: { ...register("tanggalSK") },
       error: errors.tanggalSK?.message,
+    },
+    {
+      trigger: trigger,
+      className: "col-span-2 lg:col-span-1",
+      placeholder: "Dokumen Surat Keputusan",
+      label: "Dokumen Surat Keputusan",
+      type: "file",
+      register: { ...register("dokumenSK") },
+      error:  errors.dokumenSK?.message,
     },
     {
       trigger: trigger,

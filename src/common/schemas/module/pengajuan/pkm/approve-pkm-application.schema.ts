@@ -5,6 +5,13 @@ import { validateFile } from "../pengajuan-prestasi.shema";
 export const approvePKMApplicationSchema = z.object({
   PengajuanPKMId: z.string(),
   totalAnggaran: z.string(),
+  nomorSK: z.string().min(1, { message: "Required!" }),
+  tanggalSK: z.date().refine((date) => {
+    if (!date) {
+      throw new Error("Tanggal is required.");
+    }
+    return true;
+  }),
   dokumenSK: validateFile.refine((fileList) => fileList.length > 0, {
     message: "File is required!",
   }),

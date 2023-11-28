@@ -16,10 +16,26 @@ const approvePKMHandler = protectedProcedure
   .input(approvePKMApplicationSchema)
   .mutation(async ({ ctx, input }) => {
     try {
-      const { PengajuanPKMId, dokumenSK, catatan, totalAnggaran } = input;
+      const {
+        PengajuanPKMId,
+        nomorSK,
+        tanggalSK,
+        dokumenSK,
+        catatan,
+        totalAnggaran,
+      } = input;
 
-      const dokumenJsonMeta = stringToJSON(dokumenSK) || undefined;
       const totalAnggaranToNumeric = idrToNumber(totalAnggaran);
+      const dokumenJsonMeta = stringToJSON(dokumenSK) || undefined;
+
+      // ** ADD DOKUMEN SK
+      const dokumenSKCreate = await ctx.prisma.dokumenSKMeta.create({
+        data: {
+          nomorSK,
+          tanggalSK,
+          dokumenSK: dokumenJsonMeta,
+        },
+      });
 
       // ** UPDATE PRESTASI DATA TABLE
       await ctx.prisma.pengajuanPKM.update({
@@ -28,7 +44,7 @@ const approvePKMHandler = protectedProcedure
         },
         data: {
           totalAnggaran: totalAnggaranToNumeric,
-          dokumenSK: dokumenJsonMeta,
+          suratKeputusanId: dokumenSKCreate.id,
           status: STATUS.APPROVE,
         },
       });

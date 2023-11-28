@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { approvePrestasiForm } from "~/common/schemas/module/pengajuan/approve-prestasi.schema";
 import { protectedProcedure } from "../../trpc";
@@ -7,12 +9,25 @@ import { APPROVE_PRESTASI_AND_LOMBA } from "~/common/message";
 import { type SuccessPengajuanOnUsersType } from "./_router";
 import handleUpdateNotification from "../notification/handleUpdateNotification";
 import { MODULE_TYPE_CODE } from "~/common/enums/MODULE_TYPE_CODE";
+import { stringToJSON } from "~/common/helpers/parseJSON";
 
 const approveChampionshipHandler = protectedProcedure
   .input(approvePrestasiForm)
   .mutation(async ({ ctx, input }) => {
     try {
-      const { noSK, tanggalSK, catatan, prestasiDataTableId } = input;
+      const { nomorSK, dokumenSK, tanggalSK, catatan, prestasiDataTableId } =
+        input;
+
+      const dokumenJsonMeta = stringToJSON(dokumenSK) || undefined;
+
+      // ** ADD DOKUMEN SK
+      const dokumenSKCreate  = await ctx.prisma.dokumenSKMeta.create({
+        data: {
+          nomorSK,
+          tanggalSK,
+          dokumenSK: dokumenJsonMeta,
+        },
+      });
 
       // ** UPDATE PRESTASI DATA TABLE
       await ctx.prisma.prestasiDataTable.update({
@@ -20,9 +35,8 @@ const approveChampionshipHandler = protectedProcedure
           id: prestasiDataTableId,
         },
         data: {
-          noSK,
-          tanggalSK,
           status: STATUS.APPROVE,
+          suratKeputusanId: dokumenSKCreate.id,
         },
       });
 
