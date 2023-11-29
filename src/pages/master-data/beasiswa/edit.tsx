@@ -19,10 +19,6 @@ const DynamicEditor = dynamic(
   }
 );
 
-export const getServerSideProps = requireAuth(async (_ctx) => {
-  return { props: {} };
-});
-
 const EditScholarshipMasterData = () => {
   const {
     router,

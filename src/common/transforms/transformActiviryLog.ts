@@ -10,6 +10,13 @@ export type transformedActivityLogType = {
   userName: string;
   catatan: string | null;
   date: string;
+  userInfoMeta: {
+    name: string;
+    npm: string;
+    prodiName: string;
+    semester: string;
+    role: string
+  };
 };
 
 export const transformActivityLog = (
@@ -22,6 +29,13 @@ export const transformActivityLog = (
       userName: `${val.User.name} (${capitalizeFirstLetter(val.User.role)})`,
       catatan: val.catatan,
       date: changeDateFormatToNumeric(val.createdAt),
+      userInfoMeta: {
+        name: val.User.name,
+        npm: val.User.npm,
+        prodiName: val.User.prodi?.name,
+        semester: val.User.semester,
+        role: val.User.role,
+      },
     };
   }) as transformedActivityLogType[] | undefined;
 };

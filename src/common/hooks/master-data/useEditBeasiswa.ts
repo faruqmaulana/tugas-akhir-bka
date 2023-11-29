@@ -27,7 +27,7 @@ import { api } from "~/utils/api";
 const useEditBeasiswa = () => {
   const router = useRouter();
 
-  const { data: scholarship } =
+  const { data: scholarship, isLoading } =
     api.scholarship.getScholarship.useQuery<MasterDataBeasiswaType>();
   const { mutate: editScholarshipMasterDataHandler } =
     api.scholarship.editScholarshipMasterData.useMutation();
@@ -55,14 +55,13 @@ const useEditBeasiswa = () => {
   });
 
   const onSubmit = async (userPayload: IScholarshipSchema) => {
-    if (!scholarship) return;
     setLoading(true);
 
     const { templateFormulir } = userPayload;
 
     const uploadTemplateFormulirPromise = handleUploadCloudinary({
       file: templateFormulir?.[0] as File,
-      previusFileId: (scholarship.templateFormulir as PrismaJson.FileResponse)
+      previusFileId: (scholarship?.templateFormulir as PrismaJson.FileResponse)
         ?.public_id,
     });
 
@@ -77,7 +76,7 @@ const useEditBeasiswa = () => {
         onSuccess: (data) => {
           customToast("success", data?.message);
           setLoading(false);
-          // void router.push("/module/kejuaraan");
+          void router.push("/master-data/beasiswa/");
         },
         onError: (error) => {
           customToast("error", error?.message);
@@ -135,6 +134,7 @@ const useEditBeasiswa = () => {
     SCHOLARSHIP_FORM,
     loading,
     scholarship,
+    isLoading,
   };
 };
 

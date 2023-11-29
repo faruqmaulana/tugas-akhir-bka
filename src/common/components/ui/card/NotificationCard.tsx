@@ -57,13 +57,12 @@ const NotificationCard = ({
       }`}
     >
       <div className="flex justify-between">
-        <StatusBagde status={val.notificationMessage.status} />
-        <button
-          className="m-auto ml-3 cursor-pointer"
-          onClick={() => handleNotificationDrawer(val)}
-        >
-          <InfoIcon />
-        </button>
+        <div className="flex flex-row items-center gap-2">
+          <StatusBagde status={val.notificationMessage.status} />
+          <InfoIcon
+            onClick={() => handleNotificationDrawer(val)}
+          />
+        </div>
         {!val.readed && (
           <button
             type="button"

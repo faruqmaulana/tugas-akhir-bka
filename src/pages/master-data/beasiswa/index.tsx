@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/require-await */
 import { useRouter } from "next/router";
-import { requireAuth } from "~/common/authentication/requireAuth";
 import EditIcon from "~/common/components/svg/EditIcon";
 import { Button } from "~/common/components/ui/button/Button";
 import Card from "~/common/components/ui/card/Card";
@@ -10,15 +9,10 @@ import FullPageLoader from "~/common/components/ui/loader/FullPageLoader";
 import Modal from "~/common/components/ui/modal/Modal";
 import { useEditBeasiswa } from "~/common/hooks/master-data/useEditBeasiswa";
 
-export const getServerSideProps = requireAuth(async (_ctx) => {
-  return { props: {} };
-});
-
 const Example = () => {
   const router = useRouter();
-  const { scholarship } = useEditBeasiswa();
-
-  if (!scholarship) return <FullPageLoader />;
+  const { scholarship, isLoading } = useEditBeasiswa();
+  if (isLoading) return <FullPageLoader />;
 
   return (
     <>
@@ -31,13 +25,16 @@ const Example = () => {
           />
         </Card>
         <Card header="Template Formulir Pengajuan Beasiswa">
-          <PdfViewer
-            className="mt-2"
-            url={
-              (scholarship?.templateFormulir as PrismaJson.FileResponse)
-                ?.secure_url
-            }
-          />
+          {(scholarship?.templateFormulir as PrismaJson.FileResponse)
+            ?.secure_url && (
+            <PdfViewer
+              className="mt-2"
+              url={
+                (scholarship?.templateFormulir as PrismaJson.FileResponse)
+                  ?.secure_url
+              }
+            />
+          )}
           <p className="mt-5 text-red-500">
             **Note: Template formulir ini digunakan ketika mahasiswa mengajukan
             beasiswa

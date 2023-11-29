@@ -14,7 +14,7 @@ import ExpandableCard from "~/common/components/ui/card/ExpandableCard";
 import MahasiswaActionButton from "~/common/components/ui/button/MahasiswaActionButton";
 import { useBookAction } from "~/common/hooks/module/book/useBookAction";
 
-const Example = ({ slug }: { slug: string }) => {
+const Example = () => {
   const {
     router,
     data,
@@ -35,7 +35,7 @@ const Example = ({ slug }: { slug: string }) => {
     onReject,
     onApprove,
     onEdit,
-  } = useBookAction({ slug });
+  } = useBookAction();
 
   const { role, isAdmin } = useCurrentUser();
 

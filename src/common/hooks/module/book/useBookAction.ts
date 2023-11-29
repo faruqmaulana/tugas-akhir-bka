@@ -32,9 +32,11 @@ import {
 } from "~/common/schemas/module/pengajuan/book/reject-book.schema";
 import { type FileResponse } from "~/common/libs/upload-file.lib";
 
-const useBookAction = ({ slug }: { slug: string }) => {
-  const moduleId = slug;
+const useBookAction = () => {
   const router = useRouter();
+  const { query } = router;
+  const moduleId: string = query?.slug as string;
+
   const { refetchNotification } = useMainLayout();
   const [state, setState] = useState(INITIAL_DRAWER_STATE);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
@@ -51,7 +53,6 @@ const useBookAction = ({ slug }: { slug: string }) => {
   } = api.bookModule.getBookById.useQuery<BookByIdType>(moduleId, {
     enabled: !!moduleId,
   });
-
   const activityLog = transformActivityLog(data?.ActivityLog);
 
   const setDefaultValue = async () => {
@@ -209,7 +210,9 @@ const useBookAction = ({ slug }: { slug: string }) => {
 
     const uploadDokumenSKPromise = handleUploadCloudinary({
       file: rejectPayload?.dokumenSK?.[0] as unknown as File,
-      previusFileId: (data?.suratKeputusan?.dokumenSK as PrismaJson.FileResponse)?.public_id,
+      previusFileId: (
+        data?.suratKeputusan?.dokumenSK as PrismaJson.FileResponse
+      )?.public_id,
     });
 
     const [uploadDokumenSK] = await Promise.all([uploadDokumenSKPromise]);

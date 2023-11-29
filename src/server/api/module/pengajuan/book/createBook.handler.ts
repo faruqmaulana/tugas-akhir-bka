@@ -43,8 +43,8 @@ const addBookHandler = protectedProcedure
         ctx,
         payload: {
           moduleId: createBookApplication.id,
-          MODULE_TYPE: MODULE_BUKU,
           MODULE_TYPE_CODE: MODULE_TYPE_CODE.BUKU,
+          MODULE_TYPE: MODULE_BUKU,
           notifDescription: `Pengajuan Buku - ${createBookApplication.judulBuku}`,
           STATUS_TYPE: STATUS.PROCESSED,
           relatedUserData: [{ userId: ctx.session.user.userId }],

@@ -3,11 +3,13 @@ import { handleBgColor } from "~/common/helpers/handleBgColor";
 import { useStatus } from "~/common/hooks/module/status/useStatus";
 
 export type StatusBadgeType = {
+  className?: string;
+  text?: string;
   status: string;
   size?: "xs" | "sm" | "md";
 };
 
-const getSizeStyle = (size: StatusBadgeType["size"]) => {
+export const getSizeStyle = (size: StatusBadgeType["size"]) => {
   switch (size) {
     case "xs":
       return "px-2 text-[10px]";
@@ -20,17 +22,18 @@ const getSizeStyle = (size: StatusBadgeType["size"]) => {
 };
 
 const StatusBadge = (props: StatusBadgeType) => {
-  const { status, size = "md" } = props;
+  const { className, text, status, size = "md" } = props;
   const sizeStyle = getSizeStyle(size);
   const { handleTransformedStatus } = useStatus();
 
   return (
     <div
-      className={`rounded-full font-semibold opacity-95 
+      className={`rounded-full font-semibold opacity-95
+        ${className || ""}
         ${handleBgColor(handleTransformedStatus({ status }))}
         ${sizeStyle}`}
     >
-      <p className="w-max">{handleTransformedStatus({ status })}</p>
+      <p className="w-max">{text ?? handleTransformedStatus({ status })}</p>
     </div>
   );
 };

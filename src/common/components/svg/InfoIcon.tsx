@@ -6,11 +6,13 @@ const InfoIcon = ({
   title = "Detail Info",
   width = "16",
   height = "16",
+  onClick,
 }: {
   className?: string;
   title?: string;
   width?: string;
   height?: string;
+  onClick?: () => void;
 }) => {
   return (
     <BaseTooltip title={title}>
@@ -18,6 +20,9 @@ const InfoIcon = ({
         className={`rounded-full border border-primary bg-primary p-[2px] ${
           className || ""
         }`}
+        onClick={() => {
+          if (onClick) return onClick();
+        }}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -3,7 +3,7 @@ import { validateFile } from "../pengajuan/pengajuan-prestasi.shema";
 
 export const scholarshipSchema = z.object({
   id: z.string(),
-  syarat: z.string(),
+  syarat: z.string().min(1, 'Required'),
   templateFormulir: validateFile,
 });
 

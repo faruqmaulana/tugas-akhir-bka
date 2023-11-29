@@ -13,9 +13,10 @@ const editScholarshipMasterDataHandler = protectedProcedure
     const templateFormulirJsonMeta =
       stringToJSON(templateFormulir as string) || undefined;
 
-    const data = await ctx.prisma.masterDataBeasiswa.update({
-      where: { id },
-      data: { syarat, templateFormulir: templateFormulirJsonMeta },
+    const data = await ctx.prisma.masterDataBeasiswa.upsert({
+      where: { id: id || "" },
+      create: { syarat, templateFormulir: templateFormulirJsonMeta },
+      update: { syarat, templateFormulir: templateFormulirJsonMeta },
     });
 
     return { message: `Data ${UPDATE_SUCCESS}`, data };

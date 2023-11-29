@@ -10,23 +10,17 @@ import { STATUS } from "~/common/enums/STATUS";
 import { handleBgColor, handleTextColor } from "~/common/helpers/handleBgColor";
 import { FileEdit, FileX, Repeat } from "lucide-react";
 import Spinner from "../../svg/Spinner";
-
-export type StepperVerticalProp = {
-  id: string;
-  status: string;
-  userName: string;
-  catatan: string | null;
-  date: string;
-};
+import StudentInfo from "../info/StudentInfo";
+import { type transformedActivityLogType } from "~/common/transforms/transformActiviryLog";
+import { Role } from "@prisma/client";
 
 const StepperVertical = (props: {
-  data: StepperVerticalProp[] | undefined;
+  data: transformedActivityLogType[] | undefined;
   focusContent?: boolean;
   activityLogId?: string;
   loading?: boolean;
 }) => {
   const { data, focusContent = false, activityLogId, loading } = props;
-
   const handleIcon = (status: string) => {
     if (status === STATUS.PROCESSED) {
       return <HourglassIcon width={18} height={18} />;
@@ -82,8 +76,18 @@ const StepperVertical = (props: {
               <div className={`${styles.divider}`} />
             </td>
             <td>
-              <div className="flex min-w-[210px] max-w-[210px] flex-col">
-                <p className={styles.desc}>{step.userName}</p>
+              <div className="flex min-w-[220px] max-w-[220px] flex-col">
+                <p className={styles.desc}>
+                  {step.userName}
+                  {step.userInfoMeta.role === Role.MAHASISWA && (
+                    <StudentInfo
+                      name={step.userInfoMeta.name}
+                      npm={step.userInfoMeta.npm}
+                      prodiName={step.userInfoMeta.prodiName}
+                      semester={step.userInfoMeta.semester}
+                    />
+                  )}
+                </p>
                 <p className={`${styles.desc} !font-medium !text-gray-900`}>
                   {step.date}
                 </p>

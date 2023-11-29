@@ -19,6 +19,8 @@ export const activityLogQuery = createTRPCRouter({
         return (await ctx.prisma.activityLog.findMany({
           where: {
             OR: [
+              { bukuId: id },
+              { pengajuanPKMId: id },
               { pengajuanBeasiswaId: id },
               { prestasiDataTableId: id },
               { patenAndHakiTableId: id },

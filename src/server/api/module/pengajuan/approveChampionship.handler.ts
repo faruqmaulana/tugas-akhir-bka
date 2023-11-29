@@ -29,7 +29,7 @@ const approveChampionshipHandler = protectedProcedure
       // ** ADD DOKUMEN SK
       const dokumenSKCreate = await ctx.prisma.dokumenSKMeta.upsert({
         where: {
-          id: suratKeputusanId || undefined,
+          id: suratKeputusanId || '',
         },
         update: {
           nomorSK,

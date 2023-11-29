@@ -108,13 +108,14 @@ const useNotification = () => {
   const { mutate: actionToAllNotification } =
     api.notification.actionToAllNotification.useMutation();
   const {
-    // mutate: getModuleActivityLog,
     data: getActivityLog,
     isLoading: isActivityLogLoading,
   } = api.activityLog.getModuleLogActivity.useQuery(
     { id: currentActivityLogId },
     { enabled: !!currentActivityLogId }
   );
+
+  console.log(getActivityLog)
 
   const activityLog = transformActivityLog(
     getActivityLog as KejuaraanByIdType["activityLog"]
