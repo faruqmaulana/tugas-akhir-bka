@@ -209,7 +209,7 @@ const useBookAction = ({ slug }: { slug: string }) => {
 
     const uploadDokumenSKPromise = handleUploadCloudinary({
       file: rejectPayload?.dokumenSK?.[0] as unknown as File,
-      previusFileId: (data?.dokumenSK as PrismaJson.FileResponse)?.public_id,
+      previusFileId: (data?.suratKeputusan?.dokumenSK as PrismaJson.FileResponse)?.public_id,
     });
 
     const [uploadDokumenSK] = await Promise.all([uploadDokumenSKPromise]);
@@ -331,6 +331,11 @@ const useBookAction = ({ slug }: { slug: string }) => {
       register: { ...registerApproveForm("id") },
     },
     {
+      className: "col-span-2",
+      type: "hidden",
+      register: { ...registerApproveForm("suratKeputusanId") },
+    },
+    {
       trigger: trigger,
       className: "col-span-2 lg:col-span-1",
       placeholder: "Nomor ISBN",
@@ -348,6 +353,25 @@ const useBookAction = ({ slug }: { slug: string }) => {
       control: approveController,
       register: { ...registerApproveForm("tahunTerbit") },
       error: errorsApproveForms.tahunTerbit?.message,
+    },
+    {
+      trigger: trigger,
+      className: "col-span-2",
+      placeholder: "No. Surat Keputusan",
+      label: "No. Surat Keputusan",
+      register: { ...registerApproveForm("nomorSK") },
+      error: errorsApproveForms.nomorSK?.message,
+    },
+    {
+      trigger: trigger,
+      className: "col-span-2",
+      placeholder: "Tanggal Surat Keputusan",
+      label: "Tanggal Surat Keputusan",
+      value: new Date(), // Contoh dummy data untuk tanggal kegiatan.
+      type: "date",
+      control: approveController,
+      register: { ...registerApproveForm("tanggalSK") },
+      error: errorsApproveForms.tanggalSK?.message,
     },
     {
       trigger: trigger,

@@ -23,14 +23,23 @@ const approvePKMHandler = protectedProcedure
         dokumenSK,
         catatan,
         totalAnggaran,
+        suratKeputusanId,
       } = input;
 
       const totalAnggaranToNumeric = idrToNumber(totalAnggaran);
       const dokumenJsonMeta = stringToJSON(dokumenSK) || undefined;
 
       // ** ADD DOKUMEN SK
-      const dokumenSKCreate = await ctx.prisma.dokumenSKMeta.create({
-        data: {
+      const dokumenSKCreate = await ctx.prisma.dokumenSKMeta.upsert({
+        where: {
+          id: suratKeputusanId || undefined,
+        },
+        update: {
+          nomorSK,
+          tanggalSK,
+          dokumenSK: dokumenJsonMeta,
+        },
+        create: {
           nomorSK,
           tanggalSK,
           dokumenSK: dokumenJsonMeta,

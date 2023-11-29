@@ -4,6 +4,7 @@ import { validateFile } from "../pengajuan-prestasi.shema";
 
 export const approveBookSchema = z.object({
   id: z.string().min(1, "Required"),
+  suratKeputusanId: z.string().nullable(),
   nomorISBN: z.string().min(1, "Required"),
   tahunTerbit: z.date().refine((date) => {
     if (!date) {

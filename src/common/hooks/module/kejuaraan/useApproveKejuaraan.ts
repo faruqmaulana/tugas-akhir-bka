@@ -93,6 +93,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
       setDefaultKejuaraanValue("orkemId", prestasi?.orkemId || undefined);
       setDefaultKejuaraanValue("tingkatPrestasiId", prestasi.tingkatPrestasiId);
       setDefaultKejuaraanValue("status", prestasi.status);
+      setDefaultKejuaraanValue("suratKeputusanId", prestasi?.suratKeputusanId);
       setDefaultKejuaraanValue(
         "tingkatKejuaraanId",
         prestasi.tingkatKejuaraanId
@@ -345,6 +346,12 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
     {
       trigger: trigger,
       className: "col-span-2",
+      type: "hidden",
+      register: { ...register("suratKeputusanId") },
+    },
+    {
+      trigger: trigger,
+      className: "col-span-2",
       placeholder: "No. Surat Keputusan",
       label: "No. Surat Keputusan",
       register: { ...register("nomorSK") },
@@ -368,7 +375,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
       label: "Dokumen Surat Keputusan",
       type: "file",
       register: { ...register("dokumenSK") },
-      error:  errors.dokumenSK?.message,
+      error: errors.dokumenSK?.message,
     },
     {
       trigger: trigger,

@@ -15,6 +15,7 @@ export type BookByIdType = Prisma.BukuGetPayload<{
         User: { select: typeof userQuery },
       },
     },
+    suratKeputusan: true
   },
 }>;
 

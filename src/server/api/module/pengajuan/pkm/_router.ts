@@ -17,6 +17,7 @@ export type PKMByIdType = Prisma.PengajuanPKMGetPayload<{
       };
     };
     users: true;
+    suratKeputusan: true
   };
 }>;
 

@@ -8,6 +8,7 @@ export const rejectPrestasiForm = z.object({
 });
 
 export const approvePrestasiForm = rejectPrestasiForm.extend({
+  suratKeputusanId: z.string().nullable(),
   nomorSK: z.string().min(1, { message: "Required!" }),
   tanggalSK: z.date().refine((date) => {
     if (!date) {

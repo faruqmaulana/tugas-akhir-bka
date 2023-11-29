@@ -15,6 +15,7 @@ const getPKMByIdHandler = protectedProcedure
             },
           },
           users: true,
+          suratKeputusan: true
         },
       });
     } catch (error) {

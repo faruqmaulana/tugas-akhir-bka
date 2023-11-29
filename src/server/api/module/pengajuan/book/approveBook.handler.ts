@@ -23,13 +23,22 @@ const approveBookHandler = protectedProcedure
         nomorISBN,
         tahunTerbit,
         catatan,
+        suratKeputusanId
       } = input;
 
       const dokumenJsonMeta = stringToJSON(dokumenSK) || undefined;
 
-      // ** ADD DOKUMEN SK
-      const dokumenSKCreate = await ctx.prisma.dokumenSKMeta.create({
-        data: {
+       // ** ADD DOKUMEN SK
+       const dokumenSKCreate = await ctx.prisma.dokumenSKMeta.upsert({
+        where: {
+          id: suratKeputusanId || undefined,
+        },
+        update: {
+          nomorSK,
+          tanggalSK,
+          dokumenSK: dokumenJsonMeta,
+        },
+        create: {
           nomorSK,
           tanggalSK,
           dokumenSK: dokumenJsonMeta,

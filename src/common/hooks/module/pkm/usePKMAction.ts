@@ -29,7 +29,7 @@ import {
   rejectPKMForm,
 } from "~/common/schemas/module/pengajuan/pkm/approve-pkm-application.schema";
 import { type FileResponse } from "~/common/libs/upload-file.lib";
-import { InputPropsType } from "~/common/components/ui/form/Input";
+import { type InputPropsType } from "~/common/components/ui/form/Input";
 
 const usePKMAction = ({ slug }: { slug: string }) => {
   const moduleId = slug;
@@ -115,12 +115,8 @@ const usePKMAction = ({ slug }: { slug: string }) => {
     if (data && !!mahasiswaPayload.length) {
       setDefautlRejectValue("PengajuanPKMId", data?.id);
       setDefautlApproveValue("PengajuanPKMId", data?.id);
+      setDefautlApproveValue("suratKeputusanId", data?.suratKeputusanId);
       setDefaultEditValue("PengajuanPKMId", data?.id);
-
-      // // set dokumen type
-      // setDefautlRejectValue("jenis", jenis);
-      // setDefautlApproveValue("jenis", jenis);
-      // setDefaultEditValue("jenis", jenis);
 
       // set data
       setDefaultEditValue("judul", data?.judul);
@@ -219,19 +215,21 @@ const usePKMAction = ({ slug }: { slug: string }) => {
   };
 
   // SUBMIT APPROVE
-  const onApprove = async (rejectPayload: IApprovePKMApplicationSchema) => {
+  const onApprove = async (approvePayload: IApprovePKMApplicationSchema) => {
     setState((prev) => ({ ...prev, loadingApprove: true }));
 
     const uploadDokumenSKPromise = handleUploadCloudinary({
-      file: rejectPayload?.dokumenSK?.[0] as unknown as File,
-      previusFileId: (data?.dokumenSK as PrismaJson.FileResponse)?.public_id,
+      file: approvePayload?.dokumenSK?.[0] as unknown as File,
+      previusFileId: (
+        data?.suratKeputusan?.dokumenSK as PrismaJson.FileResponse
+      )?.public_id,
     });
 
     const [uploadDokumenSK] = await Promise.all([uploadDokumenSKPromise]);
     const parseDokumenTambahan = JSONtoString(uploadDokumenSK);
 
     approve(
-      { ...rejectPayload, dokumenSK: parseDokumenTambahan },
+      { ...approvePayload, dokumenSK: parseDokumenTambahan },
       {
         onSuccess: async (data) => {
           customToast("success", data?.message);
@@ -360,6 +358,11 @@ const usePKMAction = ({ slug }: { slug: string }) => {
       register: { ...registerApproveForm("PengajuanPKMId") },
     },
     {
+      className: "col-span-2",
+      type: "hidden",
+      register: { ...registerApproveForm("suratKeputusanId") },
+    },
+    {
       trigger: trigger,
       className: "col-span-2",
       placeholder: "Anggaran",
@@ -369,6 +372,25 @@ const usePKMAction = ({ slug }: { slug: string }) => {
       register: { ...registerApproveForm("totalAnggaran") },
       error: errorsApproveForms.totalAnggaran?.message,
       control: approveController,
+    },
+    {
+      trigger: trigger,
+      className: "col-span-2",
+      placeholder: "No. Surat Keputusan",
+      label: "No. Surat Keputusan",
+      register: { ...registerApproveForm("nomorSK") },
+      error: errorsApproveForms.nomorSK?.message,
+    },
+    {
+      trigger: trigger,
+      className: "col-span-2",
+      placeholder: "Tanggal Surat Keputusan",
+      label: "Tanggal Surat Keputusan",
+      value: new Date(), // Contoh dummy data untuk tanggal kegiatan.
+      type: "date",
+      control: approveController,
+      register: { ...registerApproveForm("tanggalSK") },
+      error: errorsApproveForms.tanggalSK?.message,
     },
     {
       trigger: trigger,

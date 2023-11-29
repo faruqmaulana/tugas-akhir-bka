@@ -62,6 +62,7 @@ export const pengajuanPrestasiForm = z
     prestasiDataTableId: z.string().optional(),
     catatan: z.string().optional(),
     status: z.string().optional(),
+    suratKeputusanId: z.string().nullable(),
   })
   .refine((data) => {
     const filledFields = [

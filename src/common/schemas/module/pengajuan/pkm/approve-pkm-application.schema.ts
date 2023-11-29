@@ -4,6 +4,7 @@ import { validateFile } from "../pengajuan-prestasi.shema";
 
 export const approvePKMApplicationSchema = z.object({
   PengajuanPKMId: z.string(),
+  suratKeputusanId: z.string().nullable(),
   totalAnggaran: z.string(),
   nomorSK: z.string().min(1, { message: "Required!" }),
   tanggalSK: z.date().refine((date) => {

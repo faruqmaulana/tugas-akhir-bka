@@ -19,6 +19,7 @@ export type allChampionshipType = Prisma.PengajuanOnUsersGetPayload<{
         tingkatKejuaraan: true;
         tingkatPrestasi: true;
         activityLog: true;
+        suratKeputusan: true;
       };
     };
     dosen: { select: { name: true; nidn: true } };
@@ -80,6 +81,7 @@ const getAllChampionshipHandler = protectedProcedure
               tingkatKejuaraan: true,
               tingkatPrestasi: true,
               activityLog: true,
+              suratKeputusan: true,
             },
           },
           dosen: { select: { name: true, nidn: true } },
@@ -103,8 +105,10 @@ const getAllChampionshipHandler = protectedProcedure
       const transformedPrestasiData = prestasiData.map((data) => ({
         id: data.PrestasiDataTable?.id || "-",
         nama: data.user.name || "-",
-        noSK: data.PrestasiDataTable?.noSK || "-",
-        tanggalSK: changeDateFormat(data.PrestasiDataTable?.tanggalSK),
+        noSK: data.PrestasiDataTable?.suratKeputusan?.nomorSK || "-",
+        tanggalSK: changeDateFormat(
+          data.PrestasiDataTable?.suratKeputusan?.tanggalSK
+        ),
         kegiatan: data.PrestasiDataTable?.kegiatan || "-",
         tanggalKegiatan: changeDateFormat(
           data.PrestasiDataTable?.tanggalKegiatan

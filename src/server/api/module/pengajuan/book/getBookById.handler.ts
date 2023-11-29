@@ -14,6 +14,7 @@ const getBookByIdHandler = protectedProcedure
               User: { select: userQuery },
             },
           },
+          suratKeputusan: true
         },
       });
     } catch (error) {
