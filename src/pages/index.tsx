@@ -14,7 +14,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import styles from "~/styles/ui/Login.module.scss";
 import { requireAuth } from "~/common/authentication/requireAuth";
 import { showToast } from "~/common/components/ui/toast/showToast";
-import { LOGIN_TOAST } from "~/common/constants/MESSAGE";
 import EyeIcon from "~/common/components/svg/EyeIcon";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
@@ -46,7 +45,7 @@ export default function LoginForm() {
         redirect: false,
       });
 
-      showToast(request, LOGIN_TOAST);
+      showToast(request);
 
       // check error login
       const error = !request?.ok;

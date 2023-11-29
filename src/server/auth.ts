@@ -49,23 +49,20 @@ export const authOptions: NextAuthOptions = {
   providers: [
     Credentials({
       name: "credentials",
+      type: "credentials",
       credentials: {},
       authorize: async (credentials, req) => {
-        try {
-          const { npm, password } = await loginSchema.parseAsync(credentials);
-          const result = await prisma.user.findFirst({
-            where: { npm },
-          });
+        const { npm, password } = await loginSchema.parseAsync(credentials);
+        const result = await prisma.user.findFirst({
+          where: { npm },
+        });
 
-          if (!result) return null;
-          const isValidPassword = await verify(result.password, password);
-          if (!isValidPassword) return null;
+        if (!result) throw new Error("Akun belum terdaftar");
+        const isValidPassword = await verify(result.password, password);
+        if (!isValidPassword) throw new Error("NPM atau password salah!");
+        if (!result.isActive) throw new Error("Akun tidak aktif!");
 
-          return { id: result.id, role: result.role };
-        } catch (error) {
-          console.log(error);
-          return null;
-        }
+        return { id: result.id, role: result.role };
       },
     }),
   ],

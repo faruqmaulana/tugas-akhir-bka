@@ -52,6 +52,13 @@ const UserManagement = () => {
         accessorKey: "total_prestasi",
         header: "Total Prestasi",
       },
+      {
+        accessorKey: "isActive",
+        header: "Status Akun",
+        Cell: ({ cell }) => (
+          <p>{Boolean(cell.getValue()) ? "Aktif" : "Tidak Aktif"}</p>
+        ),
+      },
     ],
     []
   );

@@ -10,6 +10,7 @@ import { STATUS } from "~/common/enums/STATUS";
 
 export type allStudentsType = Prisma.UserGetPayload<{
   select: typeof userQuery & {
+    isActive: true,
     _count: {
       select: {
         prestasiDataTables: {
@@ -35,6 +36,7 @@ export type allStudentTableType = {
   prodi: string;
   semester: string;
   total_prestasi: number;
+  isActive: boolean
 };
 
 export const userData = createTRPCRouter({
@@ -42,7 +44,7 @@ export const userData = createTRPCRouter({
   getAllMahasiswaSelect: protectedProcedure.query(async ({ ctx }) => {
     try {
       return await ctx.prisma.user.findMany({
-        where: { role: Role.MAHASISWA },
+        where: { role: Role.MAHASISWA, isActive: true },
         select: {
           id: true,
           name: true,
@@ -66,6 +68,7 @@ export const userData = createTRPCRouter({
         where: { role: Role.MAHASISWA },
         select: {
           ...userQuery,
+          isActive: true,
           _count: {
             select: {
               prestasiDataTables: {
@@ -92,6 +95,7 @@ export const userData = createTRPCRouter({
           prodi: val.prodi?.name,
           semester: val.semester,
           total_prestasi: val._count.prestasiDataTables,
+          isActive: val.isActive
         };
       }) as allStudentTableType[];
 
