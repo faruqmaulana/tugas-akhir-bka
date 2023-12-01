@@ -28,8 +28,8 @@ export default function RegisterForm() {
   return (
     <div className="flex flex-col gap-5">
       <GoogleButton text="Sign up with Google" />
-      <div className="relative my-2 w-full border-b border-gray-400">
-        <p className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-gray-600">
+      <div className="relative my-1 w-full border-b border-gray-400">
+        <p className="absolute text-sm left-1/2 top-1/2 -translate-x-1/2 text-gray-600 -translate-y-1/2 bg-white px-2">
           OR
         </p>
       </div>

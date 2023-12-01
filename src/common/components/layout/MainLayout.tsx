@@ -9,6 +9,11 @@ const MainLayout = ({ children }: any) => {
 
   return (
     <div>
+      {/* <div className="w-full bg-red-500 py-3">
+        <p className="mx-auto text-center text-sm font-medium hover:cursor-pointer md:font-semibold">
+          lengkapi profile anda
+        </p>
+      </div> */}
       <Aside showAside={showAside} />
       <div
         className={`flex flex-col transition-all duration-1000 ease-in-out ${
