@@ -16,10 +16,9 @@ const useHeader = (props: HeaderProps) => {
   };
 
   const handleSignOut = async () => {
-    await signOut({ redirect: true });
-    // setTimeout(() => {
-    //   router.push("/");
-    // }, 1000);
+    await signOut({ redirect: false }).then(() => {
+      router.push("/"); // Redirect to the login page after signing out
+    });
   };
 
   return { router, user, handleHamburgerButton, handleSignOut };

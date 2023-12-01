@@ -172,7 +172,7 @@ const Example = ({ slug }: { slug: string }) => {
         showIconModal={false}
         isOpen={state.isApprove}
         className="!mb-0"
-        captionTitleConfirm="Approve Pengajuan Haki"
+        captionTitleConfirm="Approve Pengajuan PKM"
         onClose={() => handleButtonAction("close")}
         content={
           <form onSubmit={submitApprove(onApprove)}>

@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
+import { useCurrentUser } from "~/common/hooks/module/profile";
 import PlusIcon from "../../svg/PlusIcon";
 import { Button } from "../button/Button";
 import { useHeadingTitle } from "~/common/hooks/useHeading";
+import {  Role } from "@prisma/client";
 
 type PageTypeHeading = {
   title?: string;
@@ -26,6 +28,8 @@ const PageHeading = (props: PageTypeHeading) => {
     ownButton = false,
   } = props;
   const { router, pageHeading, moduleHeading } = useHeadingTitle();
+  const { role } = useCurrentUser();
+  const adminCreateButton = role === Role.ADMIN && router.asPath.includes('master-data') 
 
   const styleHeader = [];
 
@@ -52,7 +56,7 @@ const PageHeading = (props: PageTypeHeading) => {
           </h4>
         )}
       </div>
-      {showCreateButton && (
+      {(showCreateButton || adminCreateButton) && (
         <Button
           className="flex items-center gap-2 px-6 py-3 text-base"
           isSuccess

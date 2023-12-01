@@ -25,6 +25,7 @@ import { type IPengajuanPrestasiForm } from "~/common/schemas/module/pengajuan/p
 import { replaceForms } from "~/common/helpers/replaceForms";
 import { handleUploadCloudinary } from "~/common/libs/handle-upload-cloudinary";
 import { handleDocumentMetaToString } from "~/common/libs/handle-document-data";
+import { JSONtoString } from "~/common/helpers/parseJSON";
 
 const INITIAL_STATE = {
   isEdited: false,
@@ -48,7 +49,6 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
     api.prestasiLomba.approvePengajuanPrestasi.useMutation();
   const { mutate: rejectPengajuanPrestasi } =
     api.prestasiLomba.rejectPengajuanPrestasi.useMutation();
-
   const { mutate: editPengajuanPrestasi } =
     api.prestasiLomba.editPengajuanPrestasi.useMutation();
 
@@ -193,21 +193,34 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
     await Promise.all([refetchNotification(), refetchPrestasi()]);
   };
 
-  const onApproveKejuaraan = (approvePayload: IApprovePrestasiForm) => {
+  const onApproveKejuaraan = async (approvePayload: IApprovePrestasiForm) => {
     setState((prev) => ({ ...prev, loadingApprove: true }));
-    approvePengajuanPrestasi(approvePayload, {
-      onSuccess: async (data) => {
-        customToast("success", data?.message);
-        setState({ ...state, loadingApprove: false });
-        if (data?.message) {
-          await onSuccesAction();
-        }
-      },
-      onError: (error) => {
-        customToast("error", error?.message);
-        setState({ ...state, loadingApprove: false });
-      },
+    const uploadDokumenSKPromise = handleUploadCloudinary({
+      file: approvePayload?.dokumenSK?.[0] as unknown as File,
+      previusFileId: (
+        prestasi?.suratKeputusan?.dokumenSK as PrismaJson.FileResponse
+      )?.public_id,
     });
+
+    const [uploadDokumenSK] = await Promise.all([uploadDokumenSKPromise]);
+    const parseDokumenTambahan = JSONtoString(uploadDokumenSK);
+
+    approvePengajuanPrestasi(
+      { ...approvePayload, dokumenSK: parseDokumenTambahan },
+      {
+        onSuccess: async (data) => {
+          customToast("success", data?.message);
+          setState({ ...state, loadingApprove: false });
+          if (data?.message) {
+            await onSuccesAction();
+          }
+        },
+        onError: (error) => {
+          customToast("error", error?.message);
+          setState({ ...state, loadingApprove: false });
+        },
+      }
+    );
   };
 
   const onRejectKejuaraan = (rejectPayload: IRejectPrestasiForm) => {
@@ -339,13 +352,13 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
   const APPROVE_PRESTASI_FORM = [
     {
       trigger: trigger,
-      className: "col-span-2",
+      className: "col-span-1",
       type: "hidden",
       register: { ...register("prestasiDataTableId") },
     },
     {
       trigger: trigger,
-      className: "col-span-2",
+      className: "col-span-1",
       type: "hidden",
       register: { ...register("suratKeputusanId") },
     },
@@ -370,7 +383,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
     },
     {
       trigger: trigger,
-      className: "col-span-2 lg:col-span-1",
+      className: "col-span-2",
       placeholder: "Dokumen Surat Keputusan",
       label: "Dokumen Surat Keputusan",
       type: "file",

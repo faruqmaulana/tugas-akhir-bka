@@ -115,8 +115,6 @@ const useNotification = () => {
     { enabled: !!currentActivityLogId }
   );
 
-  console.log(getActivityLog)
-
   const activityLog = transformActivityLog(
     getActivityLog as KejuaraanByIdType["activityLog"]
   );

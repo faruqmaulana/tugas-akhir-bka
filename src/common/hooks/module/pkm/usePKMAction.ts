@@ -353,12 +353,12 @@ const usePKMAction = ({ slug }: { slug: string }) => {
   // APPROVE FORM
   const APPROVE_FORM: InputPropsType[] = [
     {
-      className: "col-span-2",
+      className: "col-span-1",
       type: "hidden",
       register: { ...registerApproveForm("PengajuanPKMId") },
     },
     {
-      className: "col-span-2",
+      className: "col-span-1",
       type: "hidden",
       register: { ...registerApproveForm("suratKeputusanId") },
     },

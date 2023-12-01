@@ -2,28 +2,69 @@
 //// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 //// ------------------------------------------------------
 
+Table Account {
+  id String [pk]
+  userId String [not null]
+  type String [not null]
+  provider String [not null]
+  providerAccountId String [not null]
+  refresh_token String
+  access_token String
+  expires_at Int
+  token_type String
+  scope String
+  id_token String
+  session_state String
+  user User [not null]
+
+  indexes {
+    (provider, providerAccountId) [unique]
+  }
+}
+
+Table Session {
+  id String [pk]
+  sessionToken String [unique, not null]
+  userId String [not null]
+  expires DateTime [not null]
+  user User [not null]
+}
+
+Table VerificationToken {
+  identifier String [not null]
+  token String [unique, not null]
+  expires DateTime [not null]
+
+  indexes {
+    (identifier, token) [unique]
+  }
+}
+
 Table User {
   id String [pk]
   name String [not null]
-  npm String [unique, not null]
+  npm String [unique]
   alamat String
   semester String
   phone String [unique]
   email String [unique, not null]
-  emailVerified DateTime
-  password String [not null]
+  password String
   role Role [not null, default: 'MAHASISWA']
   prodiId String
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [default: `now()`, not null]
   token String [unique]
   isActive Boolean [not null, default: false]
+  image String
+  emailVerified DateTime
+  accounts Account [not null]
   ActivityLog ActivityLog [not null]
   Buku Buku [not null]
   notification Notification [not null]
   PatenAndHakiTable PatenAndHakiTable [not null]
   PengajuanBeasiswa PengajuanBeasiswa [not null]
   prestasiDataTables PengajuanOnUsers [not null]
+  sessions Session [not null]
   prodi MasterDataProdi
 }
 
@@ -232,7 +273,6 @@ Table Buku {
   penerbit String [not null]
   pengarang String [not null]
   penulis String [not null]
-  temp String
   ActivityLog ActivityLog [not null]
   suratKeputusan DokumenSKMeta
   user User [not null]
@@ -294,6 +334,10 @@ Enum PatenAndHaki {
   PATEN
   HAKI
 }
+
+Ref: Account.userId > User.id [delete: Cascade]
+
+Ref: Session.userId > User.id [delete: Cascade]
 
 Ref: User.prodiId > MasterDataProdi.id
 

@@ -15,6 +15,7 @@ import styles from "~/styles/ui/Login.module.scss";
 import { requireAuth } from "~/common/authentication/requireAuth";
 import { showToast } from "~/common/components/ui/toast/showToast";
 import EyeIcon from "~/common/components/svg/EyeIcon";
+import GoogleButton from "~/common/components/ui/button/GoogleButton";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -60,7 +61,13 @@ export default function LoginForm() {
   );
 
   return (
-    <>
+    <div className="flex flex-col gap-5">
+      <GoogleButton text="Sign in with Google" />
+      <div className="relative my-2 w-full border-b border-gray-400">
+        <p className="absolute left-1/2 top-1/2 -translate-x-1/2 text-gray-600 -translate-y-1/2 bg-white px-2">
+          OR
+        </p>
+      </div>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <div className="relative flex flex-col gap-1">
           <input
@@ -119,6 +126,6 @@ export default function LoginForm() {
           </div>
         </div>
       </form>
-    </>
+    </div>
   );
 }

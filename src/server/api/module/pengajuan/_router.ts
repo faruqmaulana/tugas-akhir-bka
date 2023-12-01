@@ -23,6 +23,7 @@ export type KejuaraanByIdType = Prisma.PrestasiDataTableGetPayload<{
         User: { select: typeof userQuery };
       };
     };
+    suratKeputusan: true
   };
 }>;
 

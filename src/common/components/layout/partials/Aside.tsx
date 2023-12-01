@@ -11,10 +11,13 @@ import LinkBuilder from "./LinkBuilder";
 import { MenuWithSub } from "./MenuWithub";
 import styles from "~/styles/partials/Aside.module.scss";
 import { useAside } from "~/common/hooks/layout/useAside";
+import { useSession } from "next-auth/react";
 
 const Aside = ({ showAside }: any) => {
   const { router, listMenu, user, handleCollapse, handleCloseCollapse } =
     useAside();
+
+  const { data } = useSession();
 
   return (
     <aside className={`${styles.wrapper} ${!showAside && styles.hide}`}>
@@ -40,14 +43,14 @@ const Aside = ({ showAside }: any) => {
       <div className={styles.profile}>
         <div className={styles.photo}>
           <Image
-            src={ProfilePhoto}
+            src={data?.user.image || ProfilePhoto}
             alt="profile photo"
             width="70"
             height="70"
           />
         </div>
-        <h1 className={styles.name}>{user?.name}</h1>
-        <p className={styles.role}>{user?.role}</p>
+        <h1 className={styles.name}>{user?.name || data?.user.name}</h1>
+        <p className={styles.role}>{user?.role || data?.user.role}</p>
       </div>
 
       <div className={styles.menu}>

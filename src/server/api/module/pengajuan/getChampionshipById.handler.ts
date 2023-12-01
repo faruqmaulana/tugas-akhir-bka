@@ -16,6 +16,7 @@ const getChampionshipByIdHandler = protectedProcedure
             User: { select: userQuery },
           },
         },
+        suratKeputusan: true
       },
     })) as KejuaraanByIdType;
   });

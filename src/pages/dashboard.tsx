@@ -31,6 +31,20 @@ export default function Home() {
     STATUS.APPROVE
   );
 
+  const { data: updateUserAccount } = api.user.updateUserAccountFlag.useQuery(
+    undefined,
+    {
+      refetchIntervalInBackground: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      retry: false,
+      staleTime: Infinity,
+    }
+  ); // update user account flag
+
+  console.log({ updateUserAccount });
+
   const columns = useMemo<MRT_ColumnDef<KejuaraanData>[]>(
     () => [
       {

@@ -12,8 +12,8 @@ import { PUBLIC_ROUTE } from "../constants/routers";
 export const requireAuth =
   (func: GetServerSideProps) => async (ctx: GetServerSidePropsContext) => {
     const session = await getServerSession(ctx.req, ctx.res, authOptions);
-    // check if route is public
 
+    // check if route is public
     const isPublicRoutes = findString(
       PUBLIC_ROUTE,
       ctx.resolvedUrl.split("?")[0] as string

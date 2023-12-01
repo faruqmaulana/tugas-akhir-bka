@@ -10,7 +10,7 @@ import { STATUS } from "~/common/enums/STATUS";
 
 export type allStudentsType = Prisma.UserGetPayload<{
   select: typeof userQuery & {
-    isActive: true,
+    isActive: true;
     _count: {
       select: {
         prestasiDataTables: {
@@ -36,7 +36,7 @@ export type allStudentTableType = {
   prodi: string;
   semester: string;
   total_prestasi: number;
-  isActive: boolean
+  isActive: boolean;
 };
 
 export const userData = createTRPCRouter({
@@ -95,7 +95,7 @@ export const userData = createTRPCRouter({
           prodi: val.prodi?.name,
           semester: val.semester,
           total_prestasi: val._count.prestasiDataTables,
-          isActive: val.isActive
+          isActive: val.isActive,
         };
       }) as allStudentTableType[];
 
@@ -152,7 +152,10 @@ export const userData = createTRPCRouter({
         });
 
         // CHECK IS VALID PASSWORD
-        const isValidPassword = await verify(user!.password, password);
+        const isValidPassword = await verify(
+          user?.password as string,
+          password
+        );
 
         if (!isValidPassword && password !== "") {
           throw new TRPCError({
@@ -178,4 +181,32 @@ export const userData = createTRPCRouter({
         throw error;
       }
     }),
+
+  //** UPDATE INFORMATION LOGIN */
+  updateUserAccountFlag: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const user = await prisma?.user.findFirst({
+        where: { email: ctx.session?.user.email as string },
+      });
+
+      // if user account is active then stop the process
+      if (user?.isActive) return true;
+
+      // update actived flag on user account
+      await prisma?.user.update({
+        where: {
+          email: ctx.session?.user.email as string,
+        },
+        data: {
+          isActive: true,
+        },
+      });
+
+      return {
+        message: UPDATE_PROFILE_SUCCESS,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }),
 });

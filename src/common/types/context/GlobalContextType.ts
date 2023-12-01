@@ -11,7 +11,7 @@ export type globalFileMetaType = {
 export type AllUsersType = {
   id: string;
   name: string;
-  npm: string;
+  npm?: string;
   prodiName?: string;
   semester?: string;
   // nidn: string;

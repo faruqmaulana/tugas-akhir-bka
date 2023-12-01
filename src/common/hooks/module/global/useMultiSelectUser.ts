@@ -83,7 +83,7 @@ const useMultiSelectUser = (defaultSelected: any[] | undefined = undefined) => {
           return {
             id: val.id,
             name: val.name,
-            npm: val.npm,
+            npm: val?.npm || undefined,
             prodiName: val.prodi?.name,
             semester: val.semester || undefined,
           };

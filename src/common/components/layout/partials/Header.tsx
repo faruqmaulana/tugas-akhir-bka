@@ -14,6 +14,7 @@ import {
 } from "../../ui/hover-card";
 import { type Dispatch, type SetStateAction } from "react";
 import { useHeader } from "~/common/hooks/layout/useHeader";
+import { useSession } from "next-auth/react";
 
 export type HeaderProps = {
   showAside: boolean;
@@ -24,6 +25,8 @@ const Header = (props: HeaderProps) => {
   const { showAside } = props;
   const { router, user, handleHamburgerButton, handleSignOut } =
     useHeader(props);
+
+  const { data } = useSession();
 
   return (
     <header className={`${styles.header} ${showAside && styles.full}`}>
@@ -42,8 +45,10 @@ const Header = (props: HeaderProps) => {
             <HoverCardTrigger>
               <button type="button" className={styles.profileCorner}>
                 <div className={styles.info}>
-                  <h1 className={styles.name}>{user?.name}</h1>
-                  <p className={styles.role}>{user?.role}</p>
+                  <h1 className={styles.name}>
+                    {user?.name || data?.user.name}
+                  </h1>
+                  <p className={styles.role}>{user?.role || data?.user.role}</p>
                 </div>
 
                 <div className={styles.arrow}>

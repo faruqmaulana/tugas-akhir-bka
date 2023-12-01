@@ -1,78 +1,77 @@
 import { type MRT_ColumnDef } from "material-react-table";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
+import { Anchor } from "~/common/components/ui/anchor";
 import StatusBadge from "~/common/components/ui/badge/StatusBagde";
+import ButtonLink from "~/common/components/ui/button/ButtonLink";
 import ViewDetailButton from "~/common/components/ui/button/ViewDetailButton";
 import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import BaseTable from "~/common/components/ui/table/BaseTable";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
-import { DUMMY_PKM, type PkmType } from "~/common/constants/DUMMY_PKM";
+import { type AllBooksType } from "~/server/api/module/pengajuan/book/getBooks.handler";
+import { api } from "~/utils/api";
 
 const UserManagement = () => {
   const router = useRouter();
+  const { data } = api.bookModule.getBooks.useQuery();
 
-  const columns = useMemo<MRT_ColumnDef<PkmType>[]>(
+  const columns = useMemo<MRT_ColumnDef<AllBooksType>[]>(
     () => [
       {
-        header: "Nama Mahasiswa",
-        accessorKey: "namaMahasiswa",
+        header: "Judul Buku",
+        accessorKey: "judulBuku",
         enableClickToCopy: true,
       },
       {
-        header: "NBI",
-        accessorKey: "npm",
+        header: "Nomor ISBN",
+        accessorKey: "nomorISBN",
         enableClickToCopy: true,
       },
       {
-        header: "Semester",
-        accessorKey: "semester",
+        header: "Penulis",
+        accessorKey: "penulis",
         enableClickToCopy: true,
       },
       {
-        header: "Prodi",
-        accessorKey: "prodi",
+        header: "Pengarang",
+        accessorKey: "pengarang",
         enableClickToCopy: true,
       },
       {
-        header: "Fakultas",
-        accessorKey: "fakultas",
+        header: "Tahun Terbit",
+        accessorKey: "tahunTerbit",
         enableClickToCopy: true,
       },
       {
-        header: "Judul",
-        accessorKey: "judul",
+        header: "Jumlah Eksemplar",
+        accessorKey: "jumlahEksemplar",
         enableClickToCopy: true,
       },
       {
-        header: "Deskripsi",
-        accessorKey: "deskripsi",
+        header: "Tahun Terbit",
+        accessorKey: "tahunTerbit",
         enableClickToCopy: true,
       },
       {
-        header: "Tanggal Kegiatan",
-        accessorKey: "tanggalKegiatan",
-        enableClickToCopy: true,
+        header: "Dokumen Pendukung",
+        accessorKey: "dokumenPendukung",
+        enableClickToCopy: false,
+        Cell: ({ cell }) => (
+          <Anchor href={cell.getValue() as string}>
+            <ButtonLink />
+          </Anchor>
+        ),
       },
       {
-        header: "Lampiran",
-        accessorKey: "lampiran",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Total Anggaran",
-        accessorKey: "totalAnggaran",
-        enableClickToCopy: true,
-      },
-      // {
-      //   header: "Anggaran Dosen",
-      //   accessorKey: "anggaranDosen",
-      //   enableClickToCopy: true,
-      // },
-      {
-        header: "Dosen",
-        accessorKey: "Dosen",
-        enableClickToCopy: true,
+        header: "Dokumen SK",
+        accessorKey: "dokumenSK",
+        enableClickToCopy: false,
+        Cell: ({ cell }) => (
+          <Anchor href={cell.getValue() as string}>
+            <ButtonLink />
+          </Anchor>
+        ),
       },
       {
         header: "Status",
@@ -99,13 +98,13 @@ const UserManagement = () => {
   return (
     <>
       <PageHeading
-        title="Module Program Kreativitas Mahasiswa"
+        title="Module Buku"
         showCreateButton
-        createButtonTitle="Program Kreativitas Mahasiswa"
+        createButtonTitle="Buku"
         link="/module/buku/tambah"
       />
-      <Card header="DATA PROGRAM KREATIVITAS MAHASISWA" className="mt-[30px]">
-        <BaseTable data={DUMMY_PKM} columns={columns} />
+      <Card header="DATA BUKU" className="mt-[30px]">
+        <BaseTable data={data} columns={columns} />
       </Card>
     </>
   );

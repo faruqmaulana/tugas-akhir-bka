@@ -25,7 +25,6 @@ const UploadForm = () => {
           },
         }
       );
-      console.log(data);
       setLoading(false);
     } catch (error) {
       setLoading(false);
