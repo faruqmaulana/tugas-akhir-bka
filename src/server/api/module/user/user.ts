@@ -3,7 +3,6 @@ import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { hash, verify } from "argon2";
 import { PASSWORD_NOT_MATCH, UPDATE_PROFILE_SUCCESS } from "~/common/message";
 import { TRPCError } from "@trpc/server";
-import { removeEmptyStringProperties } from "~/common/helpers/removeEmptyStringProperties";
 import { loginInformation, userProfileForm } from "~/common/schemas/user";
 import { type Prisma, Role } from "@prisma/client";
 import { STATUS } from "~/common/enums/STATUS";
@@ -109,8 +108,8 @@ export const userData = createTRPCRouter({
   getUserProfile: protectedProcedure.query(async ({ ctx }) => {
     try {
       return await ctx.prisma.user.findUnique({
-        where: { id: ctx.session?.user.userId },
-        select: userQuery,
+        where: { email: ctx.session?.user.email },
+        select: { ...userQuery, accounts: { select: { provider: true } } },
       });
     } catch (error) {
       return error;
@@ -121,15 +120,16 @@ export const userData = createTRPCRouter({
   updateUserProfile: protectedProcedure
     .input(userProfileForm)
     .mutation(async ({ ctx, input }) => {
+      console.log({ input });
       try {
         // DO UPDATE
         const data = await ctx.prisma.user.update({
-          where: {
-            id: ctx.session?.user.userId,
-          },
-          data: removeEmptyStringProperties(input),
-          select: userQuery,
+          where: { email: ctx.session?.user.email },
+          data: input,
+          select: { ...userQuery, accounts: { select: { provider: true } } },
         });
+
+        console.log(data);
 
         return {
           message: UPDATE_PROFILE_SUCCESS,
@@ -147,7 +147,7 @@ export const userData = createTRPCRouter({
       try {
         const { password, passwordConfirmation } = input;
         const user = await ctx.prisma.user.findUnique({
-          where: { id: ctx.session?.user.userId },
+          where: { email: ctx.session?.user.email },
           select: { ...userQuery, password: true },
         });
 
@@ -186,16 +186,17 @@ export const userData = createTRPCRouter({
   updateUserAccountFlag: protectedProcedure.query(async ({ ctx }) => {
     try {
       const user = await prisma?.user.findFirst({
-        where: { email: ctx.session?.user.email as string },
+        where: { email: ctx.session?.user.email },
       });
 
+      if (!user) return true;
       // if user account is active then stop the process
       if (user?.isActive) return true;
 
       // update actived flag on user account
       await prisma?.user.update({
         where: {
-          email: ctx.session?.user.email as string,
+          email: ctx.session?.user.email,
         },
         data: {
           isActive: true,

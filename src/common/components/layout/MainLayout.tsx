@@ -3,17 +3,44 @@ import Spinner from "../svg/Spinner";
 import { Aside } from "./partials/Aside";
 import { Header } from "./partials/Header";
 import { useMainLayout } from "~/common/hooks/layout/useMainLayout";
+import Banner from "../ui/banner/Banner";
 
 const MainLayout = ({ children }: any) => {
-  const { showAside, setShowAside, userData } = useMainLayout();
+  const {
+    showAside,
+    setShowAside,
+    userData,
+    displayBanner,
+    handleCloseBannerProfileHasFilled,
+    showBannerProfile,
+  } = useMainLayout();
 
   return (
     <div>
-      {/* <div className="w-full bg-red-500 py-3">
-        <p className="mx-auto text-center text-sm font-medium hover:cursor-pointer md:font-semibold">
-          lengkapi profile anda
-        </p>
-      </div> */}
+      <div className="sticky top-0 z-50 flex flex-col">
+        <Banner
+          isCloseAble={false}
+          display={displayBanner}
+          redirect="/profile"
+          className="bg-slate-300"
+          text="Untuk melanjutkan proses pengajuan data, mohon lengkapi data profile"
+        />
+        <Banner
+          display={showBannerProfile}
+          isCloseAble={true}
+          redirect="/module/kejuaraan/tambah"
+          className="bg-slate-300"
+          onClick={handleCloseBannerProfileHasFilled}
+          text={
+            <p>
+              Selamat, profil anda berhasil diperbarui 🎉🎉🎉. Silakan ajukan{" "}
+              <span className="font-bold hover:underline">
+                dokumen pertama Anda.
+              </span>
+            </p>
+          }
+        />
+      </div>
       <Aside showAside={showAside} />
       <div
         className={`flex flex-col transition-all duration-1000 ease-in-out ${

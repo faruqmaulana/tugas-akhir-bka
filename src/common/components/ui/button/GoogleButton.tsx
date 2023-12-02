@@ -7,7 +7,7 @@ const GoogleButton = ({ text }: { text: string }) => {
   return (
     <button
       data-cy="auth-provider-button"
-      className="relative inline-flex h-10 w-full items-center justify-center rounded-md border border-gray-400 text-sm font-medium text-gray-600 outline-none ring-offset-1 ring-offset-background transition-all hover:border-gray-300 hover:bg-gray-50 focus-visible:outline-none active:bg-gray-100 disabled:pointer-events-none disabled:opacity-50 dark:bg-background/90 dark:text-gray-200 dark:hover:bg-background/50 dark:active:bg-background/80 [&>*]:px-4 [&>*]:py-2 active:[&>*]:translate-y-0.5"
+      className="relative inline-flex h-10 w-full items-center justify-center rounded-md border border-gray-400 bg-white text-sm font-medium text-gray-600 outline-none ring-offset-1 ring-offset-background transition-all hover:border-gray-300 hover:bg-gray-50 focus-visible:outline-none active:bg-gray-100 disabled:pointer-events-none disabled:opacity-50 [&>*]:px-4 [&>*]:py-2 active:[&>*]:translate-y-0.5"
       data-provider="google.com"
       onClick={() =>
         signIn("google", {

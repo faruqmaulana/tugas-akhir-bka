@@ -253,6 +253,8 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
     },
   ];
 
+  console.log({ errors });
+
   return {
     KEJUARAAN_FORM,
     setValue,

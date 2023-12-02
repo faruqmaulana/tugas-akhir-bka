@@ -10,12 +10,16 @@ import { ActionReducer } from "~/common/types/context/GlobalContextType";
 import { type AllMasterDataProdiType } from "~/server/api/module/master-data/prodi";
 import { type SingleValue } from "react-select";
 import { type ReactSelectOptionType } from "~/common/components/ui/form/ReactSelect";
+import { useCurrentUser } from "~/common/hooks/module/profile";
 
 const useProfile = () => {
   const {
     state: { user },
     dispatch,
   } = useGlobalContext();
+  const { isAdmin } = useCurrentUser();
+  const isGoogleProvider = user?.accounts?.[0]?.provider === "google";
+  const [executed, setExecuted] = useState<boolean>(false);
 
   // ** FAKULTAS STATE
   const [fakultasState, setFakultasState] = useState<{
@@ -57,8 +61,9 @@ const useProfile = () => {
 
   // ** HANDLE DEFAULT FORM VALUE
   useEffect(() => {
-    if (user) {
+    if (user && !executed) {
       handleDefaultForm(user);
+      setExecuted(true);
     }
   }, [setValue, user]);
 
@@ -85,6 +90,7 @@ const useProfile = () => {
           type: ActionReducer.UPDATE_USER,
           payload: data.data as unknown as UserProfileType,
         });
+        handleDefaultForm(data as unknown as UserProfileType);
         setLoading(false);
       },
       onError: (error) => {
@@ -93,6 +99,12 @@ const useProfile = () => {
       },
     });
   }, []);
+
+  const handleDisabledNbiForm = () => {
+    if (isAdmin) return true;
+
+    return !isGoogleProvider;
+  };
 
   const INFORMASI_LOGIN = [
     {
@@ -103,10 +115,10 @@ const useProfile = () => {
       error: errors.name?.message,
     },
     {
+      disabled: handleDisabledNbiForm(),
       className: "col-span-2 lg:col-span-1",
       placeholder: "Nomor Induk Mahasiswa",
       label: "NBI",
-      disabled: true,
       register: { ...register("npm") },
       error: errors.npm?.message,
     },
@@ -126,6 +138,7 @@ const useProfile = () => {
       ],
     },
     {
+      disabled: isAdmin,
       className: "col-span-2 lg:col-span-1",
       placeholder: "Prodi",
       label: "Prodi",
@@ -144,6 +157,7 @@ const useProfile = () => {
       error: errors.prodiId?.message,
     },
     {
+      disabled: isAdmin,
       className: "col-span-2 lg:col-span-1",
       placeholder: "ex: 8386657199",
       leftAddonComponent: "+62",
@@ -153,6 +167,7 @@ const useProfile = () => {
       error: errors.phone?.message,
     },
     {
+      disabled: isAdmin,
       className: "col-span-2 lg:col-span-1",
       placeholder: "Semester",
       label: "Semester",
@@ -160,6 +175,7 @@ const useProfile = () => {
       error: errors.semester?.message,
     },
     {
+      disabled: isAdmin,
       className: "col-span-2",
       placeholder: "Alamat Lengkap",
       label: "Alamat Lengkap",

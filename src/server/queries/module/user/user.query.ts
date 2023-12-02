@@ -3,7 +3,10 @@
 import { type Prisma } from "@prisma/client";
 
 export type UserProfileType = Prisma.UserGetPayload<{
-  include: { prodi: { include: { Fakultas: true } } };
+  include: {
+    prodi: { include: { Fakultas: true } };
+    accounts: { select: { provider: true } };
+  };
 }>;
 
 export const userQuery = {

@@ -65,7 +65,7 @@ const NotificationInfo = () => {
           <NotificationIcon />
         </div>
       </PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent className="bg-white">
         <div className="flex w-[300px] flex-col gap-1 p-2">
           <div className="flex flex-row justify-between border-b border-gray-400 pb-1">
             <span className="font-bold">Notifikasi Anda</span>

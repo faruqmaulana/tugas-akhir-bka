@@ -17,7 +17,10 @@ const useHeader = (props: HeaderProps) => {
 
   const handleSignOut = async () => {
     await signOut({ redirect: false }).then(() => {
-      router.push("/"); // Redirect to the login page after signing out
+      router.push("/");
+      setTimeout(() => {
+        router.push("/"); // Redirect to the login page after signing out
+      }, 500);
     });
   };
 

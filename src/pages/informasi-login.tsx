@@ -6,6 +6,7 @@ import LockIcon from "~/common/components/svg/Lock";
 import { Button } from "~/common/components/ui/button/Button";
 import Input from "~/common/components/ui/form/Input";
 import PageHeading from "~/common/components/ui/header/PageHeading";
+import { useGlobalContext } from "~/common/context/GlobalContext";
 import { useLoginInformation } from "~/common/hooks/module/profile/useLoginInformation";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
@@ -15,6 +16,11 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 const InformasiLogin = () => {
   const { register, handleSubmit, errors, onSubmit, loading } =
     useLoginInformation();
+
+  const {
+    state: { user },
+  } = useGlobalContext();
+  const isGoogleProvider = user?.accounts?.[0]?.provider === "google";
 
   const INFORMASI_LOGIN = [
     {
@@ -26,6 +32,7 @@ const InformasiLogin = () => {
       register: { ...register("email") },
     },
     {
+      disabled: isGoogleProvider,
       className: "col-span-2",
       placeholder: "Old password",
       leftAddonComponent: <LockIcon />,
@@ -37,6 +44,7 @@ const InformasiLogin = () => {
       error: errors.requireOldPassword?.message,
     },
     {
+      disabled: isGoogleProvider,
       className: "col-span-2",
       placeholder: "New password",
       leftAddonComponent: <LockIcon />,
@@ -47,6 +55,7 @@ const InformasiLogin = () => {
       error: errors.customErrorPassword?.message,
     },
     {
+      disabled: isGoogleProvider,
       className: "col-span-2",
       placeholder: "Confirm password",
       leftAddonComponent: <LockIcon />,

@@ -8,12 +8,50 @@ import { type AllNotificationType } from "~/server/api/module/notification/notif
 import { type UserProfileType } from "~/server/queries/module/user/user.query";
 import { api } from "~/utils/api";
 import { useWidthViewport } from "../core/useWidthViewport";
+import { BANNER_PROFILE_KEY } from "~/common/constants";
+import { useCurrentUser } from "../module/profile";
 
 const useMainLayout = () => {
-  const { state, dispatch } = useGlobalContext();
   const { viewportWidth } = useWidthViewport();
+  const { state, dispatch } = useGlobalContext();
+  const { isAdmin } = useCurrentUser();
   const [showAside, setShowAside] = useState<boolean>(true);
-  const { data: user, isLoading } = api.user.getUserProfile.useQuery();
+  const [showBannerProfile, setShowBannerProfile] = useState<boolean>(false);
+  const { data: user, isLoading } =
+    api.user.getUserProfile.useQuery<UserProfileType>();
+
+  const { user: userState } = state;
+  const userData = state?.user;
+  const userNotif = state?.notification;
+  const isProfileNotCompletelyFilled =
+    !userState?.npm || !userState?.prodi || !userState?.semester;
+  const displayBanner = !isAdmin && userData && isProfileNotCompletelyFilled;
+
+  const handleCloseBannerProfileHasFilled = () => {
+    localStorage.setItem(BANNER_PROFILE_KEY, "true");
+    setShowBannerProfile(false);
+  };
+
+  useEffect(() => {
+    const bannerPersistState = JSON.parse(
+      JSON.stringify(localStorage.getItem(BANNER_PROFILE_KEY))
+    );
+
+    if (
+      typeof displayBanner === "boolean" &&
+      displayBanner === false &&
+      !bannerPersistState &&
+      !isAdmin
+    ) {
+      setShowBannerProfile(true);
+    }
+
+    if (Boolean(bannerPersistState)) {
+      setShowBannerProfile(false);
+    }
+  }, [displayBanner]);
+
+  console.log({ showBannerProfile });
 
   useEffect(() => {
     if (viewportWidth) {
@@ -32,13 +70,15 @@ const useMainLayout = () => {
   } = api.notification.getUserNotif.useQuery<AllNotificationType>();
 
   useEffect(() => {
-    if (!isLoading && user && !loadingNotification && userNotification) {
+    if (!isLoading && user) {
       // UPDATE GLOBAL USER
       dispatch({
         type: ActionReducer.UPDATE_USER,
-        payload: user as UserProfileType,
+        payload: user,
       });
+    }
 
+    if (!loadingNotification && userNotification) {
       // UPDATE GLOBAL USER NOTIF COUNT
       dispatch({
         type: ActionReducer.UPDATE_NOTIFICATION_COUNT,
@@ -47,10 +87,16 @@ const useMainLayout = () => {
     }
   }, [isLoading, user, loadingNotification, userNotification, dispatch]);
 
-  const userData = state?.user;
-  const userNotif = state?.notification;
-
-  return { showAside, setShowAside, userData, userNotif, refetchNotification };
+  return {
+    showAside,
+    setShowAside,
+    userData,
+    userNotif,
+    refetchNotification,
+    displayBanner,
+    handleCloseBannerProfileHasFilled,
+    showBannerProfile,
+  };
 };
 
 export { useMainLayout };

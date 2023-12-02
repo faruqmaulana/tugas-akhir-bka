@@ -30,6 +30,7 @@ const Header = (props: HeaderProps) => {
 
   return (
     <header className={`${styles.header} ${showAside && styles.full}`}>
+       
       <button
         className={styles.hamburger}
         type="button"

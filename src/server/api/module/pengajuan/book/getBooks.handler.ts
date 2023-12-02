@@ -16,7 +16,9 @@ export type AllBooksType = {
 
 const getBooksHandler = protectedProcedure.query(async ({ ctx }) => {
   try {
+    const isAdmin = ctx.session.user.role === "ADMIN";
     const getAllBook = await ctx.prisma.buku.findMany({
+      where: isAdmin ? {} : { userId: ctx.session.user.userId },
       include: { suratKeputusan: true },
     });
     const transformedBooks = getAllBook.map((val) => {

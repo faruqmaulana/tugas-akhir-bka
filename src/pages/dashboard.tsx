@@ -43,8 +43,6 @@ export default function Home() {
     }
   ); // update user account flag
 
-  console.log({ updateUserAccount });
-
   const columns = useMemo<MRT_ColumnDef<KejuaraanData>[]>(
     () => [
       {

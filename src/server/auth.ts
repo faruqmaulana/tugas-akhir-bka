@@ -30,6 +30,7 @@ declare module "next-auth" {
     user: {
       userId: string;
       role: "MAHASISWA" | "ADMIN";
+      email: string;
     } & DefaultSession["user"];
   }
   interface User extends DefaultUser {
@@ -41,6 +42,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     userId: string;
     role: "MAHASISWA" | "ADMIN";
+    email: string;
   }
 }
 
@@ -70,8 +72,9 @@ export const authOptions: NextAuthOptions = {
         const isValidPassword = await verify(result.password!, password);
         if (!isValidPassword) throw new Error("NPM atau password salah!");
         if (!result.isActive) throw new Error("Akun tidak aktif!");
+        const { id, name, email, role } = result;
 
-        return { id: result.id, name: result.name, role: result.role };
+        return { id, name, email, role };
       },
     }),
   ],
@@ -83,20 +86,21 @@ export const authOptions: NextAuthOptions = {
     },
     jwt: async ({ token, user }) => {
       if (user) {
-        const { name, id, role } = user;
+        const { name, id, role, email } = user;
         token.name = name;
         token.userId = id;
         token.role = role;
+        token.email = email as string;
       }
-
       return token;
     },
     session: async ({ session, token }) => {
       if (token) {
-        const { name, userId, role } = token;
+        const { name, userId, role, email } = token;
         session.user.name = name;
         session.user.userId = userId;
         session.user.role = role;
+        token.email = email;
       }
 
       return session;
@@ -114,7 +118,7 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/dashboard",
-    newUser: "/dashboard",
+    newUser: "/",
   },
   session: {
     strategy: "jwt",

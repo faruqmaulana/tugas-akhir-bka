@@ -10,11 +10,11 @@ const validatePhone = (value: string) => {
 
 export const userProfileForm = z.object({
   name: z.string().min(1, "Nama tidak boleh kosong!"),
-  npm: z.string(),
+  npm: z.string().min(1, "NBI tidak boleh kosong!"),
   phone: z.string().refine((value) => validatePhone(value) === true, {
     message: "Invalid Indonesian phone number",
   }),
-  semester: z.string(),
+  semester: z.string().min(1, "Semester tidak boleh kosong!"),
   alamat: z.string(),
   prodiId: z.string(),
 });
