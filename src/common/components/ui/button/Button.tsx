@@ -1,6 +1,7 @@
 import { type ButtonProps } from "~/common/models/types/ButtonProps";
 import styles from "~/styles/ui/Button.module.scss";
 import Spinner from "../../svg/Spinner";
+import BaseTooltip from "../tooltip/BaseTooltip";
 
 const Button = (props: ButtonProps) => {
   const {
@@ -23,6 +24,7 @@ const Button = (props: ButtonProps) => {
     isSubmit,
     isLoading,
     className,
+    tooltip,
     ...otherProps
   } = props;
 
@@ -43,8 +45,7 @@ const Button = (props: ButtonProps) => {
   if (className) styleButton.push(className);
 
   const getLoader = loaderIcon ?? <Spinner fill="fill-gray-500" />;
-
-  return (
+  const button = (
     <button
       className={`${styleButton.join(" ")} ${
         isDisabled || isLoading ? "cursor-not-allowed" : ""
@@ -64,6 +65,10 @@ const Button = (props: ButtonProps) => {
       )}
     </button>
   );
+  if (tooltip && isDisabled)
+    return <BaseTooltip title={tooltip}>{button}</BaseTooltip>;
+
+  return button;
 };
 
 export { Button };

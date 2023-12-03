@@ -20,6 +20,7 @@ export const userQuery = {
   prodiId: true,
   semester: true,
   password: false,
+  isBannerOpen: true,
   prodi: {
     include: {
       Fakultas: true,

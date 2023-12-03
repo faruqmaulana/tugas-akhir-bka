@@ -23,7 +23,7 @@ const MainLayout = ({ children }: any) => {
           display={displayBanner}
           redirect="/profile"
           className="bg-slate-300"
-          text="Untuk melanjutkan proses pengajuan data, mohon lengkapi data profile"
+          text="Untuk melanjutkan proses pengajuan data, mohon lengkapi data profil"
         />
         <Banner
           display={showBannerProfile}

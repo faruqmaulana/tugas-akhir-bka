@@ -6,6 +6,7 @@ import { TRPCError } from "@trpc/server";
 import { loginInformation, userProfileForm } from "~/common/schemas/user";
 import { type Prisma, Role } from "@prisma/client";
 import { STATUS } from "~/common/enums/STATUS";
+import { z } from "zod";
 
 export type allStudentsType = Prisma.UserGetPayload<{
   select: typeof userQuery & {
@@ -120,7 +121,6 @@ export const userData = createTRPCRouter({
   updateUserProfile: protectedProcedure
     .input(userProfileForm)
     .mutation(async ({ ctx, input }) => {
-      console.log({ input });
       try {
         // DO UPDATE
         const data = await ctx.prisma.user.update({
@@ -128,8 +128,6 @@ export const userData = createTRPCRouter({
           data: input,
           select: { ...userQuery, accounts: { select: { provider: true } } },
         });
-
-        console.log(data);
 
         return {
           message: UPDATE_PROFILE_SUCCESS,
@@ -182,7 +180,7 @@ export const userData = createTRPCRouter({
       }
     }),
 
-  //** UPDATE INFORMATION LOGIN */
+  //** UPDATE USER ACCOUNT FLAG */
   updateUserAccountFlag: protectedProcedure.query(async ({ ctx }) => {
     try {
       const user = await prisma?.user.findFirst({
@@ -210,4 +208,25 @@ export const userData = createTRPCRouter({
       throw error;
     }
   }),
+
+  //** UPDATE USER PROFILE */
+  updateUserProfileBanner: protectedProcedure
+    .input(z.string().optional())
+    .mutation(async ({ ctx }) => {
+      try {
+        // DO UPDATE
+        const data = await ctx.prisma.user.update({
+          where: { email: ctx.session?.user.email },
+          data: { isBannerOpen: false },
+          select: { ...userQuery, accounts: { select: { provider: true } } },
+        });
+
+        return {
+          message: UPDATE_PROFILE_SUCCESS,
+          data,
+        };
+      } catch (error) {
+        throw error;
+      }
+    }),
 });

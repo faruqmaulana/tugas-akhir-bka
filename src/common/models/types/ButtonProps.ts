@@ -22,4 +22,5 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   isUppercase?: boolean;
   isLoading?: boolean;
   hover?: boolean;
+  tooltip?: string
 };

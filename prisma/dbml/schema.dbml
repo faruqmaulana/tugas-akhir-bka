@@ -57,6 +57,8 @@ Table User {
   isActive Boolean [not null, default: false]
   image String
   emailVerified DateTime
+  isBannerOpen Boolean [default: true]
+  imageMeta Json [note: '[FileResponse]']
   accounts Account [not null]
   ActivityLog ActivityLog [not null]
   Buku Buku [not null]
@@ -224,17 +226,6 @@ Table PengajuanBeasiswa {
   description String [not null]
   ActivityLog ActivityLog [not null]
   user User [not null]
-}
-
-Table SKRektor {
-  id String [pk]
-  nomorSK String [not null]
-  judul String [not null]
-  tanggal DateTime [not null]
-  keterangan String [not null]
-  lampiran String [not null]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [default: `now()`, not null]
 }
 
 Table PatenAndHakiTable {

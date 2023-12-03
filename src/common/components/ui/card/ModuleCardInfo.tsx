@@ -21,10 +21,10 @@ const ModuleCardInfo = (props: ModuleCardInfoType) => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex mb-4 flex-wrap justify-between">
+      <div className="flex mb-4 flex-wrap gap-5 justify-between">
         {status === STATUS.APPROVE && (
           <div
-            className={`flex flex-wrap items-center gap-2 rounded-full px-2 py-1 text-sm font-semibold opacity-95 ${handleBgColor(
+            className={`flex flex-wrap mx-auto xs:mx-0 items-center gap-2 rounded-full px-2 py-1 text-sm font-semibold opacity-95 ${handleBgColor(
               status
             )}`}
           >

@@ -27,6 +27,7 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 
 export default function Home() {
   const { data } = useDashboard();
+  console.log({data})
   const { data: allKejuaraan } = api.prestasiLomba.getAllKejuaraan.useQuery(
     STATUS.APPROVE
   );

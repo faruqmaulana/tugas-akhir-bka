@@ -3,7 +3,8 @@ import { useCurrentUser } from "~/common/hooks/module/profile";
 import PlusIcon from "../../svg/PlusIcon";
 import { Button } from "../button/Button";
 import { useHeadingTitle } from "~/common/hooks/useHeading";
-import {  Role } from "@prisma/client";
+import { Role } from "@prisma/client";
+import { useMainLayout } from "~/common/hooks/layout/useMainLayout";
 
 type PageTypeHeading = {
   title?: string;
@@ -28,10 +29,17 @@ const PageHeading = (props: PageTypeHeading) => {
     ownButton = false,
   } = props;
   const { router, pageHeading, moduleHeading } = useHeadingTitle();
+  const { displayBanner } = useMainLayout();
   const { role } = useCurrentUser();
-  const adminCreateButton = role === Role.ADMIN && router.asPath.includes('master-data') 
-
   const styleHeader = [];
+
+  const handleRenderAddButton = () => {
+    if (showCreateButton) return true;
+    if (role === Role.ADMIN && router.asPath.includes("master-data"))
+      return true;
+
+    return false;
+  };
 
   if (className) styleHeader.push(className);
 
@@ -43,7 +51,7 @@ const PageHeading = (props: PageTypeHeading) => {
     >
       <div className="flex items-center justify-between">
         <h1
-          className={`text-xl lg:text-3xl font-bold text-charcoal-900
+          className={`text-xl font-bold text-charcoal-900 lg:text-3xl
             ${subTitle && "mr-1"}`}
         >
           {title || pageHeading}
@@ -56,11 +64,13 @@ const PageHeading = (props: PageTypeHeading) => {
           </h4>
         )}
       </div>
-      {(showCreateButton || adminCreateButton) && (
+      {handleRenderAddButton() && (
         <Button
-          className="flex items-center gap-2 px-6 py-3 text-base"
-          isSuccess
           isMedium
+          isSuccess
+          tooltip="Mohon lengkapi data profil anda terlebih dahulu."
+          isDisabled={displayBanner}
+          className="flex items-center gap-2 px-6 py-3 text-base"
           onClick={() => {
             if (link) {
               void router.push(link);

@@ -10,21 +10,23 @@ const ModalPreviewModule = ({
   handleOpen,
   data,
   title,
+  className,
 }: {
   isOpen: boolean;
   handleClose: () => void;
   handleOpen: () => void;
   data: InputPropsType[];
   title?: string;
+  className?: string;
 }) => {
   return (
-    <div>
+    <div className={className}>
       <Button
         isPurple
         isSuccess
         isMedium
         onClick={handleOpen}
-        className="ml-auto"
+        className={`${className || ""} ml-auto`}
       >
         Preview
       </Button>

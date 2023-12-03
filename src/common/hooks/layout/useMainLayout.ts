@@ -8,8 +8,8 @@ import { type AllNotificationType } from "~/server/api/module/notification/notif
 import { type UserProfileType } from "~/server/queries/module/user/user.query";
 import { api } from "~/utils/api";
 import { useWidthViewport } from "../core/useWidthViewport";
-import { BANNER_PROFILE_KEY } from "~/common/constants";
 import { useCurrentUser } from "../module/profile";
+import { customToast } from "~/common/components/ui/toast/showToast";
 
 const useMainLayout = () => {
   const { viewportWidth } = useWidthViewport();
@@ -19,6 +19,8 @@ const useMainLayout = () => {
   const [showBannerProfile, setShowBannerProfile] = useState<boolean>(false);
   const { data: user, isLoading } =
     api.user.getUserProfile.useQuery<UserProfileType>();
+  const { mutate: updateUserBanner } =
+    api.user.updateUserProfileBanner.useMutation();
 
   const { user: userState } = state;
   const userData = state?.user;
@@ -28,30 +30,35 @@ const useMainLayout = () => {
   const displayBanner = !isAdmin && userData && isProfileNotCompletelyFilled;
 
   const handleCloseBannerProfileHasFilled = () => {
-    localStorage.setItem(BANNER_PROFILE_KEY, "true");
+    // uddate profile banner
+    updateUserBanner(undefined, {
+      onSuccess: (data) => {
+        dispatch({
+          type: ActionReducer.UPDATE_USER,
+          payload: data as unknown as UserProfileType,
+        });
+      },
+      onError: (error) => {
+        customToast("error", error?.message);
+      },
+    });
     setShowBannerProfile(false);
   };
 
   useEffect(() => {
-    const bannerPersistState = JSON.parse(
-      JSON.stringify(localStorage.getItem(BANNER_PROFILE_KEY))
-    );
-
     if (
       typeof displayBanner === "boolean" &&
       displayBanner === false &&
-      !bannerPersistState &&
+      userState?.isBannerOpen &&
       !isAdmin
     ) {
       setShowBannerProfile(true);
     }
 
-    if (Boolean(bannerPersistState)) {
+    if (!userState?.isBannerOpen) {
       setShowBannerProfile(false);
     }
   }, [displayBanner]);
-
-  console.log({ showBannerProfile });
 
   useEffect(() => {
     if (viewportWidth) {
@@ -90,12 +97,12 @@ const useMainLayout = () => {
   return {
     showAside,
     setShowAside,
-    userData,
     userNotif,
     refetchNotification,
     displayBanner,
     handleCloseBannerProfileHasFilled,
     showBannerProfile,
+    userData,
   };
 };
 
