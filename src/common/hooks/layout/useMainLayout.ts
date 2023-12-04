@@ -35,7 +35,7 @@ const useMainLayout = () => {
       onSuccess: (data) => {
         dispatch({
           type: ActionReducer.UPDATE_USER,
-          payload: data as unknown as UserProfileType,
+          payload: data.data as unknown as UserProfileType,
         });
       },
       onError: (error) => {

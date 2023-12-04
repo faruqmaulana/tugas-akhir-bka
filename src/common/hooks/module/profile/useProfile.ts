@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { useGlobalContext } from "~/common/context/GlobalContext";
 import { useForm } from "react-hook-form";
 import { type IUserProfileForm, userProfileForm } from "~/common/schemas/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type UserProfileType } from "~/server/queries/module/user/user.query";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { customToast } from "~/common/components/ui/toast/showToast";
 import { ActionReducer } from "~/common/types/context/GlobalContextType";
@@ -11,15 +12,31 @@ import { type AllMasterDataProdiType } from "~/server/api/module/master-data/pro
 import { type SingleValue } from "react-select";
 import { type ReactSelectOptionType } from "~/common/components/ui/form/ReactSelect";
 import { useCurrentUser } from "~/common/hooks/module/profile";
-
+import ProfilePhoto from "../../../../../public/profile.jpg";
+import {
+  userProfilePhoto,
+  type IUserProfilePhoto,
+} from "~/common/schemas/user/user-profile.schema";
+import { handleUploadCloudinary } from "~/common/libs/handle-upload-cloudinary";
+import { JSONtoString } from "~/common/helpers/parseJSON";
+import { type StaticImageData } from "next/image";
+import { useSession } from "next-auth/react";
 const useProfile = () => {
   const {
     state: { user },
     dispatch,
   } = useGlobalContext();
+  const { data } = useSession();
   const { isAdmin } = useCurrentUser();
   const isGoogleProvider = user?.accounts?.[0]?.provider === "google";
   const [executed, setExecuted] = useState<boolean>(false);
+  const [isShow, setIsShow] = useState<boolean>(false);
+  const [loadingUpload, setLoadingUpload] = useState<boolean>(false);
+  const [previewPhoto, setPreviewPhoto] = useState<
+    string | StaticImageData | undefined
+  >(undefined);
+  const [initial, setInitial] = useState<boolean>(false);
+  const { mutate: updateUserPhoto } = api.user.updateUserPhoto.useMutation();
 
   // ** FAKULTAS STATE
   const [fakultasState, setFakultasState] = useState<{
@@ -29,12 +46,20 @@ const useProfile = () => {
     id: user?.prodi?.Fakultas?.id,
     name: user?.prodi?.Fakultas?.name,
   });
-
   const [loading, setLoading] = useState<boolean>(false);
 
   const { mutate: updateUserProfile } =
     api.user.updateUserProfile.useMutation();
   const { data: prodi } = api.prodi.getAllProdi.useQuery();
+
+  const {
+    register: registerUploadProfile,
+    handleSubmit: handleSubmitUploadProfile,
+    reset: resetUploadForm,
+    formState: { errors: errorsUploadProfile },
+  } = useForm<IUserProfilePhoto>({
+    resolver: zodResolver(userProfilePhoto),
+  });
 
   const {
     register,
@@ -81,7 +106,7 @@ const useProfile = () => {
     });
   };
 
-  const onSubmit = useCallback((userPayload: IUserProfileForm) => {
+  const onSubmit = (userPayload: IUserProfileForm) => {
     setLoading(true);
     updateUserProfile(userPayload, {
       onSuccess: (data) => {
@@ -98,12 +123,82 @@ const useProfile = () => {
         setLoading(false);
       },
     });
-  }, []);
+  };
 
   const handleDisabledNbiForm = () => {
     if (isAdmin) return true;
 
     return !isGoogleProvider;
+  };
+
+  const handleUserProfile = () => {
+    if ((user?.imageMeta as PrismaJson.FileResponse)?.secure_url) {
+      return (user?.imageMeta as PrismaJson.FileResponse)?.secure_url;
+    }
+
+    if (user?.image) return user?.image;
+    if (data?.user.image) return data?.user.image;
+
+    return ProfilePhoto;
+  };
+
+  useEffect(() => {
+    if (user && !initial) {
+      setPreviewPhoto(handleUserProfile());
+      setInitial(true);
+    }
+  }, [user]);
+
+  const onUpdateProfile = async (approvePayload: IUserProfilePhoto) => {
+    setLoadingUpload(true);
+    const uploadDokumenProfilePhoto = handleUploadCloudinary({
+      file: approvePayload?.profilePhoto?.[0] as unknown as File,
+      previusFileId: (user?.imageMeta as PrismaJson.FileResponse)?.public_id,
+    });
+
+    const [uploadProfilePhoto] = await Promise.all([uploadDokumenProfilePhoto]);
+    const profilePhotoMeta = JSONtoString(uploadProfilePhoto);
+
+    updateUserPhoto(
+      { profilePhoto: profilePhotoMeta },
+      {
+        onSuccess: (data) => {
+          dispatch({
+            type: ActionReducer.UPDATE_USER,
+            payload: data.data as unknown as UserProfileType,
+          });
+          customToast("success", data?.message);
+          setLoadingUpload(false);
+          resetUploadForm();
+        },
+        onError: (error) => {
+          customToast("error", error?.message);
+          setLoadingUpload(false);
+        },
+      }
+    );
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files?.length > 0) {
+      const currentfile = e.target.files?.[0];
+      if (currentfile) {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          setPreviewPhoto(reader.result as string);
+        };
+        reader.readAsDataURL(currentfile);
+      }
+    } else {
+      setPreviewPhoto(undefined);
+      resetUploadForm();
+      setPreviewPhoto(handleUserProfile());
+    }
+  };
+  const handleCancelUpload = () => {
+    resetUploadForm();
+    setPreviewPhoto(handleUserProfile());
   };
 
   const INFORMASI_LOGIN = [
@@ -185,7 +280,23 @@ const useProfile = () => {
     },
   ];
 
-  return { handleSubmit, onSubmit, loading, INFORMASI_LOGIN };
+  return {
+    handleSubmit,
+    onSubmit,
+    loading,
+    isShow,
+    setIsShow,
+    INFORMASI_LOGIN,
+    handleUserProfile,
+    onUpdateProfile,
+    loadingUpload,
+    registerUploadProfile,
+    handleSubmitUploadProfile,
+    errorsUploadProfile,
+    handleFileSelect,
+    previewPhoto,
+    handleCancelUpload,
+  };
 };
 
 export { useProfile };

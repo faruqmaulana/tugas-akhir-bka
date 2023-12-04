@@ -47,14 +47,14 @@ const Example = ({ slug }: { slug: string }) => {
   return (
     <>
       <PageHeading
-        title="Detail Pengajuan Haki"
+        title="Detail Pengajuan PKM"
         ownButton={
           <Button
             isMedium
             isGray
             className="flex w-fit items-center gap-2"
             onClick={() => {
-              void router.push("/module/haki");
+              void router.push("/module/pkm");
             }}
           >
             <ArrorLeft />

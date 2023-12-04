@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { userQuery } from "~/server/queries/module/user/user.query";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { hash, verify } from "argon2";
@@ -7,6 +9,8 @@ import { loginInformation, userProfileForm } from "~/common/schemas/user";
 import { type Prisma, Role } from "@prisma/client";
 import { STATUS } from "~/common/enums/STATUS";
 import { z } from "zod";
+import { userProfilePhoto } from "~/common/schemas/user/user-profile.schema";
+import { stringToJSON } from "~/common/helpers/parseJSON";
 
 export type allStudentsType = Prisma.UserGetPayload<{
   select: typeof userQuery & {
@@ -223,6 +227,34 @@ export const userData = createTRPCRouter({
 
         return {
           message: UPDATE_PROFILE_SUCCESS,
+          data,
+        };
+      } catch (error) {
+        throw error;
+      }
+    }),
+
+  //** UPDATE USER PHOTO */
+  updateUserPhoto: protectedProcedure
+    .input(userProfilePhoto)
+    .mutation(async ({ ctx, input }) => {
+      const { profilePhoto } = input;
+      const profilePhotoMeta = stringToJSON(profilePhoto) || undefined;
+      const photoUrl = (profilePhotoMeta as PrismaJson.FileResponse)
+        ?.secure_url;
+      try {
+        // DO UPDATE
+        const data = await ctx.prisma.user.update({
+          where: { email: ctx.session?.user.email },
+          data: {
+            image: photoUrl,
+            imageMeta: profilePhotoMeta,
+          },
+          select: { ...userQuery, accounts: { select: { provider: true } } },
+        });
+
+        return {
+          message: "Photo " + UPDATE_PROFILE_SUCCESS,
           data,
         };
       } catch (error) {

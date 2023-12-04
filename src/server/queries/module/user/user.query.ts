@@ -21,6 +21,8 @@ export const userQuery = {
   semester: true,
   password: false,
   isBannerOpen: true,
+  image: true,
+  imageMeta: true,
   prodi: {
     include: {
       Fakultas: true,

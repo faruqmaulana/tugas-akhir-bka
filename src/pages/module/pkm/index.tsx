@@ -1,17 +1,20 @@
 import { type MRT_ColumnDef } from "material-react-table";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
+import { Anchor } from "~/common/components/ui/anchor";
 import StatusBadge from "~/common/components/ui/badge/StatusBagde";
+import ButtonLink from "~/common/components/ui/button/ButtonLink";
 import ViewDetailButton from "~/common/components/ui/button/ViewDetailButton";
 import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import BaseTable from "~/common/components/ui/table/BaseTable";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
-import { DUMMY_PKM, type PkmType } from "~/common/constants/DUMMY_PKM";
+import { type PkmType } from "~/common/constants/DUMMY_PKM";
+import { api } from "~/utils/api";
 
 const UserManagement = () => {
   const router = useRouter();
-
+  const { data } = api.pkmModule.getAllPKM.useQuery();
   const columns = useMemo<MRT_ColumnDef<PkmType>[]>(
     () => [
       {
@@ -22,21 +25,6 @@ const UserManagement = () => {
       {
         header: "NBI",
         accessorKey: "npm",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Semester",
-        accessorKey: "semester",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Prodi",
-        accessorKey: "prodi",
-        enableClickToCopy: true,
-      },
-      {
-        header: "Fakultas",
-        accessorKey: "fakultas",
         enableClickToCopy: true,
       },
       {
@@ -55,24 +43,44 @@ const UserManagement = () => {
         enableClickToCopy: true,
       },
       {
-        header: "Lampiran",
-        accessorKey: "lampiran",
+        header: "Proposal",
+        accessorKey: "proposal",
         enableClickToCopy: true,
+        Cell: ({ cell }) => (
+          <Anchor href={cell.getValue() as string}>
+            <ButtonLink />
+          </Anchor>
+        ),
       },
       {
         header: "Total Anggaran",
         accessorKey: "totalAnggaran",
         enableClickToCopy: true,
       },
-      // {
-      //   header: "Anggaran Dosen",
-      //   accessorKey: "anggaranDosen",
-      //   enableClickToCopy: true,
-      // },
       {
         header: "Dosen",
-        accessorKey: "Dosen",
+        accessorKey: "dosen",
         enableClickToCopy: true,
+      },
+      {
+        header: "Nomor SK",
+        accessorKey: "noSK",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Tanggal SK",
+        accessorKey: "tanggalSK",
+        enableClickToCopy: true,
+      },
+      {
+        header: "Dokumen SK",
+        accessorKey: "suratKeputusan",
+        enableClickToCopy: false,
+        Cell: ({ cell }) => (
+          <Anchor href={cell.getValue() as string}>
+            <ButtonLink />
+          </Anchor>
+        ),
       },
       {
         header: "Status",
@@ -105,7 +113,7 @@ const UserManagement = () => {
         link="/module/pkm/tambah"
       />
       <Card header="DATA PROGRAM KREATIVITAS MAHASISWA" className="mt-[30px]">
-        <BaseTable data={DUMMY_PKM} columns={columns} />
+        <BaseTable data={data} columns={columns} />
       </Card>
     </>
   );

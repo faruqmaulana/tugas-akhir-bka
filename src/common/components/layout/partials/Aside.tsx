@@ -16,8 +16,17 @@ import { useSession } from "next-auth/react";
 const Aside = ({ showAside }: any) => {
   const { router, listMenu, user, handleCollapse, handleCloseCollapse } =
     useAside();
-
   const { data } = useSession();
+
+  const handleUserProfile = () => {
+    if ((user?.imageMeta as PrismaJson.FileResponse)?.secure_url) {
+      return (user?.imageMeta as PrismaJson.FileResponse)?.secure_url;
+    }
+    if (user?.image) return user?.image;
+    if (data?.user.image) return data?.user.image;
+
+    return ProfilePhoto;
+  };
 
   return (
     <aside className={`${styles.wrapper} ${!showAside && styles.hide}`}>
@@ -43,10 +52,11 @@ const Aside = ({ showAside }: any) => {
       <div className={styles.profile}>
         <div className={styles.photo}>
           <Image
-            src={data?.user.image || ProfilePhoto}
+            fill
+            src={handleUserProfile()}
             alt="profile photo"
-            width="70"
-            height="70"
+            quality={100}
+            style={{ objectFit: "cover" }}
           />
         </div>
         <h1 className={styles.name}>{user?.name || data?.user.name}</h1>

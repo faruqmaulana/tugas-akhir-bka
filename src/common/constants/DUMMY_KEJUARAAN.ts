@@ -20,4 +20,5 @@ export type KejuaraanData = {
   fotoPenyerahanPiala: string; // URL gambar publik
   undanganKejuaraan: string; // URL text PDF publik
   dokumenPendukung: string; // URL text PDF publik
+  suratKeputusan: string; // URL text PDF publik
 };

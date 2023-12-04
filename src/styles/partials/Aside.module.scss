@@ -13,7 +13,7 @@
     @apply mt-4 flex flex-col items-center;
 
     .photo {
-      @apply mb-1 h-16 w-16 overflow-hidden rounded-full;
+      @apply mb-1 relative h-16 w-16 overflow-hidden rounded-full;
     }
 
     .name {

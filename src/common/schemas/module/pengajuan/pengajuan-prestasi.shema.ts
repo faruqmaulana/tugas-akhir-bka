@@ -24,6 +24,23 @@ export const validateFile = z.any().refine(
   }
 );
 
+export const validateImage = z.any().refine(
+  (value) => {
+    // Check if the file has a valid MIME type
+    // And valid file type
+    if (value && typeof value === "object" && (value as File).length > 0) {
+      const isValidMimeType = imageMimeTypes.includes(
+        (value as File[])[0]?.type as string
+      );
+      return isValidMimeType;
+    }
+    return true;
+  },
+  {
+    message: "File type must be an image (JPEG, PNG)",
+  }
+);
+
 export const pengajuanPrestasiForm = z
   .object({
     users: z

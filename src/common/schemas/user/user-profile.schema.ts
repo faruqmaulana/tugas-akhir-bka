@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { z } from "zod";
+import { validateImage } from "../module/pengajuan/pengajuan-prestasi.shema";
 
 const validatePhone = (value: string) => {
   const re = /^[0-9\b]+$/;
@@ -19,4 +21,11 @@ export const userProfileForm = z.object({
   prodiId: z.string(),
 });
 
+export const userProfilePhoto = z.object({
+  profilePhoto: validateImage.refine((fileList) => fileList.length > 0, {
+    message: "File is required!",
+  }),
+});
+
 export type IUserProfileForm = z.infer<typeof userProfileForm>;
+export type IUserProfilePhoto = z.infer<typeof userProfilePhoto>;

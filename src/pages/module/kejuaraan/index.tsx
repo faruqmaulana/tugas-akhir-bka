@@ -41,6 +41,16 @@ const UserManagement = () => {
         enableClickToCopy: true,
       },
       {
+        header: "Dokumen SK",
+        accessorKey: "suratKeputusan",
+        enableClickToCopy: false,
+        Cell: ({ cell }) => (
+          <Anchor href={cell.getValue() as string}>
+            <ButtonLink />
+          </Anchor>
+        ),
+      },
+      {
         header: "Kegiatan",
         accessorKey: "kegiatan",
         enableClickToCopy: true,

@@ -109,6 +109,11 @@ const getAllChampionshipHandler = protectedProcedure
         tanggalSK: changeDateFormat(
           data.PrestasiDataTable?.suratKeputusan?.tanggalSK
         ),
+        suratKeputusan:
+          (
+            data.PrestasiDataTable?.suratKeputusan
+              ?.dokumenSK as PrismaJson.FileResponse
+          )?.secure_url || "-",
         kegiatan: data.PrestasiDataTable?.kegiatan || "-",
         tanggalKegiatan: changeDateFormat(
           data.PrestasiDataTable?.tanggalKegiatan
