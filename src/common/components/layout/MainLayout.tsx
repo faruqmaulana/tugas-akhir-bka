@@ -43,10 +43,16 @@ const MainLayout = ({ children }: any) => {
       </div>
       <Aside showAside={showAside} />
       <div
-        className={`flex flex-col transition-all duration-1000 ease-in-out ${
-          showAside ? "pl-60" : "pl-0"
+        className={`relative flex flex-col transition-all duration-1000 ease-in-out ${
+          showAside ? "md:pl-60" : "pl-0"
         }`}
       >
+        {showAside && (
+          <div
+            className="absolute inset-0 z-[15] cursor-pointer bg-[#21252980] md:hidden"
+            onClick={() => setShowAside(false)}
+          />
+        )}
         <Header setShowAside={setShowAside} showAside={showAside} />
         <main className="min-h-screen bg-charcoal-100 px-5 pb-5 pt-[90px]">
           {userData ? (

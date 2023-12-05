@@ -1,5 +1,5 @@
 .wrapper {
-  @apply fixed z-20 col-start-1 col-end-2 row-start-1 row-end-[-1] h-full w-60 overflow-y-auto  bg-dashboard-aside pb-0 transition-all duration-1000 ease-in-out;
+  @apply fixed z-20 col-start-1 col-end-2 row-start-1 row-end-[-1] h-full w-60 overflow-y-auto bg-dashboard-aside pb-0 shadow-lg transition-all duration-1000 ease-in-out md:shadow-none;
 
   &.hide {
     @apply w-0;
@@ -13,7 +13,7 @@
     @apply mt-4 flex flex-col items-center;
 
     .photo {
-      @apply mb-1 relative h-16 w-16 overflow-hidden rounded-full;
+      @apply relative mb-1 h-16 w-16 overflow-hidden rounded-full;
     }
 
     .name {
