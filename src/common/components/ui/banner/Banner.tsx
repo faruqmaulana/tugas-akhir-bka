@@ -40,12 +40,14 @@ const Banner = (props: BannerPropsType) => {
         transition: "max-height 0.5s ease-out, opacity 0.5s ease-out",
       }}
     >
-      <Link
-        href={redirect ? redirect : "#"}
-        className="mx-auto text-center text-base font-medium hover:cursor-pointer md:font-semibold"
-      >
-        {text}
-      </Link>
+      {isOpen && (
+        <Link
+          href={redirect && isOpen ? redirect : "#"}
+          className="mx-auto text-center text-base font-medium hover:cursor-pointer md:font-semibold"
+        >
+          {text}
+        </Link>
+      )}
       {isCloseAble && (
         <button
           type="button"

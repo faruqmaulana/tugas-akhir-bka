@@ -1,7 +1,7 @@
 .header {
   @apply fixed z-10 flex h-[70px]
   w-full items-center
-  justify-between bg-charcoal-200 transition-all duration-1000 ease-in-out;
+  justify-between bg-charcoal-200 transition-all duration-300 ease-in-out md:duration-1000;
 
   &.full {
     @apply md:pr-60;
@@ -23,7 +23,7 @@
     duration-300 hover:bg-charcoal-400;
 
     .info {
-      @apply mr-[10px] flex flex-col;
+      @apply mr-[10px] hidden flex-col md:flex;
 
       .name {
         @apply text-base font-bold text-red-700;
@@ -36,6 +36,9 @@
 
     .photo {
       @apply mr-2 h-[38px] w-[38px] overflow-hidden rounded-full;
+    }
+    .arrow {
+      @apply hidden md:block;
     }
   }
 

@@ -15,6 +15,7 @@ import {
 import { type Dispatch, type SetStateAction } from "react";
 import { useHeader } from "~/common/hooks/layout/useHeader";
 import { useSession } from "next-auth/react";
+import { KeyIcon } from "lucide-react";
 
 export type HeaderProps = {
   showAside: boolean;
@@ -30,7 +31,6 @@ const Header = (props: HeaderProps) => {
 
   return (
     <header className={`${styles.header} ${showAside && styles.full}`}>
-       
       <button
         className={styles.hamburger}
         type="button"
@@ -45,13 +45,15 @@ const Header = (props: HeaderProps) => {
           <HoverCard>
             <HoverCardTrigger>
               <button type="button" className={styles.profileCorner}>
+                <div className="block md:hidden">
+                  <RoleManagementIcon width="28" height="24" />
+                </div>
                 <div className={styles.info}>
                   <h1 className={styles.name}>
                     {user?.name || data?.user.name}
                   </h1>
                   <p className={styles.role}>{user?.role || data?.user.role}</p>
                 </div>
-
                 <div className={styles.arrow}>
                   <ArrowIcon />
                 </div>
@@ -78,7 +80,7 @@ const Header = (props: HeaderProps) => {
                     void router.push("/informasi-login");
                   }}
                 >
-                  <RoleManagementIcon />
+                  <KeyIcon width={18} height={18} />
                   <button type="button">Informasi Login</button>
                 </li>
                 <li className={`${styles.list}`} onClick={handleSignOut}>

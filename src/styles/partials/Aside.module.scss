@@ -1,5 +1,5 @@
 .wrapper {
-  @apply fixed z-20 col-start-1 col-end-2 row-start-1 row-end-[-1] h-full w-60 overflow-y-auto bg-dashboard-aside pb-0 shadow-lg transition-all duration-1000 ease-in-out md:shadow-none;
+  @apply fixed z-20 col-start-1 col-end-2 row-start-1 row-end-[-1] h-full w-60 overflow-y-auto bg-dashboard-aside pb-0 shadow-lg transition-all duration-300 md:duration-1000 ease-in-out md:shadow-none;
 
   &.hide {
     @apply w-0;
