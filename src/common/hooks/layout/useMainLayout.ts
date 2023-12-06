@@ -21,7 +21,6 @@ const useMainLayout = () => {
     api.user.getUserProfile.useQuery<UserProfileType>();
   const { mutate: updateUserBanner } =
     api.user.updateUserProfileBanner.useMutation();
-
   const { user: userState } = state;
   const userData = state?.user;
   const userNotif = state?.notification;

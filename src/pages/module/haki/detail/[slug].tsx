@@ -15,7 +15,7 @@ import ExpandableCard from "~/common/components/ui/card/ExpandableCard";
 import MahasiswaActionButton from "~/common/components/ui/button/MahasiswaActionButton";
 import { PatenAndHaki } from "@prisma/client";
 
-const Example = ({ slug }: { slug: string }) => {
+const Example = () => {
   const {
     router,
     haki,
@@ -36,7 +36,7 @@ const Example = ({ slug }: { slug: string }) => {
     onReject,
     onApprove,
     onEdit,
-  } = useHakiAction({ slug, jenis: PatenAndHaki.HAKI });
+  } = useHakiAction({ jenis: PatenAndHaki.HAKI });
 
   const { role, isAdmin } = useCurrentUser();
 

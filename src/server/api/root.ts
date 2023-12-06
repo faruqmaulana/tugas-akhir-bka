@@ -21,6 +21,7 @@ import { scholarshipModule } from "./module/pengajuan/beasiswa/_router";
 import { hakiModule } from "./module/pengajuan/haki/_router";
 import { pkmModule } from "./module/pengajuan/pkm/_router";
 import { bookModule } from "./module/pengajuan/book/_router";
+import { allModuleCount } from "./module/count/getAllModuleCount";
 
 /**
  * This is the primary router for your server.
@@ -60,6 +61,9 @@ export const appRouter = createTRPCRouter({
 
   // ** ACTIVITY LOG
   activityLog: activityLogQuery,
+
+  // ** ALL MODULE COUNT 
+  allModule: allModuleCount, 
 
   // ** REGISTER
   register: registerQuery,

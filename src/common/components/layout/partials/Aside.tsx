@@ -12,11 +12,16 @@ import { MenuWithSub } from "./MenuWithub";
 import styles from "~/styles/partials/Aside.module.scss";
 import { useAside } from "~/common/hooks/layout/useAside";
 import { useSession } from "next-auth/react";
+import { api } from "~/utils/api";
+import { type ModuleCountType } from "~/server/api/module/count/getAllModuleCount";
 
-const Aside = ({ showAside }: any) => {
+const Aside = ({ showAside, setShowAside }: any) => {
   const { router, listMenu, user, handleCollapse, handleCloseCollapse } =
     useAside();
   const { data } = useSession();
+  const { data: moduleCount } =
+    api.allModule.getAllModuleCount.useQuery<ModuleCountType[]>();
+    console.log(moduleCount)
 
   const handleUserProfile = () => {
     if ((user?.imageMeta as PrismaJson.FileResponse)?.secure_url) {
@@ -71,14 +76,18 @@ const Aside = ({ showAside }: any) => {
                 {...item}
                 key={item.id}
                 pathName={router.pathname}
+                setShowAside={setShowAside}
+                moduleCount={moduleCount}
                 handleCloseCollapse={handleCloseCollapse}
               />
             ) : (
               <MenuWithSub
                 {...item}
-                index={item.id}
                 key={item.id}
+                index={item.id}
                 isAllAccess={true}
+                moduleCount={moduleCount}
+                setShowAside={setShowAside}
                 handleCollapse={handleCollapse}
               />
             );

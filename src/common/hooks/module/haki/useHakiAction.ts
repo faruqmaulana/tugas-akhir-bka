@@ -33,15 +33,10 @@ import { ActionReducer } from "~/common/types/context/GlobalContextType";
 import { type PatenAndHaki } from "@prisma/client";
 import capitalizeFirstLetter from "~/common/helpers/capitalizeFirstLetter";
 
-const useHakiAction = ({
-  slug,
-  jenis,
-}: {
-  slug: string;
-  jenis: PatenAndHaki;
-}) => {
-  const hakiId = slug;
+const useHakiAction = ({ jenis }: { jenis: PatenAndHaki }) => {
   const router = useRouter();
+  const { query } = router;
+  const hakiId = query?.slug as string;
   const { dispatch } = useGlobalContext();
   const [initialLoad, setInitialLoad] = useState(true);
   const { refetchNotification } = useMainLayout();

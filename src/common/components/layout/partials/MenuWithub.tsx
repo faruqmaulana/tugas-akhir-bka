@@ -12,6 +12,9 @@ import { useCurrentUser } from "~/common/hooks/module/profile";
 import { type Role } from "@prisma/client";
 
 import styles from "~/styles/partials/Aside.module.scss";
+import { useWidthViewport } from "~/common/hooks/core/useWidthViewport";
+import { type MODULE_TYPE_CODE } from "~/common/enums/MODULE_TYPE_CODE";
+import { type ModuleCountType } from "~/server/api/module/count/getAllModuleCount";
 
 const MenuWithSub = (props: any) => {
   const {
@@ -25,9 +28,13 @@ const MenuWithSub = (props: any) => {
     handleCollapse,
     module,
     authorization,
+    setShowAside,
+    moduleCount,
   } = props;
+
   const router = useRouter();
   const { role } = useCurrentUser();
+  const { viewportWidth } = useWidthViewport();
 
   const [subModule, setSubModule] = useState<any[]>([]);
 
@@ -55,6 +62,14 @@ const MenuWithSub = (props: any) => {
     if (type === "Ditolak") return "!bg-[#FF7070]";
 
     return "";
+  };
+
+  const handleModuleCount = (moduleType: MODULE_TYPE_CODE): ModuleCountType => {
+    const filterModule = moduleCount?.filter(
+      (val: { code: string }) => val.code === moduleType
+    )?.[0];
+
+    return filterModule;
   };
 
   if (authorization && !authorization?.includes(role as Role)) return null;
@@ -99,6 +114,11 @@ const MenuWithSub = (props: any) => {
                 passHref
                 href={sub.url}
                 className={`${styles.linkSub} ${handleActiveMenu(sub.url)}`}
+                onClick={() => {
+                  if (viewportWidth && viewportWidth <= 767) {
+                    setShowAside(false);
+                  }
+                }}
               >
                 <span className={styles.titleSub}>{sub.title}</span>
                 {module !== "master-data" && (
@@ -107,7 +127,7 @@ const MenuWithSub = (props: any) => {
                       sub.title
                     )}`}
                   >
-                    {sub.counter}
+                    {handleModuleCount(sub.module).count}
                   </span>
                 )}
               </Link>

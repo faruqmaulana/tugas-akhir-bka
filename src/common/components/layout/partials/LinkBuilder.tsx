@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
@@ -9,6 +10,9 @@ import { useCurrentUser } from "~/common/hooks/module/profile";
 import { type Role } from "@prisma/client";
 
 import styles from "~/styles/partials/Aside.module.scss";
+import { useWidthViewport } from "~/common/hooks/core/useWidthViewport";
+import { type MODULE_TYPE_CODE } from "~/common/enums/MODULE_TYPE_CODE";
+import { type ModuleCountType } from "~/server/api/module/count/getAllModuleCount";
 
 const LinkBuilder = (props: any) => {
   const {
@@ -21,8 +25,10 @@ const LinkBuilder = (props: any) => {
     counter,
     handleCloseCollapse,
     authorization,
+    setShowAside,
+    moduleCount,
   } = props;
-
+  const { viewportWidth } = useWidthViewport();
   const { role } = useCurrentUser();
   const exceptModule = ["dashboard", "user-management", "sk-rektor"];
 
@@ -35,6 +41,14 @@ const LinkBuilder = (props: any) => {
     return isActive ? styles.active : "";
   };
 
+  const handleModuleCount = (moduleType: MODULE_TYPE_CODE): ModuleCountType => {
+    const filterModule = moduleCount && moduleCount?.filter(
+      (val: { module: string }) => val.module === moduleType
+    )?.[0];
+
+    return filterModule;
+  };
+
   if (authorization && !authorization?.includes(role as Role)) return null;
 
   return (
@@ -44,20 +58,24 @@ const LinkBuilder = (props: any) => {
         href={url}
         className={`${styles.link} ${handleActiveMenu(url, pathName)}`}
         onClick={() => {
+          if (viewportWidth && viewportWidth <= 767) {
+            setShowAside(false);
+          }
           handleCloseCollapse();
         }}
       >
         <div className={styles.icon}>{createElement(icon)}</div>
         <span className={styles.title}>{title}</span>
-        {!exceptModule.includes(module) && (
-          <span
-            className={`${styles.counter} ${
-              counter > 40 ? "!bg-[#FF7070]" : ""
-            }`}
-          >
-            {counter}
-          </span>
-        )}
+        {!exceptModule.includes(module) &&
+          handleModuleCount(module)?.count > 0 && (
+            <span
+              className={`${styles.counter} ${
+                handleModuleCount(module)?.count > 40 ? "!bg-[#FF7070]" : ""
+              }`}
+            >
+              {handleModuleCount(module)?.count}
+            </span>
+          )}
       </Link>
     </li>
   );

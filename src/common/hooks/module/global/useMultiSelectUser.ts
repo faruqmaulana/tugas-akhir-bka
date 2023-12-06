@@ -43,7 +43,7 @@ const useMultiSelectUser = (defaultSelected: any[] | undefined = undefined) => {
   const mergedUser = [] as CustomReactSelectOptionsType[];
 
   if (tempMahasiswaRole) {
-    tempMahasiswaRole.map((val) => {
+    tempMahasiswaRole?.map((val) => {
       mergedUser.push({ ...val, role: "MAHASISWA" });
     });
   }

@@ -41,7 +41,7 @@ const MainLayout = ({ children }: any) => {
           }
         />
       </div>
-      <Aside showAside={showAside} />
+      <Aside showAside={showAside} setShowAside={setShowAside} />
       <div
         className={`relative flex flex-col transition-all duration-1000 ease-in-out ${
           showAside ? "md:pl-60" : "pl-0"
