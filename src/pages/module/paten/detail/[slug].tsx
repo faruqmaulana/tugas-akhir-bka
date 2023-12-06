@@ -5,7 +5,6 @@ import PageHeading from "~/common/components/ui/header/PageHeading";
 import Modal from "~/common/components/ui/modal/Modal";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
 import BaseForm from "~/common/components/ui/form/BaseForm";
-import { requireAuth } from "~/common/authentication/requireAuth";
 import StepperVertical from "~/common/components/ui/stepper/StepperVertical";
 import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
 import EditModalDescription from "~/common/components/ui/modal/EditModalDescription";
@@ -16,11 +15,7 @@ import ExpandableCard from "~/common/components/ui/card/ExpandableCard";
 import MahasiswaActionButton from "~/common/components/ui/button/MahasiswaActionButton";
 import { PatenAndHaki } from "@prisma/client";
 
-export const getServerSideProps = requireAuth(async (ctx) => {
-  return { props: { slug: ctx.query.slug } };
-});
-
-const Example = ({ slug }: { slug: string }) => {
+const Example = () => {
   const {
     router,
     haki,
@@ -41,7 +36,7 @@ const Example = ({ slug }: { slug: string }) => {
     onReject,
     onApprove,
     onEdit,
-  } = useHakiAction({ slug, jenis: PatenAndHaki.PATEN });
+  } = useHakiAction({ jenis: PatenAndHaki.PATEN });
 
   const { role, isAdmin } = useCurrentUser();
 
