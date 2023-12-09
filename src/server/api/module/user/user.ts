@@ -1,9 +1,14 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { userQuery } from "~/server/queries/module/user/user.query";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { hash, verify } from "argon2";
-import { PASSWORD_NOT_MATCH, UPDATE_PROFILE_SUCCESS } from "~/common/message";
+import {
+  ADD_SUCCESS,
+  PASSWORD_NOT_MATCH,
+  UPDATE_PROFILE_SUCCESS,
+} from "~/common/message";
 import { TRPCError } from "@trpc/server";
 import { loginInformation, userProfileForm } from "~/common/schemas/user";
 import { type Prisma, Role } from "@prisma/client";
@@ -11,6 +16,9 @@ import { STATUS } from "~/common/enums/STATUS";
 import { z } from "zod";
 import { userProfilePhoto } from "~/common/schemas/user/user-profile.schema";
 import { stringToJSON } from "~/common/helpers/parseJSON";
+import { mahasiswaManagementForm } from "~/common/schemas/module/master-data/user-management.schema";
+import { adminManagementForm } from "../../../../common/schemas/module/master-data/user-management.schema";
+import errorDuplicateData from "~/common/handler/errorDuplicateData";
 
 export type allStudentsType = Prisma.UserGetPayload<{
   select: typeof userQuery & {
@@ -41,6 +49,7 @@ export type allStudentTableType = {
   semester: string;
   total_prestasi: number;
   isActive: boolean;
+  role: Role;
 };
 
 export const userData = createTRPCRouter({
@@ -66,10 +75,9 @@ export const userData = createTRPCRouter({
     }
   }),
 
-  getAllMahasiswa: protectedProcedure.query(async ({ ctx }) => {
+  getAllUsers: protectedProcedure.query(async ({ ctx }) => {
     try {
       const reqAllStudents = (await ctx.prisma.user.findMany({
-        where: { role: Role.MAHASISWA },
         select: {
           ...userQuery,
           isActive: true,
@@ -100,6 +108,7 @@ export const userData = createTRPCRouter({
           semester: val.semester,
           total_prestasi: val._count.prestasiDataTables,
           isActive: val.isActive,
+          role: val.role,
         };
       }) as allStudentTableType[];
 
@@ -256,6 +265,88 @@ export const userData = createTRPCRouter({
         return {
           message: "Photo " + UPDATE_PROFILE_SUCCESS,
           data,
+        };
+      } catch (error) {
+        throw error;
+      }
+    }),
+
+  addMahasiswa: protectedProcedure
+    .input(mahasiswaManagementForm)
+    .mutation(async ({ ctx, input }) => {
+      const { password, npm, email } = input;
+      try {
+        //** CHECK NPM DUPLO */
+        const isNpmAlreadyExist = await ctx.prisma.user.findUnique({
+          where: {
+            npm,
+          },
+        });
+
+        if (isNpmAlreadyExist) {
+          errorDuplicateData({
+            addUserData: true,
+            property: "Nomor Induk Mahasiswa",
+          });
+        }
+
+        // //** CHECK EMAIL DUPLO */
+        const isEmailAlreadyExist = await ctx.prisma.user.findUnique({
+          where: {
+            email,
+          },
+        });
+
+        if (isEmailAlreadyExist) {
+          errorDuplicateData({ addUserData: true, property: "Email" });
+        }
+
+        await ctx.prisma.user.create({
+          data: {
+            ...input,
+            password: await hash(password),
+            role: Role.MAHASISWA,
+            isActive: true,
+          },
+          select: { ...userQuery, accounts: { select: { provider: true } } },
+        });
+
+        return {
+          message: `${ADD_SUCCESS} Mahasiswa`,
+        };
+      } catch (error) {
+        throw error;
+      }
+    }),
+
+  addAdmin: protectedProcedure
+    .input(adminManagementForm)
+    .mutation(async ({ ctx, input }) => {
+      const { password, email } = input;
+      try {
+        // //** CHECK EMAIL DUPLO */
+        const isEmailAlreadyExist = await ctx.prisma.user.findUnique({
+          where: {
+            email,
+          },
+        });
+
+        if (isEmailAlreadyExist) {
+          errorDuplicateData({ addUserData: true, property: "Email" });
+        }
+
+        await ctx.prisma.user.create({
+          data: {
+            ...input,
+            isActive: true,
+            role: Role.ADMIN,
+            password: await hash(password),
+          },
+          select: { ...userQuery, accounts: { select: { provider: true } } },
+        });
+
+        return {
+          message: `${ADD_SUCCESS} Admin`,
         };
       } catch (error) {
         throw error;

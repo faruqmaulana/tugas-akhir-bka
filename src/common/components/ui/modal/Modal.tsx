@@ -156,7 +156,7 @@ const Modal = (props: ModalProps) => {
             {showClose && !isLoading && closeIcon}
           </div>
           <div
-            className={`my-5 mb-8
+            className={`mt-5
               ${className} 
               ${contentCenter && "text-center"} 
               ${modalScroll && style.scrollableTable}`}

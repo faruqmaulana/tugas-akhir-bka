@@ -42,7 +42,6 @@ const getAchievementByFacultyHandler = protectedProcedure.query(
         await ctx.prisma.pengajuanOnUsers.findMany(approvedAchievementQuery);
       // Create a map to accumulate the totals
       const groupedDataMap: Record<string, number> = {};
-      console.log({ approvedAchievementData });
       approvedAchievementData.forEach((item) => {
         const fakultasName = item?.user?.prodi?.Fakultas?.name;
 

@@ -23,7 +23,7 @@ const ModalForm = (props: ModalFormsType) => {
         </p>
       )}
       <BaseForm data={FORMS} />
-      <div className="-mb-8 mt-6 flex flex-row items-center justify-end gap-3">
+      <div className="mt-6 flex flex-row items-center justify-end gap-3">
         <Button
           isGray
           isSuccess

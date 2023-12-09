@@ -8,34 +8,38 @@ const TableAction = ({
   onDelete,
   disableDelete = false,
 }: {
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
   disableDelete?: boolean;
 }) => {
   return (
     <div className="flex flex-row gap-1">
-      <Button
-        isPrimary
-        isSmall
-        className="flex items-center gap-2 text-center"
-        onClick={() => {
-          onEdit();
-        }}
-      >
-        <EditIcon />
-        <span>Edit</span>
-      </Button>
-      <Button
-        isDisabled={disableDelete}
-        isDanger
-        isSmall
-        className="flex items-center gap-2 text-center"
-        onClick={() => {
-          onDelete();
-        }}
-      >
-        <TrashIcon />
-      </Button>
+      {onEdit && (
+        <Button
+          isPrimary
+          isSmall
+          className="flex items-center gap-2 text-center"
+          onClick={() => {
+            onEdit();
+          }}
+        >
+          <EditIcon />
+          <span>Edit</span>
+        </Button>
+      )}
+      {onDelete && (
+        <Button
+          isDisabled={disableDelete}
+          isDanger
+          isSmall
+          className="flex items-center gap-2 text-center"
+          onClick={() => {
+            onDelete();
+          }}
+        >
+          <TrashIcon />
+        </Button>
+      )}
     </div>
   );
 };

@@ -21,7 +21,6 @@ const Aside = ({ showAside, setShowAside }: any) => {
   const { data } = useSession();
   const { data: moduleCount } =
     api.allModule.getAllModuleCount.useQuery<ModuleCountType[]>();
-    console.log(moduleCount)
 
   const handleUserProfile = () => {
     if ((user?.imageMeta as PrismaJson.FileResponse)?.secure_url) {
