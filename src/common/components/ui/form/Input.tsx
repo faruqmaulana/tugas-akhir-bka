@@ -24,6 +24,9 @@ import {
 import LoadingInput from "./LoadingInput";
 import dynamic from "next/dynamic";
 import Loader from "../loader/Loader";
+import { Switch } from "../switch/switch";
+import StatusBadge from "../badge/StatusBagde";
+import { STATUS } from "~/common/enums/STATUS";
 
 const InputCurrency = dynamic(
   () => import("~/common/components/ui/form/InputCurrency"),
@@ -70,6 +73,9 @@ export type InputPropsType = {
   trigger?: UseFormTrigger<any>;
   isPreview?: boolean;
   variant?: "normal" | "currency";
+  checked?: boolean;
+  handlePrimitiveSwitch?: () => void;
+  customSwitchValue?: boolean
 };
 
 const Input = (props: InputPropsType) => {
@@ -103,6 +109,9 @@ const Input = (props: InputPropsType) => {
     handleSelectOptionChange,
     isPreview = false,
     variant = "normal",
+    checked = false,
+    handlePrimitiveSwitch,
+    customSwitchValue = false
   } = props;
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -262,6 +271,19 @@ const Input = (props: InputPropsType) => {
             fileData={fileData}
             editIconAction={editIconAction}
           />
+        )}
+        {type === "switch" && (
+          <div className="flex flex-row items-center gap-2">
+            <Switch checked={checked} onClick={handlePrimitiveSwitch} />
+            {value && !customSwitchValue && <p>{value}</p>}
+            {customSwitchValue && (
+              <StatusBadge
+                className="w-fit"
+                status={checked ? STATUS.APPROVE : STATUS.REJECT}
+                text={value}
+              />
+            )}
+          </div>
         )}
         {type === "password" && (
           <button

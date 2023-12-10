@@ -65,7 +65,7 @@ export const authOptions: NextAuthOptions = {
       authorize: async (credentials, req) => {
         const { npm, password } = await loginSchema.parseAsync(credentials);
         const result = await prisma.user.findFirst({
-          where: { npm },
+          where: { OR: [{ email: npm }, { npm: npm }] },
         });
 
         if (!result) throw new Error("Akun belum terdaftar");

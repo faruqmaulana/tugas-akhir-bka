@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
@@ -11,10 +12,12 @@ import PageHeading from "~/common/components/ui/header/PageHeading";
 import Modal from "~/common/components/ui/modal/Modal";
 import ModalForm from "~/common/components/ui/modal/ModalForm";
 import BaseTable from "~/common/components/ui/table/BaseTable";
+import TableAction from "~/common/components/ui/table/TableAction";
 import { STATUS } from "~/common/enums/STATUS";
 import capitalizeFirstLetter from "~/common/helpers/capitalizeFirstLetter";
 import { useUserManagement } from "~/common/hooks/module/user-management/useUserManagement";
 import { type allStudentTableType } from "~/server/api/module/user/user";
+import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -29,12 +32,16 @@ const UserManagement = () => {
     tab,
     handleActiveMahasiswaTab,
     handleActiveAdminTab,
-    usersState,
     ADD_ADMIN,
     onSubmitAddMahasiswa,
     handleAddMahasiswa,
     handleAddAdmin,
     onSubmitAddAdmin,
+    handleEdit,
+    allUsers,
+    EDIT_MAHASISWA,
+    handleSubmitEdit,
+    onSubmitEditMahasiswa,
   } = useUserManagement();
 
   const mahasiswaColumn = useMemo<MRT_ColumnDef<allStudentTableType>[]>(
@@ -77,6 +84,7 @@ const UserManagement = () => {
       {
         accessorKey: "isActive",
         header: "Status Akun",
+        enableClickToCopy: true,
         Cell: ({ cell }) => (
           <StatusBadge
             className="w-fit"
@@ -85,8 +93,15 @@ const UserManagement = () => {
           />
         ),
       },
+      {
+        header: "Action",
+        ...tableActionConfig,
+        Cell: ({ row }) => (
+          <TableAction onEdit={() => handleEdit(row.original)} />
+        ),
+      },
     ],
-    [tab]
+    [allUsers]
   );
 
   const adminColumn = useMemo<MRT_ColumnDef<allStudentTableType>[]>(
@@ -113,7 +128,7 @@ const UserManagement = () => {
         ),
       },
     ],
-    [usersState, tab]
+    [allUsers]
   );
 
   return (
@@ -124,30 +139,40 @@ const UserManagement = () => {
         onOpen={handleAdd}
       />
       <Card header={`DATA ${tab}`} className="mt-[30px]">
-        <div className="mb-3 mt-2 flex w-full !max-w-[360px] flex-row rounded-md border border-slate-300 bg-slate-200 p-1">
-          <button
-            type="button"
-            className={`w-1/2 rounded-md py-[2px] ${
-              tab === "MAHASISWA" ? "bg-white shadow-md" : "text-slate-500"
-            }`}
-            onClick={handleActiveMahasiswaTab}
-          >
-            Mahasiswa
-          </button>
-          <button
-            type="button"
-            className={`w-1/2 rounded-md py-[2px] ${
-              tab === "ADMIN" ? "bg-white shadow-md" : "text-slate-500"
-            }`}
-            onClick={handleActiveAdminTab}
-          >
-            Admin
-          </button>
+        {allUsers && (
+          <div className="mb-3 mt-2 flex w-full !max-w-[360px] flex-row rounded-md border border-slate-300 bg-slate-200 p-1">
+            <button
+              type="button"
+              className={`w-1/2 rounded-md py-[2px] ${
+                tab === "MAHASISWA" ? "bg-white shadow-md" : "text-slate-500"
+              }`}
+              onClick={handleActiveMahasiswaTab}
+            >
+              Mahasiswa
+            </button>
+            <button
+              type="button"
+              className={`w-1/2 rounded-md py-[2px] ${
+                tab === "ADMIN" ? "bg-white shadow-md" : "text-slate-500"
+              }`}
+              onClick={handleActiveAdminTab}
+            >
+              Admin
+            </button>
+          </div>
+        )}
+        <div className={tab === "MAHASISWA" ? "" : "hidden"}>
+          <BaseTable
+            columns={mahasiswaColumn}
+            data={allUsers?.filter((val) => val.role === "MAHASISWA")}
+          />
         </div>
-        <BaseTable
-          columns={tab === "MAHASISWA" ? mahasiswaColumn : adminColumn}
-          data={usersState}
-        />
+        <div className={tab === "ADMIN" ? "" : "hidden"}>
+          <BaseTable
+            columns={adminColumn}
+            data={allUsers?.filter((val) => val.role === "ADMIN")}
+          />
+        </div>
       </Card>
       <Modal
         isOpen={modalState.isAddModalOpen}
@@ -166,32 +191,19 @@ const UserManagement = () => {
         }
         onCloseButton={handleClose}
       />
-      {/* <Modal
-        isOpen={modalState.isAddModalOpen}
-        content={
-          <ModalForm
-            formTitle="Tambah Data Dosen"
-            onSubmit={handleUpdateSubmit(onAddSubmit)}
-            FORMS={DOSEN_FORM}
-            loadingSubmit={modalState.isAddLoading}
-            onClose={handleClose}
-          />
-        }
-        onCloseButton={handleClose}
-      />
       <Modal
         isOpen={modalState.isEditModalOpen}
         content={
           <ModalForm
-            formTitle="ubah data dosen"
-            onSubmit={handleUpdateSubmit(onUpdateSubmit)}
-            FORMS={DOSEN_FORM}
+            formTitle="Ubah data mahasiswa"
+            onSubmit={handleSubmitEdit(onSubmitEditMahasiswa)}
+            FORMS={EDIT_MAHASISWA}
             loadingSubmit={modalState.isEditLoading}
             onClose={handleClose}
           />
         }
         onCloseButton={handleClose}
-      /> */}
+      />
     </>
   );
 };

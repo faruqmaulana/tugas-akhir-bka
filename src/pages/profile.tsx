@@ -86,7 +86,7 @@ const ProfilePage = () => {
             )}
             <div className="flex flex-row ml-auto gap-3">
               <Button onClick={handleCancelUpload} isGray isMedium className="rounded-lg">
-                Batal
+                Reset
               </Button>
               <Button
                 isSubmit

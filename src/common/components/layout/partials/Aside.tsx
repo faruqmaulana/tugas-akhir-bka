@@ -53,7 +53,7 @@ const Aside = ({ showAside, setShowAside }: any) => {
         </Link>
       </div>
 
-      <div className={styles.profile}>
+      <Link href="/profile" className={styles.profile}>
         <div className={styles.photo}>
           <Image
             fill
@@ -65,7 +65,7 @@ const Aside = ({ showAside, setShowAside }: any) => {
         </div>
         <h1 className={styles.name}>{user?.name || data?.user.name}</h1>
         <p className={styles.role}>{user?.role || data?.user.role}</p>
-      </div>
+      </Link>
 
       <div className={styles.menu}>
         <ul>

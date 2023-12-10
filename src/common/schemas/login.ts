@@ -10,7 +10,7 @@ function validateIndonesianPhoneNumber(value: string) {
 }
 
 export const loginSchema = z.object({
-  npm: z.string().min(1, { message: "NPM harus diisi" }).max(10, { message: "NPM maksimal 10 karakter" }),
+  npm: z.string().min(1, { message: "Required" }),
   password: z.string().min(8, { message: "Kata sandi harus 8 digit" }),
 });
 

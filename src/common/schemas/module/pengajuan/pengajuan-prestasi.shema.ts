@@ -6,40 +6,81 @@ import { z, ZodError, type ZodIssue } from "zod";
 
 const imageMimeTypes = ["image/jpeg", "image/png"];
 const pdfMimeType = "application/pdf";
+const maxFileSizeMB = 1; // Maximum file size in megabytes
 
-export const validateFile = z.any().refine(
-  (value) => {
-    // Check if the file has a valid MIME type
-    // And valid file type
-    if (value && typeof value === "object" && (value as File).length > 0) {
-      const isValidMimeType =
-        imageMimeTypes.includes((value as File[])[0]?.type as string) ||
-        (value as File[])[0]?.type === pdfMimeType;
-      return isValidMimeType;
+export const validateFile = z
+  .any()
+  .refine(
+    (value) => {
+      // Check if the file has a valid MIME type
+      // And valid file type
+      if (value && typeof value === "object" && (value as File).length > 0) {
+        const isValidMimeType =
+          imageMimeTypes.includes((value as File[])[0]?.type as string) ||
+          (value as File[])[0]?.type === pdfMimeType;
+        return isValidMimeType;
+      }
+      return true;
+    },
+    {
+      message: "File type must be an image (JPEG, PNG) or a PDF.",
     }
-    return true;
-  },
-  {
-    message: "File type must be an image (JPEG, PNG) or a PDF.",
-  }
-);
+  )
+  .refine(
+    (value) => {
+      // Check if the file has a valid MIME type
+      // And valid file type
+      if (value && typeof value === "object" && (value as File).length > 0) {
+        // Check if the file size is within the limit
+        const fileSizeInMB =
+          ((value as File[])[0]?.size as number) / (1024 * 1024);
+        const isFileSizeValid = fileSizeInMB <= maxFileSizeMB;
 
-export const validateImage = z.any().refine(
-  (value) => {
-    // Check if the file has a valid MIME type
-    // And valid file type
-    if (value && typeof value === "object" && (value as File).length > 0) {
-      const isValidMimeType = imageMimeTypes.includes(
-        (value as File[])[0]?.type as string
-      );
-      return isValidMimeType;
+        return isFileSizeValid;
+      }
+      return true;
+    },
+    {
+      message: "*The file exceeded the maximum size of 1MB",
     }
-    return true;
-  },
-  {
-    message: "File type must be an image (JPEG, PNG)",
-  }
-);
+  );
+
+export const validateImage = z
+  .any()
+  .refine(
+    (value) => {
+      // Check if the file has a valid MIME type
+      // And valid file type
+      if (value && typeof value === "object" && (value as File).length > 0) {
+        const isValidMimeType = imageMimeTypes.includes(
+          (value as File[])[0]?.type as string
+        );
+        return isValidMimeType;
+      }
+      return true;
+    },
+    {
+      message: "File type must be an image (JPEG, PNG)",
+    }
+  )
+  .refine(
+    (value) => {
+      // Check if the file has a valid MIME type
+      // And valid file type
+      if (value && typeof value === "object" && (value as File).length > 0) {
+        // Check if the file size is within the limit
+        const fileSizeInMB =
+          ((value as File[])[0]?.size as number) / (1024 * 1024);
+        const isFileSizeValid = fileSizeInMB <= maxFileSizeMB;
+
+        return isFileSizeValid;
+      }
+      return true;
+    },
+    {
+      message: "*The image exceeded the maximum size of 1MB",
+    }
+  );
 
 export const pengajuanPrestasiForm = z
   .object({

@@ -8,6 +8,7 @@ import {
   ADD_SUCCESS,
   PASSWORD_NOT_MATCH,
   UPDATE_PROFILE_SUCCESS,
+  UPDATE_SUCCESS,
 } from "~/common/message";
 import { TRPCError } from "@trpc/server";
 import { loginInformation, userProfileForm } from "~/common/schemas/user";
@@ -16,7 +17,10 @@ import { STATUS } from "~/common/enums/STATUS";
 import { z } from "zod";
 import { userProfilePhoto } from "~/common/schemas/user/user-profile.schema";
 import { stringToJSON } from "~/common/helpers/parseJSON";
-import { mahasiswaManagementForm } from "~/common/schemas/module/master-data/user-management.schema";
+import {
+  editMahasiswaManagementForm,
+  mahasiswaManagementForm,
+} from "~/common/schemas/module/master-data/user-management.schema";
 import { adminManagementForm } from "../../../../common/schemas/module/master-data/user-management.schema";
 import errorDuplicateData from "~/common/handler/errorDuplicateData";
 
@@ -40,11 +44,14 @@ export type allStudentsType = Prisma.UserGetPayload<{
 }>[];
 
 export type allStudentTableType = {
+  id: string;
   name: string;
   email: string;
   phone: string;
   npm: string;
   fakultas: string;
+  fakultasId: string;
+  prodiId: string;
   prodi: string;
   semester: string;
   total_prestasi: number;
@@ -78,6 +85,9 @@ export const userData = createTRPCRouter({
   getAllUsers: protectedProcedure.query(async ({ ctx }) => {
     try {
       const reqAllStudents = (await ctx.prisma.user.findMany({
+        orderBy: {
+          updatedAt: "desc",
+        },
         select: {
           ...userQuery,
           isActive: true,
@@ -99,11 +109,14 @@ export const userData = createTRPCRouter({
 
       const allTransformedStudents = reqAllStudents.map((val) => {
         return {
+          id: val.id,
           name: val.name,
           email: val.email,
           phone: val.phone,
           npm: val.npm,
           fakultas: val.prodi?.Fakultas.name,
+          fakultasId: val.prodi?.Fakultas.id,
+          prodiId: val.prodi?.id,
           prodi: val.prodi?.name,
           semester: val.semester,
           total_prestasi: val._count.prestasiDataTables,
@@ -274,7 +287,7 @@ export const userData = createTRPCRouter({
   addMahasiswa: protectedProcedure
     .input(mahasiswaManagementForm)
     .mutation(async ({ ctx, input }) => {
-      const { password, npm, email } = input;
+      const { id, password, npm, email } = input;
       try {
         //** CHECK NPM DUPLO */
         const isNpmAlreadyExist = await ctx.prisma.user.findUnique({
@@ -304,6 +317,7 @@ export const userData = createTRPCRouter({
         await ctx.prisma.user.create({
           data: {
             ...input,
+            id: undefined,
             password: await hash(password),
             role: Role.MAHASISWA,
             isActive: true,
@@ -312,7 +326,73 @@ export const userData = createTRPCRouter({
         });
 
         return {
-          message: `${ADD_SUCCESS} Mahasiswa`,
+          message: id
+            ? `Data Mahasiswa ${UPDATE_SUCCESS}`
+            : `${ADD_SUCCESS} Mahasiswa`,
+        };
+      } catch (error) {
+        throw error;
+      }
+    }),
+
+  editMahasiswa: protectedProcedure
+    .input(editMahasiswaManagementForm)
+    .mutation(async ({ ctx, input }) => {
+      const { id, password, npm, email, prodiId, isActive, semester } = input;
+      try {
+        // ** GET CURRENT USER */
+        const currentUser = await ctx.prisma.user.findUnique({
+          where: { id },
+        });
+
+        //** CHECK NPM DUPLO */
+        const isNpmAlreadyExist = npm
+          ? await ctx.prisma.user.findUnique({
+              where: {
+                npm,
+              },
+            })
+          : { npm: null };
+
+        // check founded npm from others and current user npm
+        // pass if founded and current user is equal
+        if (isNpmAlreadyExist && currentUser?.npm !== isNpmAlreadyExist?.npm) {
+          errorDuplicateData({
+            addUserData: true,
+            property: "Nomor Induk Mahasiswa",
+          });
+        }
+
+        // //** CHECK EMAIL DUPLO */
+        const isEmailAlreadyExist = await ctx.prisma.user.findUnique({
+          where: {
+            email,
+          },
+        });
+
+        if (isEmailAlreadyExist && currentUser?.email !== isEmailAlreadyExist?.email) {
+          errorDuplicateData({ addUserData: true, property: "Email" });
+        }
+
+        await ctx.prisma.user.update({
+          where: { id },
+          data: {
+            ...input,
+            role: Role.MAHASISWA,
+            isActive: Boolean(isActive),
+            id: undefined,
+            npm: npm || undefined,
+            prodiId: prodiId || undefined,
+            semester: semester || undefined,
+            password: password ? await hash(password) : undefined,
+          },
+          select: { ...userQuery, accounts: { select: { provider: true } } },
+        });
+
+        return {
+          message: id
+            ? `Data Mahasiswa ${UPDATE_SUCCESS}`
+            : `${ADD_SUCCESS} Mahasiswa`,
         };
       } catch (error) {
         throw error;

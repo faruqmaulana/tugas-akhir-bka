@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Role } from "@prisma/client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { type SingleValue } from "react-select";
 import { type ReactSelectOptionType } from "~/common/components/ui/form/ReactSelect";
@@ -14,6 +14,8 @@ import {
   adminManagementForm,
   type IMahasiswaManagementForm,
   mahasiswaManagementForm,
+  type IEditMahasiswaManagementForm,
+  editMahasiswaManagementForm,
 } from "~/common/schemas/module/master-data/user-management.schema";
 import { type AllMasterDataProdiType } from "~/server/api/module/master-data/prodi";
 import { type allStudentTableType } from "~/server/api/module/user/user";
@@ -24,15 +26,12 @@ const useUserManagement = () => {
   const { data: allUsers, refetch: refetchUsers } =
     api.user.getAllUsers.useQuery<allStudentTableType[]>();
   const { mutate: mutateAddMahasiswa } = api.user.addMahasiswa.useMutation();
+  const { mutate: mutateEditMahasiswa } = api.user.editMahasiswa.useMutation();
   const { mutate: mutateAddAdmin } = api.user.addAdmin.useMutation();
-
+  const [checked, setChecked] = useState<boolean>(false);
   const [tab, setTab] = useState<Role>("MAHASISWA");
-  const [initial, setInitial] = useState<boolean>(true);
   const [modalState, setModalState] =
     useState<ModalStateType>(INITIAL_MODAL_STATE);
-  const [usersState, setUsersState] = useState<
-    allStudentTableType[] | undefined
-  >(undefined);
 
   // ** FAKULTAS STATE
   const [fakultasState, setFakultasState] = useState<{
@@ -40,33 +39,15 @@ const useUserManagement = () => {
     name: string | undefined;
   }>();
 
-  const handleFilterUserState = (role: Role) => {
-    if (allUsers) {
-      const copyUsers = [...allUsers];
-      const filteredUsersData = copyUsers?.filter((val) => val.role === role);
-
-      setUsersState(filteredUsersData);
-    }
-  };
-
   const handleActiveMahasiswaTab = () => {
     setTab(Role.MAHASISWA);
-    handleFilterUserState(Role.MAHASISWA);
   };
 
   const handleActiveAdminTab = () => {
     setTab(Role.ADMIN);
-    handleFilterUserState(Role.ADMIN);
   };
 
   const handleClose = () => setModalState(INITIAL_MODAL_STATE);
-
-  useEffect(() => {
-    if (allUsers && initial) {
-      setUsersState(allUsers?.filter((val) => val.role === "MAHASISWA"));
-      setInitial(false);
-    }
-  }, [allUsers, initial]);
 
   // ** FORM STATE */
   //* ADD STATE */
@@ -79,6 +60,17 @@ const useUserManagement = () => {
     formState: { errors: errorsAddMahasiswaForm },
   } = useForm<IMahasiswaManagementForm>({
     resolver: zodResolver(mahasiswaManagementForm),
+  });
+
+  const {
+    register: registerEdit,
+    setValue: setEditValue,
+    handleSubmit: handleSubmitEdit,
+    control: editController,
+    reset: resetEditUserForm,
+    formState: { errors: errorsEditMahasiswaForm },
+  } = useForm<IEditMahasiswaManagementForm>({
+    resolver: zodResolver(editMahasiswaManagementForm),
   });
 
   const {
@@ -104,10 +96,39 @@ const useUserManagement = () => {
     });
   };
 
+  const handleEdit = (currentData: allStudentTableType) => {
+    // GET FILTERED LECTURER
+    const getCurrentUser = allUsers?.filter(
+      (val) => val.id === currentData.id
+    )[0];
+
+    if (getCurrentUser) {
+      setFakultasState({
+        id: getCurrentUser?.fakultasId,
+        name: getCurrentUser?.fakultas,
+      });
+
+      handleDefaultEditValue(getCurrentUser);
+
+      setModalState({ ...INITIAL_MODAL_STATE, isEditModalOpen: true });
+    }
+  };
+
+  const handleDefaultEditValue = (filteredUser: allStudentTableType) => {
+    setEditValue("id", filteredUser?.id);
+    setEditValue("prodiId", filteredUser?.prodiId || "");
+    setEditValue("name", filteredUser?.name);
+    setEditValue("email", filteredUser?.email);
+    setEditValue("npm", filteredUser?.npm);
+    setEditValue("semester", filteredUser?.name);
+    setChecked(filteredUser?.isActive);
+  };
+
   // ** MODAL ACTION */
   const handleAdd = () => {
     resetAdminForm();
     resetAddUserForm();
+    resetEditUserForm();
     setFakultasState(undefined);
     setModalState({ ...INITIAL_MODAL_STATE, isAddModalOpen: true });
   };
@@ -117,7 +138,7 @@ const useUserManagement = () => {
     setModalState((prev) => ({ ...prev, isAddLoading: true }));
     mutateAddMahasiswa(userPaylod, {
       onSuccess: (data) => {
-        void refetchUsers().then((_val) => handleFilterUserState("MAHASISWA"));
+        void refetchUsers();
         customToast("success", data.message);
         setModalState(INITIAL_MODAL_STATE);
       },
@@ -128,12 +149,31 @@ const useUserManagement = () => {
     });
   };
 
+  //* UPDATE MAHASISWA */
+  const onSubmitEditMahasiswa = (userPaylod: IEditMahasiswaManagementForm) => {
+    setModalState((prev) => ({ ...prev, isEditLoading: true }));
+    mutateEditMahasiswa(
+      { ...userPaylod, isActive: checked },
+      {
+        onSuccess: (data) => {
+          void refetchUsers();
+          customToast("success", data.message);
+          setModalState(INITIAL_MODAL_STATE);
+        },
+        onError: (error) => {
+          customToast("error", error?.message);
+          setModalState((prev) => ({ ...prev, isEditLoading: false }));
+        },
+      }
+    );
+  };
+
   //* ADD ADMIN */
   const onSubmitAddAdmin = (userPaylod: IAdminManagementForm) => {
     setModalState((prev) => ({ ...prev, isAddLoading: true }));
     mutateAddAdmin(userPaylod, {
       onSuccess: (data) => {
-        void refetchUsers().then((_val) => handleFilterUserState("ADMIN"));
+        void refetchUsers();
         customToast("success", data.message);
         setModalState(INITIAL_MODAL_STATE);
       },
@@ -188,7 +228,6 @@ const useUserManagement = () => {
       label: "Prodi",
       type: "select",
       isLoading: !prodi,
-      // value: user?.prodi?.id,
       control: control,
       register: { ...register("prodiId") },
       handleSelectOptionChange: handleFakultasChange,
@@ -208,6 +247,83 @@ const useUserManagement = () => {
       label: "Password",
       register: { ...register("password") },
       error: errorsAddMahasiswaForm.name?.message,
+    },
+  ];
+
+  //** EDIT FORM */
+  const EDIT_MAHASISWA = [
+    {
+      className: "col-span-2",
+      placeholder: "Nama Mahasiwa",
+      label: "Nama Lengkap",
+      register: { ...registerEdit("name") },
+      error: errorsEditMahasiswaForm.name?.message,
+    },
+    {
+      className: "col-span-2",
+      placeholder: "Nomor Induk Mahasiswa",
+      label: "NBI",
+      register: { ...registerEdit("npm") },
+      error: errorsEditMahasiswaForm.npm?.message,
+    },
+    {
+      className: "col-span-2",
+      placeholder: "Email",
+      label: "Email",
+      register: { ...registerEdit("email") },
+      error: errorsEditMahasiswaForm.email?.message,
+    },
+    {
+      disabled: true,
+      className: "col-span-2",
+      placeholder: "Fakultas",
+      label: "Fakultas",
+      type: "select",
+      value: fakultasState?.id,
+      control: editController,
+      selectData: [
+        {
+          id: fakultasState?.id,
+          title: fakultasState?.name,
+        },
+      ],
+    },
+    {
+      className: "col-span-2",
+      placeholder: "Prodi",
+      label: "Prodi",
+      type: "select",
+      isLoading: !prodi,
+      control: editController,
+      register: { ...registerEdit("prodiId") },
+      handleSelectOptionChange: handleFakultasChange,
+      selectData: prodi,
+      error: errorsEditMahasiswaForm.prodiId?.message,
+    },
+    {
+      className: "col-span-2",
+      placeholder: "Semester",
+      label: "Semester",
+      register: { ...registerEdit("semester") },
+      error: errorsEditMahasiswaForm.semester?.message,
+    },
+    {
+      className: "col-span-2",
+      placeholder: "Reset Password",
+      label: "Reset Password",
+      register: { ...register("password") },
+      error: errorsEditMahasiswaForm.name?.message,
+    },
+    {
+      className: "col-span-2",
+      label: "Status Akun",
+      type: "switch",
+      customSwitchValue: true,
+      value: checked ? "Aktif" : "Tidak Aktif",
+      checked: checked,
+      additionalInfo:
+        "Untuk menonaktifkan pengguna, ubah status akun menjadi tidak aktif.",
+      handlePrimitiveSwitch: () => setChecked(!checked),
     },
   ];
 
@@ -243,12 +359,16 @@ const useUserManagement = () => {
     tab,
     handleActiveMahasiswaTab,
     handleActiveAdminTab,
-    usersState,
     ADD_ADMIN,
     onSubmitAddMahasiswa,
     handleAddMahasiswa,
     handleAddAdmin,
     onSubmitAddAdmin,
+    handleEdit,
+    allUsers,
+    EDIT_MAHASISWA,
+    handleSubmitEdit,
+    onSubmitEditMahasiswa,
   };
 };
 
