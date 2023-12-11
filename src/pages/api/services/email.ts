@@ -80,5 +80,5 @@ const handleEmailTypeMessage = (type: BodyType["type"]) => {
   if (type === "RESEND_EMAIL_VERIFICATION")
     return "Email aktivasi berhasil dikirim ulang";
   if (type === "SEND_RESET_PASSWORD")
-    return "Permintaan reset password berhasil dikirim, sialhkan cek email anda";
+    return "Permintaan reset password berhasil dikirim, silahkan cek email anda";
 };

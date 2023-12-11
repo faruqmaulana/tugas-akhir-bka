@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -14,10 +15,13 @@ import { useAside } from "~/common/hooks/layout/useAside";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import { type ModuleCountType } from "~/server/api/module/count/getAllModuleCount";
+import { useWidthViewport } from "~/common/hooks/core/useWidthViewport";
 
 const Aside = ({ showAside, setShowAside }: any) => {
   const { router, listMenu, user, handleCollapse, handleCloseCollapse } =
     useAside();
+  const { viewportWidth } = useWidthViewport();
+
   const { data } = useSession();
   const { data: moduleCount } =
     api.allModule.getAllModuleCount.useQuery<ModuleCountType[]>();
@@ -35,7 +39,15 @@ const Aside = ({ showAside, setShowAside }: any) => {
   return (
     <aside className={`${styles.wrapper} ${!showAside && styles.hide}`}>
       <div className={styles.logo}>
-        <Link href="/dashboard" passHref>
+        <Link
+          href="/dashboard"
+          passHref
+          onClick={() => {
+            if (viewportWidth && viewportWidth <= 767) {
+              setShowAside(false);
+            }
+          }}
+        >
           <div className="flex items-center justify-center gap-3">
             <Image
               src={UntagLogo}
@@ -53,7 +65,15 @@ const Aside = ({ showAside, setShowAside }: any) => {
         </Link>
       </div>
 
-      <Link href="/profile" className={styles.profile}>
+      <Link
+        href="/profile"
+        className={styles.profile}
+        onClick={() => {
+          if (viewportWidth && viewportWidth <= 767) {
+            setShowAside(false);
+          }
+        }}
+      >
         <div className={styles.photo}>
           <Image
             fill
