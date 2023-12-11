@@ -15,7 +15,7 @@ import { loginInformation, userProfileForm } from "~/common/schemas/user";
 import { type Prisma, Role } from "@prisma/client";
 import { STATUS } from "~/common/enums/STATUS";
 import { z } from "zod";
-import { userProfilePhoto } from "~/common/schemas/user/user-profile.schema";
+import { adminProfileForm, userProfilePhoto } from "~/common/schemas/user/user-profile.schema";
 import { stringToJSON } from "~/common/helpers/parseJSON";
 import {
   editMahasiswaManagementForm,
@@ -145,7 +145,7 @@ export const userData = createTRPCRouter({
 
   //** UPDATE USER PROFILE */
   updateUserProfile: protectedProcedure
-    .input(userProfileForm)
+    .input(adminProfileForm)
     .mutation(async ({ ctx, input }) => {
       try {
         // DO UPDATE

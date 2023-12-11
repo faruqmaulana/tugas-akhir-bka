@@ -169,7 +169,7 @@ const Modal = (props: ModalProps) => {
           <div
             className={`flex gap-4 ${
               buttonCenter ? "justify-center" : "justify-end"
-            } ${buttonCenter && buttonClose ? "mb-7" : ""}`}
+            } ${buttonCenter && showButtonClose ? "mt-7" : ""}`}
           >
             {showButtonConfirm && buttonConfirm}
             {showButtonDanger && buttonDanger}

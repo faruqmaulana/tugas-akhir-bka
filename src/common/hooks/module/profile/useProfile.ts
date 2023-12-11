@@ -16,6 +16,7 @@ import ProfilePhoto from "../../../../../public/profile.jpg";
 import {
   userProfilePhoto,
   type IUserProfilePhoto,
+  adminProfileForm,
 } from "~/common/schemas/user/user-profile.schema";
 import { handleUploadCloudinary } from "~/common/libs/handle-upload-cloudinary";
 import { JSONtoString } from "~/common/helpers/parseJSON";
@@ -58,7 +59,7 @@ const useProfile = () => {
     reset: resetUploadForm,
     formState: { errors: errorsUploadProfile },
   } = useForm<IUserProfilePhoto>({
-    resolver: zodResolver(userProfilePhoto),
+    resolver: zodResolver(isAdmin ? adminProfileForm : userProfilePhoto),
   });
 
   const {

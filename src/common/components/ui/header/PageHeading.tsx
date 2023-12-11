@@ -34,6 +34,7 @@ const PageHeading = (props: PageTypeHeading) => {
   const styleHeader = [];
 
   const handleRenderAddButton = () => {
+    if (!showCreateButton) return false;
     if (showCreateButton) return true;
     if (role === Role.ADMIN && router.asPath.includes("master-data"))
       return true;

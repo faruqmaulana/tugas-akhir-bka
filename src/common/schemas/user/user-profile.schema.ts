@@ -21,6 +21,17 @@ export const userProfileForm = z.object({
   prodiId: z.string(),
 });
 
+export const adminProfileForm = z.object({
+  name: z.string().min(1, "Nama tidak boleh kosong!"),
+  npm: z.string().optional(),
+  phone: z.string().refine((value) => validatePhone(value) === true, {
+    message: "Invalid Indonesian phone number",
+  }),
+  semester: z.string().optional(),
+  alamat: z.string(),
+  prodiId: z.string().optional(),
+});
+
 export const userProfilePhoto = z.object({
   profilePhoto: validateImage.refine((fileList) => fileList.length > 0, {
     message: "File is required!",
@@ -28,4 +39,5 @@ export const userProfilePhoto = z.object({
 });
 
 export type IUserProfileForm = z.infer<typeof userProfileForm>;
+export type IAdminProfileForm = z.infer<typeof adminProfileForm>;
 export type IUserProfilePhoto = z.infer<typeof userProfilePhoto>;
