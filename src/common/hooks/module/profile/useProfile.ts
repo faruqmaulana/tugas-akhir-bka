@@ -59,7 +59,7 @@ const useProfile = () => {
     reset: resetUploadForm,
     formState: { errors: errorsUploadProfile },
   } = useForm<IUserProfilePhoto>({
-    resolver: zodResolver(isAdmin ? adminProfileForm : userProfilePhoto),
+    resolver: zodResolver(userProfilePhoto),
   });
 
   const {
@@ -69,7 +69,7 @@ const useProfile = () => {
     control,
     formState: { errors },
   } = useForm<IUserProfileForm>({
-    resolver: zodResolver(userProfileForm),
+    resolver: zodResolver(isAdmin ? adminProfileForm : userProfileForm),
   });
 
   const handleDefaultForm = (user: UserProfileType) => {
