@@ -16,7 +16,7 @@ const Example = () => {
 
   return (
     <>
-      <PageHeading />
+      <PageHeading showCreateButton={false} />
       <div className="flex flex-col gap-5">
         <Card>
           <div

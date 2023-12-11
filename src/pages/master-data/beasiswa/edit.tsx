@@ -4,7 +4,6 @@ import { Button } from "~/common/components/ui/button/Button";
 import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import dynamic from "next/dynamic";
-import { requireAuth } from "~/common/authentication/requireAuth";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "draft-js/dist/Draft.css";
@@ -33,6 +32,7 @@ const EditScholarshipMasterData = () => {
   return (
     <>
       <PageHeading
+        showCreateButton={false}
         ownButton={
           <Button
             isMedium
