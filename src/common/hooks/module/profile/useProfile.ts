@@ -17,6 +17,7 @@ import {
   userProfilePhoto,
   type IUserProfilePhoto,
   adminProfileForm,
+  type IAdminProfileForm,
 } from "~/common/schemas/user/user-profile.schema";
 import { handleUploadCloudinary } from "~/common/libs/handle-upload-cloudinary";
 import { JSONtoString } from "~/common/helpers/parseJSON";
@@ -68,7 +69,7 @@ const useProfile = () => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<IUserProfileForm>({
+  } = useForm<IAdminProfileForm | IUserProfileForm>({
     resolver: zodResolver(isAdmin ? adminProfileForm : userProfileForm),
   });
 
@@ -107,7 +108,7 @@ const useProfile = () => {
     });
   };
 
-  const onSubmit = (userPayload: IUserProfileForm) => {
+  const onSubmit = (userPayload: IAdminProfileForm | IUserProfileForm) => {
     setLoading(true);
     updateUserProfile(userPayload, {
       onSuccess: (data) => {
