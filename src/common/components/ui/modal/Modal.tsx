@@ -113,7 +113,7 @@ const Modal = (props: ModalProps) => {
   const buttonDanger = (
     <Button
       buttonForm={buttonForm}
-      className="mt-7 flex w-full max-w-[120px] justify-center py-2"
+      className="flex w-full max-w-[120px] justify-center py-2"
       isDisabled={disabledButtonDanger || isLoading}
       isDanger
       isSubmit={isButtonSubmit}
@@ -169,7 +169,7 @@ const Modal = (props: ModalProps) => {
           <div
             className={`flex gap-4 ${
               buttonCenter ? "justify-center" : "justify-end"
-            }`}
+            } ${buttonCenter && buttonClose ? "mb-7" : ""}`}
           >
             {showButtonConfirm && buttonConfirm}
             {showButtonDanger && buttonDanger}
