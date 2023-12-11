@@ -10,12 +10,14 @@ import { api } from "~/utils/api";
 import { useWidthViewport } from "../core/useWidthViewport";
 import { useCurrentUser } from "../module/profile";
 import { customToast } from "~/common/components/ui/toast/showToast";
+import { useSession } from "next-auth/react";
 
 const useMainLayout = () => {
   const { viewportWidth } = useWidthViewport();
   const { state, dispatch } = useGlobalContext();
   const { isAdmin } = useCurrentUser();
   const [showAside, setShowAside] = useState<boolean>(true);
+  const { data: session } = useSession();
   const [showBannerProfile, setShowBannerProfile] = useState<boolean>(false);
   const { data: user, isLoading } =
     api.user.getUserProfile.useQuery<UserProfileType>();
@@ -26,7 +28,7 @@ const useMainLayout = () => {
   const userNotif = state?.notification;
   const isProfileNotCompletelyFilled =
     !userState?.npm || !userState?.prodi || !userState?.semester;
-  const displayBanner = !isAdmin && userData && isProfileNotCompletelyFilled;
+  const displayBanner = session?.user && !isAdmin && userData && isProfileNotCompletelyFilled;
 
   const handleCloseBannerProfileHasFilled = () => {
     // uddate profile banner
