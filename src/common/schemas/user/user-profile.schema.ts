@@ -17,7 +17,7 @@ export const userProfileForm = z.object({
     message: "Invalid Indonesian phone number",
   }),
   semester: z.string().min(1, "Semester tidak boleh kosong!"),
-  alamat: z.string(),
+  alamat: z.string().nullable(),
   prodiId: z.string(),
 });
 

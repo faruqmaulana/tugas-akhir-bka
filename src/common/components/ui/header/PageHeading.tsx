@@ -5,6 +5,8 @@ import { Button } from "../button/Button";
 import { useHeadingTitle } from "~/common/hooks/useHeading";
 import { Role } from "@prisma/client";
 import { useMainLayout } from "~/common/hooks/layout/useMainLayout";
+import { Popover, PopoverContent, PopoverTrigger } from "../popover";
+import Link from "next/link";
 
 type PageTypeHeading = {
   title?: string;
@@ -65,27 +67,43 @@ const PageHeading = (props: PageTypeHeading) => {
           </h4>
         )}
       </div>
-      {handleRenderAddButton() && (
-        <Button
-          isMedium
-          isSuccess
-          tooltip="Mohon lengkapi data profil anda terlebih dahulu."
-          isDisabled={displayBanner}
-          className="flex items-center gap-2 px-6 py-3 text-base"
-          onClick={() => {
-            if (link) {
-              void router.push(link);
-              return;
-            }
-            if (onOpen) {
-              onOpen();
-            }
-          }}
-        >
-          <PlusIcon />
-          <span> Add {createButtonTitle || moduleHeading}</span>
-        </Button>
-      )}
+      {handleRenderAddButton() &&
+        (displayBanner ? (
+          <Popover>
+            <PopoverTrigger>
+              <Button
+                isMedium
+                isSuccess
+                className="flex !cursor-not-allowed items-center gap-2 !bg-gray-400 px-6 py-3 text-base hover:!bg-gray-400"
+              >
+                <PlusIcon />
+                <span> Add {createButtonTitle || moduleHeading}</span>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="z-50 overflow-hidden rounded-md border border-gray-400 bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-lg animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 max-w-[250px]">
+              Mohon lengkapi data profil anda terlebih dahulu. <Link href='/profile' className="text-blue-500 font-semibold underline">KLIK DISINI</Link>
+            </PopoverContent>
+          </Popover>
+        ) : (
+          <Button
+            isMedium
+            isSuccess
+            isDisabled={displayBanner}
+            className="flex items-center gap-2 px-6 py-3 text-base"
+            onClick={() => {
+              if (link) {
+                void router.push(link);
+                return;
+              }
+              if (onOpen) {
+                onOpen();
+              }
+            }}
+          >
+            <PlusIcon />
+            <span> Add {createButtonTitle || moduleHeading}</span>
+          </Button>
+        ))}
       {ownButton || ""}
     </div>
   );

@@ -75,7 +75,7 @@ export type InputPropsType = {
   variant?: "normal" | "currency";
   checked?: boolean;
   handlePrimitiveSwitch?: () => void;
-  customSwitchValue?: boolean
+  customSwitchValue?: boolean;
 };
 
 const Input = (props: InputPropsType) => {
@@ -111,7 +111,7 @@ const Input = (props: InputPropsType) => {
     variant = "normal",
     checked = false,
     handlePrimitiveSwitch,
-    customSwitchValue = false
+    customSwitchValue = false,
   } = props;
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -237,6 +237,7 @@ const Input = (props: InputPropsType) => {
             {...(register || {})}
             autoComplete={autocomplete || "off"}
             disabled={isDisabled}
+            min={1}
             type={showPassword ? "text" : type}
             data-te-inline="true"
             className={`relative m-0 block w-[1px] min-w-0 flex-auto rounded-r border border-solid border-neutral-400 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-600 dark:text-neutral-900 dark:focus:border-primary ${
@@ -311,6 +312,7 @@ const Input = (props: InputPropsType) => {
       {error && (
         <p className="text-sm text-red-500">
           {(error as string)
+            .replaceAll("Expected string, received null", "Required!")
             .replaceAll("Required", "Required!")
             .replaceAll("!!", "!")}
         </p>
