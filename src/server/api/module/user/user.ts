@@ -11,11 +11,14 @@ import {
   UPDATE_SUCCESS,
 } from "~/common/message";
 import { TRPCError } from "@trpc/server";
-import { loginInformation, userProfileForm } from "~/common/schemas/user";
+import { loginInformation } from "~/common/schemas/user";
 import { type Prisma, Role } from "@prisma/client";
 import { STATUS } from "~/common/enums/STATUS";
 import { z } from "zod";
-import { adminProfileForm, userProfilePhoto } from "~/common/schemas/user/user-profile.schema";
+import {
+  adminProfileForm,
+  userProfilePhoto,
+} from "~/common/schemas/user/user-profile.schema";
 import { stringToJSON } from "~/common/helpers/parseJSON";
 import {
   editMahasiswaManagementForm,
@@ -209,7 +212,7 @@ export const userData = createTRPCRouter({
   //** UPDATE USER ACCOUNT FLAG */
   updateUserAccountFlag: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const user = await prisma?.user.findFirst({
+      const user = await ctx.prisma?.user.findFirst({
         where: { email: ctx.session?.user.email },
       });
 
@@ -218,7 +221,7 @@ export const userData = createTRPCRouter({
       if (user?.isActive) return true;
 
       // update actived flag on user account
-      await prisma?.user.update({
+      await ctx.prisma?.user.update({
         where: {
           email: ctx.session?.user.email,
         },
@@ -370,7 +373,10 @@ export const userData = createTRPCRouter({
           },
         });
 
-        if (isEmailAlreadyExist && currentUser?.email !== isEmailAlreadyExist?.email) {
+        if (
+          isEmailAlreadyExist &&
+          currentUser?.email !== isEmailAlreadyExist?.email
+        ) {
           errorDuplicateData({ addUserData: true, property: "Email" });
         }
 
