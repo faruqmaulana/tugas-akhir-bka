@@ -23,13 +23,11 @@ export const userProfileForm = z.object({
 
 export const adminProfileForm = z.object({
   name: z.string().min(1, "Nama tidak boleh kosong!"),
-  npm: z.string().optional(),
-  phone: z.string().refine((value) => validatePhone(value) === true, {
-    message: "Invalid Indonesian phone number",
-  }),
-  semester: z.string().optional(),
-  alamat: z.string(),
-  prodiId: z.string().optional(),
+  npm: z.string().optional().nullable(),
+  phone: z.string().optional().nullable(),
+  semester: z.string().optional().nullable(),
+  alamat: z.string().optional().nullable(),
+  prodiId: z.any().optional().nullable(),
 });
 
 export const userProfilePhoto = z.object({
