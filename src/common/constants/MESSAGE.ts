@@ -65,6 +65,7 @@ export const UPDATE_ALL_MODULE = (module: string) => {
 
 // module login
 export const LOGIN_SUCCES = "Berhasil Login!";
+export const LOGOUT_SUCCES = "Berhasil Logout!";
 export const LOGIN_ERROR = "Gagal Login!";
 export const LOGIN_TOAST = {
   success: LOGIN_SUCCES,

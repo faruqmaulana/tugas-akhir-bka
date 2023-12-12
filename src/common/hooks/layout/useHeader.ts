@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import { type HeaderProps } from "~/common/components/layout/partials/Header";
 import { useGlobalContext } from "~/common/context/GlobalContext";
 import { signOut } from "next-auth/react";
+import { customToast } from "~/common/components/ui/toast/showToast";
+import { LOGOUT_SUCCES } from "~/common/constants/MESSAGE";
 
 const useHeader = (props: HeaderProps) => {
   const router = useRouter();
@@ -18,6 +20,7 @@ const useHeader = (props: HeaderProps) => {
   const handleSignOut = async () => {
     await signOut({ redirect: false }).then(() => {
       router.push("/");
+      customToast("success", LOGOUT_SUCCES);
       setTimeout(() => {
         router.push("/"); // Redirect to the login page after signing out
       }, 500);
