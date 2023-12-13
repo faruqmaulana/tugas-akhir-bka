@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/require-await */
+import { useRouter } from "next/router";
 import React from "react";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
 import { Button } from "~/common/components/ui/button/Button";
@@ -8,10 +9,6 @@ import BaseForm from "~/common/components/ui/form/BaseForm";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import ModalPreviewModule from "~/common/components/ui/modal/ModalPreviewModule";
 import { useKejuaraan } from "~/common/hooks/module/kejuaraan/useKejuaraan";
-
-// export const getServerSideProps = requireAuth(async (_ctx) => {
-//   return { props: {} };
-// });
 
 const TambahKejuaraan = () => {
   const {
@@ -23,13 +20,21 @@ const TambahKejuaraan = () => {
     handleClosePreview,
     isPreviewOpen,
   } = useKejuaraan();
+  const router = useRouter();
 
   return (
     <>
       <PageHeading
         title="Form Pengajuan Prestasi Lomba & Kejuaraan"
         ownButton={
-          <Button isMedium isGray className="flex w-fit items-center gap-2">
+          <Button
+            isMedium
+            isGray
+            className="flex w-fit items-center gap-2"
+            onClick={() => {
+              void router.push("/module/kejuaraan");
+            }}
+          >
             <ArrorLeft />
             <span>Batal</span>
           </Button>

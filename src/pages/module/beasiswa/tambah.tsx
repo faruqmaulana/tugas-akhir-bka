@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-misused-promises */
+import { useRouter } from "next/router";
 import React from "react";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
 import { Button } from "~/common/components/ui/button/Button";
@@ -17,10 +18,11 @@ import { useAddScholarship } from "~/common/hooks/module/beasiswa/useAddScholars
 // });
 
 const AddScolarship = () => {
+  const router = useRouter();
+  const { scholarship } = useEditBeasiswa();
   const { ADD_SCHOLARSHIP_FORM, handleSubmit, onSubmit, loading } =
     useAddScholarship();
 
-  const { scholarship } = useEditBeasiswa();
   if (!scholarship) return <FullPageLoader />;
 
   return (
@@ -28,7 +30,14 @@ const AddScolarship = () => {
       <PageHeading
         title="Form Pengajuan Beasiswa"
         ownButton={
-          <Button isMedium isGray className="flex w-fit items-center gap-2">
+          <Button
+            isMedium
+            isGray
+            className="flex w-fit items-center gap-2"
+            onClick={() => {
+              void router.push("/module/beasiswa");
+            }}
+          >
             <ArrorLeft />
             <span>Kembali</span>
           </Button>
