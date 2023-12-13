@@ -91,11 +91,12 @@ const UserManagement = () => {
       {
         header: "Action",
         ...tableActionConfig,
-        Cell: () => (
+        Cell: (props) => (
           <ViewDetailButton
             onClick={() => {
+              const id = props.row.original.id;
               const transformUrl = router.pathname.split("/").join("/");
-              void router.push(transformUrl + "/detail");
+              void router.push(transformUrl + "/detail/" + id);
             }}
           />
         ),
