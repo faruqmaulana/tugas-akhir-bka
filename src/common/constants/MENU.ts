@@ -98,6 +98,12 @@ const LIST_MENU: MenuItemType[] = [
         url: "/master-data/tingkat-prestasi",
         module: "check-point",
       },
+      {
+        id: 44,
+        title: "Dokumen SK",
+        url: "/master-data/surat-keputusan",
+        module: "check-point",
+      },
     ],
   },
   {

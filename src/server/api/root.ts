@@ -22,6 +22,7 @@ import { hakiModule } from "./module/pengajuan/haki/_router";
 import { pkmModule } from "./module/pengajuan/pkm/_router";
 import { bookModule } from "./module/pengajuan/book/_router";
 import { allModuleCount } from "./module/count/getAllModuleCount";
+import { dokumenSKQuery } from "./module/master-data/dokumen-sk/_router";
 
 /**
  * This is the primary router for your server.
@@ -40,6 +41,7 @@ export const appRouter = createTRPCRouter({
   championshipLevel: championshipLevelQuery,
   achievementLevel: achievementLevelQuery,
   scholarship: scholarshipQuery,
+  dokumenSKQuery: dokumenSKQuery,
 
   // ** STATISTIC
   statistic: statisticQuery,
