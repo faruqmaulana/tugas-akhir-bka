@@ -62,7 +62,7 @@ const AddScolarship = () => {
         <Card
           className="mt-[20px]"
           header="Form Pengajuan Beasiswa"
-          headerClassName="m-auto"
+          headerClassName="m-auto !mb-4"
         >
           <BaseForm data={ADD_SCHOLARSHIP_FORM} />
           <SubmitButton loading={loading} />
