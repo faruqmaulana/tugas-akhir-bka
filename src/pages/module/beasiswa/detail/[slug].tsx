@@ -4,6 +4,7 @@ import React from "react";
 import { requireAuth } from "~/common/authentication/requireAuth";
 import ArrorLeft from "~/common/components/svg/ArrorLeft";
 import { Button } from "~/common/components/ui/button/Button";
+import MahasiswaActionButton from "~/common/components/ui/button/MahasiswaActionButton";
 import ExpandableCard from "~/common/components/ui/card/ExpandableCard";
 import BaseDrawer from "~/common/components/ui/drawer/BaseDrawer";
 import BaseForm from "~/common/components/ui/form/BaseForm";
@@ -12,7 +13,6 @@ import FullPageLoader from "~/common/components/ui/loader/FullPageLoader";
 import EditModalDescription from "~/common/components/ui/modal/EditModalDescription";
 import Modal from "~/common/components/ui/modal/Modal";
 import StepperVertical from "~/common/components/ui/stepper/StepperVertical";
-import { STATUS } from "~/common/enums/STATUS";
 import renderActionButton from "~/common/helpers/renderActionButton";
 import { useScholarshipAction } from "~/common/hooks/module/beasiswa/useScholarshipAction";
 import { useCurrentUser } from "~/common/hooks/module/profile";
@@ -95,28 +95,14 @@ const ScholarshipDetail = ({ slug }: { slug: string }) => {
           </div>
         )}
         {!isAdmin && !isLoadingScholarship && (
-          <form onSubmit={submitEditScholarship(onEditScholarship)}>
-            <div className="flex flex-row justify-end gap-4">
-              <Button
-                disabled={!scholarship}
-                isSecondary
-                isLarge
-                onClick={() => setDefaultValue()}
-              >
-                Reset
-              </Button>
-              <Button
-                isSuccess
-                isLarge
-                onClick={() => handleButtonAction("edit")}
-              >
-                {scholarship?.status === STATUS.PROCESSED ||
-                scholarship?.status === STATUS.REPROCESS
-                  ? "Submit Perubahan"
-                  : "Ajukan Ulang"}
-              </Button>
-            </div>
-          </form>
+          <MahasiswaActionButton
+            onSubmit={submitEditScholarship(onEditScholarship)}
+            disableReset={!scholarship}
+            handleButtonAction={() => handleButtonAction("edit")}
+            FORM_DATA={SCHOLARSHIP_FORM}
+            setDefaultValue={() => setDefaultValue()}
+            status={scholarship?.status}
+          />
         )}
       </ExpandableCard>
       <BaseDrawer

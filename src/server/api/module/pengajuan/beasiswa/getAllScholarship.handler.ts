@@ -4,7 +4,9 @@ import { changeDateFormat } from "~/common/helpers/changeDateFormat";
 
 const getAllScholarshipHandler = protectedProcedure.query(async ({ ctx }) => {
   try {
+    const isAdmin = ctx.session.user.role === "ADMIN";
     const getAllScholarship = await ctx.prisma.pengajuanBeasiswa.findMany({
+      where: isAdmin ? {} : { userId: ctx.session.user.userId },
       orderBy: {
         updatedAt: "desc",
       },
