@@ -8,8 +8,16 @@ import React from "react";
 import { Button } from "../button/Button";
 import { ExportToCsv } from "export-to-csv";
 import DownloadIcon from "../../svg/DownloadIcon";
+import { useRouter } from "next/router";
+
+interface RowType {
+  id: string;
+  // other properties
+}
 
 const BaseTable = ({ columns, data, showColumnFilters = true }: any) => {
+  const router = useRouter();
+  const isModulePage = router.pathname.includes("/module");
   const csvOptions = {
     fieldSeparator: ",",
     quoteStrings: '"',
@@ -88,6 +96,17 @@ const BaseTable = ({ columns, data, showColumnFilters = true }: any) => {
         showColumnFilters: showColumnFilters,
         density: "compact",
       }}
+      // navigate to the detail module when clicking on a row on the current module page.
+      muiTableBodyRowProps={({ row }) => ({
+        onClick: () => {
+          if (isModulePage && (row.original as RowType).id) {
+            void router.push(
+              router.pathname + "/detail/" + (row.original as RowType).id
+            );
+          }
+        },
+        sx: { cursor: isModulePage ? "pointer" : "default" },
+      })}
       renderTopToolbarCustomActions={({ table }) => (
         <div className="flex w-[245px] space-x-3 overflow-auto py-1 xs:w-auto">
           <div className="flex flex-shrink-0">
