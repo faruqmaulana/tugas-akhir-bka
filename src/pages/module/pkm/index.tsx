@@ -10,11 +10,14 @@ import PageHeading from "~/common/components/ui/header/PageHeading";
 import BaseTable from "~/common/components/ui/table/BaseTable";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
 import { type PkmType } from "~/common/constants/DUMMY_PKM";
+import { useCurrentUser } from "~/common/hooks/module/profile";
 import { api } from "~/utils/api";
 
 const UserManagement = () => {
   const router = useRouter();
+  const { isAdmin } = useCurrentUser();
   const { data } = api.pkmModule.getAllPKM.useQuery();
+
   const columns = useMemo<MRT_ColumnDef<PkmType>[]>(
     () => [
       {
@@ -109,7 +112,7 @@ const UserManagement = () => {
     <>
       <PageHeading
         title="Module Program Kreativitas Mahasiswa"
-        showCreateButton
+        showCreateButton={!isAdmin}
         createButtonTitle="Program Kreativitas Mahasiswa"
         link="/module/pkm/tambah"
       />

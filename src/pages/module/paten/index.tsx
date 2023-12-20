@@ -14,14 +14,11 @@ import { api } from "~/utils/api";
 import { PatenAndHaki } from "@prisma/client";
 import { Anchor } from "~/common/components/ui/anchor";
 import ButtonLink from "~/common/components/ui/button/ButtonLink";
-import { requireAuth } from "~/common/authentication/requireAuth";
-
-// export const getServerSideProps = requireAuth(async (_ctx) => {
-//   return { props: {} };
-// });
+import { useCurrentUser } from "~/common/hooks/module/profile";
 
 const UserManagement = () => {
   const router = useRouter();
+  const { isAdmin } = useCurrentUser();
   const { data } = api.hakiModule.getAllPatenAndHaki.useQuery({
     type: PatenAndHaki.PATEN,
   });
@@ -120,7 +117,7 @@ const UserManagement = () => {
     <>
       <PageHeading
         title="Module Data Paten"
-        showCreateButton
+        showCreateButton={!isAdmin}
         createButtonTitle="Data Paten"
         link="paten/tambah"
       />

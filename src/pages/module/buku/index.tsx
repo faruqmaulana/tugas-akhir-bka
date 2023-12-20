@@ -9,11 +9,13 @@ import Card from "~/common/components/ui/card/Card";
 import PageHeading from "~/common/components/ui/header/PageHeading";
 import BaseTable from "~/common/components/ui/table/BaseTable";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
+import { useCurrentUser } from "~/common/hooks/module/profile";
 import { type AllBooksType } from "~/server/api/module/pengajuan/book/getBooks.handler";
 import { api } from "~/utils/api";
 
 const UserManagement = () => {
   const router = useRouter();
+  const { isAdmin } = useCurrentUser();
   const { data } = api.bookModule.getBooks.useQuery();
 
   const columns = useMemo<MRT_ColumnDef<AllBooksType>[]>(
@@ -99,7 +101,7 @@ const UserManagement = () => {
     <>
       <PageHeading
         title="Module Buku"
-        showCreateButton
+        showCreateButton={!isAdmin}
         createButtonTitle="Buku"
         link="/module/buku/tambah"
       />

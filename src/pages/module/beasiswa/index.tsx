@@ -11,6 +11,7 @@ import PageHeading from "~/common/components/ui/header/PageHeading";
 import BaseTable from "~/common/components/ui/table/BaseTable";
 import { tableActionConfig } from "~/common/config/TABLE_CONFIG";
 import { type PengajuanBeasiswa } from "~/common/constants/module/PENGAJUAN_BEASISWA";
+import { useCurrentUser } from "~/common/hooks/module/profile";
 import { api } from "~/utils/api";
 
 // export const getServerSideProps = requireAuth(async (ctx) => {
@@ -19,6 +20,7 @@ import { api } from "~/utils/api";
 
 const UserManagement = () => {
   const router = useRouter();
+  const { isAdmin } = useCurrentUser();
   const { data } = api.scholarshipModule.getAllScholarship.useQuery();
 
   const columns = useMemo<MRT_ColumnDef<PengajuanBeasiswa>[]>(
@@ -95,7 +97,7 @@ const UserManagement = () => {
     <>
       <PageHeading
         title="Module Pengajuan Beasiswa"
-        showCreateButton
+        showCreateButton={!isAdmin}
         createButtonTitle="Pengajuan Beasiswa"
         link="/module/beasiswa/tambah"
       />

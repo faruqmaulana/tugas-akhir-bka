@@ -28,7 +28,6 @@ const AuthLayout = ({ children }: any) => {
               placeholder="blur"
               quality={80}
             />
-            {/* <div className="h-[50px] border-l border-gray-400"></div> */}
             <div className="flex flex-col items-center">
               <p className="text-[16px]">Biro Kemahasiswaan dan Alumni</p>
               <p className="text-[16px]">Untag Surabaya</p>
