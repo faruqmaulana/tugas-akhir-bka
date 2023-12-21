@@ -12,7 +12,7 @@ const useCurrentUser = () => {
   const isAdmin = session?.user.role === Role.ADMIN;
   const currentUserName = user?.name;
 
-  return { isAdmin, currentUserName, user, role };
+  return { isAdmin, currentUserName, user, role, session };
 };
 
 export { useCurrentUser };

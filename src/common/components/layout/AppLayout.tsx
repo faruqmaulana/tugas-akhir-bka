@@ -2,19 +2,31 @@
 import { Router, useRouter } from "next/router";
 
 import { MainLayout } from "./MainLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Spinner from "../svg/Spinner";
 import { findString } from "~/common/helpers/findString";
 import { AuthLayout } from "./AuthLayout";
 import { PUBLIC_ROUTE } from "~/common/constants/routers";
 import { useGlobalContext } from "~/common/context/GlobalContext";
 import { ActionReducer } from "~/common/types/context/GlobalContextType";
+import { useCurrentUser } from "~/common/hooks/module/profile";
 
 const AppLayout = ({ children }: any) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const isPublicPage = findString(PUBLIC_ROUTE, router.pathname);
   const { dispatch } = useGlobalContext();
+  const { isAdmin, session } = useCurrentUser();
+
+  useEffect(() => {
+    if (session) {
+      const isMasterData = router.pathname.includes("master-data");
+      const userManagement = router.pathname.includes("user-management");
+      if ((!isAdmin && isMasterData) || (!isAdmin && userManagement)) {
+        return void router.push("/dashboard");
+      }
+    }
+  }, [router]);
 
   Router.events.on("routeChangeStart", () => {
     setIsLoading(true);
