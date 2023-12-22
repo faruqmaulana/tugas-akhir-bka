@@ -2,6 +2,7 @@ import { changeDateFormat } from "~/common/helpers/changeDateFormat";
 import { protectedProcedure } from "~/server/api/trpc";
 
 export type AllBooksType = {
+  id: string;
   judulBuku: string;
   nomorISBN: string;
   penulis: string;
@@ -23,6 +24,7 @@ const getBooksHandler = protectedProcedure.query(async ({ ctx }) => {
     });
     const transformedBooks = getAllBook.map((val) => {
       return {
+        id: val.id,
         judulBuku: val.judulBuku,
         nomorISBN: val.nomorISBN,
         penulis: val.penulis,

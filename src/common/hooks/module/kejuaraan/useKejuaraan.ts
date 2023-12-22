@@ -217,7 +217,7 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
       label: "Piagam Penghargaan",
       type: "file",
       register: { ...register("piagamPenghargaan") },
-      error: errors.custom?.message,
+      error: errors.custom?.message || errors.piagamPenghargaan?.message,
     },
     {
       trigger: trigger,
@@ -226,7 +226,7 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
       label: "Foto Penyerahan Piala",
       type: "file",
       register: { ...register("fotoPenyerahanPiala") },
-      error: errors.custom?.message,
+      error: errors.custom?.message || errors.fotoPenyerahanPiala?.message,
     },
     {
       trigger: trigger,
@@ -235,7 +235,7 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
       label: "Undangan Kejuaraan",
       type: "file",
       register: { ...register("undanganKejuaraan") },
-      error: errors.custom?.message,
+      error: errors.custom?.message || errors.undanganKejuaraan?.message,
     },
     {
       trigger: trigger,
@@ -244,7 +244,7 @@ const useKejuaraan = (defaultSelected: any | undefined = undefined) => {
       label: "Dokumen Pendukung",
       type: "file",
       register: { ...register("dokumenPendukung") },
-      error: errors.custom?.message,
+      error: errors.custom?.message || errors.dokumenPendukung?.message,
     },
     {
       type: "hidden",

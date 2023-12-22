@@ -410,7 +410,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
       label: "Piagam Penghargaan",
       type: "file",
       register: { ...registerKejuaraanForm("piagamPenghargaan") },
-      error: errorsKejuaraanForm.custom?.message,
+      error: errorsKejuaraanForm.custom?.message || errorsKejuaraanForm.piagamPenghargaan?.message,
       fileData: prestasi?.lampiran.piagamPenghargaan,
     },
     {
@@ -420,7 +420,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
       label: "Foto Penyerahan Piala",
       type: "file",
       register: { ...registerKejuaraanForm("fotoPenyerahanPiala") },
-      error: errorsKejuaraanForm.custom?.message,
+      error: errorsKejuaraanForm.custom?.message || errorsKejuaraanForm.fotoPenyerahanPiala?.message,
       fileData: prestasi?.lampiran.fotoPenyerahanPiala,
     },
     {
@@ -430,7 +430,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
       label: "Undangan Kejuaraan",
       type: "file",
       register: { ...registerKejuaraanForm("undanganKejuaraan") },
-      error: errorsKejuaraanForm.custom?.message,
+      error: errorsKejuaraanForm.custom?.message || errorsKejuaraanForm.undanganKejuaraan?.message,
       fileData: prestasi?.lampiran.undanganKejuaraan,
     },
     {
@@ -440,7 +440,7 @@ const useApproveKejuaraan = ({ slug }: { slug: string }) => {
       label: "Dokumen Pendukung",
       type: "file",
       register: { ...registerKejuaraanForm("dokumenPendukung") },
-      error: errorsKejuaraanForm.custom?.message,
+      error: errorsKejuaraanForm.custom?.message || errorsKejuaraanForm.dokumenPendukung?.message,
       fileData: prestasi?.lampiran.dokumenPendukung,
     },
   ];

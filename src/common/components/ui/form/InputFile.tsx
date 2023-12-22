@@ -95,6 +95,8 @@ const InputFile = (props: InputFileType) => {
   )[0];
 
   const handleFileName = () => {
+    // if (!previewUrl) return;
+
     if (currentFileState) return currentFileState.fileName;
 
     if (!fileData?.original_filename) return;

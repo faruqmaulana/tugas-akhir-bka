@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { type MRT_ColumnDef } from "material-react-table";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
@@ -84,11 +87,12 @@ const UserManagement = () => {
       {
         header: "Action",
         ...tableActionConfig,
-        Cell: () => (
+        Cell: (props) => (
           <ViewDetailButton
             onClick={() => {
+              const id = props.row.original.id;
               const transformUrl = router.pathname.split("/").join("/");
-              void router.push(transformUrl + "/detail");
+              void router.push(transformUrl + "/detail/" + id);
             }}
           />
         ),
