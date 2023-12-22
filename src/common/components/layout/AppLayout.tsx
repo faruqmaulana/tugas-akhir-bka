@@ -19,14 +19,14 @@ const AppLayout = ({ children }: any) => {
   const { isAdmin, session } = useCurrentUser();
 
   useEffect(() => {
-    if (session) {
+    if (session && router) {
       const isMasterData = router.pathname.includes("master-data");
       const userManagement = router.pathname.includes("user-management");
       if ((!isAdmin && isMasterData) || (!isAdmin && userManagement)) {
         return void router.push("/dashboard");
       }
     }
-  }, [router]);
+  }, [router, session]);
 
   Router.events.on("routeChangeStart", () => {
     setIsLoading(true);
